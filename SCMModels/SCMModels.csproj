@@ -1,0 +1,322 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6F0D4FF8-8B7B-44E0-8CBF-1F097609EEA0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SCMModels</RootNamespace>
+    <AssemblyName>SCMModels</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SCMModels\AccessGroupMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\AccessName.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\AuthorizationItem.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\AutorizationGroup.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\ClientLogin.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\CustomerMasterYG.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\Department.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\DynamicSearchResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SCMModels\Employee.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\Grade.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\ItemAttributesMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MaterialMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRApprover.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRApproversView.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRBuyerGroup.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRBuyerGroupMember.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRCommunication.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRCustomsDuty.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRDepartment.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRDespatchDocCategory.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRDetail.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRDispatchLocation.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRDocument.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRDocumentation.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRDocumentationDescription.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRIncharge.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRIssuePurpos.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRItemDetailsAttachment.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRItemDetails_X.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRItemInfo.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPROfferDetail.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPAApprover.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPADetail.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPADocument.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPAPurchaseMode.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPAPurchaseType.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPAVendor.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPreferredVendorType.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRProcurementSource.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRProjectDutyApplicable.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRPurchaseType.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRReminderTracking.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRRevision.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRScope.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRStatu.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRStatusTrack.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRTargetedSpendSupportingDoc.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRTechClearance.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\MPRVendorDetail.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQCommunication.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQDocument.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQItem.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQItemsInfo.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQReminderTracking.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQRevision.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQStatu.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQVendorTerm.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\SCMModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SCMModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\SCMModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\SCMModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SCMModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\SCMStatu.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\StandardListYNN.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\sysdiagram.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\TermsCategory.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\testuserdetail.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\Test_AttributeMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\Test_CategoryAttributes.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\Test_CategoryMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\Test_ItemAttributesMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\Test_ItemMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\UnitMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\UserDetail.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\VendorMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\VendorRFQTerm.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="SCMModels\SCMModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SCMModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="packages.config" />
+    <None Include="SCMModels\SCMModel.edmx.diagram">
+      <DependentUpon>SCMModel.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SCMModels\SCMModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SCMModel.edmx</DependentUpon>
+      <LastGenOutput>SCMModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="SCMModels\SCMModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SCMModel.edmx</DependentUpon>
+      <LastGenOutput>SCMModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
+</Project>

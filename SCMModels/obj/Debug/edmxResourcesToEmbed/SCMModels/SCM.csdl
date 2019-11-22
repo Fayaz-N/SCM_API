@@ -1,0 +1,2241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="YSCMModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="YSCMEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AccessGroupMasters" EntityType="YSCMModel.AccessGroupMaster" />
+    <EntitySet Name="AccessNames" EntityType="YSCMModel.AccessName" />
+    <EntitySet Name="AuthorizationItems" EntityType="YSCMModel.AuthorizationItem" />
+    <EntitySet Name="AutorizationGroups" EntityType="YSCMModel.AutorizationGroup" />
+    <EntitySet Name="ClientLogins" EntityType="YSCMModel.ClientLogin" />
+    <EntitySet Name="ItemAttributesMasters" EntityType="YSCMModel.ItemAttributesMaster" />
+    <EntitySet Name="MaterialMasters" EntityType="YSCMModel.MaterialMaster" />
+    <EntitySet Name="MPRApprovers" EntityType="YSCMModel.MPRApprover" />
+    <EntitySet Name="MPRBuyerGroupMembers" EntityType="YSCMModel.MPRBuyerGroupMember" />
+    <EntitySet Name="MPRBuyerGroups" EntityType="YSCMModel.MPRBuyerGroup" />
+    <EntitySet Name="MPRCommunications" EntityType="YSCMModel.MPRCommunication" />
+    <EntitySet Name="MPRCustomsDuties" EntityType="YSCMModel.MPRCustomsDuty" />
+    <EntitySet Name="MPRDepartments" EntityType="YSCMModel.MPRDepartment" />
+    <EntitySet Name="MPRDespatchDocCategories" EntityType="YSCMModel.MPRDespatchDocCategory" />
+    <EntitySet Name="MPRDetails" EntityType="YSCMModel.MPRDetail" />
+    <EntitySet Name="MPRDispatchLocations" EntityType="YSCMModel.MPRDispatchLocation" />
+    <EntitySet Name="MPRDocumentations" EntityType="YSCMModel.MPRDocumentation" />
+    <EntitySet Name="MPRDocumentationDescriptions" EntityType="YSCMModel.MPRDocumentationDescription" />
+    <EntitySet Name="MPRDocuments" EntityType="YSCMModel.MPRDocument" />
+    <EntitySet Name="MPRIncharges" EntityType="YSCMModel.MPRIncharge" />
+    <EntitySet Name="MPRIssuePurposes" EntityType="YSCMModel.MPRIssuePurpos" />
+    <EntitySet Name="MPRItemDetails_X" EntityType="YSCMModel.MPRItemDetails_X" />
+    <EntitySet Name="MPRItemDetailsAttachments" EntityType="YSCMModel.MPRItemDetailsAttachment" />
+    <EntitySet Name="MPRItemInfoes" EntityType="YSCMModel.MPRItemInfo" />
+    <EntitySet Name="MPROfferDetails" EntityType="YSCMModel.MPROfferDetail" />
+    <EntitySet Name="MPRPAApprovers" EntityType="YSCMModel.MPRPAApprover" />
+    <EntitySet Name="MPRPADetails" EntityType="YSCMModel.MPRPADetail" />
+    <EntitySet Name="MPRPADocuments" EntityType="YSCMModel.MPRPADocument" />
+    <EntitySet Name="MPRPAPurchaseModes" EntityType="YSCMModel.MPRPAPurchaseMode" />
+    <EntitySet Name="MPRPAPurchaseTypes" EntityType="YSCMModel.MPRPAPurchaseType" />
+    <EntitySet Name="MPRPAVendors" EntityType="YSCMModel.MPRPAVendor" />
+    <EntitySet Name="MPRPreferredVendorTypes" EntityType="YSCMModel.MPRPreferredVendorType" />
+    <EntitySet Name="MPRProcurementSources" EntityType="YSCMModel.MPRProcurementSource" />
+    <EntitySet Name="MPRProjectDutyApplicables" EntityType="YSCMModel.MPRProjectDutyApplicable" />
+    <EntitySet Name="MPRPurchaseTypes" EntityType="YSCMModel.MPRPurchaseType" />
+    <EntitySet Name="MPRReminderTrackings" EntityType="YSCMModel.MPRReminderTracking" />
+    <EntitySet Name="MPRRevisions" EntityType="YSCMModel.MPRRevision" />
+    <EntitySet Name="MPRScopes" EntityType="YSCMModel.MPRScope" />
+    <EntitySet Name="MPRStatus" EntityType="YSCMModel.MPRStatu" />
+    <EntitySet Name="MPRStatusTracks" EntityType="YSCMModel.MPRStatusTrack" />
+    <EntitySet Name="MPRTargetedSpendSupportingDocs" EntityType="YSCMModel.MPRTargetedSpendSupportingDoc" />
+    <EntitySet Name="MPRVendorDetails" EntityType="YSCMModel.MPRVendorDetail" />
+    <EntitySet Name="RFQItems" EntityType="YSCMModel.RFQItem" />
+    <EntitySet Name="RFQItemsInfoes" EntityType="YSCMModel.RFQItemsInfo" />
+    <EntitySet Name="RFQMasters" EntityType="YSCMModel.RFQMaster" />
+    <EntitySet Name="RFQRevisions" EntityType="YSCMModel.RFQRevision" />
+    <EntitySet Name="StandardListYNNs" EntityType="YSCMModel.StandardListYNN" />
+    <EntitySet Name="sysdiagrams" EntityType="YSCMModel.sysdiagram" />
+    <EntitySet Name="Test_AttributeMaster" EntityType="YSCMModel.Test_AttributeMaster" />
+    <EntitySet Name="Test_CategoryAttributes" EntityType="YSCMModel.Test_CategoryAttributes" />
+    <EntitySet Name="Test_CategoryMaster" EntityType="YSCMModel.Test_CategoryMaster" />
+    <EntitySet Name="Test_ItemAttributesMaster" EntityType="YSCMModel.Test_ItemAttributesMaster" />
+    <EntitySet Name="Test_ItemMaster" EntityType="YSCMModel.Test_ItemMaster" />
+    <EntitySet Name="testuserdetails" EntityType="YSCMModel.testuserdetail" />
+    <EntitySet Name="UnitMasters" EntityType="YSCMModel.UnitMaster" />
+    <EntitySet Name="UserDetails" EntityType="YSCMModel.UserDetail" />
+    <EntitySet Name="VendorMasters" EntityType="YSCMModel.VendorMaster" />
+    <EntitySet Name="CustomerMasterYGS" EntityType="YSCMModel.CustomerMasterYG" />
+    <EntitySet Name="Departments" EntityType="YSCMModel.Department" />
+    <EntitySet Name="Employees" EntityType="YSCMModel.Employee" />
+    <EntitySet Name="Grades" EntityType="YSCMModel.Grade" />
+    <EntitySet Name="MPRTechClearances" EntityType="YSCMModel.MPRTechClearance" />
+    <AssociationSet Name="FK_AccessGroupMaster_UserDetails" Association="YSCMModel.FK_AccessGroupMaster_UserDetails">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AccessGroupMaster" EntitySet="AccessGroupMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessGroupMaster_UserDetails1" Association="YSCMModel.FK_AccessGroupMaster_UserDetails1">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AccessGroupMaster" EntitySet="AccessGroupMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessNames_AccessGroupMaster" Association="YSCMModel.FK_AccessNames_AccessGroupMaster">
+      <End Role="AccessGroupMaster" EntitySet="AccessGroupMasters" />
+      <End Role="AccessName" EntitySet="AccessNames" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessNames_UserDetails" Association="YSCMModel.FK_AccessNames_UserDetails">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AccessName" EntitySet="AccessNames" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessNames_UserDetails1" Association="YSCMModel.FK_AccessNames_UserDetails1">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AccessName" EntitySet="AccessNames" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_AccessNames" Association="YSCMModel.FK_AuthorizationItems_AccessNames">
+      <End Role="AccessName" EntitySet="AccessNames" />
+      <End Role="AuthorizationItem" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_AutorizationGroup" Association="YSCMModel.FK_AuthorizationItems_AutorizationGroup">
+      <End Role="AutorizationGroup" EntitySet="AutorizationGroups" />
+      <End Role="AuthorizationItem" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_UserDetails" Association="YSCMModel.FK_AuthorizationItems_UserDetails">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AuthorizationItem" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_UserDetails1" Association="YSCMModel.FK_AuthorizationItems_UserDetails1">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AuthorizationItem" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AutorizationGroup_UserDetails" Association="YSCMModel.FK_AutorizationGroup_UserDetails">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AutorizationGroup" EntitySet="AutorizationGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AutorizationGroup_UserDetails1" Association="YSCMModel.FK_AutorizationGroup_UserDetails1">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="AutorizationGroup" EntitySet="AutorizationGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemAttributesMaster_Test_AttributeMaster" Association="YSCMModel.FK_ItemAttributesMaster_Test_AttributeMaster">
+      <End Role="Test_AttributeMaster" EntitySet="Test_AttributeMaster" />
+      <End Role="ItemAttributesMaster" EntitySet="ItemAttributesMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemAttributesMaster_Test_ItemMaster" Association="YSCMModel.FK_ItemAttributesMaster_Test_ItemMaster">
+      <End Role="Test_ItemMaster" EntitySet="Test_ItemMaster" />
+      <End Role="ItemAttributesMaster" EntitySet="ItemAttributesMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRBuyerGroupMembers_MPRBuyerGroups" Association="YSCMModel.FK_MPRBuyerGroupMembers_MPRBuyerGroups">
+      <End Role="MPRBuyerGroup" EntitySet="MPRBuyerGroups" />
+      <End Role="MPRBuyerGroupMember" EntitySet="MPRBuyerGroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRBuyerGroups" Association="YSCMModel.FK_MPRRevisions_MPRBuyerGroups">
+      <End Role="MPRBuyerGroup" EntitySet="MPRBuyerGroups" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_CategoryMaster_MPRBuyerGroups" Association="YSCMModel.FK_Test_CategoryMaster_MPRBuyerGroups">
+      <End Role="MPRBuyerGroup" EntitySet="MPRBuyerGroups" />
+      <End Role="Test_CategoryMaster" EntitySet="Test_CategoryMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRCommunications_MPRCommunications" Association="YSCMModel.FK_MPRCommunications_MPRCommunications">
+      <End Role="MPRCommunication" EntitySet="MPRCommunications" />
+      <End Role="MPRCommunication1" EntitySet="MPRCommunications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRCommunications_MPRRevisions" Association="YSCMModel.FK_MPRCommunications_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRCommunication" EntitySet="MPRCommunications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRCommunications_UserDetails" Association="YSCMModel.FK_MPRCommunications_UserDetails">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="MPRCommunication" EntitySet="MPRCommunications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRReminderTracking_MPRCommunications" Association="YSCMModel.FK_MPRReminderTracking_MPRCommunications">
+      <End Role="MPRCommunication" EntitySet="MPRCommunications" />
+      <End Role="MPRReminderTracking" EntitySet="MPRReminderTrackings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRCustomsDuty" Association="YSCMModel.FK_MPRRevisions_MPRCustomsDuty">
+      <End Role="MPRCustomsDuty" EntitySet="MPRCustomsDuties" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRDepartments" Association="YSCMModel.FK_MPRRevisions_MPRDepartments">
+      <End Role="MPRDepartment" EntitySet="MPRDepartments" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDetails_MPRPreferredVendorTypes" Association="YSCMModel.FK_MPRDetails_MPRPreferredVendorTypes">
+      <End Role="MPRPreferredVendorType" EntitySet="MPRPreferredVendorTypes" />
+      <End Role="MPRDetail" EntitySet="MPRDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDetails_MPRPurchaseTypes" Association="YSCMModel.FK_MPRDetails_MPRPurchaseTypes">
+      <End Role="MPRPurchaseType" EntitySet="MPRPurchaseTypes" />
+      <End Role="MPRDetail" EntitySet="MPRDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDetails_MPRStatus" Association="YSCMModel.FK_MPRDetails_MPRStatus">
+      <End Role="MPRStatu" EntitySet="MPRStatus" />
+      <End Role="MPRDetail" EntitySet="MPRDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRIncharges_MPRDetails" Association="YSCMModel.FK_MPRIncharges_MPRDetails">
+      <End Role="MPRDetail" EntitySet="MPRDetails" />
+      <End Role="MPRIncharge" EntitySet="MPRIncharges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPROfferDetails_MPRDetails" Association="YSCMModel.FK_MPROfferDetails_MPRDetails">
+      <End Role="MPRDetail" EntitySet="MPRDetails" />
+      <End Role="MPROfferDetail" EntitySet="MPROfferDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRDetails" Association="YSCMModel.FK_MPRRevisions_MPRDetails">
+      <End Role="MPRDetail" EntitySet="MPRDetails" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRStatusTrack_MPRDetails" Association="YSCMModel.FK_MPRStatusTrack_MPRDetails">
+      <End Role="MPRDetail" EntitySet="MPRDetails" />
+      <End Role="MPRStatusTrack" EntitySet="MPRStatusTracks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocumentation_MPRDocumentationDescriptions" Association="YSCMModel.FK_MPRDocumentation_MPRDocumentationDescriptions">
+      <End Role="MPRDocumentationDescription" EntitySet="MPRDocumentationDescriptions" />
+      <End Role="MPRDocumentation" EntitySet="MPRDocumentations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocumentation_MPRRevisions" Association="YSCMModel.FK_MPRDocumentation_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRDocumentation" EntitySet="MPRDocumentations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocuments_MPRItemInfo" Association="YSCMModel.FK_MPRDocuments_MPRItemInfo">
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfoes" />
+      <End Role="MPRDocument" EntitySet="MPRDocuments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocuments_MPRRevisions" Association="YSCMModel.FK_MPRDocuments_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRDocument" EntitySet="MPRDocuments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRIncharges_MPRRevisions" Association="YSCMModel.FK_MPRIncharges_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRIncharge" EntitySet="MPRIncharges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRIssuePurposes" Association="YSCMModel.FK_MPRRevisions_MPRIssuePurposes">
+      <End Role="MPRIssuePurpos" EntitySet="MPRIssuePurposes" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemDetails_MPRPADetails" Association="YSCMModel.FK_MPRItemDetails_MPRPADetails">
+      <End Role="MPRPADetail" EntitySet="MPRPADetails" />
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemDetails_MPRRevisions" Association="YSCMModel.FK_MPRItemDetails_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemDetailsAttachments_MPRItemDetails" Association="YSCMModel.FK_MPRItemDetailsAttachments_MPRItemDetails">
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+      <End Role="MPRItemDetailsAttachment" EntitySet="MPRItemDetailsAttachments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPADocuments_MPRItemDetails" Association="YSCMModel.FK_MPRPADocuments_MPRItemDetails">
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+      <End Role="MPRPADocument" EntitySet="MPRPADocuments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemInfo_MPRItemInfo" Association="YSCMModel.FK_MPRItemInfo_MPRItemInfo">
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfoes" />
+      <End Role="MPRItemInfo1" EntitySet="MPRItemInfoes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemInfo_MPRRevisions" Association="YSCMModel.FK_MPRItemInfo_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfoes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemInfo_UnitMaster" Association="YSCMModel.FK_MPRItemInfo_UnitMaster">
+      <End Role="UnitMaster" EntitySet="UnitMasters" />
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfoes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQItems_MPRItemInfo" Association="YSCMModel.FK_RFQItems_MPRItemInfo">
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfoes" />
+      <End Role="RFQItem" EntitySet="RFQItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPAApprovers_MPRPADetails" Association="YSCMModel.FK_MPRPAApprovers_MPRPADetails">
+      <End Role="MPRPADetail" EntitySet="MPRPADetails" />
+      <End Role="MPRPAApprover" EntitySet="MPRPAApprovers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPADetails_MPRPAPurchaseModes" Association="YSCMModel.FK_MPRPADetails_MPRPAPurchaseModes">
+      <End Role="MPRPAPurchaseMode" EntitySet="MPRPAPurchaseModes" />
+      <End Role="MPRPADetail" EntitySet="MPRPADetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPADetails_MPRPAPurchaseTypes" Association="YSCMModel.FK_MPRPADetails_MPRPAPurchaseTypes">
+      <End Role="MPRPAPurchaseType" EntitySet="MPRPAPurchaseTypes" />
+      <End Role="MPRPADetail" EntitySet="MPRPADetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPAVendors_MPRPADetails" Association="YSCMModel.FK_MPRPAVendors_MPRPADetails">
+      <End Role="MPRPADetail" EntitySet="MPRPADetails" />
+      <End Role="MPRPAVendor" EntitySet="MPRPAVendors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRProcurementSources" Association="YSCMModel.FK_MPRRevisions_MPRProcurementSources">
+      <End Role="MPRProcurementSource" EntitySet="MPRProcurementSources" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRProjectDutyApplicable" Association="YSCMModel.FK_MPRRevisions_MPRProjectDutyApplicable">
+      <End Role="MPRProjectDutyApplicable" EntitySet="MPRProjectDutyApplicables" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRReminderTracking_UserDetails" Association="YSCMModel.FK_MPRReminderTracking_UserDetails">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="MPRReminderTracking" EntitySet="MPRReminderTrackings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRScopes" Association="YSCMModel.FK_MPRRevisions_MPRScopes">
+      <End Role="MPRScope" EntitySet="MPRScopes" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN" Association="YSCMModel.FK_MPRRevisions_StandardListYNN">
+      <End Role="StandardListYNN" EntitySet="StandardListYNNs" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN10" Association="YSCMModel.FK_MPRRevisions_StandardListYNN10">
+      <End Role="StandardListYNN" EntitySet="StandardListYNNs" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN6" Association="YSCMModel.FK_MPRRevisions_StandardListYNN6">
+      <End Role="StandardListYNN" EntitySet="StandardListYNNs" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN7" Association="YSCMModel.FK_MPRRevisions_StandardListYNN7">
+      <End Role="StandardListYNN" EntitySet="StandardListYNNs" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN8" Association="YSCMModel.FK_MPRRevisions_StandardListYNN8">
+      <End Role="StandardListYNN" EntitySet="StandardListYNNs" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN9" Association="YSCMModel.FK_MPRRevisions_StandardListYNN9">
+      <End Role="StandardListYNN" EntitySet="StandardListYNNs" />
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRStatusTrack_MPRRevisions" Association="YSCMModel.FK_MPRStatusTrack_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRStatusTrack" EntitySet="MPRStatusTracks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRTargetedSpendSupportingDocs_MPRRevisions" Association="YSCMModel.FK_MPRTargetedSpendSupportingDocs_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRTargetedSpendSupportingDoc" EntitySet="MPRTargetedSpendSupportingDocs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRVendorDetails_MPRRevisions" Association="YSCMModel.FK_MPRVendorDetails_MPRRevisions">
+      <End Role="MPRRevision" EntitySet="MPRRevisions" />
+      <End Role="MPRVendorDetail" EntitySet="MPRVendorDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRStatusTrack_UserDetails" Association="YSCMModel.FK_MPRStatusTrack_UserDetails">
+      <End Role="UserDetail" EntitySet="UserDetails" />
+      <End Role="MPRStatusTrack" EntitySet="MPRStatusTracks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRVendorDetails_VendorMaster" Association="YSCMModel.FK_MPRVendorDetails_VendorMaster">
+      <End Role="VendorMaster" EntitySet="VendorMasters" />
+      <End Role="MPRVendorDetail" EntitySet="MPRVendorDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQItems_RFQRevisions" Association="YSCMModel.FK_RFQItems_RFQRevisions">
+      <End Role="RFQRevision" EntitySet="RFQRevisions" />
+      <End Role="RFQItem" EntitySet="RFQItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQItemsInfo_RFQItems" Association="YSCMModel.FK_RFQItemsInfo_RFQItems">
+      <End Role="RFQItem" EntitySet="RFQItems" />
+      <End Role="RFQItemsInfo" EntitySet="RFQItemsInfoes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQMaster_VendorMaster" Association="YSCMModel.FK_RFQMaster_VendorMaster">
+      <End Role="VendorMaster" EntitySet="VendorMasters" />
+      <End Role="RFQMaster" EntitySet="RFQMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQRevisions_RFQMaster" Association="YSCMModel.FK_RFQRevisions_RFQMaster">
+      <End Role="RFQMaster" EntitySet="RFQMasters" />
+      <End Role="RFQRevision" EntitySet="RFQRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_CategoryAttributes_Test_AttributeMaster" Association="YSCMModel.FK_Test_CategoryAttributes_Test_AttributeMaster">
+      <End Role="Test_AttributeMaster" EntitySet="Test_AttributeMaster" />
+      <End Role="Test_CategoryAttributes" EntitySet="Test_CategoryAttributes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_ItemAttributesMaster_Test_AttributeMaster" Association="YSCMModel.FK_Test_ItemAttributesMaster_Test_AttributeMaster">
+      <End Role="Test_AttributeMaster" EntitySet="Test_AttributeMaster" />
+      <End Role="Test_ItemAttributesMaster" EntitySet="Test_ItemAttributesMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_CategoryMaster_Test_CategoryMaster" Association="YSCMModel.FK_Test_CategoryMaster_Test_CategoryMaster">
+      <End Role="Test_CategoryMaster" EntitySet="Test_CategoryMaster" />
+      <End Role="Test_CategoryMaster1" EntitySet="Test_CategoryMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_ItemMaster_Test_CategoryMaster" Association="YSCMModel.FK_Test_ItemMaster_Test_CategoryMaster">
+      <End Role="Test_CategoryMaster" EntitySet="Test_CategoryMaster" />
+      <End Role="Test_ItemMaster" EntitySet="Test_ItemMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_ItemAttributesMaster_Test_ItemMaster" Association="YSCMModel.FK_Test_ItemAttributesMaster_Test_ItemMaster">
+      <End Role="Test_ItemMaster" EntitySet="Test_ItemMaster" />
+      <End Role="Test_ItemAttributesMaster" EntitySet="Test_ItemAttributesMaster" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="AccessGroupMaster">
+    <Key>
+      <PropertyRef Name="AccessGroupId" />
+    </Key>
+    <Property Name="AccessGroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeletedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="DeleteDate" Type="DateTime" Precision="0" />
+    <Property Name="DeletedRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="UserDetail" Relationship="YSCMModel.FK_AccessGroupMaster_UserDetails" FromRole="AccessGroupMaster" ToRole="UserDetail" />
+    <NavigationProperty Name="UserDetail1" Relationship="YSCMModel.FK_AccessGroupMaster_UserDetails1" FromRole="AccessGroupMaster" ToRole="UserDetail" />
+    <NavigationProperty Name="AccessNames" Relationship="YSCMModel.FK_AccessNames_AccessGroupMaster" FromRole="AccessGroupMaster" ToRole="AccessName" />
+  </EntityType>
+  <EntityType Name="AccessName">
+    <Key>
+      <PropertyRef Name="AccessNameID" />
+    </Key>
+    <Property Name="AccessNameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccessGroupId" Type="Int32" Nullable="false" />
+    <Property Name="AccessName1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="updatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="updatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeletedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="DeletedDate" Type="DateTime" Precision="0" />
+    <Property Name="DeletedRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="AccessGroupMaster" Relationship="YSCMModel.FK_AccessNames_AccessGroupMaster" FromRole="AccessName" ToRole="AccessGroupMaster" />
+    <NavigationProperty Name="UserDetail" Relationship="YSCMModel.FK_AccessNames_UserDetails" FromRole="AccessName" ToRole="UserDetail" />
+    <NavigationProperty Name="UserDetail1" Relationship="YSCMModel.FK_AccessNames_UserDetails1" FromRole="AccessName" ToRole="UserDetail" />
+    <NavigationProperty Name="AuthorizationItems" Relationship="YSCMModel.FK_AuthorizationItems_AccessNames" FromRole="AccessName" ToRole="AuthorizationItem" />
+  </EntityType>
+  <EntityType Name="AuthorizationItem">
+    <Key>
+      <PropertyRef Name="RoleAccessNameid" />
+    </Key>
+    <Property Name="RoleAccessNameid" Type="Int32" Nullable="false" />
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <Property Name="AccessNamesId" Type="Int32" Nullable="false" />
+    <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="Updateddate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeletedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="Deleteddate" Type="DateTime" Precision="0" />
+    <Property Name="DeletedRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="AccessName" Relationship="YSCMModel.FK_AuthorizationItems_AccessNames" FromRole="AuthorizationItem" ToRole="AccessName" />
+    <NavigationProperty Name="AutorizationGroup" Relationship="YSCMModel.FK_AuthorizationItems_AutorizationGroup" FromRole="AuthorizationItem" ToRole="AutorizationGroup" />
+    <NavigationProperty Name="UserDetail" Relationship="YSCMModel.FK_AuthorizationItems_UserDetails" FromRole="AuthorizationItem" ToRole="UserDetail" />
+    <NavigationProperty Name="UserDetail1" Relationship="YSCMModel.FK_AuthorizationItems_UserDetails1" FromRole="AuthorizationItem" ToRole="UserDetail" />
+  </EntityType>
+  <EntityType Name="AutorizationGroup">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <Property Name="RoleName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="updatedDate" Type="DateTime" Precision="0" />
+    <Property Name="DeletedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="DeletedDate" Type="DateTime" Precision="0" />
+    <Property Name="DeletedRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="AuthorizationItems" Relationship="YSCMModel.FK_AuthorizationItems_AutorizationGroup" FromRole="AutorizationGroup" ToRole="AuthorizationItem" />
+    <NavigationProperty Name="UserDetail" Relationship="YSCMModel.FK_AutorizationGroup_UserDetails" FromRole="AutorizationGroup" ToRole="UserDetail" />
+    <NavigationProperty Name="UserDetail1" Relationship="YSCMModel.FK_AutorizationGroup_UserDetails1" FromRole="AutorizationGroup" ToRole="UserDetail" />
+  </EntityType>
+  <EntityType Name="ClientLogin">
+    <Key>
+      <PropertyRef Name="CId" />
+    </Key>
+    <Property Name="CId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="email" Type="String" MaxLength="320" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="ItemAttributesMaster">
+    <Key>
+      <PropertyRef Name="ItemAttributeid" />
+    </Key>
+    <Property Name="ItemAttributeid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemId" Type="Int32" />
+    <Property Name="Attributeid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Test_AttributeMaster" Relationship="YSCMModel.FK_ItemAttributesMaster_Test_AttributeMaster" FromRole="ItemAttributesMaster" ToRole="Test_AttributeMaster" />
+    <NavigationProperty Name="Test_ItemMaster" Relationship="YSCMModel.FK_ItemAttributesMaster_Test_ItemMaster" FromRole="ItemAttributesMaster" ToRole="Test_ItemMaster" />
+  </EntityType>
+  <EntityType Name="MaterialMaster">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ItemDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" />
+    <Property Name="UpdatedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="UpdatedDate" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="MPRApprover">
+    <Key>
+      <PropertyRef Name="EmployeeNo" />
+    </Key>
+    <Property Name="EmployeeNo" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="MPRBuyerGroupMember">
+    <Key>
+      <PropertyRef Name="BuyerGroupMemberId" />
+    </Key>
+    <Property Name="BuyerGroupMemberId" Type="Int16" Nullable="false" />
+    <Property Name="BuyerGroupId" Type="Byte" Nullable="false" />
+    <Property Name="GroupMember" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="MPRBuyerGroup" Relationship="YSCMModel.FK_MPRBuyerGroupMembers_MPRBuyerGroups" FromRole="MPRBuyerGroupMember" ToRole="MPRBuyerGroup" />
+  </EntityType>
+  <EntityType Name="MPRBuyerGroup">
+    <Key>
+      <PropertyRef Name="BuyerGroupId" />
+    </Key>
+    <Property Name="BuyerGroupId" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BuyerGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRBuyerGroupMembers" Relationship="YSCMModel.FK_MPRBuyerGroupMembers_MPRBuyerGroups" FromRole="MPRBuyerGroup" ToRole="MPRBuyerGroupMember" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRBuyerGroups" FromRole="MPRBuyerGroup" ToRole="MPRRevision" />
+    <NavigationProperty Name="Test_CategoryMaster" Relationship="YSCMModel.FK_Test_CategoryMaster_MPRBuyerGroups" FromRole="MPRBuyerGroup" ToRole="Test_CategoryMaster" />
+  </EntityType>
+  <EntityType Name="MPRCommunication">
+    <Key>
+      <PropertyRef Name="MPRCCId" />
+    </Key>
+    <Property Name="MPRCCId" Type="Int32" Nullable="false" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="RemarksFrom" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="SendEmail" Type="Boolean" Nullable="false" />
+    <Property Name="SetReminder" Type="Boolean" Nullable="false" />
+    <Property Name="ReminderDate" Type="DateTime" Precision="0" />
+    <Property Name="RemarksDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRCommunications1" Relationship="YSCMModel.FK_MPRCommunications_MPRCommunications" FromRole="MPRCommunication" ToRole="MPRCommunication1" />
+    <NavigationProperty Name="MPRCommunication1" Relationship="YSCMModel.FK_MPRCommunications_MPRCommunications" FromRole="MPRCommunication1" ToRole="MPRCommunication" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRCommunications_MPRRevisions" FromRole="MPRCommunication" ToRole="MPRRevision" />
+    <NavigationProperty Name="UserDetail" Relationship="YSCMModel.FK_MPRCommunications_UserDetails" FromRole="MPRCommunication" ToRole="UserDetail" />
+    <NavigationProperty Name="MPRReminderTrackings" Relationship="YSCMModel.FK_MPRReminderTracking_MPRCommunications" FromRole="MPRCommunication" ToRole="MPRReminderTracking" />
+  </EntityType>
+  <EntityType Name="MPRCustomsDuty">
+    <Key>
+      <PropertyRef Name="CustomsDutyId" />
+    </Key>
+    <Property Name="CustomsDutyId" Type="Byte" Nullable="false" />
+    <Property Name="CustomsDuty" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRCustomsDuty" FromRole="MPRCustomsDuty" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRDepartment">
+    <Key>
+      <PropertyRef Name="DepartmentId" />
+    </Key>
+    <Property Name="DepartmentId" Type="Byte" Nullable="false" />
+    <Property Name="Department" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="SecondApprover" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="ThirdApprover" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRDepartments" FromRole="MPRDepartment" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRDespatchDocCategory">
+    <Key>
+      <PropertyRef Name="DespatchDocCategoryId" />
+    </Key>
+    <Property Name="DespatchDocCategoryId" Type="Byte" Nullable="false" />
+    <Property Name="DespatchDocCategory" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="MPRDetail">
+    <Key>
+      <PropertyRef Name="RequisitionId" />
+    </Key>
+    <Property Name="RequisitionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DocumentNo" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="SubmittedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+    <Property Name="SubmittedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="XXXCommercialOfferReceivedDate" Type="DateTime" Precision="0" />
+    <Property Name="XXXOfferDetailsMailedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="XXXOfferDetailsMailedOn" Type="DateTime" Precision="0" />
+    <Property Name="XXXOfferDetailsViewedByCheckerOn" Type="DateTime" Precision="0" />
+    <Property Name="XXXOfferDetailsViewedByApproverOn" Type="DateTime" Precision="0" />
+    <Property Name="XXXMaterialReceiptDate" Type="DateTime" Precision="0" />
+    <Property Name="XXXRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="XXXEstimatedCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="XXXPreviousPOPrice" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="XXXPurchaseTypeId" Type="Byte" />
+    <Property Name="XXXPreferredVendorTypeId" Type="Byte" />
+    <Property Name="XXXStatusId" Type="Byte" />
+    <Property Name="XXXPurchaseCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="DocumentDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="MPRPreferredVendorType" Relationship="YSCMModel.FK_MPRDetails_MPRPreferredVendorTypes" FromRole="MPRDetail" ToRole="MPRPreferredVendorType" />
+    <NavigationProperty Name="MPRPurchaseType" Relationship="YSCMModel.FK_MPRDetails_MPRPurchaseTypes" FromRole="MPRDetail" ToRole="MPRPurchaseType" />
+    <NavigationProperty Name="MPRStatu" Relationship="YSCMModel.FK_MPRDetails_MPRStatus" FromRole="MPRDetail" ToRole="MPRStatu" />
+    <NavigationProperty Name="MPRIncharges" Relationship="YSCMModel.FK_MPRIncharges_MPRDetails" FromRole="MPRDetail" ToRole="MPRIncharge" />
+    <NavigationProperty Name="MPROfferDetails" Relationship="YSCMModel.FK_MPROfferDetails_MPRDetails" FromRole="MPRDetail" ToRole="MPROfferDetail" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRDetails" FromRole="MPRDetail" ToRole="MPRRevision" />
+    <NavigationProperty Name="MPRStatusTracks" Relationship="YSCMModel.FK_MPRStatusTrack_MPRDetails" FromRole="MPRDetail" ToRole="MPRStatusTrack" />
+  </EntityType>
+  <EntityType Name="MPRDispatchLocation">
+    <Key>
+      <PropertyRef Name="DispatchLocationId" />
+    </Key>
+    <Property Name="DispatchLocationId" Type="Byte" Nullable="false" />
+    <Property Name="DispatchLocation" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="XOrder" Type="Byte" Nullable="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRDocumentation">
+    <Key>
+      <PropertyRef Name="DocumentationId" />
+    </Key>
+    <Property Name="DocumentationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="DocumentationDescriptionId" Type="Byte" Nullable="false" />
+    <Property Name="NoOfSetsApproval" Type="Byte" Nullable="false" />
+    <Property Name="NoOfSetsFinal" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="MPRDocumentationDescription" Relationship="YSCMModel.FK_MPRDocumentation_MPRDocumentationDescriptions" FromRole="MPRDocumentation" ToRole="MPRDocumentationDescription" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRDocumentation_MPRRevisions" FromRole="MPRDocumentation" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRDocumentationDescription">
+    <Key>
+      <PropertyRef Name="DocumentationDescriptionId" />
+    </Key>
+    <Property Name="DocumentationDescriptionId" Type="Byte" Nullable="false" />
+    <Property Name="DocumentationDescription" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRDocumentations" Relationship="YSCMModel.FK_MPRDocumentation_MPRDocumentationDescriptions" FromRole="MPRDocumentationDescription" ToRole="MPRDocumentation" />
+  </EntityType>
+  <EntityType Name="MPRDocument">
+    <Key>
+      <PropertyRef Name="MprDocId" />
+    </Key>
+    <Property Name="MprDocId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="ItemDetailsId" Type="Int32" />
+    <Property Name="DocumentName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="UploadedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="UplaodedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Path" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="DocumentTypeid" Type="Byte" Nullable="false" />
+    <Property Name="Deleteflag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRItemInfo" Relationship="YSCMModel.FK_MPRDocuments_MPRItemInfo" FromRole="MPRDocument" ToRole="MPRItemInfo" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRDocuments_MPRRevisions" FromRole="MPRDocument" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRIncharge">
+    <Key>
+      <PropertyRef Name="InchargeId" />
+    </Key>
+    <Property Name="InchargeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequisitionId" Type="Int32" Nullable="false" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="Incharge" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="CanClearTechnically" Type="Boolean" Nullable="false" />
+    <Property Name="CanClearCommercially" Type="Boolean" Nullable="false" />
+    <Property Name="CanReceiveMailNotification" Type="Boolean" Nullable="false" />
+    <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRDetail" Relationship="YSCMModel.FK_MPRIncharges_MPRDetails" FromRole="MPRIncharge" ToRole="MPRDetail" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRIncharges_MPRRevisions" FromRole="MPRIncharge" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRIssuePurpos">
+    <Key>
+      <PropertyRef Name="IssuePurposeId" />
+    </Key>
+    <Property Name="IssuePurposeId" Type="Byte" Nullable="false" />
+    <Property Name="IssuePurpose" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRIssuePurposes" FromRole="MPRIssuePurpos" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRItemDetails_X">
+    <Key>
+      <PropertyRef Name="ItemDetailsId" />
+    </Key>
+    <Property Name="ItemDetailsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="ItemDescription" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="Unit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SaleOrderLineItemNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ReferenceDocNo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="PAId" Type="Int32" />
+    <Property Name="PONo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="MPRPADetail" Relationship="YSCMModel.FK_MPRItemDetails_MPRPADetails" FromRole="MPRItemDetails_X" ToRole="MPRPADetail" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRItemDetails_MPRRevisions" FromRole="MPRItemDetails_X" ToRole="MPRRevision" />
+    <NavigationProperty Name="MPRItemDetailsAttachments" Relationship="YSCMModel.FK_MPRItemDetailsAttachments_MPRItemDetails" FromRole="MPRItemDetails_X" ToRole="MPRItemDetailsAttachment" />
+    <NavigationProperty Name="MPRPADocuments" Relationship="YSCMModel.FK_MPRPADocuments_MPRItemDetails" FromRole="MPRItemDetails_X" ToRole="MPRPADocument" />
+  </EntityType>
+  <EntityType Name="MPRItemDetailsAttachment">
+    <Key>
+      <PropertyRef Name="ItemDetailsAttachmentId" />
+    </Key>
+    <Property Name="ItemDetailsAttachmentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemDetailsId" Type="Int32" Nullable="false" />
+    <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="MPRItemDetails_X" Relationship="YSCMModel.FK_MPRItemDetailsAttachments_MPRItemDetails" FromRole="MPRItemDetailsAttachment" ToRole="MPRItemDetails_X" />
+  </EntityType>
+  <EntityType Name="MPRItemInfo">
+    <Key>
+      <PropertyRef Name="Itemdetailsid" />
+    </Key>
+    <Property Name="Itemdetailsid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionId" Type="Int32" />
+    <Property Name="Itemid" Type="Int32" Nullable="false" />
+    <Property Name="ItemDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Quantity" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="UnitId" Type="Byte" />
+    <Property Name="SaleOrderNo" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+    <Property Name="SOLineItemNo" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+    <Property Name="TargetSpend" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ReferenceDocNo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" />
+    <NavigationProperty Name="MPRDocuments" Relationship="YSCMModel.FK_MPRDocuments_MPRItemInfo" FromRole="MPRItemInfo" ToRole="MPRDocument" />
+    <NavigationProperty Name="MPRItemInfo1" Relationship="YSCMModel.FK_MPRItemInfo_MPRItemInfo" FromRole="MPRItemInfo" ToRole="MPRItemInfo1" />
+    <NavigationProperty Name="MPRItemInfo2" Relationship="YSCMModel.FK_MPRItemInfo_MPRItemInfo" FromRole="MPRItemInfo1" ToRole="MPRItemInfo" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRItemInfo_MPRRevisions" FromRole="MPRItemInfo" ToRole="MPRRevision" />
+    <NavigationProperty Name="UnitMaster" Relationship="YSCMModel.FK_MPRItemInfo_UnitMaster" FromRole="MPRItemInfo" ToRole="UnitMaster" />
+    <NavigationProperty Name="RFQItems" Relationship="YSCMModel.FK_RFQItems_MPRItemInfo" FromRole="MPRItemInfo" ToRole="RFQItem" />
+  </EntityType>
+  <EntityType Name="MPROfferDetail">
+    <Key>
+      <PropertyRef Name="OfferId" />
+    </Key>
+    <Property Name="OfferId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequisitionId" Type="Int32" Nullable="false" />
+    <Property Name="VendorName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="OfferMailedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="EnteredBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="EnteredOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="MPRDetail" Relationship="YSCMModel.FK_MPROfferDetails_MPRDetails" FromRole="MPROfferDetail" ToRole="MPRDetail" />
+  </EntityType>
+  <EntityType Name="MPRPAApprover">
+    <Key>
+      <PropertyRef Name="ApproverId" />
+    </Key>
+    <Property Name="ApproverId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PAId" Type="Int32" Nullable="false" />
+    <Property Name="ApproverLevel" Type="Byte" Nullable="false" />
+    <Property Name="Approver" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="ApproversRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="ApprovalStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ApprovedOn" Type="DateTime" Precision="7" />
+    <NavigationProperty Name="MPRPADetail" Relationship="YSCMModel.FK_MPRPAApprovers_MPRPADetails" FromRole="MPRPAApprover" ToRole="MPRPADetail" />
+  </EntityType>
+  <EntityType Name="MPRPADetail">
+    <Key>
+      <PropertyRef Name="PAId" />
+    </Key>
+    <Property Name="PAId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="RequestedOn" Type="DateTime" Precision="7" />
+    <Property Name="PurchaseTypeId" Type="Byte" />
+    <Property Name="PurchaseModeId" Type="Byte" />
+    <Property Name="ProjectName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ProjectCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TargetedSpendAmount" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="PurchaseCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="PackagingForwarding" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Taxes" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Freight" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Insurance" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DeliveryCondition" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ShipmentMode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PaymentTerms" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="CreditDays" Type="Int16" />
+    <Property Name="Warranty" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="BankGuarantee" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="LDPenaltyTerms" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="SpecialInstructions" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="FactorsForImports" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="SpecialRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="SuppliersReference" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="MPRItemDetails_X" Relationship="YSCMModel.FK_MPRItemDetails_MPRPADetails" FromRole="MPRPADetail" ToRole="MPRItemDetails_X" />
+    <NavigationProperty Name="MPRPAApprovers" Relationship="YSCMModel.FK_MPRPAApprovers_MPRPADetails" FromRole="MPRPADetail" ToRole="MPRPAApprover" />
+    <NavigationProperty Name="MPRPAPurchaseMode" Relationship="YSCMModel.FK_MPRPADetails_MPRPAPurchaseModes" FromRole="MPRPADetail" ToRole="MPRPAPurchaseMode" />
+    <NavigationProperty Name="MPRPAPurchaseType" Relationship="YSCMModel.FK_MPRPADetails_MPRPAPurchaseTypes" FromRole="MPRPADetail" ToRole="MPRPAPurchaseType" />
+    <NavigationProperty Name="MPRPAVendors" Relationship="YSCMModel.FK_MPRPAVendors_MPRPADetails" FromRole="MPRPADetail" ToRole="MPRPAVendor" />
+  </EntityType>
+  <EntityType Name="MPRPADocument">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemDetailsId" Type="Int32" Nullable="false" />
+    <Property Name="Filename" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="MPRItemDetails_X" Relationship="YSCMModel.FK_MPRPADocuments_MPRItemDetails" FromRole="MPRPADocument" ToRole="MPRItemDetails_X" />
+  </EntityType>
+  <EntityType Name="MPRPAPurchaseMode">
+    <Key>
+      <PropertyRef Name="PurchaseModeId" />
+    </Key>
+    <Property Name="PurchaseModeId" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PurchaseMode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="XOrder" Type="Byte" Nullable="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRPADetails" Relationship="YSCMModel.FK_MPRPADetails_MPRPAPurchaseModes" FromRole="MPRPAPurchaseMode" ToRole="MPRPADetail" />
+  </EntityType>
+  <EntityType Name="MPRPAPurchaseType">
+    <Key>
+      <PropertyRef Name="PurchaseTypeId" />
+    </Key>
+    <Property Name="PurchaseTypeId" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PurchaseType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="XOrder" Type="Byte" Nullable="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRPADetails" Relationship="YSCMModel.FK_MPRPADetails_MPRPAPurchaseTypes" FromRole="MPRPAPurchaseType" ToRole="MPRPADetail" />
+  </EntityType>
+  <EntityType Name="MPRPAVendor">
+    <Key>
+      <PropertyRef Name="VendorId" />
+    </Key>
+    <Property Name="VendorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PAId" Type="Int32" Nullable="false" />
+    <Property Name="Vendor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="BoolSelectedVendor" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRPADetail" Relationship="YSCMModel.FK_MPRPAVendors_MPRPADetails" FromRole="MPRPAVendor" ToRole="MPRPADetail" />
+  </EntityType>
+  <EntityType Name="MPRPreferredVendorType">
+    <Key>
+      <PropertyRef Name="PreferredVendorTypeId" />
+    </Key>
+    <Property Name="PreferredVendorTypeId" Type="Byte" Nullable="false" />
+    <Property Name="PreferredVendorType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <Property Name="XOrder" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="MPRDetails" Relationship="YSCMModel.FK_MPRDetails_MPRPreferredVendorTypes" FromRole="MPRPreferredVendorType" ToRole="MPRDetail" />
+  </EntityType>
+  <EntityType Name="MPRProcurementSource">
+    <Key>
+      <PropertyRef Name="ProcurementSourceId" />
+    </Key>
+    <Property Name="ProcurementSourceId" Type="Byte" Nullable="false" />
+    <Property Name="ProcurementSource" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRProcurementSources" FromRole="MPRProcurementSource" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRProjectDutyApplicable">
+    <Key>
+      <PropertyRef Name="ProjectDutyApplicableId" />
+    </Key>
+    <Property Name="ProjectDutyApplicableId" Type="Byte" Nullable="false" />
+    <Property Name="ProjectDutyApplicable" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRProjectDutyApplicable" FromRole="MPRProjectDutyApplicable" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRPurchaseType">
+    <Key>
+      <PropertyRef Name="PurchaseTypeId" />
+    </Key>
+    <Property Name="PurchaseTypeId" Type="Byte" Nullable="false" />
+    <Property Name="PurchaseType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <Property Name="XOrder" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="MPRDetails" Relationship="YSCMModel.FK_MPRDetails_MPRPurchaseTypes" FromRole="MPRPurchaseType" ToRole="MPRDetail" />
+  </EntityType>
+  <EntityType Name="MPRReminderTracking">
+    <Key>
+      <PropertyRef Name="ReminderId" />
+    </Key>
+    <Property Name="ReminderId" Type="Int32" Nullable="false" />
+    <Property Name="MPRCCId" Type="Int32" Nullable="false" />
+    <Property Name="ReminderTo" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="MailSentOn" Type="DateTime" Precision="0" />
+    <Property Name="AcknowledgedOn" Type="DateTime" Precision="0" />
+    <Property Name="AcknowledgementRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRCommunication" Relationship="YSCMModel.FK_MPRReminderTracking_MPRCommunications" FromRole="MPRReminderTracking" ToRole="MPRCommunication" />
+    <NavigationProperty Name="UserDetail" Relationship="YSCMModel.FK_MPRReminderTracking_UserDetails" FromRole="MPRReminderTracking" ToRole="UserDetail" />
+  </EntityType>
+  <EntityType Name="MPRRevision">
+    <Key>
+      <PropertyRef Name="RevisionId" />
+    </Key>
+    <Property Name="RevisionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequisitionId" Type="Int32" Nullable="false" />
+    <Property Name="DepartmentId" Type="Byte" />
+    <Property Name="ProjectManager" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="JobCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="JobName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="GEPSApprovalId" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+    <Property Name="SaleOrderNo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="LineItemNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ClientName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="PlantLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="BuyerGroupId" Type="Byte" />
+    <Property Name="TargetedSpendAmount" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="TargetedSpendRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="BoolPreferredVendor" Type="Boolean" />
+    <Property Name="JustificationForSinglePreferredVendor" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeliveryRequiredBy" Type="DateTime" Precision="0" />
+    <Property Name="IssuePurposeId" Type="Byte" />
+    <Property Name="DispatchLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ScopeId" Type="Byte" />
+    <Property Name="TrainingRequired" Type="Boolean" />
+    <Property Name="TrainingManWeeks" Type="Byte" />
+    <Property Name="TrainingRemarks" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="BoolDocumentationApplicable" Type="Boolean" />
+    <Property Name="GuaranteePeriod" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="NoOfSetsOfQAP" Type="Byte" />
+    <Property Name="InspectionRequired" Type="Boolean" />
+    <Property Name="InspectionRequiredNew" Type="Byte" />
+    <Property Name="InspectionComments" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="NoOfSetsOfTestCertificates" Type="Byte" />
+    <Property Name="ProcurementSourceId" Type="Byte" />
+    <Property Name="CustomsDutyId" Type="Byte" />
+    <Property Name="ProjectDutyApplicableId" Type="Byte" />
+    <Property Name="ExciseDutyReimbursableForBOs" Type="Boolean" />
+    <Property Name="SalesTaxReimbursableForBOs" Type="Boolean" />
+    <Property Name="VATReimbursableForBOs" Type="Boolean" />
+    <Property Name="ServiceTaxReimbursableForBOs" Type="Boolean" />
+    <Property Name="ExciseDutyReimbursableForBOsNew" Type="Byte" />
+    <Property Name="SalesTaxReimbursableForBOsNew" Type="Byte" />
+    <Property Name="VATReimbursableForBOsNew" Type="Byte" />
+    <Property Name="ServiceTaxReimbursableForBOsNew" Type="Byte" />
+    <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="PreparedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="PreparedOn" Type="DateTime" Precision="0" />
+    <Property Name="CheckedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="CheckedOn" Type="DateTime" Precision="0" />
+    <Property Name="CheckStatus" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ApprovedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="ApprovedOn" Type="DateTime" Precision="0" />
+    <Property Name="ApprovalStatus" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="SecondApprover" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="SecondApprovedOn" Type="DateTime" Precision="0" />
+    <Property Name="SecondApproversStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ThirdApprover" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="ThirdApproverStatus" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="ThirdApproverStatusChangedOn" Type="DateTime" Precision="7" />
+    <Property Name="PurchaseDetailsReadBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="PurchaseDetailsReadOn" Type="DateTime" Precision="0" />
+    <Property Name="PurchasePersonnel" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="PODate" Type="DateTime" Precision="0" />
+    <Property Name="ExpectedDespatchDate" Type="DateTime" Precision="0" />
+    <Property Name="PurchasePersonnelsComments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="TechDocsReceivedDate" Type="DateTime" Precision="0" />
+    <Property Name="CommercialOfferReceivedDate" Type="DateTime" Precision="0" />
+    <Property Name="OfferDetailsMailedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="OfferDetailsMailedOn" Type="DateTime" Precision="0" />
+    <Property Name="OfferDetailsViewedByCheckerOn" Type="DateTime" Precision="0" />
+    <Property Name="OfferDetailsViewedByApproverOn" Type="DateTime" Precision="0" />
+    <Property Name="MaterialReceiptDate" Type="DateTime" Precision="0" />
+    <Property Name="Remarks1" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="EstimatedCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="PreviousPOPrice" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="PurchaseTypeId" Type="Byte" />
+    <Property Name="PreferredVendorTypeId" Type="Byte" />
+    <Property Name="StatusId" Type="Byte" />
+    <Property Name="PurchaseCost" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="RevisionNo" Type="Byte" />
+    <Property Name="BoolValidRevision" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRBuyerGroup" Relationship="YSCMModel.FK_MPRRevisions_MPRBuyerGroups" FromRole="MPRRevision" ToRole="MPRBuyerGroup" />
+    <NavigationProperty Name="MPRCommunications" Relationship="YSCMModel.FK_MPRCommunications_MPRRevisions" FromRole="MPRRevision" ToRole="MPRCommunication" />
+    <NavigationProperty Name="MPRCustomsDuty" Relationship="YSCMModel.FK_MPRRevisions_MPRCustomsDuty" FromRole="MPRRevision" ToRole="MPRCustomsDuty" />
+    <NavigationProperty Name="MPRDepartment" Relationship="YSCMModel.FK_MPRRevisions_MPRDepartments" FromRole="MPRRevision" ToRole="MPRDepartment" />
+    <NavigationProperty Name="MPRDetail" Relationship="YSCMModel.FK_MPRRevisions_MPRDetails" FromRole="MPRRevision" ToRole="MPRDetail" />
+    <NavigationProperty Name="MPRDocumentations" Relationship="YSCMModel.FK_MPRDocumentation_MPRRevisions" FromRole="MPRRevision" ToRole="MPRDocumentation" />
+    <NavigationProperty Name="MPRDocuments" Relationship="YSCMModel.FK_MPRDocuments_MPRRevisions" FromRole="MPRRevision" ToRole="MPRDocument" />
+    <NavigationProperty Name="MPRIncharges" Relationship="YSCMModel.FK_MPRIncharges_MPRRevisions" FromRole="MPRRevision" ToRole="MPRIncharge" />
+    <NavigationProperty Name="MPRIssuePurpos" Relationship="YSCMModel.FK_MPRRevisions_MPRIssuePurposes" FromRole="MPRRevision" ToRole="MPRIssuePurpos" />
+    <NavigationProperty Name="MPRItemDetails_X" Relationship="YSCMModel.FK_MPRItemDetails_MPRRevisions" FromRole="MPRRevision" ToRole="MPRItemDetails_X" />
+    <NavigationProperty Name="MPRItemInfoes" Relationship="YSCMModel.FK_MPRItemInfo_MPRRevisions" FromRole="MPRRevision" ToRole="MPRItemInfo" />
+    <NavigationProperty Name="MPRProcurementSource" Relationship="YSCMModel.FK_MPRRevisions_MPRProcurementSources" FromRole="MPRRevision" ToRole="MPRProcurementSource" />
+    <NavigationProperty Name="MPRProjectDutyApplicable" Relationship="YSCMModel.FK_MPRRevisions_MPRProjectDutyApplicable" FromRole="MPRRevision" ToRole="MPRProjectDutyApplicable" />
+    <NavigationProperty Name="MPRScope" Relationship="YSCMModel.FK_MPRRevisions_MPRScopes" FromRole="MPRRevision" ToRole="MPRScope" />
+    <NavigationProperty Name="StandardListYNN" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN" FromRole="MPRRevision" ToRole="StandardListYNN" />
+    <NavigationProperty Name="StandardListYNN1" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN10" FromRole="MPRRevision" ToRole="StandardListYNN" />
+    <NavigationProperty Name="StandardListYNN2" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN6" FromRole="MPRRevision" ToRole="StandardListYNN" />
+    <NavigationProperty Name="StandardListYNN3" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN7" FromRole="MPRRevision" ToRole="StandardListYNN" />
+    <NavigationProperty Name="StandardListYNN4" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN8" FromRole="MPRRevision" ToRole="StandardListYNN" />
+    <NavigationProperty Name="StandardListYNN5" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN9" FromRole="MPRRevision" ToRole="StandardListYNN" />
+    <NavigationProperty Name="MPRStatusTracks" Relationship="YSCMModel.FK_MPRStatusTrack_MPRRevisions" FromRole="MPRRevision" ToRole="MPRStatusTrack" />
+    <NavigationProperty Name="MPRTargetedSpendSupportingDocs" Relationship="YSCMModel.FK_MPRTargetedSpendSupportingDocs_MPRRevisions" FromRole="MPRRevision" ToRole="MPRTargetedSpendSupportingDoc" />
+    <NavigationProperty Name="MPRVendorDetails" Relationship="YSCMModel.FK_MPRVendorDetails_MPRRevisions" FromRole="MPRRevision" ToRole="MPRVendorDetail" />
+  </EntityType>
+  <EntityType Name="MPRScope">
+    <Key>
+      <PropertyRef Name="ScopeId" />
+    </Key>
+    <Property Name="ScopeId" Type="Byte" Nullable="false" />
+    <Property Name="Scope" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_MPRScopes" FromRole="MPRScope" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRStatu">
+    <Key>
+      <PropertyRef Name="StatusId" />
+    </Key>
+    <Property Name="StatusId" Type="Byte" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="BoolInUse" Type="Boolean" />
+    <NavigationProperty Name="MPRDetails" Relationship="YSCMModel.FK_MPRDetails_MPRStatus" FromRole="MPRStatu" ToRole="MPRDetail" />
+  </EntityType>
+  <EntityType Name="MPRStatusTrack">
+    <Key>
+      <PropertyRef Name="StatusTrackId" />
+    </Key>
+    <Property Name="StatusTrackId" Type="Int32" Nullable="false" />
+    <Property Name="RequisitionId" Type="Int32" Nullable="false" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="StatusId" Type="Int32" Nullable="false" />
+    <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRDetail" Relationship="YSCMModel.FK_MPRStatusTrack_MPRDetails" FromRole="MPRStatusTrack" ToRole="MPRDetail" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRStatusTrack_MPRRevisions" FromRole="MPRStatusTrack" ToRole="MPRRevision" />
+    <NavigationProperty Name="UserDetail" Relationship="YSCMModel.FK_MPRStatusTrack_UserDetails" FromRole="MPRStatusTrack" ToRole="UserDetail" />
+  </EntityType>
+  <EntityType Name="MPRTargetedSpendSupportingDoc">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="DocumentFilename" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRTargetedSpendSupportingDocs_MPRRevisions" FromRole="MPRTargetedSpendSupportingDoc" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="MPRVendorDetail">
+    <Key>
+      <PropertyRef Name="VendorDetailsId" />
+    </Key>
+    <Property Name="VendorDetailsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevisionId" Type="Int32" Nullable="false" />
+    <Property Name="Vendorid" Type="Int32" Nullable="false" />
+    <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="RemovedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="RemovedDate" Type="DateTime" Precision="0" />
+    <Property Name="RemoveFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRRevision" Relationship="YSCMModel.FK_MPRVendorDetails_MPRRevisions" FromRole="MPRVendorDetail" ToRole="MPRRevision" />
+    <NavigationProperty Name="VendorMaster" Relationship="YSCMModel.FK_MPRVendorDetails_VendorMaster" FromRole="MPRVendorDetail" ToRole="VendorMaster" />
+  </EntityType>
+  <EntityType Name="RFQItem">
+    <Key>
+      <PropertyRef Name="RFQItemsId" />
+    </Key>
+    <Property Name="RFQItemsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RFQRevisionId" Type="Int32" Nullable="false" />
+    <Property Name="MPRItemDetailsid" Type="Int32" Nullable="false" />
+    <Property Name="QuotationQty" Type="Double" Nullable="false" />
+    <Property Name="VendorModelNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="HSNCode" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+    <Property Name="RequestRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="MPRItemInfo" Relationship="YSCMModel.FK_RFQItems_MPRItemInfo" FromRole="RFQItem" ToRole="MPRItemInfo" />
+    <NavigationProperty Name="RFQRevision" Relationship="YSCMModel.FK_RFQItems_RFQRevisions" FromRole="RFQItem" ToRole="RFQRevision" />
+    <NavigationProperty Name="RFQItemsInfoes" Relationship="YSCMModel.FK_RFQItemsInfo_RFQItems" FromRole="RFQItem" ToRole="RFQItemsInfo" />
+  </EntityType>
+  <EntityType Name="RFQItemsInfo">
+    <Key>
+      <PropertyRef Name="RFQSplitItemId" />
+    </Key>
+    <Property Name="RFQSplitItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RFQItemsId" Type="Int32" Nullable="false" />
+    <Property Name="Qty" Type="Double" Nullable="false" />
+    <Property Name="UOM" Type="Int32" Nullable="false" />
+    <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="DiscountPercentage" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="Discount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="CurrencyId" Type="Int32" Nullable="false" />
+    <Property Name="CurrencyValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeliveryDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="RFQItem" Relationship="YSCMModel.FK_RFQItemsInfo_RFQItems" FromRole="RFQItemsInfo" ToRole="RFQItem" />
+  </EntityType>
+  <EntityType Name="RFQMaster">
+    <Key>
+      <PropertyRef Name="RfqMasterId" />
+    </Key>
+    <Property Name="RfqMasterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RFQNo" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="RFQUniqueNo" Type="Int32" />
+    <Property Name="VendorId" Type="Int32" Nullable="false" />
+    <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="VendorMaster" Relationship="YSCMModel.FK_RFQMaster_VendorMaster" FromRole="RFQMaster" ToRole="VendorMaster" />
+    <NavigationProperty Name="RFQRevisions" Relationship="YSCMModel.FK_RFQRevisions_RFQMaster" FromRole="RFQMaster" ToRole="RFQRevision" />
+  </EntityType>
+  <EntityType Name="RFQRevision">
+    <Key>
+      <PropertyRef Name="rfqRevisionId" />
+    </Key>
+    <Property Name="rfqRevisionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="rfqMasterId" Type="Int32" Nullable="false" />
+    <Property Name="RevisionNo" Type="Int32" Nullable="false" />
+    <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="RFQValidDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="PackingForwarding" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="ExciseDuty" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="SalesTax" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Freight" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Insurance" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="CustomsDuty" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="ShipmentModeid" Type="Int32" />
+    <Property Name="PaymentTermDays" Type="Int32" />
+    <Property Name="PaymentTermRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="BankGuarantee" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeliveryMinWeeks" Type="Int32" />
+    <Property Name="DeliveryMaxWeeks" Type="Int32" />
+    <Property Name="DeleteFlag" Type="Boolean" />
+    <NavigationProperty Name="RFQItems" Relationship="YSCMModel.FK_RFQItems_RFQRevisions" FromRole="RFQRevision" ToRole="RFQItem" />
+    <NavigationProperty Name="RFQMaster" Relationship="YSCMModel.FK_RFQRevisions_RFQMaster" FromRole="RFQRevision" ToRole="RFQMaster" />
+  </EntityType>
+  <EntityType Name="StandardListYNN">
+    <Key>
+      <PropertyRef Name="ListItemId" />
+    </Key>
+    <Property Name="ListItemId" Type="Byte" Nullable="false" />
+    <Property Name="ListItem" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="XOrder" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="MPRRevisions" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN" FromRole="StandardListYNN" ToRole="MPRRevision" />
+    <NavigationProperty Name="MPRRevisions1" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN10" FromRole="StandardListYNN" ToRole="MPRRevision" />
+    <NavigationProperty Name="MPRRevisions2" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN6" FromRole="StandardListYNN" ToRole="MPRRevision" />
+    <NavigationProperty Name="MPRRevisions3" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN7" FromRole="StandardListYNN" ToRole="MPRRevision" />
+    <NavigationProperty Name="MPRRevisions4" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN8" FromRole="StandardListYNN" ToRole="MPRRevision" />
+    <NavigationProperty Name="MPRRevisions5" Relationship="YSCMModel.FK_MPRRevisions_StandardListYNN9" FromRole="StandardListYNN" ToRole="MPRRevision" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Test_AttributeMaster">
+    <Key>
+      <PropertyRef Name="AttributeId" />
+    </Key>
+    <Property Name="AttributeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AttributeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" />
+    <NavigationProperty Name="ItemAttributesMasters" Relationship="YSCMModel.FK_ItemAttributesMaster_Test_AttributeMaster" FromRole="Test_AttributeMaster" ToRole="ItemAttributesMaster" />
+    <NavigationProperty Name="Test_CategoryAttributes" Relationship="YSCMModel.FK_Test_CategoryAttributes_Test_AttributeMaster" FromRole="Test_AttributeMaster" ToRole="Test_CategoryAttributes" />
+    <NavigationProperty Name="Test_ItemAttributesMaster" Relationship="YSCMModel.FK_Test_ItemAttributesMaster_Test_AttributeMaster" FromRole="Test_AttributeMaster" ToRole="Test_ItemAttributesMaster" />
+  </EntityType>
+  <EntityType Name="Test_CategoryAttributes">
+    <Key>
+      <PropertyRef Name="CatAttributeid" />
+    </Key>
+    <Property Name="CatAttributeid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryId" Type="Int32" />
+    <Property Name="AttributeId" Type="Int32" />
+    <Property Name="DeleteFlag" Type="Boolean" />
+    <NavigationProperty Name="Test_AttributeMaster" Relationship="YSCMModel.FK_Test_CategoryAttributes_Test_AttributeMaster" FromRole="Test_CategoryAttributes" ToRole="Test_AttributeMaster" />
+  </EntityType>
+  <EntityType Name="Test_CategoryMaster">
+    <Key>
+      <PropertyRef Name="Categoryid" />
+    </Key>
+    <Property Name="Categoryid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ParentId" Type="Int32" />
+    <Property Name="BuyergroupId" Type="Byte" />
+    <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Deleteflag" Type="Boolean" />
+    <NavigationProperty Name="MPRBuyerGroup" Relationship="YSCMModel.FK_Test_CategoryMaster_MPRBuyerGroups" FromRole="Test_CategoryMaster" ToRole="MPRBuyerGroup" />
+    <NavigationProperty Name="Test_CategoryMaster1" Relationship="YSCMModel.FK_Test_CategoryMaster_Test_CategoryMaster" FromRole="Test_CategoryMaster" ToRole="Test_CategoryMaster1" />
+    <NavigationProperty Name="Test_CategoryMaster2" Relationship="YSCMModel.FK_Test_CategoryMaster_Test_CategoryMaster" FromRole="Test_CategoryMaster1" ToRole="Test_CategoryMaster" />
+    <NavigationProperty Name="Test_ItemMaster" Relationship="YSCMModel.FK_Test_ItemMaster_Test_CategoryMaster" FromRole="Test_CategoryMaster" ToRole="Test_ItemMaster" />
+  </EntityType>
+  <EntityType Name="Test_ItemAttributesMaster">
+    <Key>
+      <PropertyRef Name="ItemAttributeid" />
+    </Key>
+    <Property Name="ItemAttributeid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="itemid" Type="Int32" />
+    <Property Name="Attributeid" Type="Int32" />
+    <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Test_AttributeMaster" Relationship="YSCMModel.FK_Test_ItemAttributesMaster_Test_AttributeMaster" FromRole="Test_ItemAttributesMaster" ToRole="Test_AttributeMaster" />
+    <NavigationProperty Name="Test_ItemMaster" Relationship="YSCMModel.FK_Test_ItemAttributesMaster_Test_ItemMaster" FromRole="Test_ItemAttributesMaster" ToRole="Test_ItemMaster" />
+  </EntityType>
+  <EntityType Name="Test_ItemMaster">
+    <Key>
+      <PropertyRef Name="itemId" />
+    </Key>
+    <Property Name="itemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryId" Type="Int32" />
+    <Property Name="ItemName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="HSNCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="ItemAttributesMasters" Relationship="YSCMModel.FK_ItemAttributesMaster_Test_ItemMaster" FromRole="Test_ItemMaster" ToRole="ItemAttributesMaster" />
+    <NavigationProperty Name="Test_CategoryMaster" Relationship="YSCMModel.FK_Test_ItemMaster_Test_CategoryMaster" FromRole="Test_ItemMaster" ToRole="Test_CategoryMaster" />
+    <NavigationProperty Name="Test_ItemAttributesMaster" Relationship="YSCMModel.FK_Test_ItemAttributesMaster_Test_ItemMaster" FromRole="Test_ItemMaster" ToRole="Test_ItemAttributesMaster" />
+  </EntityType>
+  <EntityType Name="testuserdetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="UnitMaster">
+    <Key>
+      <PropertyRef Name="UnitID" />
+    </Key>
+    <Property Name="UnitID" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UnitName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" />
+    <NavigationProperty Name="MPRItemInfoes" Relationship="YSCMModel.FK_MPRItemInfo_UnitMaster" FromRole="UnitMaster" ToRole="MPRItemInfo" />
+  </EntityType>
+  <EntityType Name="UserDetail">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="AccessGroupMasters" Relationship="YSCMModel.FK_AccessGroupMaster_UserDetails" FromRole="UserDetail" ToRole="AccessGroupMaster" />
+    <NavigationProperty Name="AccessGroupMasters1" Relationship="YSCMModel.FK_AccessGroupMaster_UserDetails1" FromRole="UserDetail" ToRole="AccessGroupMaster" />
+    <NavigationProperty Name="AccessNames" Relationship="YSCMModel.FK_AccessNames_UserDetails" FromRole="UserDetail" ToRole="AccessName" />
+    <NavigationProperty Name="AccessNames1" Relationship="YSCMModel.FK_AccessNames_UserDetails1" FromRole="UserDetail" ToRole="AccessName" />
+    <NavigationProperty Name="AuthorizationItems" Relationship="YSCMModel.FK_AuthorizationItems_UserDetails" FromRole="UserDetail" ToRole="AuthorizationItem" />
+    <NavigationProperty Name="AuthorizationItems1" Relationship="YSCMModel.FK_AuthorizationItems_UserDetails1" FromRole="UserDetail" ToRole="AuthorizationItem" />
+    <NavigationProperty Name="AutorizationGroups" Relationship="YSCMModel.FK_AutorizationGroup_UserDetails" FromRole="UserDetail" ToRole="AutorizationGroup" />
+    <NavigationProperty Name="AutorizationGroups1" Relationship="YSCMModel.FK_AutorizationGroup_UserDetails1" FromRole="UserDetail" ToRole="AutorizationGroup" />
+    <NavigationProperty Name="MPRCommunications" Relationship="YSCMModel.FK_MPRCommunications_UserDetails" FromRole="UserDetail" ToRole="MPRCommunication" />
+    <NavigationProperty Name="MPRReminderTrackings" Relationship="YSCMModel.FK_MPRReminderTracking_UserDetails" FromRole="UserDetail" ToRole="MPRReminderTracking" />
+    <NavigationProperty Name="MPRStatusTracks" Relationship="YSCMModel.FK_MPRStatusTrack_UserDetails" FromRole="UserDetail" ToRole="MPRStatusTrack" />
+  </EntityType>
+  <EntityType Name="VendorMaster">
+    <Key>
+      <PropertyRef Name="Vendorid" />
+    </Key>
+    <Property Name="Vendorid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VendorCode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="VendorName" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="Emailid" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ContactNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="Deleteflag" Type="Boolean" />
+    <NavigationProperty Name="MPRVendorDetails" Relationship="YSCMModel.FK_MPRVendorDetails_VendorMaster" FromRole="VendorMaster" ToRole="MPRVendorDetail" />
+    <NavigationProperty Name="RFQMasters" Relationship="YSCMModel.FK_RFQMaster_VendorMaster" FromRole="VendorMaster" ToRole="RFQMaster" />
+  </EntityType>
+  <EntityType Name="CustomerMasterYG">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="GroupId" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerMasterTypeId" Type="Byte" />
+    <Property Name="YGSSAPCustomerCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerName1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerName2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerName3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerCountry" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="PostalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="StateCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+    <Property Name="City" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Address1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Address2" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Address3" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="IndustryCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="PAN" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TAN" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="GSTNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CINNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="DepartmentId" />
+      <PropertyRef Name="DepartmentName" />
+      <PropertyRef Name="BUCode" />
+      <PropertyRef Name="BoolInUse" />
+    </Key>
+    <Property Name="DepartmentId" Type="Byte" Nullable="false" />
+    <Property Name="DepartmentName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DepartmentHead" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="DepartmentAdministrator" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="DepartmentSubAdministrator" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="BUCode" Type="Int16" Nullable="false" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeNo" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="Nickname" />
+      <PropertyRef Name="DomainId" />
+      <PropertyRef Name="YGSCostCenter" />
+      <PropertyRef Name="CostCenter" />
+      <PropertyRef Name="Sex" />
+      <PropertyRef Name="MaritalStatus" />
+      <PropertyRef Name="BoolContract" />
+      <PropertyRef Name="DOJ" />
+      <PropertyRef Name="BoolHOD" />
+      <PropertyRef Name="BoolFurnishedCertificates" />
+      <PropertyRef Name="BoolExecutive" />
+      <PropertyRef Name="BoolESI" />
+      <PropertyRef Name="MedAllBal" />
+      <PropertyRef Name="BoolHasProximityCard" />
+      <PropertyRef Name="PLStatus" />
+      <PropertyRef Name="RestrictedHolidaysAvailed" />
+      <PropertyRef Name="PaternityLeavesAvailed" />
+      <PropertyRef Name="OrganizationId" />
+      <PropertyRef Name="BoolIntranetEnabled" />
+      <PropertyRef Name="BoolExpatriate" />
+      <PropertyRef Name="PWD" />
+    </Key>
+    <Property Name="EmployeeNo" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Nickname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ShortName" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="GlobalEmpNo" Type="String" MaxLength="8" FixedLength="true" Unicode="false" />
+    <Property Name="YGSAccountCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="DomainId" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
+    <Property Name="YGSCostCenter" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
+    <Property Name="CostCenter" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
+    <Property Name="OrgDepartmentId" Type="Int16" />
+    <Property Name="OrgOfficeId" Type="Byte" />
+    <Property Name="Sex" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="MaritalStatus" Type="Boolean" Nullable="false" />
+    <Property Name="DOB" Type="DateTime" Precision="0" />
+    <Property Name="BoolContract" Type="Boolean" Nullable="false" />
+    <Property Name="DOJ" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="EffectiveDOJ" Type="DateTime" Precision="0" />
+    <Property Name="ConfirmationDueDate" Type="DateTime" Precision="0" />
+    <Property Name="ConfirmationDate" Type="DateTime" Precision="0" />
+    <Property Name="DOL" Type="DateTime" Precision="0" />
+    <Property Name="DepartmentId" Type="Byte" />
+    <Property Name="GroupId" Type="Int16" />
+    <Property Name="DeptCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+    <Property Name="Grade" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="Designation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="FunctionalRoleId" Type="Int16" />
+    <Property Name="EMail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SerialNo" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+    <Property Name="BloodGroup" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="HODEmpNo" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="BoolHOD" Type="Boolean" Nullable="false" />
+    <Property Name="BlockId" Type="Byte" />
+    <Property Name="FloorId" Type="Int16" />
+    <Property Name="Qualification" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="QualificationString" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="BoolFurnishedCertificates" Type="Boolean" Nullable="false" />
+    <Property Name="PrevEmployment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="BoolExecutive" Type="Boolean" Nullable="false" />
+    <Property Name="MobileNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="Basic" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="HRA" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="MedicalAllowance" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="SpecialAllowance" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="TransportAllowance" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="TraineeAllowance" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="PersonalPay" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ProfessionalAllowance" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="PFNo" Type="Int32" />
+    <Property Name="FPFNo" Type="Int32" />
+    <Property Name="AccountsDetails" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="BoolESI" Type="Boolean" Nullable="false" />
+    <Property Name="ICICIAccNo" Type="String" MaxLength="12" FixedLength="true" Unicode="false" />
+    <Property Name="MedAllBal" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="PickupPointId" Type="Int16" />
+    <Property Name="HomePhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PresentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="PermanentAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="EmergencyContactPerson" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmergencyContactNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BoolHasProximityCard" Type="Boolean" Nullable="false" />
+    <Property Name="PLStatus" Type="Single" Nullable="false" />
+    <Property Name="OldPLStatus" Type="Single" />
+    <Property Name="LeavesDeductedFromFlexiDaily" Type="Single" />
+    <Property Name="LeavesDeductedFromFlexiWeekly" Type="Single" />
+    <Property Name="RestrictedHolidaysAvailed" Type="Byte" Nullable="false" />
+    <Property Name="PaternityLeavesAvailed" Type="Byte" Nullable="false" />
+    <Property Name="NameAsInPassport" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="PassportNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PassportIssuedPlace" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PassportIssuedDate" Type="DateTime" Precision="0" />
+    <Property Name="PassportExpiryDate" Type="DateTime" Precision="0" />
+    <Property Name="AddressAsInPassport" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="BirthPlace" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PanNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="AadhaarNo" Type="String" MaxLength="12" FixedLength="true" Unicode="false" />
+    <Property Name="BoolKannadiga" Type="Boolean" />
+    <Property Name="CommunityId" Type="Byte" />
+    <Property Name="FathersName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SpouseName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="OrganizationId" Type="Byte" Nullable="false" />
+    <Property Name="BoolIntranetEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="UAN" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+    <Property Name="ExpenseCategoryId" Type="Byte" />
+    <Property Name="BoolExpatriate" Type="Boolean" Nullable="false" />
+    <Property Name="PWD" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Grade">
+    <Key>
+      <PropertyRef Name="Grade1" />
+      <PropertyRef Name="GroupId" />
+      <PropertyRef Name="Designation" />
+      <PropertyRef Name="Hierarchy" />
+      <PropertyRef Name="SumInsured" />
+      <PropertyRef Name="SumInsuredDependentParents" />
+      <PropertyRef Name="PersonalAccidentSumInsured" />
+      <PropertyRef Name="JobStatus" />
+      <PropertyRef Name="TSSkillFactor" />
+      <PropertyRef Name="TEVComfortLevel" />
+      <PropertyRef Name="TEVOutOfPocketAllowance" />
+      <PropertyRef Name="TEVOffshoreAllowance" />
+      <PropertyRef Name="TEVDayTripAllowance" />
+      <PropertyRef Name="BoolInUse" />
+    </Key>
+    <Property Name="Grade1" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="GroupId" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="Designation" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Hierarchy" Type="Byte" Nullable="false" />
+    <Property Name="SumInsured" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="SumInsuredDependentParents" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="PersonalAccidentSumInsured" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="JobStatus" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="TSSkillFactor" Type="Single" Nullable="false" />
+    <Property Name="TEVComfortLevel" Type="Byte" Nullable="false" />
+    <Property Name="TEVOutOfPocketAllowance" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="TEVOffshoreAllowance" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="TEVDayTripAllowance" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="BoolInUse" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRTechClearance">
+    <Key>
+      <PropertyRef Name="RequisitionId" />
+      <PropertyRef Name="BoolCleared" />
+      <PropertyRef Name="UpdatedOn" />
+    </Key>
+    <Property Name="RequisitionId" Type="Int32" Nullable="false" />
+    <Property Name="BoolCleared" Type="Boolean" Nullable="false" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="0" />
+  </EntityType>
+  <Association Name="FK_AccessGroupMaster_UserDetails">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="1" />
+    <End Type="YSCMModel.AccessGroupMaster" Role="AccessGroupMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessGroupMaster">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessGroupMaster_UserDetails1">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="0..1" />
+    <End Type="YSCMModel.AccessGroupMaster" Role="AccessGroupMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessGroupMaster">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessNames_AccessGroupMaster">
+    <End Type="YSCMModel.AccessGroupMaster" Role="AccessGroupMaster" Multiplicity="1" />
+    <End Type="YSCMModel.AccessName" Role="AccessName" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccessGroupMaster">
+        <PropertyRef Name="AccessGroupId" />
+      </Principal>
+      <Dependent Role="AccessName">
+        <PropertyRef Name="AccessGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessNames_UserDetails">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="1" />
+    <End Type="YSCMModel.AccessName" Role="AccessName" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessName">
+        <PropertyRef Name="updatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessNames_UserDetails1">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="0..1" />
+    <End Type="YSCMModel.AccessName" Role="AccessName" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessName">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_AccessNames">
+    <End Type="YSCMModel.AccessName" Role="AccessName" Multiplicity="1" />
+    <End Type="YSCMModel.AuthorizationItem" Role="AuthorizationItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccessName">
+        <PropertyRef Name="AccessNameID" />
+      </Principal>
+      <Dependent Role="AuthorizationItem">
+        <PropertyRef Name="AccessNamesId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_AutorizationGroup">
+    <End Type="YSCMModel.AutorizationGroup" Role="AutorizationGroup" Multiplicity="1" />
+    <End Type="YSCMModel.AuthorizationItem" Role="AuthorizationItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AutorizationGroup">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="AuthorizationItem">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_UserDetails">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="1" />
+    <End Type="YSCMModel.AuthorizationItem" Role="AuthorizationItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AuthorizationItem">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_UserDetails1">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="0..1" />
+    <End Type="YSCMModel.AuthorizationItem" Role="AuthorizationItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AuthorizationItem">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AutorizationGroup_UserDetails">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="1" />
+    <End Type="YSCMModel.AutorizationGroup" Role="AutorizationGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AutorizationGroup">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AutorizationGroup_UserDetails1">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="0..1" />
+    <End Type="YSCMModel.AutorizationGroup" Role="AutorizationGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AutorizationGroup">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemAttributesMaster_Test_AttributeMaster">
+    <End Type="YSCMModel.Test_AttributeMaster" Role="Test_AttributeMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.ItemAttributesMaster" Role="ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_AttributeMaster">
+        <PropertyRef Name="AttributeId" />
+      </Principal>
+      <Dependent Role="ItemAttributesMaster">
+        <PropertyRef Name="Attributeid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemAttributesMaster_Test_ItemMaster">
+    <End Type="YSCMModel.Test_ItemMaster" Role="Test_ItemMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.ItemAttributesMaster" Role="ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_ItemMaster">
+        <PropertyRef Name="itemId" />
+      </Principal>
+      <Dependent Role="ItemAttributesMaster">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRBuyerGroupMembers_MPRBuyerGroups">
+    <End Type="YSCMModel.MPRBuyerGroup" Role="MPRBuyerGroup" Multiplicity="1" />
+    <End Type="YSCMModel.MPRBuyerGroupMember" Role="MPRBuyerGroupMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRBuyerGroup">
+        <PropertyRef Name="BuyerGroupId" />
+      </Principal>
+      <Dependent Role="MPRBuyerGroupMember">
+        <PropertyRef Name="BuyerGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRBuyerGroups">
+    <End Type="YSCMModel.MPRBuyerGroup" Role="MPRBuyerGroup" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRBuyerGroup">
+        <PropertyRef Name="BuyerGroupId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="BuyerGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_CategoryMaster_MPRBuyerGroups">
+    <End Type="YSCMModel.MPRBuyerGroup" Role="MPRBuyerGroup" Multiplicity="0..1" />
+    <End Type="YSCMModel.Test_CategoryMaster" Role="Test_CategoryMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRBuyerGroup">
+        <PropertyRef Name="BuyerGroupId" />
+      </Principal>
+      <Dependent Role="Test_CategoryMaster">
+        <PropertyRef Name="BuyergroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRCommunications_MPRCommunications">
+    <End Type="YSCMModel.MPRCommunication" Role="MPRCommunication" Multiplicity="1" />
+    <End Type="YSCMModel.MPRCommunication" Role="MPRCommunication1" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="MPRCommunication">
+        <PropertyRef Name="MPRCCId" />
+      </Principal>
+      <Dependent Role="MPRCommunication1">
+        <PropertyRef Name="MPRCCId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRCommunications_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRCommunication" Role="MPRCommunication" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRCommunication">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRCommunications_UserDetails">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRCommunication" Role="MPRCommunication" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="MPRCommunication">
+        <PropertyRef Name="RemarksFrom" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRReminderTracking_MPRCommunications">
+    <End Type="YSCMModel.MPRCommunication" Role="MPRCommunication" Multiplicity="1" />
+    <End Type="YSCMModel.MPRReminderTracking" Role="MPRReminderTracking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRCommunication">
+        <PropertyRef Name="MPRCCId" />
+      </Principal>
+      <Dependent Role="MPRReminderTracking">
+        <PropertyRef Name="MPRCCId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRCustomsDuty">
+    <End Type="YSCMModel.MPRCustomsDuty" Role="MPRCustomsDuty" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRCustomsDuty">
+        <PropertyRef Name="CustomsDutyId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="CustomsDutyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRDepartments">
+    <End Type="YSCMModel.MPRDepartment" Role="MPRDepartment" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDepartment">
+        <PropertyRef Name="DepartmentId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDetails_MPRPreferredVendorTypes">
+    <End Type="YSCMModel.MPRPreferredVendorType" Role="MPRPreferredVendorType" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRDetail" Role="MPRDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPreferredVendorType">
+        <PropertyRef Name="PreferredVendorTypeId" />
+      </Principal>
+      <Dependent Role="MPRDetail">
+        <PropertyRef Name="XXXPreferredVendorTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDetails_MPRPurchaseTypes">
+    <End Type="YSCMModel.MPRPurchaseType" Role="MPRPurchaseType" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRDetail" Role="MPRDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPurchaseType">
+        <PropertyRef Name="PurchaseTypeId" />
+      </Principal>
+      <Dependent Role="MPRDetail">
+        <PropertyRef Name="XXXPurchaseTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDetails_MPRStatus">
+    <End Type="YSCMModel.MPRStatu" Role="MPRStatu" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRDetail" Role="MPRDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRStatu">
+        <PropertyRef Name="StatusId" />
+      </Principal>
+      <Dependent Role="MPRDetail">
+        <PropertyRef Name="XXXStatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRIncharges_MPRDetails">
+    <End Type="YSCMModel.MPRDetail" Role="MPRDetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRIncharge" Role="MPRIncharge" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetail">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPRIncharge">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPROfferDetails_MPRDetails">
+    <End Type="YSCMModel.MPRDetail" Role="MPRDetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPROfferDetail" Role="MPROfferDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetail">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPROfferDetail">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRDetails">
+    <End Type="YSCMModel.MPRDetail" Role="MPRDetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetail">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRStatusTrack_MPRDetails">
+    <End Type="YSCMModel.MPRDetail" Role="MPRDetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRStatusTrack" Role="MPRStatusTrack" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetail">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPRStatusTrack">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocumentation_MPRDocumentationDescriptions">
+    <End Type="YSCMModel.MPRDocumentationDescription" Role="MPRDocumentationDescription" Multiplicity="1" />
+    <End Type="YSCMModel.MPRDocumentation" Role="MPRDocumentation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDocumentationDescription">
+        <PropertyRef Name="DocumentationDescriptionId" />
+      </Principal>
+      <Dependent Role="MPRDocumentation">
+        <PropertyRef Name="DocumentationDescriptionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocumentation_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRDocumentation" Role="MPRDocumentation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRDocumentation">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocuments_MPRItemInfo">
+    <End Type="YSCMModel.MPRItemInfo" Role="MPRItemInfo" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRDocument" Role="MPRDocument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemInfo">
+        <PropertyRef Name="Itemdetailsid" />
+      </Principal>
+      <Dependent Role="MPRDocument">
+        <PropertyRef Name="ItemDetailsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocuments_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRDocument" Role="MPRDocument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRDocument">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRIncharges_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRIncharge" Role="MPRIncharge" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRIncharge">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRIssuePurposes">
+    <End Type="YSCMModel.MPRIssuePurpos" Role="MPRIssuePurpos" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRIssuePurpos">
+        <PropertyRef Name="IssuePurposeId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="IssuePurposeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemDetails_MPRPADetails">
+    <End Type="YSCMModel.MPRPADetail" Role="MPRPADetail" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRItemDetails_X" Role="MPRItemDetails_X" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPADetail">
+        <PropertyRef Name="PAId" />
+      </Principal>
+      <Dependent Role="MPRItemDetails_X">
+        <PropertyRef Name="PAId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemDetails_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRItemDetails_X" Role="MPRItemDetails_X" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRItemDetails_X">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemDetailsAttachments_MPRItemDetails">
+    <End Type="YSCMModel.MPRItemDetails_X" Role="MPRItemDetails_X" Multiplicity="1" />
+    <End Type="YSCMModel.MPRItemDetailsAttachment" Role="MPRItemDetailsAttachment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemDetails_X">
+        <PropertyRef Name="ItemDetailsId" />
+      </Principal>
+      <Dependent Role="MPRItemDetailsAttachment">
+        <PropertyRef Name="ItemDetailsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPADocuments_MPRItemDetails">
+    <End Type="YSCMModel.MPRItemDetails_X" Role="MPRItemDetails_X" Multiplicity="1" />
+    <End Type="YSCMModel.MPRPADocument" Role="MPRPADocument" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemDetails_X">
+        <PropertyRef Name="ItemDetailsId" />
+      </Principal>
+      <Dependent Role="MPRPADocument">
+        <PropertyRef Name="ItemDetailsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemInfo_MPRItemInfo">
+    <End Type="YSCMModel.MPRItemInfo" Role="MPRItemInfo" Multiplicity="1" />
+    <End Type="YSCMModel.MPRItemInfo" Role="MPRItemInfo1" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemInfo">
+        <PropertyRef Name="Itemdetailsid" />
+      </Principal>
+      <Dependent Role="MPRItemInfo1">
+        <PropertyRef Name="Itemdetailsid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemInfo_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRItemInfo" Role="MPRItemInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRItemInfo">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemInfo_UnitMaster">
+    <End Type="YSCMModel.UnitMaster" Role="UnitMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRItemInfo" Role="MPRItemInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UnitMaster">
+        <PropertyRef Name="UnitID" />
+      </Principal>
+      <Dependent Role="MPRItemInfo">
+        <PropertyRef Name="UnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQItems_MPRItemInfo">
+    <End Type="YSCMModel.MPRItemInfo" Role="MPRItemInfo" Multiplicity="1" />
+    <End Type="YSCMModel.RFQItem" Role="RFQItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemInfo">
+        <PropertyRef Name="Itemdetailsid" />
+      </Principal>
+      <Dependent Role="RFQItem">
+        <PropertyRef Name="MPRItemDetailsid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPAApprovers_MPRPADetails">
+    <End Type="YSCMModel.MPRPADetail" Role="MPRPADetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRPAApprover" Role="MPRPAApprover" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPADetail">
+        <PropertyRef Name="PAId" />
+      </Principal>
+      <Dependent Role="MPRPAApprover">
+        <PropertyRef Name="PAId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPADetails_MPRPAPurchaseModes">
+    <End Type="YSCMModel.MPRPAPurchaseMode" Role="MPRPAPurchaseMode" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRPADetail" Role="MPRPADetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPAPurchaseMode">
+        <PropertyRef Name="PurchaseModeId" />
+      </Principal>
+      <Dependent Role="MPRPADetail">
+        <PropertyRef Name="PurchaseModeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPADetails_MPRPAPurchaseTypes">
+    <End Type="YSCMModel.MPRPAPurchaseType" Role="MPRPAPurchaseType" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRPADetail" Role="MPRPADetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPAPurchaseType">
+        <PropertyRef Name="PurchaseTypeId" />
+      </Principal>
+      <Dependent Role="MPRPADetail">
+        <PropertyRef Name="PurchaseTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPAVendors_MPRPADetails">
+    <End Type="YSCMModel.MPRPADetail" Role="MPRPADetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRPAVendor" Role="MPRPAVendor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPADetail">
+        <PropertyRef Name="PAId" />
+      </Principal>
+      <Dependent Role="MPRPAVendor">
+        <PropertyRef Name="PAId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRProcurementSources">
+    <End Type="YSCMModel.MPRProcurementSource" Role="MPRProcurementSource" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRProcurementSource">
+        <PropertyRef Name="ProcurementSourceId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="ProcurementSourceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRProjectDutyApplicable">
+    <End Type="YSCMModel.MPRProjectDutyApplicable" Role="MPRProjectDutyApplicable" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRProjectDutyApplicable">
+        <PropertyRef Name="ProjectDutyApplicableId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="ProjectDutyApplicableId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRReminderTracking_UserDetails">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRReminderTracking" Role="MPRReminderTracking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="MPRReminderTracking">
+        <PropertyRef Name="ReminderTo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRScopes">
+    <End Type="YSCMModel.MPRScope" Role="MPRScope" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRScope">
+        <PropertyRef Name="ScopeId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="ScopeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN">
+    <End Type="YSCMModel.StandardListYNN" Role="StandardListYNN" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="InspectionRequiredNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN10">
+    <End Type="YSCMModel.StandardListYNN" Role="StandardListYNN" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="ServiceTaxReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN6">
+    <End Type="YSCMModel.StandardListYNN" Role="StandardListYNN" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="InspectionRequiredNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN7">
+    <End Type="YSCMModel.StandardListYNN" Role="StandardListYNN" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="ExciseDutyReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN8">
+    <End Type="YSCMModel.StandardListYNN" Role="StandardListYNN" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="SalesTaxReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN9">
+    <End Type="YSCMModel.StandardListYNN" Role="StandardListYNN" Multiplicity="0..1" />
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevision">
+        <PropertyRef Name="VATReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRStatusTrack_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRStatusTrack" Role="MPRStatusTrack" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRStatusTrack">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRTargetedSpendSupportingDocs_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRTargetedSpendSupportingDoc" Role="MPRTargetedSpendSupportingDoc" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRTargetedSpendSupportingDoc">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRVendorDetails_MPRRevisions">
+    <End Type="YSCMModel.MPRRevision" Role="MPRRevision" Multiplicity="1" />
+    <End Type="YSCMModel.MPRVendorDetail" Role="MPRVendorDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevision">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRVendorDetail">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRStatusTrack_UserDetails">
+    <End Type="YSCMModel.UserDetail" Role="UserDetail" Multiplicity="1" />
+    <End Type="YSCMModel.MPRStatusTrack" Role="MPRStatusTrack" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetail">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="MPRStatusTrack">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRVendorDetails_VendorMaster">
+    <End Type="YSCMModel.VendorMaster" Role="VendorMaster" Multiplicity="1" />
+    <End Type="YSCMModel.MPRVendorDetail" Role="MPRVendorDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VendorMaster">
+        <PropertyRef Name="Vendorid" />
+      </Principal>
+      <Dependent Role="MPRVendorDetail">
+        <PropertyRef Name="Vendorid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQItems_RFQRevisions">
+    <End Type="YSCMModel.RFQRevision" Role="RFQRevision" Multiplicity="1" />
+    <End Type="YSCMModel.RFQItem" Role="RFQItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RFQRevision">
+        <PropertyRef Name="rfqRevisionId" />
+      </Principal>
+      <Dependent Role="RFQItem">
+        <PropertyRef Name="RFQRevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQItemsInfo_RFQItems">
+    <End Type="YSCMModel.RFQItem" Role="RFQItem" Multiplicity="1" />
+    <End Type="YSCMModel.RFQItemsInfo" Role="RFQItemsInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RFQItem">
+        <PropertyRef Name="RFQItemsId" />
+      </Principal>
+      <Dependent Role="RFQItemsInfo">
+        <PropertyRef Name="RFQItemsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQMaster_VendorMaster">
+    <End Type="YSCMModel.VendorMaster" Role="VendorMaster" Multiplicity="1" />
+    <End Type="YSCMModel.RFQMaster" Role="RFQMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VendorMaster">
+        <PropertyRef Name="Vendorid" />
+      </Principal>
+      <Dependent Role="RFQMaster">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQRevisions_RFQMaster">
+    <End Type="YSCMModel.RFQMaster" Role="RFQMaster" Multiplicity="1" />
+    <End Type="YSCMModel.RFQRevision" Role="RFQRevision" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RFQMaster">
+        <PropertyRef Name="RfqMasterId" />
+      </Principal>
+      <Dependent Role="RFQRevision">
+        <PropertyRef Name="rfqMasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_CategoryAttributes_Test_AttributeMaster">
+    <End Type="YSCMModel.Test_AttributeMaster" Role="Test_AttributeMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.Test_CategoryAttributes" Role="Test_CategoryAttributes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_AttributeMaster">
+        <PropertyRef Name="AttributeId" />
+      </Principal>
+      <Dependent Role="Test_CategoryAttributes">
+        <PropertyRef Name="AttributeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_ItemAttributesMaster_Test_AttributeMaster">
+    <End Type="YSCMModel.Test_AttributeMaster" Role="Test_AttributeMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.Test_ItemAttributesMaster" Role="Test_ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_AttributeMaster">
+        <PropertyRef Name="AttributeId" />
+      </Principal>
+      <Dependent Role="Test_ItemAttributesMaster">
+        <PropertyRef Name="Attributeid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_CategoryMaster_Test_CategoryMaster">
+    <End Type="YSCMModel.Test_CategoryMaster" Role="Test_CategoryMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.Test_CategoryMaster" Role="Test_CategoryMaster1" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_CategoryMaster">
+        <PropertyRef Name="Categoryid" />
+      </Principal>
+      <Dependent Role="Test_CategoryMaster1">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_ItemMaster_Test_CategoryMaster">
+    <End Type="YSCMModel.Test_CategoryMaster" Role="Test_CategoryMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.Test_ItemMaster" Role="Test_ItemMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_CategoryMaster">
+        <PropertyRef Name="Categoryid" />
+      </Principal>
+      <Dependent Role="Test_ItemMaster">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_ItemAttributesMaster_Test_ItemMaster">
+    <End Type="YSCMModel.Test_ItemMaster" Role="Test_ItemMaster" Multiplicity="0..1" />
+    <End Type="YSCMModel.Test_ItemAttributesMaster" Role="Test_ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_ItemMaster">
+        <PropertyRef Name="itemId" />
+      </Principal>
+      <Dependent Role="Test_ItemAttributesMaster">
+        <PropertyRef Name="itemid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

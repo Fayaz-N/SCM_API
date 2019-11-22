@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="27d682eabc9a4a6e93f81d3e04a98bb6" Name="Diagram1">
+        <EntityTypeShape EntityType="YSCMModel.AccessGroupMaster" Width="1.5" PointX="8.25" PointY="14.125" />
+        <EntityTypeShape EntityType="YSCMModel.AccessName" Width="1.5" PointX="10.5" PointY="14.5" />
+        <EntityTypeShape EntityType="YSCMModel.AuthorizationItem" Width="1.5" PointX="12.75" PointY="13.5" />
+        <EntityTypeShape EntityType="YSCMModel.AutorizationGroup" Width="1.5" PointX="8.25" PointY="10" />
+        <EntityTypeShape EntityType="YSCMModel.ClientLogin" Width="1.5" PointX="9.75" PointY="2.125" />
+        <EntityTypeShape EntityType="YSCMModel.ItemAttributesMaster" Width="1.5" PointX="7.5" PointY="3.625" />
+        <EntityTypeShape EntityType="YSCMModel.MaterialMaster" Width="1.5" PointX="9.75" PointY="5.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRApprover" Width="1.5" PointX="10.75" PointY="8.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRBuyerGroupMember" Width="1.5" PointX="3" PointY="51" />
+        <EntityTypeShape EntityType="YSCMModel.MPRBuyerGroup" Width="1.5" PointX="0.75" PointY="18" />
+        <EntityTypeShape EntityType="YSCMModel.MPRCommunication" Width="1.5" PointX="11.25" PointY="32.75" />
+        <EntityTypeShape EntityType="YSCMModel.MPRCustomsDuty" Width="1.5" PointX="0.75" PointY="53.5" />
+        <EntityTypeShape EntityType="YSCMModel.MPRDepartment" Width="1.5" PointX="0.75" PointY="50.5" />
+        <EntityTypeShape EntityType="YSCMModel.MPRDespatchDocCategory" Width="1.5" PointX="10.75" PointY="10.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRDetail" Width="1.5" PointX="0.75" PointY="35.25" />
+        <EntityTypeShape EntityType="YSCMModel.MPRDispatchLocation" Width="1.5" PointX="11.75" PointY="2.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRDocumentation" Width="1.5" PointX="8.25" PointY="28.5" />
+        <EntityTypeShape EntityType="YSCMModel.MPRDocumentationDescription" Width="1.5" PointX="6" PointY="13.75" />
+        <EntityTypeShape EntityType="YSCMModel.MPRDocument" Width="1.5" PointX="8.25" PointY="32" />
+        <EntityTypeShape EntityType="YSCMModel.MPRIncharge" Width="1.5" PointX="5.25" PointY="23" />
+        <EntityTypeShape EntityType="YSCMModel.MPRIssuePurpos" Width="1.5" PointX="0.75" PointY="32" />
+        <EntityTypeShape EntityType="YSCMModel.MPRItemDetails_X" Width="1.5" PointX="5.25" PointY="27.875" />
+        <EntityTypeShape EntityType="YSCMModel.MPRItemDetailsAttachment" Width="1.5" PointX="7.5" PointY="37" />
+        <EntityTypeShape EntityType="YSCMModel.MPRItemInfo" Width="1.5" PointX="11.25" PointY="22.5" />
+        <EntityTypeShape EntityType="YSCMModel.MPROfferDetail" Width="1.5" PointX="3" PointY="53.875" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPAApprover" Width="1.5" PointX="5.25" PointY="37" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPADetail" Width="1.5" PointX="3" PointY="7.375" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPADocument" Width="1.5" PointX="7.5" PointY="21.5" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPAPurchaseMode" Width="1.5" PointX="0.75" PointY="11" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPAPurchaseType" Width="1.5" PointX="0.75" PointY="8.25" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPAVendor" Width="1.5" PointX="5.25" PointY="10.25" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPreferredVendorType" Width="1.5" PointX="1.5" PointY="47.875" />
+        <EntityTypeShape EntityType="YSCMModel.MPRProcurementSource" Width="1.5" PointX="0.75" PointY="23.5" />
+        <EntityTypeShape EntityType="YSCMModel.MPRProjectDutyApplicable" Width="1.5" PointX="0.75" PointY="21" />
+        <EntityTypeShape EntityType="YSCMModel.MPRPurchaseType" Width="1.5" PointX="1.5" PointY="45.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRReminderTracking" Width="1.5" PointX="16.5" PointY="33.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRRevision" Width="1.5" PointX="3" PointY="19" />
+        <EntityTypeShape EntityType="YSCMModel.MPRScope" Width="1.5" PointX="11.75" PointY="5.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRStatu" Width="1.5" PointX="1.5" PointY="42.5" />
+        <EntityTypeShape EntityType="YSCMModel.MPRStatusTrack" Width="1.5" PointX="8.25" PointY="24.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRTargetedSpendSupportingDoc" Width="1.5" PointX="5.25" PointY="68.75" />
+        <EntityTypeShape EntityType="YSCMModel.MPRVendorDetail" Width="1.5" PointX="11.25" PointY="28.125" />
+        <EntityTypeShape EntityType="YSCMModel.RFQCommunication" Width="1.5" PointX="18.75" PointY="37" />
+        <EntityTypeShape EntityType="YSCMModel.RFQDocument" Width="1.5" PointX="18.75" PointY="32" />
+        <EntityTypeShape EntityType="YSCMModel.RFQItem" Width="1.5" PointX="13.5" PointY="32.25" />
+        <EntityTypeShape EntityType="YSCMModel.RFQItemsInfo" Width="1.5" PointX="15.75" PointY="41.25" />
+        <EntityTypeShape EntityType="YSCMModel.RFQMaster" Width="1.5" PointX="5.25" PointY="33.125" />
+        <EntityTypeShape EntityType="YSCMModel.RFQReminderTracking" Width="1.5" PointX="21" PointY="37.625" />
+        <EntityTypeShape EntityType="YSCMModel.RFQRevision" Width="1.5" PointX="7.5" PointY="39.75" />
+        <EntityTypeShape EntityType="YSCMModel.RFQStatu" Width="1.5" PointX="9.75" PointY="41.375" />
+        <EntityTypeShape EntityType="YSCMModel.RFQVendorTerm" Width="1.5" PointX="12.75" PointY="41.375" />
+        <EntityTypeShape EntityType="YSCMModel.SCMStatu" Width="1.5" PointX="12.75" PointY="8.125" />
+        <EntityTypeShape EntityType="YSCMModel.StandardListYNN" Width="1.5" PointX="0.75" PointY="28.25" />
+        <EntityTypeShape EntityType="YSCMModel.sysdiagram" Width="1.5" PointX="13.75" PointY="2.125" />
+        <EntityTypeShape EntityType="YSCMModel.TermsCategory" Width="1.5" PointX="8.25" PointY="47.625" />
+        <EntityTypeShape EntityType="YSCMModel.Test_AttributeMaster" Width="1.5" PointX="5.25" PointY="7" />
+        <EntityTypeShape EntityType="YSCMModel.Test_CategoryAttributes" Width="1.5" PointX="7.5" PointY="7.125" />
+        <EntityTypeShape EntityType="YSCMModel.Test_CategoryMaster" Width="1.5" PointX="3" PointY="3.5" />
+        <EntityTypeShape EntityType="YSCMModel.Test_ItemAttributesMaster" Width="1.5" PointX="7.5" PointY="0.75" />
+        <EntityTypeShape EntityType="YSCMModel.Test_ItemMaster" Width="1.5" PointX="5.25" PointY="3.625" />
+        <EntityTypeShape EntityType="YSCMModel.testuserdetail" Width="1.5" PointX="13.75" PointY="5.125" />
+        <EntityTypeShape EntityType="YSCMModel.UnitMaster" Width="1.5" PointX="9" PointY="18.75" />
+        <EntityTypeShape EntityType="YSCMModel.UserDetail" Width="1.5" PointX="6" PointY="16.875" />
+        <EntityTypeShape EntityType="YSCMModel.VendorMaster" Width="1.5" PointX="3" PointY="15.25" />
+        <EntityTypeShape EntityType="YSCMModel.VendorRFQTerm" Width="1.5" PointX="10.5" PointY="47.25" />
+        <EntityTypeShape EntityType="YSCMModel.CustomerMasterYG" Width="1.5" PointX="14.75" PointY="8.125" />
+        <EntityTypeShape EntityType="YSCMModel.Department" Width="1.5" PointX="14.75" PointY="14.125" />
+        <EntityTypeShape EntityType="YSCMModel.Employee" Width="1.5" PointX="16.75" PointY="2.125" />
+        <EntityTypeShape EntityType="YSCMModel.Grade" Width="1.5" PointX="13.75" PointY="18.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRTechClearance" Width="1.5" PointX="18.75" PointY="2.125" />
+        <EntityTypeShape EntityType="YSCMModel.MPRApproversView" Width="1.5" PointX="18.75" PointY="5.125" />
+        <AssociationConnector Association="YSCMModel.FK_AccessGroupMaster_UserDetails" />
+        <AssociationConnector Association="YSCMModel.FK_AccessGroupMaster_UserDetails1" />
+        <AssociationConnector Association="YSCMModel.FK_AccessNames_AccessGroupMaster" />
+        <AssociationConnector Association="YSCMModel.FK_AccessNames_UserDetails" />
+        <AssociationConnector Association="YSCMModel.FK_AccessNames_UserDetails1" />
+        <AssociationConnector Association="YSCMModel.FK_AuthorizationItems_AccessNames" />
+        <AssociationConnector Association="YSCMModel.FK_AuthorizationItems_AutorizationGroup" />
+        <AssociationConnector Association="YSCMModel.FK_AuthorizationItems_UserDetails" />
+        <AssociationConnector Association="YSCMModel.FK_AuthorizationItems_UserDetails1" />
+        <AssociationConnector Association="YSCMModel.FK_AutorizationGroup_UserDetails" />
+        <AssociationConnector Association="YSCMModel.FK_AutorizationGroup_UserDetails1" />
+        <AssociationConnector Association="YSCMModel.FK_ItemAttributesMaster_Test_AttributeMaster" />
+        <AssociationConnector Association="YSCMModel.FK_ItemAttributesMaster_Test_ItemMaster" />
+        <AssociationConnector Association="YSCMModel.FK_MPRBuyerGroupMembers_MPRBuyerGroups" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_MPRBuyerGroups" />
+        <AssociationConnector Association="YSCMModel.FK_Test_CategoryMaster_MPRBuyerGroups" />
+        <AssociationConnector Association="YSCMModel.FK_MPRCommunications_MPRCommunications" />
+        <AssociationConnector Association="YSCMModel.FK_MPRCommunications_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRCommunications_UserDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRReminderTracking_MPRCommunications" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_MPRCustomsDuty" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_MPRDepartments" />
+        <AssociationConnector Association="YSCMModel.FK_MPRDetails_MPRPreferredVendorTypes" />
+        <AssociationConnector Association="YSCMModel.FK_MPRDetails_MPRPurchaseTypes" />
+        <AssociationConnector Association="YSCMModel.FK_MPRDetails_MPRStatus" />
+        <AssociationConnector Association="YSCMModel.FK_MPRIncharges_MPRDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPROfferDetails_MPRDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_MPRDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRStatusTrack_MPRDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRDocumentation_MPRDocumentationDescriptions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRDocumentation_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRDocuments_MPRItemInfo" />
+        <AssociationConnector Association="YSCMModel.FK_MPRDocuments_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRIncharges_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_MPRIssuePurposes" />
+        <AssociationConnector Association="YSCMModel.FK_MPRItemDetails_MPRPADetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRItemDetails_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRItemDetailsAttachments_MPRItemDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRPADocuments_MPRItemDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRItemInfo_MPRItemInfo" />
+        <AssociationConnector Association="YSCMModel.FK_MPRItemInfo_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRItemInfo_UnitMaster" />
+        <AssociationConnector Association="YSCMModel.FK_RFQItems_MPRItemInfo" />
+        <AssociationConnector Association="YSCMModel.FK_MPRPAApprovers_MPRPADetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRPADetails_MPRPAPurchaseModes" />
+        <AssociationConnector Association="YSCMModel.FK_MPRPADetails_MPRPAPurchaseTypes" />
+        <AssociationConnector Association="YSCMModel.FK_MPRPAVendors_MPRPADetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_MPRProcurementSources" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_MPRProjectDutyApplicable" />
+        <AssociationConnector Association="YSCMModel.FK_MPRReminderTracking_UserDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_StandardListYNN" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_StandardListYNN10" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_StandardListYNN6" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_StandardListYNN7" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_StandardListYNN8" />
+        <AssociationConnector Association="YSCMModel.FK_MPRRevisions_StandardListYNN9" />
+        <AssociationConnector Association="YSCMModel.FK_MPRStatusTrack_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRTargetedSpendSupportingDocs_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRVendorDetails_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_RFQMaster_MPRRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_MPRStatusTrack_UserDetails" />
+        <AssociationConnector Association="YSCMModel.FK_MPRVendorDetails_VendorMaster" />
+        <AssociationConnector Association="YSCMModel.FK_RFQCommunications_RFQItems" />
+        <AssociationConnector Association="YSCMModel.FK_RFQCommunications_RFQRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_RFQReminderTracking_RFQCommunications" />
+        <AssociationConnector Association="YSCMModel.FK_RFQDocuments_RFQItems" />
+        <AssociationConnector Association="YSCMModel.FK_RFQDocuments_RFQRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_RFQItems_RFQRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_RFQItemsInfo_RFQItems" />
+        <AssociationConnector Association="YSCMModel.FK_RFQMaster_VendorMaster" />
+        <AssociationConnector Association="YSCMModel.FK_RFQRevisions_RFQMaster" />
+        <AssociationConnector Association="YSCMModel.FK_RFQStatus_RFQRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_RFQVendorTerms_RFQRevisions" />
+        <AssociationConnector Association="YSCMModel.FK_RFQVendorTerms_VendorRFQTerms" />
+        <AssociationConnector Association="YSCMModel.v" />
+        <AssociationConnector Association="YSCMModel.FK_Test_CategoryAttributes_Test_AttributeMaster" />
+        <AssociationConnector Association="YSCMModel.FK_Test_ItemAttributesMaster_Test_AttributeMaster" />
+        <AssociationConnector Association="YSCMModel.FK_Test_CategoryMaster_Test_CategoryMaster" />
+        <AssociationConnector Association="YSCMModel.FK_Test_ItemMaster_Test_CategoryMaster" />
+        <AssociationConnector Association="YSCMModel.FK_Test_ItemAttributesMaster_Test_ItemMaster" />
+        <AssociationConnector Association="YSCMModel.FK_VendorRFQTerms_VendorMaster" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

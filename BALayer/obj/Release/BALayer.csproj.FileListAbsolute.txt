@@ -1,0 +1,16 @@
+D:\SCM\SCMAPI\BALayer\bin\Release\BALayer.dll
+D:\SCM\SCMAPI\BALayer\bin\Release\BALayer.pdb
+D:\SCM\SCMAPI\BALayer\bin\Release\DALayer.dll
+D:\SCM\SCMAPI\BALayer\bin\Release\SCMModels.dll
+D:\SCM\SCMAPI\BALayer\bin\Release\EntityFramework.dll
+D:\SCM\SCMAPI\BALayer\bin\Release\DALayer.pdb
+D:\SCM\SCMAPI\BALayer\bin\Release\DALayer.dll.config
+D:\SCM\SCMAPI\BALayer\bin\Release\SCMModels.pdb
+D:\SCM\SCMAPI\BALayer\bin\Release\SCMModels.dll.config
+D:\SCM\SCMAPI\BALayer\bin\Release\EntityFramework.xml
+D:\SCM\SCMAPI\BALayer\obj\Release\BALayer.csprojAssemblyReference.cache
+D:\SCM\SCMAPI\BALayer\obj\Release\BALayer.csproj.CoreCompileInputs.cache
+D:\SCM\SCMAPI\BALayer\obj\Release\BALayer.csproj.CopyComplete
+D:\SCM\SCMAPI\BALayer\obj\Release\BALayer.dll
+D:\SCM\SCMAPI\BALayer\obj\Release\BALayer.pdb
+D:\SCM\SCMAPI\BALayer\bin\Release\BALayer.dll.config

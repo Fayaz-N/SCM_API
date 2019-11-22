@@ -1,0 +1,12 @@
+D:\SCM\SCMAPI\SCMModels\bin\Release\SCMModels.dll.config
+D:\SCM\SCMAPI\SCMModels\bin\Release\SCMModels.dll
+D:\SCM\SCMAPI\SCMModels\bin\Release\SCMModels.pdb
+D:\SCM\SCMAPI\SCMModels\bin\Release\EntityFramework.dll
+D:\SCM\SCMAPI\SCMModels\bin\Release\EntityFramework.SqlServer.dll
+D:\SCM\SCMAPI\SCMModels\bin\Release\EntityFramework.xml
+D:\SCM\SCMAPI\SCMModels\bin\Release\EntityFramework.SqlServer.xml
+D:\SCM\SCMAPI\SCMModels\obj\Release\SCMModels.csprojAssemblyReference.cache
+D:\SCM\SCMAPI\SCMModels\obj\Release\SCMModels.csproj.CoreCompileInputs.cache
+D:\SCM\SCMAPI\SCMModels\obj\Release\SCMModels.csproj.CopyComplete
+D:\SCM\SCMAPI\SCMModels\obj\Release\SCMModels.dll
+D:\SCM\SCMAPI\SCMModels\obj\Release\SCMModels.pdb

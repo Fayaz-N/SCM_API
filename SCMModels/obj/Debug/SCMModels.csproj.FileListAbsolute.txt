@@ -1,0 +1,12 @@
+D:\SCM\SCMAPI\SCMModels\bin\Debug\SCMModels.dll.config
+D:\SCM\SCMAPI\SCMModels\bin\Debug\SCMModels.dll
+D:\SCM\SCMAPI\SCMModels\bin\Debug\SCMModels.pdb
+D:\SCM\SCMAPI\SCMModels\bin\Debug\EntityFramework.dll
+D:\SCM\SCMAPI\SCMModels\bin\Debug\EntityFramework.SqlServer.dll
+D:\SCM\SCMAPI\SCMModels\bin\Debug\EntityFramework.xml
+D:\SCM\SCMAPI\SCMModels\bin\Debug\EntityFramework.SqlServer.xml
+D:\SCM\SCMAPI\SCMModels\obj\Debug\SCMModels.csproj.CoreCompileInputs.cache
+D:\SCM\SCMAPI\SCMModels\obj\Debug\SCMModels.csproj.CopyComplete
+D:\SCM\SCMAPI\SCMModels\obj\Debug\SCMModels.dll
+D:\SCM\SCMAPI\SCMModels\obj\Debug\SCMModels.pdb
+D:\SCM\SCMAPI\SCMModels\obj\Debug\SCMModels.csprojAssemblyReference.cache

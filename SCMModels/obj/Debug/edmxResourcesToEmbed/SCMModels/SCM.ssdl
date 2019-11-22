@@ -1,0 +1,2252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="YSCMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AccessGroupMaster">
+    <Key>
+      <PropertyRef Name="AccessGroupId" />
+    </Key>
+    <Property Name="AccessGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="UpdatedDate" Type="date" Nullable="false" />
+    <Property Name="DeletedBy" Type="char" MaxLength="6" />
+    <Property Name="DeleteDate" Type="date" />
+    <Property Name="DeletedRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AccessNames">
+    <Key>
+      <PropertyRef Name="AccessNameID" />
+    </Key>
+    <Property Name="AccessNameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccessGroupId" Type="int" Nullable="false" />
+    <Property Name="AccessName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="updatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="updatedDate" Type="date" Nullable="false" />
+    <Property Name="DeletedBy" Type="char" MaxLength="6" />
+    <Property Name="DeletedDate" Type="date" />
+    <Property Name="DeletedRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AuthorizationItems">
+    <Key>
+      <PropertyRef Name="RoleAccessNameid" />
+    </Key>
+    <Property Name="RoleAccessNameid" Type="int" Nullable="false" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+    <Property Name="AccessNamesId" Type="int" Nullable="false" />
+    <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="Updateddate" Type="date" Nullable="false" />
+    <Property Name="DeletedBy" Type="char" MaxLength="6" />
+    <Property Name="Deleteddate" Type="date" />
+    <Property Name="DeletedRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AutorizationGroup">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="int" Nullable="false" />
+    <Property Name="RoleName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="updatedDate" Type="date" />
+    <Property Name="DeletedBy" Type="char" MaxLength="6" />
+    <Property Name="DeletedDate" Type="date" />
+    <Property Name="DeletedRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ClientLogin">
+    <Key>
+      <PropertyRef Name="CId" />
+    </Key>
+    <Property Name="CId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerName" Type="varchar" MaxLength="50" />
+    <Property Name="CustomerPassword" Type="varchar" MaxLength="50" />
+    <Property Name="Location" Type="varchar" MaxLength="50" />
+    <Property Name="Mobile" Type="varchar" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="320" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'YSCM.dbo.CustomerMasterYGS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="CustomerMasterYGS">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="GroupId" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="CustomerMasterTypeId" Type="tinyint" />
+    <Property Name="YGSSAPCustomerCode" Type="varchar" MaxLength="20" />
+    <Property Name="CustomerName1" Type="varchar" MaxLength="100" />
+    <Property Name="CustomerName2" Type="varchar" MaxLength="100" />
+    <Property Name="CustomerName3" Type="varchar" MaxLength="100" />
+    <Property Name="CustomerCountry" Type="varchar" MaxLength="100" />
+    <Property Name="PostalCode" Type="varchar" MaxLength="20" />
+    <Property Name="StateCode" Type="varchar" MaxLength="3" />
+    <Property Name="City" Type="varchar" MaxLength="100" />
+    <Property Name="Address1" Type="varchar" MaxLength="200" />
+    <Property Name="Address2" Type="varchar" MaxLength="200" />
+    <Property Name="Address3" Type="varchar" MaxLength="200" />
+    <Property Name="IndustryCode" Type="varchar" MaxLength="10" />
+    <Property Name="PAN" Type="varchar" MaxLength="50" />
+    <Property Name="TAN" Type="varchar" MaxLength="50" />
+    <Property Name="GSTNo" Type="varchar" MaxLength="50" />
+    <Property Name="CINNo" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'YSCM.dbo.Departments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Departments">
+    <Key>
+      <PropertyRef Name="DepartmentId" />
+      <PropertyRef Name="DepartmentName" />
+      <PropertyRef Name="BUCode" />
+      <PropertyRef Name="BoolInUse" />
+    </Key>
+    <Property Name="DepartmentId" Type="tinyint" Nullable="false" />
+    <Property Name="DepartmentName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DepartmentHead" Type="char" MaxLength="6" />
+    <Property Name="DepartmentAdministrator" Type="char" MaxLength="6" />
+    <Property Name="DepartmentSubAdministrator" Type="char" MaxLength="6" />
+    <Property Name="BUCode" Type="smallint" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'YSCM.dbo.Employee' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeNo" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="Nickname" />
+      <PropertyRef Name="DomainId" />
+      <PropertyRef Name="YGSCostCenter" />
+      <PropertyRef Name="CostCenter" />
+      <PropertyRef Name="Sex" />
+      <PropertyRef Name="MaritalStatus" />
+      <PropertyRef Name="BoolContract" />
+      <PropertyRef Name="DOJ" />
+      <PropertyRef Name="BoolHOD" />
+      <PropertyRef Name="BoolFurnishedCertificates" />
+      <PropertyRef Name="BoolExecutive" />
+      <PropertyRef Name="BoolESI" />
+      <PropertyRef Name="MedAllBal" />
+      <PropertyRef Name="BoolHasProximityCard" />
+      <PropertyRef Name="PLStatus" />
+      <PropertyRef Name="RestrictedHolidaysAvailed" />
+      <PropertyRef Name="PaternityLeavesAvailed" />
+      <PropertyRef Name="OrganizationId" />
+      <PropertyRef Name="BoolIntranetEnabled" />
+      <PropertyRef Name="BoolExpatriate" />
+      <PropertyRef Name="PWD" />
+    </Key>
+    <Property Name="EmployeeNo" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Nickname" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ShortName" Type="varchar" MaxLength="10" />
+    <Property Name="GlobalEmpNo" Type="char" MaxLength="8" />
+    <Property Name="YGSAccountCode" Type="varchar" MaxLength="10" />
+    <Property Name="DomainId" Type="char" MaxLength="8" Nullable="false" />
+    <Property Name="YGSCostCenter" Type="char" MaxLength="4" Nullable="false" />
+    <Property Name="CostCenter" Type="char" MaxLength="4" Nullable="false" />
+    <Property Name="OrgDepartmentId" Type="smallint" />
+    <Property Name="OrgOfficeId" Type="tinyint" />
+    <Property Name="Sex" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="MaritalStatus" Type="bit" Nullable="false" />
+    <Property Name="DOB" Type="smalldatetime" />
+    <Property Name="BoolContract" Type="bit" Nullable="false" />
+    <Property Name="DOJ" Type="smalldatetime" Nullable="false" />
+    <Property Name="EffectiveDOJ" Type="smalldatetime" />
+    <Property Name="ConfirmationDueDate" Type="smalldatetime" />
+    <Property Name="ConfirmationDate" Type="smalldatetime" />
+    <Property Name="DOL" Type="smalldatetime" />
+    <Property Name="DepartmentId" Type="tinyint" />
+    <Property Name="GroupId" Type="smallint" />
+    <Property Name="DeptCode" Type="char" MaxLength="3" />
+    <Property Name="Grade" Type="varchar" MaxLength="5" />
+    <Property Name="Designation" Type="varchar" MaxLength="50" />
+    <Property Name="FunctionalRoleId" Type="smallint" />
+    <Property Name="EMail" Type="varchar" MaxLength="50" />
+    <Property Name="SerialNo" Type="varchar" MaxLength="4" />
+    <Property Name="BloodGroup" Type="varchar" MaxLength="5" />
+    <Property Name="HODEmpNo" Type="char" MaxLength="6" />
+    <Property Name="BoolHOD" Type="bit" Nullable="false" />
+    <Property Name="BlockId" Type="tinyint" />
+    <Property Name="FloorId" Type="smallint" />
+    <Property Name="Qualification" Type="varchar" MaxLength="200" />
+    <Property Name="QualificationString" Type="varchar" MaxLength="500" />
+    <Property Name="BoolFurnishedCertificates" Type="bit" Nullable="false" />
+    <Property Name="PrevEmployment" Type="varchar" MaxLength="500" />
+    <Property Name="BoolExecutive" Type="bit" Nullable="false" />
+    <Property Name="MobileNo" Type="varchar" MaxLength="10" />
+    <Property Name="Basic" Type="money" />
+    <Property Name="HRA" Type="money" />
+    <Property Name="MedicalAllowance" Type="money" />
+    <Property Name="SpecialAllowance" Type="money" />
+    <Property Name="TransportAllowance" Type="money" />
+    <Property Name="TraineeAllowance" Type="money" />
+    <Property Name="PersonalPay" Type="money" />
+    <Property Name="ProfessionalAllowance" Type="money" />
+    <Property Name="PFNo" Type="int" />
+    <Property Name="FPFNo" Type="int" />
+    <Property Name="AccountsDetails" Type="varchar" MaxLength="500" />
+    <Property Name="BoolESI" Type="bit" Nullable="false" />
+    <Property Name="ICICIAccNo" Type="char" MaxLength="12" />
+    <Property Name="MedAllBal" Type="money" Nullable="false" />
+    <Property Name="PickupPointId" Type="smallint" />
+    <Property Name="HomePhone" Type="varchar" MaxLength="50" />
+    <Property Name="PresentAddress" Type="varchar" MaxLength="200" />
+    <Property Name="PermanentAddress" Type="varchar" MaxLength="200" />
+    <Property Name="EmergencyContactPerson" Type="varchar" MaxLength="50" />
+    <Property Name="EmergencyContactNo" Type="varchar" MaxLength="50" />
+    <Property Name="BoolHasProximityCard" Type="bit" Nullable="false" />
+    <Property Name="PLStatus" Type="real" Nullable="false" />
+    <Property Name="OldPLStatus" Type="real" />
+    <Property Name="LeavesDeductedFromFlexiDaily" Type="real" />
+    <Property Name="LeavesDeductedFromFlexiWeekly" Type="real" />
+    <Property Name="RestrictedHolidaysAvailed" Type="tinyint" Nullable="false" />
+    <Property Name="PaternityLeavesAvailed" Type="tinyint" Nullable="false" />
+    <Property Name="NameAsInPassport" Type="varchar" MaxLength="100" />
+    <Property Name="PassportNo" Type="varchar" MaxLength="20" />
+    <Property Name="PassportIssuedPlace" Type="varchar" MaxLength="50" />
+    <Property Name="PassportIssuedDate" Type="smalldatetime" />
+    <Property Name="PassportExpiryDate" Type="smalldatetime" />
+    <Property Name="AddressAsInPassport" Type="varchar" MaxLength="200" />
+    <Property Name="BirthPlace" Type="varchar" MaxLength="50" />
+    <Property Name="PanNo" Type="varchar" MaxLength="10" />
+    <Property Name="AadhaarNo" Type="char" MaxLength="12" />
+    <Property Name="BoolKannadiga" Type="bit" />
+    <Property Name="CommunityId" Type="tinyint" />
+    <Property Name="FathersName" Type="varchar" MaxLength="50" />
+    <Property Name="SpouseName" Type="varchar" MaxLength="50" />
+    <Property Name="OrganizationId" Type="tinyint" Nullable="false" />
+    <Property Name="BoolIntranetEnabled" Type="bit" Nullable="false" />
+    <Property Name="UAN" Type="varchar" MaxLength="12" />
+    <Property Name="ExpenseCategoryId" Type="tinyint" />
+    <Property Name="BoolExpatriate" Type="bit" Nullable="false" />
+    <Property Name="PWD" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'YSCM.dbo.Grades' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Grades">
+    <Key>
+      <PropertyRef Name="Grade" />
+      <PropertyRef Name="GroupId" />
+      <PropertyRef Name="Designation" />
+      <PropertyRef Name="Hierarchy" />
+      <PropertyRef Name="SumInsured" />
+      <PropertyRef Name="SumInsuredDependentParents" />
+      <PropertyRef Name="PersonalAccidentSumInsured" />
+      <PropertyRef Name="JobStatus" />
+      <PropertyRef Name="TSSkillFactor" />
+      <PropertyRef Name="TEVComfortLevel" />
+      <PropertyRef Name="TEVOutOfPocketAllowance" />
+      <PropertyRef Name="TEVOffshoreAllowance" />
+      <PropertyRef Name="TEVDayTripAllowance" />
+      <PropertyRef Name="BoolInUse" />
+    </Key>
+    <Property Name="Grade" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="GroupId" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="Designation" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Hierarchy" Type="tinyint" Nullable="false" />
+    <Property Name="SumInsured" Type="money" Nullable="false" />
+    <Property Name="SumInsuredDependentParents" Type="money" Nullable="false" />
+    <Property Name="PersonalAccidentSumInsured" Type="money" Nullable="false" />
+    <Property Name="JobStatus" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="TSSkillFactor" Type="real" Nullable="false" />
+    <Property Name="TEVComfortLevel" Type="tinyint" Nullable="false" />
+    <Property Name="TEVOutOfPocketAllowance" Type="money" Nullable="false" />
+    <Property Name="TEVOffshoreAllowance" Type="money" Nullable="false" />
+    <Property Name="TEVDayTripAllowance" Type="money" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ItemAttributesMaster">
+    <Key>
+      <PropertyRef Name="ItemAttributeid" />
+    </Key>
+    <Property Name="ItemAttributeid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemId" Type="int" />
+    <Property Name="Attributeid" Type="int" />
+    <Property Name="description" Type="varchar" MaxLength="100" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MaterialMaster">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemName" Type="varchar" MaxLength="100" />
+    <Property Name="ItemDescription" Type="varchar" MaxLength="200" />
+    <Property Name="DeleteFlag" Type="bit" />
+    <Property Name="UpdatedBy" Type="char" MaxLength="6" />
+    <Property Name="UpdatedDate" Type="date" />
+  </EntityType>
+  <EntityType Name="MPRApprovers">
+    <Key>
+      <PropertyRef Name="EmployeeNo" />
+    </Key>
+    <Property Name="EmployeeNo" Type="char" MaxLength="6" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRBuyerGroupMembers">
+    <Key>
+      <PropertyRef Name="BuyerGroupMemberId" />
+    </Key>
+    <Property Name="BuyerGroupMemberId" Type="smallint" Nullable="false" />
+    <Property Name="BuyerGroupId" Type="tinyint" Nullable="false" />
+    <Property Name="GroupMember" Type="char" MaxLength="6" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRBuyerGroups">
+    <Key>
+      <PropertyRef Name="BuyerGroupId" />
+    </Key>
+    <Property Name="BuyerGroupId" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BuyerGroup" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRCommunications">
+    <Key>
+      <PropertyRef Name="MPRCCId" />
+    </Key>
+    <Property Name="MPRCCId" Type="int" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="Remarks" Type="text" Nullable="false" />
+    <Property Name="RemarksFrom" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="SendEmail" Type="bit" Nullable="false" />
+    <Property Name="SetReminder" Type="bit" Nullable="false" />
+    <Property Name="ReminderDate" Type="date" />
+    <Property Name="RemarksDate" Type="date" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRCustomsDuty">
+    <Key>
+      <PropertyRef Name="CustomsDutyId" />
+    </Key>
+    <Property Name="CustomsDutyId" Type="tinyint" Nullable="false" />
+    <Property Name="CustomsDuty" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRDepartments">
+    <Key>
+      <PropertyRef Name="DepartmentId" />
+    </Key>
+    <Property Name="DepartmentId" Type="tinyint" Nullable="false" />
+    <Property Name="Department" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="SecondApprover" Type="char" MaxLength="6" />
+    <Property Name="ThirdApprover" Type="char" MaxLength="6" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRDespatchDocCategories">
+    <Key>
+      <PropertyRef Name="DespatchDocCategoryId" />
+    </Key>
+    <Property Name="DespatchDocCategoryId" Type="tinyint" Nullable="false" />
+    <Property Name="DespatchDocCategory" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRDetails">
+    <Key>
+      <PropertyRef Name="RequisitionId" />
+    </Key>
+    <Property Name="RequisitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DocumentNo" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="SubmittedBy" Type="varchar" MaxLength="6" Nullable="false" />
+    <Property Name="SubmittedDate" Type="datetime" Nullable="false" />
+    <Property Name="XXXCommercialOfferReceivedDate" Type="date" />
+    <Property Name="XXXOfferDetailsMailedBy" Type="char" MaxLength="6" />
+    <Property Name="XXXOfferDetailsMailedOn" Type="date" />
+    <Property Name="XXXOfferDetailsViewedByCheckerOn" Type="date" />
+    <Property Name="XXXOfferDetailsViewedByApproverOn" Type="date" />
+    <Property Name="XXXMaterialReceiptDate" Type="date" />
+    <Property Name="XXXRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="XXXEstimatedCost" Type="money" />
+    <Property Name="XXXPreviousPOPrice" Type="money" />
+    <Property Name="XXXPurchaseTypeId" Type="tinyint" />
+    <Property Name="XXXPreferredVendorTypeId" Type="tinyint" />
+    <Property Name="XXXStatusId" Type="tinyint" />
+    <Property Name="XXXPurchaseCost" Type="money" />
+    <Property Name="DocumentDescription" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="MPRDispatchLocations">
+    <Key>
+      <PropertyRef Name="DispatchLocationId" />
+    </Key>
+    <Property Name="DispatchLocationId" Type="tinyint" Nullable="false" />
+    <Property Name="DispatchLocation" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="XOrder" Type="tinyint" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRDocumentation">
+    <Key>
+      <PropertyRef Name="DocumentationId" />
+    </Key>
+    <Property Name="DocumentationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="DocumentationDescriptionId" Type="tinyint" Nullable="false" />
+    <Property Name="NoOfSetsApproval" Type="tinyint" Nullable="false" />
+    <Property Name="NoOfSetsFinal" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRDocumentationDescriptions">
+    <Key>
+      <PropertyRef Name="DocumentationDescriptionId" />
+    </Key>
+    <Property Name="DocumentationDescriptionId" Type="tinyint" Nullable="false" />
+    <Property Name="DocumentationDescription" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRDocuments">
+    <Key>
+      <PropertyRef Name="MprDocId" />
+    </Key>
+    <Property Name="MprDocId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="ItemDetailsId" Type="int" />
+    <Property Name="DocumentName" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="UploadedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="UplaodedDate" Type="date" Nullable="false" />
+    <Property Name="Path" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="DocumentTypeid" Type="tinyint" Nullable="false" />
+    <Property Name="Deleteflag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRIncharges">
+    <Key>
+      <PropertyRef Name="InchargeId" />
+    </Key>
+    <Property Name="InchargeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequisitionId" Type="int" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="Incharge" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="CanClearTechnically" Type="bit" Nullable="false" />
+    <Property Name="CanClearCommercially" Type="bit" Nullable="false" />
+    <Property Name="CanReceiveMailNotification" Type="bit" Nullable="false" />
+    <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="UpdatedDate" Type="date" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRIssuePurposes">
+    <Key>
+      <PropertyRef Name="IssuePurposeId" />
+    </Key>
+    <Property Name="IssuePurposeId" Type="tinyint" Nullable="false" />
+    <Property Name="IssuePurpose" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRItemDetails_X">
+    <Key>
+      <PropertyRef Name="ItemDetailsId" />
+    </Key>
+    <Property Name="ItemDetailsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="ItemDescription" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="Unit" Type="varchar" MaxLength="50" />
+    <Property Name="SaleOrderLineItemNo" Type="varchar" MaxLength="20" />
+    <Property Name="ReferenceDocNo" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="PAId" Type="int" />
+    <Property Name="PONo" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="MPRItemDetailsAttachments">
+    <Key>
+      <PropertyRef Name="ItemDetailsAttachmentId" />
+    </Key>
+    <Property Name="ItemDetailsAttachmentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemDetailsId" Type="int" Nullable="false" />
+    <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRItemInfo">
+    <Key>
+      <PropertyRef Name="Itemdetailsid" />
+    </Key>
+    <Property Name="Itemdetailsid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RevisionId" Type="int" />
+    <Property Name="Itemid" Type="int" Nullable="false" />
+    <Property Name="ItemDescription" Type="varchar" MaxLength="200" />
+    <Property Name="Quantity" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="UnitId" Type="tinyint" />
+    <Property Name="SaleOrderNo" Type="varchar" MaxLength="12" />
+    <Property Name="SOLineItemNo" Type="varchar" MaxLength="8" />
+    <Property Name="TargetSpend" Type="money" />
+    <Property Name="ReferenceDocNo" Type="varchar" MaxLength="100" />
+    <Property Name="DeleteFlag" Type="bit" />
+  </EntityType>
+  <EntityType Name="MPROfferDetails">
+    <Key>
+      <PropertyRef Name="OfferId" />
+    </Key>
+    <Property Name="OfferId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequisitionId" Type="int" Nullable="false" />
+    <Property Name="VendorName" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="OfferMailedOn" Type="date" Nullable="false" />
+    <Property Name="Remarks" Type="varchar" MaxLength="500" />
+    <Property Name="EnteredBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="EnteredOn" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRPAApprovers">
+    <Key>
+      <PropertyRef Name="ApproverId" />
+    </Key>
+    <Property Name="ApproverId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PAId" Type="int" Nullable="false" />
+    <Property Name="ApproverLevel" Type="tinyint" Nullable="false" />
+    <Property Name="Approver" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="ApproversRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="ApprovalStatus" Type="varchar" MaxLength="20" />
+    <Property Name="ApprovedOn" Type="datetime2" Precision="7" />
+  </EntityType>
+  <EntityType Name="MPRPADetails">
+    <Key>
+      <PropertyRef Name="PAId" />
+    </Key>
+    <Property Name="PAId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequestedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="RequestedOn" Type="datetime2" Precision="7" />
+    <Property Name="PurchaseTypeId" Type="tinyint" />
+    <Property Name="PurchaseModeId" Type="tinyint" />
+    <Property Name="ProjectName" Type="varchar" MaxLength="100" />
+    <Property Name="ProjectCode" Type="varchar" MaxLength="50" />
+    <Property Name="TargetedSpendAmount" Type="money" />
+    <Property Name="PurchaseCost" Type="money" />
+    <Property Name="PackagingForwarding" Type="varchar" MaxLength="50" />
+    <Property Name="Taxes" Type="varchar" MaxLength="50" />
+    <Property Name="Freight" Type="varchar" MaxLength="50" />
+    <Property Name="Insurance" Type="varchar" MaxLength="50" />
+    <Property Name="DeliveryCondition" Type="varchar" MaxLength="100" />
+    <Property Name="ShipmentMode" Type="varchar" MaxLength="50" />
+    <Property Name="PaymentTerms" Type="varchar" MaxLength="500" />
+    <Property Name="CreditDays" Type="smallint" />
+    <Property Name="Warranty" Type="varchar" MaxLength="500" />
+    <Property Name="BankGuarantee" Type="varchar" MaxLength="500" />
+    <Property Name="LDPenaltyTerms" Type="varchar" MaxLength="500" />
+    <Property Name="SpecialInstructions" Type="varchar" MaxLength="500" />
+    <Property Name="FactorsForImports" Type="varchar" MaxLength="100" />
+    <Property Name="SpecialRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="SuppliersReference" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="MPRPADocuments">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemDetailsId" Type="int" Nullable="false" />
+    <Property Name="Filename" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRPAPurchaseModes">
+    <Key>
+      <PropertyRef Name="PurchaseModeId" />
+    </Key>
+    <Property Name="PurchaseModeId" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PurchaseMode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="XOrder" Type="tinyint" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRPAPurchaseTypes">
+    <Key>
+      <PropertyRef Name="PurchaseTypeId" />
+    </Key>
+    <Property Name="PurchaseTypeId" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PurchaseType" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="XOrder" Type="tinyint" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRPAVendors">
+    <Key>
+      <PropertyRef Name="VendorId" />
+    </Key>
+    <Property Name="VendorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PAId" Type="int" Nullable="false" />
+    <Property Name="Vendor" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="BoolSelectedVendor" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRPreferredVendorTypes">
+    <Key>
+      <PropertyRef Name="PreferredVendorTypeId" />
+    </Key>
+    <Property Name="PreferredVendorTypeId" Type="tinyint" Nullable="false" />
+    <Property Name="PreferredVendorType" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+    <Property Name="XOrder" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRProcurementSources">
+    <Key>
+      <PropertyRef Name="ProcurementSourceId" />
+    </Key>
+    <Property Name="ProcurementSourceId" Type="tinyint" Nullable="false" />
+    <Property Name="ProcurementSource" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRProjectDutyApplicable">
+    <Key>
+      <PropertyRef Name="ProjectDutyApplicableId" />
+    </Key>
+    <Property Name="ProjectDutyApplicableId" Type="tinyint" Nullable="false" />
+    <Property Name="ProjectDutyApplicable" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRPurchaseTypes">
+    <Key>
+      <PropertyRef Name="PurchaseTypeId" />
+    </Key>
+    <Property Name="PurchaseTypeId" Type="tinyint" Nullable="false" />
+    <Property Name="PurchaseType" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+    <Property Name="XOrder" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRReminderTracking">
+    <Key>
+      <PropertyRef Name="ReminderId" />
+    </Key>
+    <Property Name="ReminderId" Type="int" Nullable="false" />
+    <Property Name="MPRCCId" Type="int" Nullable="false" />
+    <Property Name="ReminderTo" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="MailSentOn" Type="date" />
+    <Property Name="AcknowledgedOn" Type="date" />
+    <Property Name="AcknowledgementRemarks" Type="nvarchar" MaxLength="500" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRRevisions">
+    <Key>
+      <PropertyRef Name="RevisionId" />
+    </Key>
+    <Property Name="RevisionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequisitionId" Type="int" Nullable="false" />
+    <Property Name="DepartmentId" Type="tinyint" />
+    <Property Name="ProjectManager" Type="char" MaxLength="6" />
+    <Property Name="JobCode" Type="varchar" MaxLength="50" />
+    <Property Name="JobName" Type="varchar" MaxLength="100" />
+    <Property Name="GEPSApprovalId" Type="varchar" MaxLength="7" />
+    <Property Name="SaleOrderNo" Type="varchar" MaxLength="100" />
+    <Property Name="LineItemNo" Type="varchar" MaxLength="20" />
+    <Property Name="ClientName" Type="varchar" MaxLength="150" />
+    <Property Name="PlantLocation" Type="varchar" MaxLength="100" />
+    <Property Name="BuyerGroupId" Type="tinyint" />
+    <Property Name="TargetedSpendAmount" Type="money" />
+    <Property Name="TargetedSpendRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="BoolPreferredVendor" Type="bit" />
+    <Property Name="JustificationForSinglePreferredVendor" Type="varchar" MaxLength="500" />
+    <Property Name="DeliveryRequiredBy" Type="smalldatetime" />
+    <Property Name="IssuePurposeId" Type="tinyint" />
+    <Property Name="DispatchLocation" Type="varchar" MaxLength="100" />
+    <Property Name="ScopeId" Type="tinyint" />
+    <Property Name="TrainingRequired" Type="bit" />
+    <Property Name="TrainingManWeeks" Type="tinyint" />
+    <Property Name="TrainingRemarks" Type="varchar" MaxLength="200" />
+    <Property Name="BoolDocumentationApplicable" Type="bit" />
+    <Property Name="GuaranteePeriod" Type="varchar" MaxLength="200" />
+    <Property Name="NoOfSetsOfQAP" Type="tinyint" />
+    <Property Name="InspectionRequired" Type="bit" />
+    <Property Name="InspectionRequiredNew" Type="tinyint" />
+    <Property Name="InspectionComments" Type="varchar" MaxLength="200" />
+    <Property Name="NoOfSetsOfTestCertificates" Type="tinyint" />
+    <Property Name="ProcurementSourceId" Type="tinyint" />
+    <Property Name="CustomsDutyId" Type="tinyint" />
+    <Property Name="ProjectDutyApplicableId" Type="tinyint" />
+    <Property Name="ExciseDutyReimbursableForBOs" Type="bit" />
+    <Property Name="SalesTaxReimbursableForBOs" Type="bit" />
+    <Property Name="VATReimbursableForBOs" Type="bit" />
+    <Property Name="ServiceTaxReimbursableForBOs" Type="bit" />
+    <Property Name="ExciseDutyReimbursableForBOsNew" Type="tinyint" />
+    <Property Name="SalesTaxReimbursableForBOsNew" Type="tinyint" />
+    <Property Name="VATReimbursableForBOsNew" Type="tinyint" />
+    <Property Name="ServiceTaxReimbursableForBOsNew" Type="tinyint" />
+    <Property Name="Remarks" Type="varchar" MaxLength="500" />
+    <Property Name="PreparedBy" Type="char" MaxLength="6" />
+    <Property Name="PreparedOn" Type="smalldatetime" />
+    <Property Name="CheckedBy" Type="char" MaxLength="6" />
+    <Property Name="CheckedOn" Type="smalldatetime" />
+    <Property Name="CheckStatus" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ApprovedBy" Type="char" MaxLength="6" />
+    <Property Name="ApprovedOn" Type="smalldatetime" />
+    <Property Name="ApprovalStatus" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="SecondApprover" Type="char" MaxLength="6" />
+    <Property Name="SecondApprovedOn" Type="smalldatetime" />
+    <Property Name="SecondApproversStatus" Type="varchar" MaxLength="20" />
+    <Property Name="ThirdApprover" Type="char" MaxLength="6" />
+    <Property Name="ThirdApproverStatus" Type="varchar" MaxLength="30" />
+    <Property Name="ThirdApproverStatusChangedOn" Type="datetime2" Precision="7" />
+    <Property Name="PurchaseDetailsReadBy" Type="char" MaxLength="6" />
+    <Property Name="PurchaseDetailsReadOn" Type="date" />
+    <Property Name="PurchasePersonnel" Type="char" MaxLength="6" />
+    <Property Name="PODate" Type="date" />
+    <Property Name="ExpectedDespatchDate" Type="date" />
+    <Property Name="PurchasePersonnelsComments" Type="varchar" MaxLength="500" />
+    <Property Name="TechDocsReceivedDate" Type="date" />
+    <Property Name="CommercialOfferReceivedDate" Type="date" />
+    <Property Name="OfferDetailsMailedBy" Type="char" MaxLength="6" />
+    <Property Name="OfferDetailsMailedOn" Type="date" />
+    <Property Name="OfferDetailsViewedByCheckerOn" Type="date" />
+    <Property Name="OfferDetailsViewedByApproverOn" Type="date" />
+    <Property Name="MaterialReceiptDate" Type="date" />
+    <Property Name="Remarks1" Type="varchar" MaxLength="500" />
+    <Property Name="EstimatedCost" Type="money" />
+    <Property Name="PreviousPOPrice" Type="money" />
+    <Property Name="PurchaseTypeId" Type="tinyint" />
+    <Property Name="PreferredVendorTypeId" Type="tinyint" />
+    <Property Name="StatusId" Type="tinyint" />
+    <Property Name="PurchaseCost" Type="money" />
+    <Property Name="RevisionNo" Type="tinyint" />
+    <Property Name="BoolValidRevision" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRScopes">
+    <Key>
+      <PropertyRef Name="ScopeId" />
+    </Key>
+    <Property Name="ScopeId" Type="tinyint" Nullable="false" />
+    <Property Name="Scope" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRStatus">
+    <Key>
+      <PropertyRef Name="StatusId" />
+    </Key>
+    <Property Name="StatusId" Type="tinyint" Nullable="false" />
+    <Property Name="Status" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="BoolInUse" Type="bit" />
+  </EntityType>
+  <EntityType Name="MPRStatusTrack">
+    <Key>
+      <PropertyRef Name="StatusTrackId" />
+    </Key>
+    <Property Name="StatusTrackId" Type="int" Nullable="false" />
+    <Property Name="RequisitionId" Type="int" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="UpdatedDate" Type="date" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRTargetedSpendSupportingDocs">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="DocumentFilename" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'YSCM.dbo.MPRTechClearance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="MPRTechClearance">
+    <Key>
+      <PropertyRef Name="RequisitionId" />
+      <PropertyRef Name="BoolCleared" />
+      <PropertyRef Name="UpdatedOn" />
+    </Key>
+    <Property Name="RequisitionId" Type="int" Nullable="false" />
+    <Property Name="BoolCleared" Type="bit" Nullable="false" />
+    <Property Name="UpdatedOn" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MPRVendorDetails">
+    <Key>
+      <PropertyRef Name="VendorDetailsId" />
+    </Key>
+    <Property Name="VendorDetailsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RevisionId" Type="int" Nullable="false" />
+    <Property Name="Vendorid" Type="int" Nullable="false" />
+    <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="UpdatedDate" Type="date" Nullable="false" />
+    <Property Name="RemovedBy" Type="char" MaxLength="6" />
+    <Property Name="RemovedDate" Type="date" />
+    <Property Name="RemoveFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RFQItems">
+    <Key>
+      <PropertyRef Name="RFQItemsId" />
+    </Key>
+    <Property Name="RFQItemsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RFQRevisionId" Type="int" Nullable="false" />
+    <Property Name="MPRItemDetailsid" Type="int" Nullable="false" />
+    <Property Name="QuotationQty" Type="float" Nullable="false" />
+    <Property Name="VendorModelNo" Type="varchar" MaxLength="50" />
+    <Property Name="HSNCode" Type="varchar" MaxLength="8" />
+    <Property Name="RequestRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RFQItemsInfo">
+    <Key>
+      <PropertyRef Name="RFQSplitItemId" />
+    </Key>
+    <Property Name="RFQSplitItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RFQItemsId" Type="int" Nullable="false" />
+    <Property Name="Qty" Type="float" Nullable="false" />
+    <Property Name="UOM" Type="int" Nullable="false" />
+    <Property Name="UnitPrice" Type="money" Nullable="false" />
+    <Property Name="DiscountPercentage" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="Discount" Type="money" Nullable="false" />
+    <Property Name="CurrencyId" Type="int" Nullable="false" />
+    <Property Name="CurrencyValue" Type="money" Nullable="false" />
+    <Property Name="Remarks" Type="varchar" MaxLength="500" />
+    <Property Name="DeliveryDate" Type="date" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RFQMaster">
+    <Key>
+      <PropertyRef Name="RfqMasterId" />
+    </Key>
+    <Property Name="RfqMasterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RFQNo" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="RFQUniqueNo" Type="int" />
+    <Property Name="VendorId" Type="int" Nullable="false" />
+    <Property Name="CreatedBy" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RFQRevisions">
+    <Key>
+      <PropertyRef Name="rfqRevisionId" />
+    </Key>
+    <Property Name="rfqRevisionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="rfqMasterId" Type="int" Nullable="false" />
+    <Property Name="RevisionNo" Type="int" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="RFQValidDate" Type="date" Nullable="false" />
+    <Property Name="PackingForwarding" Type="varchar" MaxLength="250" />
+    <Property Name="ExciseDuty" Type="varchar" MaxLength="250" />
+    <Property Name="SalesTax" Type="varchar" MaxLength="250" />
+    <Property Name="Freight" Type="varchar" MaxLength="250" />
+    <Property Name="Insurance" Type="varchar" MaxLength="250" />
+    <Property Name="CustomsDuty" Type="varchar" MaxLength="250" />
+    <Property Name="ShipmentModeid" Type="int" />
+    <Property Name="PaymentTermDays" Type="int" />
+    <Property Name="PaymentTermRemarks" Type="varchar" MaxLength="500" />
+    <Property Name="BankGuarantee" Type="varchar" MaxLength="500" />
+    <Property Name="DeliveryMinWeeks" Type="int" />
+    <Property Name="DeliveryMaxWeeks" Type="int" />
+    <Property Name="DeleteFlag" Type="bit" />
+  </EntityType>
+  <EntityType Name="StandardListYNN">
+    <Key>
+      <PropertyRef Name="ListItemId" />
+    </Key>
+    <Property Name="ListItemId" Type="tinyint" Nullable="false" />
+    <Property Name="ListItem" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="XOrder" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Test_AttributeMaster">
+    <Key>
+      <PropertyRef Name="AttributeId" />
+    </Key>
+    <Property Name="AttributeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AttributeName" Type="varchar" MaxLength="50" />
+    <Property Name="Description" Type="varchar" MaxLength="500" />
+    <Property Name="DeleteFlag" Type="bit" />
+  </EntityType>
+  <EntityType Name="Test_CategoryAttributes">
+    <Key>
+      <PropertyRef Name="CatAttributeid" />
+    </Key>
+    <Property Name="CatAttributeid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CategoryId" Type="int" />
+    <Property Name="AttributeId" Type="int" />
+    <Property Name="DeleteFlag" Type="bit" />
+  </EntityType>
+  <EntityType Name="Test_CategoryMaster">
+    <Key>
+      <PropertyRef Name="Categoryid" />
+    </Key>
+    <Property Name="Categoryid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ParentId" Type="int" />
+    <Property Name="BuyergroupId" Type="tinyint" />
+    <Property Name="CategoryName" Type="varchar" MaxLength="50" />
+    <Property Name="Deleteflag" Type="bit" />
+  </EntityType>
+  <EntityType Name="Test_ItemAttributesMaster">
+    <Key>
+      <PropertyRef Name="ItemAttributeid" />
+    </Key>
+    <Property Name="ItemAttributeid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="itemid" Type="int" />
+    <Property Name="Attributeid" Type="int" />
+    <Property Name="description" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Test_ItemMaster">
+    <Key>
+      <PropertyRef Name="itemId" />
+    </Key>
+    <Property Name="itemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CategoryId" Type="int" />
+    <Property Name="ItemName" Type="varchar" MaxLength="50" />
+    <Property Name="HSNCode" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="testuserdetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="username" Type="varchar" MaxLength="100" />
+    <Property Name="password" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="UnitMaster">
+    <Key>
+      <PropertyRef Name="UnitID" />
+    </Key>
+    <Property Name="UnitID" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UnitName" Type="varchar" MaxLength="50" />
+    <Property Name="DeleteFlag" Type="bit" />
+  </EntityType>
+  <EntityType Name="UserDetails">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="char" MaxLength="6" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VendorMaster">
+    <Key>
+      <PropertyRef Name="Vendorid" />
+    </Key>
+    <Property Name="Vendorid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VendorCode" Type="varchar" MaxLength="30" />
+    <Property Name="VendorName" Type="varchar" MaxLength="350" />
+    <Property Name="Emailid" Type="varchar" MaxLength="100" />
+    <Property Name="ContactNo" Type="varchar" MaxLength="10" />
+    <Property Name="Deleteflag" Type="bit" />
+  </EntityType>
+  <Association Name="FK_AccessGroupMaster_UserDetails">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="1" />
+    <End Role="AccessGroupMaster" Type="Self.AccessGroupMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessGroupMaster">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessGroupMaster_UserDetails1">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="0..1" />
+    <End Role="AccessGroupMaster" Type="Self.AccessGroupMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessGroupMaster">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessNames_AccessGroupMaster">
+    <End Role="AccessGroupMaster" Type="Self.AccessGroupMaster" Multiplicity="1" />
+    <End Role="AccessNames" Type="Self.AccessNames" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccessGroupMaster">
+        <PropertyRef Name="AccessGroupId" />
+      </Principal>
+      <Dependent Role="AccessNames">
+        <PropertyRef Name="AccessGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessNames_UserDetails">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="1" />
+    <End Role="AccessNames" Type="Self.AccessNames" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessNames">
+        <PropertyRef Name="updatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccessNames_UserDetails1">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="0..1" />
+    <End Role="AccessNames" Type="Self.AccessNames" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AccessNames">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_AccessNames">
+    <End Role="AccessNames" Type="Self.AccessNames" Multiplicity="1" />
+    <End Role="AuthorizationItems" Type="Self.AuthorizationItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccessNames">
+        <PropertyRef Name="AccessNameID" />
+      </Principal>
+      <Dependent Role="AuthorizationItems">
+        <PropertyRef Name="AccessNamesId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_AutorizationGroup">
+    <End Role="AutorizationGroup" Type="Self.AutorizationGroup" Multiplicity="1" />
+    <End Role="AuthorizationItems" Type="Self.AuthorizationItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AutorizationGroup">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="AuthorizationItems">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_UserDetails">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="1" />
+    <End Role="AuthorizationItems" Type="Self.AuthorizationItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AuthorizationItems">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AuthorizationItems_UserDetails1">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="0..1" />
+    <End Role="AuthorizationItems" Type="Self.AuthorizationItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AuthorizationItems">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AutorizationGroup_UserDetails">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="1" />
+    <End Role="AutorizationGroup" Type="Self.AutorizationGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AutorizationGroup">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AutorizationGroup_UserDetails1">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="0..1" />
+    <End Role="AutorizationGroup" Type="Self.AutorizationGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="AutorizationGroup">
+        <PropertyRef Name="DeletedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemAttributesMaster_Test_AttributeMaster">
+    <End Role="Test_AttributeMaster" Type="Self.Test_AttributeMaster" Multiplicity="0..1" />
+    <End Role="ItemAttributesMaster" Type="Self.ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_AttributeMaster">
+        <PropertyRef Name="AttributeId" />
+      </Principal>
+      <Dependent Role="ItemAttributesMaster">
+        <PropertyRef Name="Attributeid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ItemAttributesMaster_Test_ItemMaster">
+    <End Role="Test_ItemMaster" Type="Self.Test_ItemMaster" Multiplicity="0..1" />
+    <End Role="ItemAttributesMaster" Type="Self.ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_ItemMaster">
+        <PropertyRef Name="itemId" />
+      </Principal>
+      <Dependent Role="ItemAttributesMaster">
+        <PropertyRef Name="ItemId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRBuyerGroupMembers_MPRBuyerGroups">
+    <End Role="MPRBuyerGroups" Type="Self.MPRBuyerGroups" Multiplicity="1" />
+    <End Role="MPRBuyerGroupMembers" Type="Self.MPRBuyerGroupMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRBuyerGroups">
+        <PropertyRef Name="BuyerGroupId" />
+      </Principal>
+      <Dependent Role="MPRBuyerGroupMembers">
+        <PropertyRef Name="BuyerGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRCommunications_MPRCommunications">
+    <End Role="MPRCommunications" Type="Self.MPRCommunications" Multiplicity="1" />
+    <End Role="MPRCommunications1" Type="Self.MPRCommunications" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="MPRCommunications">
+        <PropertyRef Name="MPRCCId" />
+      </Principal>
+      <Dependent Role="MPRCommunications1">
+        <PropertyRef Name="MPRCCId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRCommunications_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRCommunications" Type="Self.MPRCommunications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRCommunications">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRCommunications_UserDetails">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="1" />
+    <End Role="MPRCommunications" Type="Self.MPRCommunications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="MPRCommunications">
+        <PropertyRef Name="RemarksFrom" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDetails_MPRPreferredVendorTypes">
+    <End Role="MPRPreferredVendorTypes" Type="Self.MPRPreferredVendorTypes" Multiplicity="0..1" />
+    <End Role="MPRDetails" Type="Self.MPRDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPreferredVendorTypes">
+        <PropertyRef Name="PreferredVendorTypeId" />
+      </Principal>
+      <Dependent Role="MPRDetails">
+        <PropertyRef Name="XXXPreferredVendorTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDetails_MPRPurchaseTypes">
+    <End Role="MPRPurchaseTypes" Type="Self.MPRPurchaseTypes" Multiplicity="0..1" />
+    <End Role="MPRDetails" Type="Self.MPRDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPurchaseTypes">
+        <PropertyRef Name="PurchaseTypeId" />
+      </Principal>
+      <Dependent Role="MPRDetails">
+        <PropertyRef Name="XXXPurchaseTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDetails_MPRStatus">
+    <End Role="MPRStatus" Type="Self.MPRStatus" Multiplicity="0..1" />
+    <End Role="MPRDetails" Type="Self.MPRDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRStatus">
+        <PropertyRef Name="StatusId" />
+      </Principal>
+      <Dependent Role="MPRDetails">
+        <PropertyRef Name="XXXStatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocumentation_MPRDocumentationDescriptions">
+    <End Role="MPRDocumentationDescriptions" Type="Self.MPRDocumentationDescriptions" Multiplicity="1" />
+    <End Role="MPRDocumentation" Type="Self.MPRDocumentation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDocumentationDescriptions">
+        <PropertyRef Name="DocumentationDescriptionId" />
+      </Principal>
+      <Dependent Role="MPRDocumentation">
+        <PropertyRef Name="DocumentationDescriptionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocumentation_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRDocumentation" Type="Self.MPRDocumentation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRDocumentation">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocuments_MPRItemInfo">
+    <End Role="MPRItemInfo" Type="Self.MPRItemInfo" Multiplicity="0..1" />
+    <End Role="MPRDocuments" Type="Self.MPRDocuments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemInfo">
+        <PropertyRef Name="Itemdetailsid" />
+      </Principal>
+      <Dependent Role="MPRDocuments">
+        <PropertyRef Name="ItemDetailsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRDocuments_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRDocuments" Type="Self.MPRDocuments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRDocuments">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRIncharges_MPRDetails">
+    <End Role="MPRDetails" Type="Self.MPRDetails" Multiplicity="1" />
+    <End Role="MPRIncharges" Type="Self.MPRIncharges" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetails">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPRIncharges">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRIncharges_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRIncharges" Type="Self.MPRIncharges" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRIncharges">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemDetails_MPRPADetails">
+    <End Role="MPRPADetails" Type="Self.MPRPADetails" Multiplicity="0..1" />
+    <End Role="MPRItemDetails_X" Type="Self.MPRItemDetails_X" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPADetails">
+        <PropertyRef Name="PAId" />
+      </Principal>
+      <Dependent Role="MPRItemDetails_X">
+        <PropertyRef Name="PAId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemDetails_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRItemDetails_X" Type="Self.MPRItemDetails_X" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRItemDetails_X">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemDetailsAttachments_MPRItemDetails">
+    <End Role="MPRItemDetails_X" Type="Self.MPRItemDetails_X" Multiplicity="1" />
+    <End Role="MPRItemDetailsAttachments" Type="Self.MPRItemDetailsAttachments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemDetails_X">
+        <PropertyRef Name="ItemDetailsId" />
+      </Principal>
+      <Dependent Role="MPRItemDetailsAttachments">
+        <PropertyRef Name="ItemDetailsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemInfo_MPRItemInfo">
+    <End Role="MPRItemInfo" Type="Self.MPRItemInfo" Multiplicity="1" />
+    <End Role="MPRItemInfo1" Type="Self.MPRItemInfo" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemInfo">
+        <PropertyRef Name="Itemdetailsid" />
+      </Principal>
+      <Dependent Role="MPRItemInfo1">
+        <PropertyRef Name="Itemdetailsid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemInfo_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="0..1" />
+    <End Role="MPRItemInfo" Type="Self.MPRItemInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRItemInfo">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRItemInfo_UnitMaster">
+    <End Role="UnitMaster" Type="Self.UnitMaster" Multiplicity="0..1" />
+    <End Role="MPRItemInfo" Type="Self.MPRItemInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UnitMaster">
+        <PropertyRef Name="UnitID" />
+      </Principal>
+      <Dependent Role="MPRItemInfo">
+        <PropertyRef Name="UnitId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPROfferDetails_MPRDetails">
+    <End Role="MPRDetails" Type="Self.MPRDetails" Multiplicity="1" />
+    <End Role="MPROfferDetails" Type="Self.MPROfferDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetails">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPROfferDetails">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPAApprovers_MPRPADetails">
+    <End Role="MPRPADetails" Type="Self.MPRPADetails" Multiplicity="1" />
+    <End Role="MPRPAApprovers" Type="Self.MPRPAApprovers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPADetails">
+        <PropertyRef Name="PAId" />
+      </Principal>
+      <Dependent Role="MPRPAApprovers">
+        <PropertyRef Name="PAId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPADetails_MPRPAPurchaseModes">
+    <End Role="MPRPAPurchaseModes" Type="Self.MPRPAPurchaseModes" Multiplicity="0..1" />
+    <End Role="MPRPADetails" Type="Self.MPRPADetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPAPurchaseModes">
+        <PropertyRef Name="PurchaseModeId" />
+      </Principal>
+      <Dependent Role="MPRPADetails">
+        <PropertyRef Name="PurchaseModeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPADetails_MPRPAPurchaseTypes">
+    <End Role="MPRPAPurchaseTypes" Type="Self.MPRPAPurchaseTypes" Multiplicity="0..1" />
+    <End Role="MPRPADetails" Type="Self.MPRPADetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPAPurchaseTypes">
+        <PropertyRef Name="PurchaseTypeId" />
+      </Principal>
+      <Dependent Role="MPRPADetails">
+        <PropertyRef Name="PurchaseTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPADocuments_MPRItemDetails">
+    <End Role="MPRItemDetails_X" Type="Self.MPRItemDetails_X" Multiplicity="1" />
+    <End Role="MPRPADocuments" Type="Self.MPRPADocuments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemDetails_X">
+        <PropertyRef Name="ItemDetailsId" />
+      </Principal>
+      <Dependent Role="MPRPADocuments">
+        <PropertyRef Name="ItemDetailsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRPAVendors_MPRPADetails">
+    <End Role="MPRPADetails" Type="Self.MPRPADetails" Multiplicity="1" />
+    <End Role="MPRPAVendors" Type="Self.MPRPAVendors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRPADetails">
+        <PropertyRef Name="PAId" />
+      </Principal>
+      <Dependent Role="MPRPAVendors">
+        <PropertyRef Name="PAId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRReminderTracking_MPRCommunications">
+    <End Role="MPRCommunications" Type="Self.MPRCommunications" Multiplicity="1" />
+    <End Role="MPRReminderTracking" Type="Self.MPRReminderTracking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRCommunications">
+        <PropertyRef Name="MPRCCId" />
+      </Principal>
+      <Dependent Role="MPRReminderTracking">
+        <PropertyRef Name="MPRCCId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRReminderTracking_UserDetails">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="1" />
+    <End Role="MPRReminderTracking" Type="Self.MPRReminderTracking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="MPRReminderTracking">
+        <PropertyRef Name="ReminderTo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRBuyerGroups">
+    <End Role="MPRBuyerGroups" Type="Self.MPRBuyerGroups" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRBuyerGroups">
+        <PropertyRef Name="BuyerGroupId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="BuyerGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRCustomsDuty">
+    <End Role="MPRCustomsDuty" Type="Self.MPRCustomsDuty" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRCustomsDuty">
+        <PropertyRef Name="CustomsDutyId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="CustomsDutyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRDepartments">
+    <End Role="MPRDepartments" Type="Self.MPRDepartments" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDepartments">
+        <PropertyRef Name="DepartmentId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRDetails">
+    <End Role="MPRDetails" Type="Self.MPRDetails" Multiplicity="1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetails">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRIssuePurposes">
+    <End Role="MPRIssuePurposes" Type="Self.MPRIssuePurposes" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRIssuePurposes">
+        <PropertyRef Name="IssuePurposeId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="IssuePurposeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRProcurementSources">
+    <End Role="MPRProcurementSources" Type="Self.MPRProcurementSources" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRProcurementSources">
+        <PropertyRef Name="ProcurementSourceId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="ProcurementSourceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRProjectDutyApplicable">
+    <End Role="MPRProjectDutyApplicable" Type="Self.MPRProjectDutyApplicable" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRProjectDutyApplicable">
+        <PropertyRef Name="ProjectDutyApplicableId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="ProjectDutyApplicableId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_MPRScopes">
+    <End Role="MPRScopes" Type="Self.MPRScopes" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRScopes">
+        <PropertyRef Name="ScopeId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="ScopeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN">
+    <End Role="StandardListYNN" Type="Self.StandardListYNN" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="InspectionRequiredNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN10">
+    <End Role="StandardListYNN" Type="Self.StandardListYNN" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="ServiceTaxReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN6">
+    <End Role="StandardListYNN" Type="Self.StandardListYNN" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="InspectionRequiredNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN7">
+    <End Role="StandardListYNN" Type="Self.StandardListYNN" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="ExciseDutyReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN8">
+    <End Role="StandardListYNN" Type="Self.StandardListYNN" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="SalesTaxReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRRevisions_StandardListYNN9">
+    <End Role="StandardListYNN" Type="Self.StandardListYNN" Multiplicity="0..1" />
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StandardListYNN">
+        <PropertyRef Name="ListItemId" />
+      </Principal>
+      <Dependent Role="MPRRevisions">
+        <PropertyRef Name="VATReimbursableForBOsNew" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRStatusTrack_MPRDetails">
+    <End Role="MPRDetails" Type="Self.MPRDetails" Multiplicity="1" />
+    <End Role="MPRStatusTrack" Type="Self.MPRStatusTrack" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRDetails">
+        <PropertyRef Name="RequisitionId" />
+      </Principal>
+      <Dependent Role="MPRStatusTrack">
+        <PropertyRef Name="RequisitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRStatusTrack_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRStatusTrack" Type="Self.MPRStatusTrack" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRStatusTrack">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRStatusTrack_UserDetails">
+    <End Role="UserDetails" Type="Self.UserDetails" Multiplicity="1" />
+    <End Role="MPRStatusTrack" Type="Self.MPRStatusTrack" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserDetails">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="MPRStatusTrack">
+        <PropertyRef Name="UpdatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRTargetedSpendSupportingDocs_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRTargetedSpendSupportingDocs" Type="Self.MPRTargetedSpendSupportingDocs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRTargetedSpendSupportingDocs">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRVendorDetails_MPRRevisions">
+    <End Role="MPRRevisions" Type="Self.MPRRevisions" Multiplicity="1" />
+    <End Role="MPRVendorDetails" Type="Self.MPRVendorDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRRevisions">
+        <PropertyRef Name="RevisionId" />
+      </Principal>
+      <Dependent Role="MPRVendorDetails">
+        <PropertyRef Name="RevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MPRVendorDetails_VendorMaster">
+    <End Role="VendorMaster" Type="Self.VendorMaster" Multiplicity="1" />
+    <End Role="MPRVendorDetails" Type="Self.MPRVendorDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VendorMaster">
+        <PropertyRef Name="Vendorid" />
+      </Principal>
+      <Dependent Role="MPRVendorDetails">
+        <PropertyRef Name="Vendorid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQItems_MPRItemInfo">
+    <End Role="MPRItemInfo" Type="Self.MPRItemInfo" Multiplicity="1" />
+    <End Role="RFQItems" Type="Self.RFQItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRItemInfo">
+        <PropertyRef Name="Itemdetailsid" />
+      </Principal>
+      <Dependent Role="RFQItems">
+        <PropertyRef Name="MPRItemDetailsid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQItems_RFQRevisions">
+    <End Role="RFQRevisions" Type="Self.RFQRevisions" Multiplicity="1" />
+    <End Role="RFQItems" Type="Self.RFQItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RFQRevisions">
+        <PropertyRef Name="rfqRevisionId" />
+      </Principal>
+      <Dependent Role="RFQItems">
+        <PropertyRef Name="RFQRevisionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQItemsInfo_RFQItems">
+    <End Role="RFQItems" Type="Self.RFQItems" Multiplicity="1" />
+    <End Role="RFQItemsInfo" Type="Self.RFQItemsInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RFQItems">
+        <PropertyRef Name="RFQItemsId" />
+      </Principal>
+      <Dependent Role="RFQItemsInfo">
+        <PropertyRef Name="RFQItemsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQMaster_VendorMaster">
+    <End Role="VendorMaster" Type="Self.VendorMaster" Multiplicity="1" />
+    <End Role="RFQMaster" Type="Self.RFQMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VendorMaster">
+        <PropertyRef Name="Vendorid" />
+      </Principal>
+      <Dependent Role="RFQMaster">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQRevisions_RFQMaster">
+    <End Role="RFQMaster" Type="Self.RFQMaster" Multiplicity="1" />
+    <End Role="RFQRevisions" Type="Self.RFQRevisions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RFQMaster">
+        <PropertyRef Name="RfqMasterId" />
+      </Principal>
+      <Dependent Role="RFQRevisions">
+        <PropertyRef Name="rfqMasterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_CategoryAttributes_Test_AttributeMaster">
+    <End Role="Test_AttributeMaster" Type="Self.Test_AttributeMaster" Multiplicity="0..1" />
+    <End Role="Test_CategoryAttributes" Type="Self.Test_CategoryAttributes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_AttributeMaster">
+        <PropertyRef Name="AttributeId" />
+      </Principal>
+      <Dependent Role="Test_CategoryAttributes">
+        <PropertyRef Name="AttributeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_CategoryMaster_MPRBuyerGroups">
+    <End Role="MPRBuyerGroups" Type="Self.MPRBuyerGroups" Multiplicity="0..1" />
+    <End Role="Test_CategoryMaster" Type="Self.Test_CategoryMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MPRBuyerGroups">
+        <PropertyRef Name="BuyerGroupId" />
+      </Principal>
+      <Dependent Role="Test_CategoryMaster">
+        <PropertyRef Name="BuyergroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_CategoryMaster_Test_CategoryMaster">
+    <End Role="Test_CategoryMaster" Type="Self.Test_CategoryMaster" Multiplicity="0..1" />
+    <End Role="Test_CategoryMaster1" Type="Self.Test_CategoryMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_CategoryMaster">
+        <PropertyRef Name="Categoryid" />
+      </Principal>
+      <Dependent Role="Test_CategoryMaster1">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_ItemAttributesMaster_Test_AttributeMaster">
+    <End Role="Test_AttributeMaster" Type="Self.Test_AttributeMaster" Multiplicity="0..1" />
+    <End Role="Test_ItemAttributesMaster" Type="Self.Test_ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_AttributeMaster">
+        <PropertyRef Name="AttributeId" />
+      </Principal>
+      <Dependent Role="Test_ItemAttributesMaster">
+        <PropertyRef Name="Attributeid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_ItemAttributesMaster_Test_ItemMaster">
+    <End Role="Test_ItemMaster" Type="Self.Test_ItemMaster" Multiplicity="0..1" />
+    <End Role="Test_ItemAttributesMaster" Type="Self.Test_ItemAttributesMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_ItemMaster">
+        <PropertyRef Name="itemId" />
+      </Principal>
+      <Dependent Role="Test_ItemAttributesMaster">
+        <PropertyRef Name="itemid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_ItemMaster_Test_CategoryMaster">
+    <End Role="Test_CategoryMaster" Type="Self.Test_CategoryMaster" Multiplicity="0..1" />
+    <End Role="Test_ItemMaster" Type="Self.Test_ItemMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test_CategoryMaster">
+        <PropertyRef Name="Categoryid" />
+      </Principal>
+      <Dependent Role="Test_ItemMaster">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="YSCMModelStoreContainer">
+    <EntitySet Name="AccessGroupMaster" EntityType="Self.AccessGroupMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AccessNames" EntityType="Self.AccessNames" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AuthorizationItems" EntityType="Self.AuthorizationItems" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AutorizationGroup" EntityType="Self.AutorizationGroup" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ClientLogin" EntityType="Self.ClientLogin" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemAttributesMaster" EntityType="Self.ItemAttributesMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MaterialMaster" EntityType="Self.MaterialMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRApprovers" EntityType="Self.MPRApprovers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRBuyerGroupMembers" EntityType="Self.MPRBuyerGroupMembers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRBuyerGroups" EntityType="Self.MPRBuyerGroups" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRCommunications" EntityType="Self.MPRCommunications" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRCustomsDuty" EntityType="Self.MPRCustomsDuty" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRDepartments" EntityType="Self.MPRDepartments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRDespatchDocCategories" EntityType="Self.MPRDespatchDocCategories" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRDetails" EntityType="Self.MPRDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRDispatchLocations" EntityType="Self.MPRDispatchLocations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRDocumentation" EntityType="Self.MPRDocumentation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRDocumentationDescriptions" EntityType="Self.MPRDocumentationDescriptions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRDocuments" EntityType="Self.MPRDocuments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRIncharges" EntityType="Self.MPRIncharges" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRIssuePurposes" EntityType="Self.MPRIssuePurposes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRItemDetails_X" EntityType="Self.MPRItemDetails_X" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRItemDetailsAttachments" EntityType="Self.MPRItemDetailsAttachments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRItemInfo" EntityType="Self.MPRItemInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPROfferDetails" EntityType="Self.MPROfferDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPAApprovers" EntityType="Self.MPRPAApprovers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPADetails" EntityType="Self.MPRPADetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPADocuments" EntityType="Self.MPRPADocuments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPAPurchaseModes" EntityType="Self.MPRPAPurchaseModes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPAPurchaseTypes" EntityType="Self.MPRPAPurchaseTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPAVendors" EntityType="Self.MPRPAVendors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPreferredVendorTypes" EntityType="Self.MPRPreferredVendorTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRProcurementSources" EntityType="Self.MPRProcurementSources" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRProjectDutyApplicable" EntityType="Self.MPRProjectDutyApplicable" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRPurchaseTypes" EntityType="Self.MPRPurchaseTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRReminderTracking" EntityType="Self.MPRReminderTracking" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRRevisions" EntityType="Self.MPRRevisions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRScopes" EntityType="Self.MPRScopes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRStatus" EntityType="Self.MPRStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRStatusTrack" EntityType="Self.MPRStatusTrack" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRTargetedSpendSupportingDocs" EntityType="Self.MPRTargetedSpendSupportingDocs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MPRVendorDetails" EntityType="Self.MPRVendorDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RFQItems" EntityType="Self.RFQItems" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RFQItemsInfo" EntityType="Self.RFQItemsInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RFQMaster" EntityType="Self.RFQMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RFQRevisions" EntityType="Self.RFQRevisions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StandardListYNN" EntityType="Self.StandardListYNN" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Test_AttributeMaster" EntityType="Self.Test_AttributeMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Test_CategoryAttributes" EntityType="Self.Test_CategoryAttributes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Test_CategoryMaster" EntityType="Self.Test_CategoryMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Test_ItemAttributesMaster" EntityType="Self.Test_ItemAttributesMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Test_ItemMaster" EntityType="Self.Test_ItemMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="testuserdetails" EntityType="Self.testuserdetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UnitMaster" EntityType="Self.UnitMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserDetails" EntityType="Self.UserDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VendorMaster" EntityType="Self.VendorMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CustomerMasterYGS" EntityType="Self.CustomerMasterYGS" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [CustomerMasterYGS].[CustomerId] AS [CustomerId], 
+    [CustomerMasterYGS].[GroupId] AS [GroupId], 
+    [CustomerMasterYGS].[CustomerMasterTypeId] AS [CustomerMasterTypeId], 
+    [CustomerMasterYGS].[YGSSAPCustomerCode] AS [YGSSAPCustomerCode], 
+    [CustomerMasterYGS].[CustomerName1] AS [CustomerName1], 
+    [CustomerMasterYGS].[CustomerName2] AS [CustomerName2], 
+    [CustomerMasterYGS].[CustomerName3] AS [CustomerName3], 
+    [CustomerMasterYGS].[CustomerCountry] AS [CustomerCountry], 
+    [CustomerMasterYGS].[PostalCode] AS [PostalCode], 
+    [CustomerMasterYGS].[StateCode] AS [StateCode], 
+    [CustomerMasterYGS].[City] AS [City], 
+    [CustomerMasterYGS].[Address1] AS [Address1], 
+    [CustomerMasterYGS].[Address2] AS [Address2], 
+    [CustomerMasterYGS].[Address3] AS [Address3], 
+    [CustomerMasterYGS].[IndustryCode] AS [IndustryCode], 
+    [CustomerMasterYGS].[PAN] AS [PAN], 
+    [CustomerMasterYGS].[TAN] AS [TAN], 
+    [CustomerMasterYGS].[GSTNo] AS [GSTNo], 
+    [CustomerMasterYGS].[CINNo] AS [CINNo]
+    FROM [dbo].[CustomerMasterYGS] AS [CustomerMasterYGS]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Departments" EntityType="Self.Departments" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Departments].[DepartmentId] AS [DepartmentId], 
+    [Departments].[DepartmentName] AS [DepartmentName], 
+    [Departments].[DepartmentHead] AS [DepartmentHead], 
+    [Departments].[DepartmentAdministrator] AS [DepartmentAdministrator], 
+    [Departments].[DepartmentSubAdministrator] AS [DepartmentSubAdministrator], 
+    [Departments].[BUCode] AS [BUCode], 
+    [Departments].[BoolInUse] AS [BoolInUse]
+    FROM [dbo].[Departments] AS [Departments]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Employee" EntityType="Self.Employee" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Employee].[EmployeeNo] AS [EmployeeNo], 
+    [Employee].[Name] AS [Name], 
+    [Employee].[Nickname] AS [Nickname], 
+    [Employee].[ShortName] AS [ShortName], 
+    [Employee].[GlobalEmpNo] AS [GlobalEmpNo], 
+    [Employee].[YGSAccountCode] AS [YGSAccountCode], 
+    [Employee].[DomainId] AS [DomainId], 
+    [Employee].[YGSCostCenter] AS [YGSCostCenter], 
+    [Employee].[CostCenter] AS [CostCenter], 
+    [Employee].[OrgDepartmentId] AS [OrgDepartmentId], 
+    [Employee].[OrgOfficeId] AS [OrgOfficeId], 
+    [Employee].[Sex] AS [Sex], 
+    [Employee].[MaritalStatus] AS [MaritalStatus], 
+    [Employee].[DOB] AS [DOB], 
+    [Employee].[BoolContract] AS [BoolContract], 
+    [Employee].[DOJ] AS [DOJ], 
+    [Employee].[EffectiveDOJ] AS [EffectiveDOJ], 
+    [Employee].[ConfirmationDueDate] AS [ConfirmationDueDate], 
+    [Employee].[ConfirmationDate] AS [ConfirmationDate], 
+    [Employee].[DOL] AS [DOL], 
+    [Employee].[DepartmentId] AS [DepartmentId], 
+    [Employee].[GroupId] AS [GroupId], 
+    [Employee].[DeptCode] AS [DeptCode], 
+    [Employee].[Grade] AS [Grade], 
+    [Employee].[Designation] AS [Designation], 
+    [Employee].[FunctionalRoleId] AS [FunctionalRoleId], 
+    [Employee].[EMail] AS [EMail], 
+    [Employee].[SerialNo] AS [SerialNo], 
+    [Employee].[BloodGroup] AS [BloodGroup], 
+    [Employee].[HODEmpNo] AS [HODEmpNo], 
+    [Employee].[BoolHOD] AS [BoolHOD], 
+    [Employee].[BlockId] AS [BlockId], 
+    [Employee].[FloorId] AS [FloorId], 
+    [Employee].[Qualification] AS [Qualification], 
+    [Employee].[QualificationString] AS [QualificationString], 
+    [Employee].[BoolFurnishedCertificates] AS [BoolFurnishedCertificates], 
+    [Employee].[PrevEmployment] AS [PrevEmployment], 
+    [Employee].[BoolExecutive] AS [BoolExecutive], 
+    [Employee].[MobileNo] AS [MobileNo], 
+    [Employee].[Basic] AS [Basic], 
+    [Employee].[HRA] AS [HRA], 
+    [Employee].[MedicalAllowance] AS [MedicalAllowance], 
+    [Employee].[SpecialAllowance] AS [SpecialAllowance], 
+    [Employee].[TransportAllowance] AS [TransportAllowance], 
+    [Employee].[TraineeAllowance] AS [TraineeAllowance], 
+    [Employee].[PersonalPay] AS [PersonalPay], 
+    [Employee].[ProfessionalAllowance] AS [ProfessionalAllowance], 
+    [Employee].[PFNo] AS [PFNo], 
+    [Employee].[FPFNo] AS [FPFNo], 
+    [Employee].[AccountsDetails] AS [AccountsDetails], 
+    [Employee].[BoolESI] AS [BoolESI], 
+    [Employee].[ICICIAccNo] AS [ICICIAccNo], 
+    [Employee].[MedAllBal] AS [MedAllBal], 
+    [Employee].[PickupPointId] AS [PickupPointId], 
+    [Employee].[HomePhone] AS [HomePhone], 
+    [Employee].[PresentAddress] AS [PresentAddress], 
+    [Employee].[PermanentAddress] AS [PermanentAddress], 
+    [Employee].[EmergencyContactPerson] AS [EmergencyContactPerson], 
+    [Employee].[EmergencyContactNo] AS [EmergencyContactNo], 
+    [Employee].[BoolHasProximityCard] AS [BoolHasProximityCard], 
+    [Employee].[PLStatus] AS [PLStatus], 
+    [Employee].[OldPLStatus] AS [OldPLStatus], 
+    [Employee].[LeavesDeductedFromFlexiDaily] AS [LeavesDeductedFromFlexiDaily], 
+    [Employee].[LeavesDeductedFromFlexiWeekly] AS [LeavesDeductedFromFlexiWeekly], 
+    [Employee].[RestrictedHolidaysAvailed] AS [RestrictedHolidaysAvailed], 
+    [Employee].[PaternityLeavesAvailed] AS [PaternityLeavesAvailed], 
+    [Employee].[NameAsInPassport] AS [NameAsInPassport], 
+    [Employee].[PassportNo] AS [PassportNo], 
+    [Employee].[PassportIssuedPlace] AS [PassportIssuedPlace], 
+    [Employee].[PassportIssuedDate] AS [PassportIssuedDate], 
+    [Employee].[PassportExpiryDate] AS [PassportExpiryDate], 
+    [Employee].[AddressAsInPassport] AS [AddressAsInPassport], 
+    [Employee].[BirthPlace] AS [BirthPlace], 
+    [Employee].[PanNo] AS [PanNo], 
+    [Employee].[AadhaarNo] AS [AadhaarNo], 
+    [Employee].[BoolKannadiga] AS [BoolKannadiga], 
+    [Employee].[CommunityId] AS [CommunityId], 
+    [Employee].[FathersName] AS [FathersName], 
+    [Employee].[SpouseName] AS [SpouseName], 
+    [Employee].[OrganizationId] AS [OrganizationId], 
+    [Employee].[BoolIntranetEnabled] AS [BoolIntranetEnabled], 
+    [Employee].[UAN] AS [UAN], 
+    [Employee].[ExpenseCategoryId] AS [ExpenseCategoryId], 
+    [Employee].[BoolExpatriate] AS [BoolExpatriate], 
+    [Employee].[PWD] AS [PWD]
+    FROM [dbo].[Employee] AS [Employee]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Grades" EntityType="Self.Grades" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Grades].[Grade] AS [Grade], 
+    [Grades].[GroupId] AS [GroupId], 
+    [Grades].[Designation] AS [Designation], 
+    [Grades].[Hierarchy] AS [Hierarchy], 
+    [Grades].[SumInsured] AS [SumInsured], 
+    [Grades].[SumInsuredDependentParents] AS [SumInsuredDependentParents], 
+    [Grades].[PersonalAccidentSumInsured] AS [PersonalAccidentSumInsured], 
+    [Grades].[JobStatus] AS [JobStatus], 
+    [Grades].[TSSkillFactor] AS [TSSkillFactor], 
+    [Grades].[TEVComfortLevel] AS [TEVComfortLevel], 
+    [Grades].[TEVOutOfPocketAllowance] AS [TEVOutOfPocketAllowance], 
+    [Grades].[TEVOffshoreAllowance] AS [TEVOffshoreAllowance], 
+    [Grades].[TEVDayTripAllowance] AS [TEVDayTripAllowance], 
+    [Grades].[BoolInUse] AS [BoolInUse]
+    FROM [dbo].[Grades] AS [Grades]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="MPRTechClearance" EntityType="Self.MPRTechClearance" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [MPRTechClearance].[RequisitionId] AS [RequisitionId], 
+    [MPRTechClearance].[BoolCleared] AS [BoolCleared], 
+    [MPRTechClearance].[UpdatedOn] AS [UpdatedOn]
+    FROM [dbo].[MPRTechClearance] AS [MPRTechClearance]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_AccessGroupMaster_UserDetails" Association="Self.FK_AccessGroupMaster_UserDetails">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AccessGroupMaster" EntitySet="AccessGroupMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessGroupMaster_UserDetails1" Association="Self.FK_AccessGroupMaster_UserDetails1">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AccessGroupMaster" EntitySet="AccessGroupMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessNames_AccessGroupMaster" Association="Self.FK_AccessNames_AccessGroupMaster">
+      <End Role="AccessGroupMaster" EntitySet="AccessGroupMaster" />
+      <End Role="AccessNames" EntitySet="AccessNames" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessNames_UserDetails" Association="Self.FK_AccessNames_UserDetails">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AccessNames" EntitySet="AccessNames" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AccessNames_UserDetails1" Association="Self.FK_AccessNames_UserDetails1">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AccessNames" EntitySet="AccessNames" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_AccessNames" Association="Self.FK_AuthorizationItems_AccessNames">
+      <End Role="AccessNames" EntitySet="AccessNames" />
+      <End Role="AuthorizationItems" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_AutorizationGroup" Association="Self.FK_AuthorizationItems_AutorizationGroup">
+      <End Role="AutorizationGroup" EntitySet="AutorizationGroup" />
+      <End Role="AuthorizationItems" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_UserDetails" Association="Self.FK_AuthorizationItems_UserDetails">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AuthorizationItems" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AuthorizationItems_UserDetails1" Association="Self.FK_AuthorizationItems_UserDetails1">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AuthorizationItems" EntitySet="AuthorizationItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AutorizationGroup_UserDetails" Association="Self.FK_AutorizationGroup_UserDetails">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AutorizationGroup" EntitySet="AutorizationGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AutorizationGroup_UserDetails1" Association="Self.FK_AutorizationGroup_UserDetails1">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="AutorizationGroup" EntitySet="AutorizationGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemAttributesMaster_Test_AttributeMaster" Association="Self.FK_ItemAttributesMaster_Test_AttributeMaster">
+      <End Role="Test_AttributeMaster" EntitySet="Test_AttributeMaster" />
+      <End Role="ItemAttributesMaster" EntitySet="ItemAttributesMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ItemAttributesMaster_Test_ItemMaster" Association="Self.FK_ItemAttributesMaster_Test_ItemMaster">
+      <End Role="Test_ItemMaster" EntitySet="Test_ItemMaster" />
+      <End Role="ItemAttributesMaster" EntitySet="ItemAttributesMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRBuyerGroupMembers_MPRBuyerGroups" Association="Self.FK_MPRBuyerGroupMembers_MPRBuyerGroups">
+      <End Role="MPRBuyerGroups" EntitySet="MPRBuyerGroups" />
+      <End Role="MPRBuyerGroupMembers" EntitySet="MPRBuyerGroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRCommunications_MPRCommunications" Association="Self.FK_MPRCommunications_MPRCommunications">
+      <End Role="MPRCommunications" EntitySet="MPRCommunications" />
+      <End Role="MPRCommunications1" EntitySet="MPRCommunications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRCommunications_MPRRevisions" Association="Self.FK_MPRCommunications_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRCommunications" EntitySet="MPRCommunications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRCommunications_UserDetails" Association="Self.FK_MPRCommunications_UserDetails">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="MPRCommunications" EntitySet="MPRCommunications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDetails_MPRPreferredVendorTypes" Association="Self.FK_MPRDetails_MPRPreferredVendorTypes">
+      <End Role="MPRPreferredVendorTypes" EntitySet="MPRPreferredVendorTypes" />
+      <End Role="MPRDetails" EntitySet="MPRDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDetails_MPRPurchaseTypes" Association="Self.FK_MPRDetails_MPRPurchaseTypes">
+      <End Role="MPRPurchaseTypes" EntitySet="MPRPurchaseTypes" />
+      <End Role="MPRDetails" EntitySet="MPRDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDetails_MPRStatus" Association="Self.FK_MPRDetails_MPRStatus">
+      <End Role="MPRStatus" EntitySet="MPRStatus" />
+      <End Role="MPRDetails" EntitySet="MPRDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocumentation_MPRDocumentationDescriptions" Association="Self.FK_MPRDocumentation_MPRDocumentationDescriptions">
+      <End Role="MPRDocumentationDescriptions" EntitySet="MPRDocumentationDescriptions" />
+      <End Role="MPRDocumentation" EntitySet="MPRDocumentation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocumentation_MPRRevisions" Association="Self.FK_MPRDocumentation_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRDocumentation" EntitySet="MPRDocumentation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocuments_MPRItemInfo" Association="Self.FK_MPRDocuments_MPRItemInfo">
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfo" />
+      <End Role="MPRDocuments" EntitySet="MPRDocuments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRDocuments_MPRRevisions" Association="Self.FK_MPRDocuments_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRDocuments" EntitySet="MPRDocuments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRIncharges_MPRDetails" Association="Self.FK_MPRIncharges_MPRDetails">
+      <End Role="MPRDetails" EntitySet="MPRDetails" />
+      <End Role="MPRIncharges" EntitySet="MPRIncharges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRIncharges_MPRRevisions" Association="Self.FK_MPRIncharges_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRIncharges" EntitySet="MPRIncharges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemDetails_MPRPADetails" Association="Self.FK_MPRItemDetails_MPRPADetails">
+      <End Role="MPRPADetails" EntitySet="MPRPADetails" />
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemDetails_MPRRevisions" Association="Self.FK_MPRItemDetails_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemDetailsAttachments_MPRItemDetails" Association="Self.FK_MPRItemDetailsAttachments_MPRItemDetails">
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+      <End Role="MPRItemDetailsAttachments" EntitySet="MPRItemDetailsAttachments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemInfo_MPRItemInfo" Association="Self.FK_MPRItemInfo_MPRItemInfo">
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfo" />
+      <End Role="MPRItemInfo1" EntitySet="MPRItemInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemInfo_MPRRevisions" Association="Self.FK_MPRItemInfo_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRItemInfo_UnitMaster" Association="Self.FK_MPRItemInfo_UnitMaster">
+      <End Role="UnitMaster" EntitySet="UnitMaster" />
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPROfferDetails_MPRDetails" Association="Self.FK_MPROfferDetails_MPRDetails">
+      <End Role="MPRDetails" EntitySet="MPRDetails" />
+      <End Role="MPROfferDetails" EntitySet="MPROfferDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPAApprovers_MPRPADetails" Association="Self.FK_MPRPAApprovers_MPRPADetails">
+      <End Role="MPRPADetails" EntitySet="MPRPADetails" />
+      <End Role="MPRPAApprovers" EntitySet="MPRPAApprovers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPADetails_MPRPAPurchaseModes" Association="Self.FK_MPRPADetails_MPRPAPurchaseModes">
+      <End Role="MPRPAPurchaseModes" EntitySet="MPRPAPurchaseModes" />
+      <End Role="MPRPADetails" EntitySet="MPRPADetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPADetails_MPRPAPurchaseTypes" Association="Self.FK_MPRPADetails_MPRPAPurchaseTypes">
+      <End Role="MPRPAPurchaseTypes" EntitySet="MPRPAPurchaseTypes" />
+      <End Role="MPRPADetails" EntitySet="MPRPADetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPADocuments_MPRItemDetails" Association="Self.FK_MPRPADocuments_MPRItemDetails">
+      <End Role="MPRItemDetails_X" EntitySet="MPRItemDetails_X" />
+      <End Role="MPRPADocuments" EntitySet="MPRPADocuments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRPAVendors_MPRPADetails" Association="Self.FK_MPRPAVendors_MPRPADetails">
+      <End Role="MPRPADetails" EntitySet="MPRPADetails" />
+      <End Role="MPRPAVendors" EntitySet="MPRPAVendors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRReminderTracking_MPRCommunications" Association="Self.FK_MPRReminderTracking_MPRCommunications">
+      <End Role="MPRCommunications" EntitySet="MPRCommunications" />
+      <End Role="MPRReminderTracking" EntitySet="MPRReminderTracking" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRReminderTracking_UserDetails" Association="Self.FK_MPRReminderTracking_UserDetails">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="MPRReminderTracking" EntitySet="MPRReminderTracking" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRBuyerGroups" Association="Self.FK_MPRRevisions_MPRBuyerGroups">
+      <End Role="MPRBuyerGroups" EntitySet="MPRBuyerGroups" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRCustomsDuty" Association="Self.FK_MPRRevisions_MPRCustomsDuty">
+      <End Role="MPRCustomsDuty" EntitySet="MPRCustomsDuty" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRDepartments" Association="Self.FK_MPRRevisions_MPRDepartments">
+      <End Role="MPRDepartments" EntitySet="MPRDepartments" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRDetails" Association="Self.FK_MPRRevisions_MPRDetails">
+      <End Role="MPRDetails" EntitySet="MPRDetails" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRIssuePurposes" Association="Self.FK_MPRRevisions_MPRIssuePurposes">
+      <End Role="MPRIssuePurposes" EntitySet="MPRIssuePurposes" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRProcurementSources" Association="Self.FK_MPRRevisions_MPRProcurementSources">
+      <End Role="MPRProcurementSources" EntitySet="MPRProcurementSources" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRProjectDutyApplicable" Association="Self.FK_MPRRevisions_MPRProjectDutyApplicable">
+      <End Role="MPRProjectDutyApplicable" EntitySet="MPRProjectDutyApplicable" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_MPRScopes" Association="Self.FK_MPRRevisions_MPRScopes">
+      <End Role="MPRScopes" EntitySet="MPRScopes" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN" Association="Self.FK_MPRRevisions_StandardListYNN">
+      <End Role="StandardListYNN" EntitySet="StandardListYNN" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN10" Association="Self.FK_MPRRevisions_StandardListYNN10">
+      <End Role="StandardListYNN" EntitySet="StandardListYNN" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN6" Association="Self.FK_MPRRevisions_StandardListYNN6">
+      <End Role="StandardListYNN" EntitySet="StandardListYNN" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN7" Association="Self.FK_MPRRevisions_StandardListYNN7">
+      <End Role="StandardListYNN" EntitySet="StandardListYNN" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN8" Association="Self.FK_MPRRevisions_StandardListYNN8">
+      <End Role="StandardListYNN" EntitySet="StandardListYNN" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRRevisions_StandardListYNN9" Association="Self.FK_MPRRevisions_StandardListYNN9">
+      <End Role="StandardListYNN" EntitySet="StandardListYNN" />
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRStatusTrack_MPRDetails" Association="Self.FK_MPRStatusTrack_MPRDetails">
+      <End Role="MPRDetails" EntitySet="MPRDetails" />
+      <End Role="MPRStatusTrack" EntitySet="MPRStatusTrack" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRStatusTrack_MPRRevisions" Association="Self.FK_MPRStatusTrack_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRStatusTrack" EntitySet="MPRStatusTrack" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRStatusTrack_UserDetails" Association="Self.FK_MPRStatusTrack_UserDetails">
+      <End Role="UserDetails" EntitySet="UserDetails" />
+      <End Role="MPRStatusTrack" EntitySet="MPRStatusTrack" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRTargetedSpendSupportingDocs_MPRRevisions" Association="Self.FK_MPRTargetedSpendSupportingDocs_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRTargetedSpendSupportingDocs" EntitySet="MPRTargetedSpendSupportingDocs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRVendorDetails_MPRRevisions" Association="Self.FK_MPRVendorDetails_MPRRevisions">
+      <End Role="MPRRevisions" EntitySet="MPRRevisions" />
+      <End Role="MPRVendorDetails" EntitySet="MPRVendorDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MPRVendorDetails_VendorMaster" Association="Self.FK_MPRVendorDetails_VendorMaster">
+      <End Role="VendorMaster" EntitySet="VendorMaster" />
+      <End Role="MPRVendorDetails" EntitySet="MPRVendorDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQItems_MPRItemInfo" Association="Self.FK_RFQItems_MPRItemInfo">
+      <End Role="MPRItemInfo" EntitySet="MPRItemInfo" />
+      <End Role="RFQItems" EntitySet="RFQItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQItems_RFQRevisions" Association="Self.FK_RFQItems_RFQRevisions">
+      <End Role="RFQRevisions" EntitySet="RFQRevisions" />
+      <End Role="RFQItems" EntitySet="RFQItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQItemsInfo_RFQItems" Association="Self.FK_RFQItemsInfo_RFQItems">
+      <End Role="RFQItems" EntitySet="RFQItems" />
+      <End Role="RFQItemsInfo" EntitySet="RFQItemsInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQMaster_VendorMaster" Association="Self.FK_RFQMaster_VendorMaster">
+      <End Role="VendorMaster" EntitySet="VendorMaster" />
+      <End Role="RFQMaster" EntitySet="RFQMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQRevisions_RFQMaster" Association="Self.FK_RFQRevisions_RFQMaster">
+      <End Role="RFQMaster" EntitySet="RFQMaster" />
+      <End Role="RFQRevisions" EntitySet="RFQRevisions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_CategoryAttributes_Test_AttributeMaster" Association="Self.FK_Test_CategoryAttributes_Test_AttributeMaster">
+      <End Role="Test_AttributeMaster" EntitySet="Test_AttributeMaster" />
+      <End Role="Test_CategoryAttributes" EntitySet="Test_CategoryAttributes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_CategoryMaster_MPRBuyerGroups" Association="Self.FK_Test_CategoryMaster_MPRBuyerGroups">
+      <End Role="MPRBuyerGroups" EntitySet="MPRBuyerGroups" />
+      <End Role="Test_CategoryMaster" EntitySet="Test_CategoryMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_CategoryMaster_Test_CategoryMaster" Association="Self.FK_Test_CategoryMaster_Test_CategoryMaster">
+      <End Role="Test_CategoryMaster" EntitySet="Test_CategoryMaster" />
+      <End Role="Test_CategoryMaster1" EntitySet="Test_CategoryMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_ItemAttributesMaster_Test_AttributeMaster" Association="Self.FK_Test_ItemAttributesMaster_Test_AttributeMaster">
+      <End Role="Test_AttributeMaster" EntitySet="Test_AttributeMaster" />
+      <End Role="Test_ItemAttributesMaster" EntitySet="Test_ItemAttributesMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_ItemAttributesMaster_Test_ItemMaster" Association="Self.FK_Test_ItemAttributesMaster_Test_ItemMaster">
+      <End Role="Test_ItemMaster" EntitySet="Test_ItemMaster" />
+      <End Role="Test_ItemAttributesMaster" EntitySet="Test_ItemAttributesMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_ItemMaster_Test_CategoryMaster" Association="Self.FK_Test_ItemMaster_Test_CategoryMaster">
+      <End Role="Test_CategoryMaster" EntitySet="Test_CategoryMaster" />
+      <End Role="Test_ItemMaster" EntitySet="Test_ItemMaster" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
