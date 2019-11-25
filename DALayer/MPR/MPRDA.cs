@@ -1,4 +1,5 @@
-﻿using SCMModels;
+﻿using DALayer.Emails;
+using SCMModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,11 @@ namespace DALayer.MPR
 {
 	public class MPRDA : IMPRDA
 	{
+		private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
+		public MPRDA(IEmailTemplateDA EmailTemplateDA)
+		{
+			this.emailTemplateDA = EmailTemplateDA;
+		}
 		YSCMEntities DB = new YSCMEntities();
 
 		public DataTable GetListItems(DynamicSearchResult Result)
@@ -485,6 +491,7 @@ namespace DALayer.MPR
 						mprrevision.ThirdApproverStatusChangedOn = DateTime.Now;
 					}
 					Context.SaveChanges();
+					this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId);
 				}
 				
 			}
