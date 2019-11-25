@@ -97,6 +97,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Emails\EmailTemplateDA.cs" />
+    <Compile Include="Emails\IEmailTemplateDA.cs" />
     <Compile Include="MPR\IMPRDA.cs" />
     <Compile Include="MPR\MPRDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
