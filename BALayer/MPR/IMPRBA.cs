@@ -11,6 +11,9 @@ namespace BALayer
 {
 	public interface IMPRBA
 	{
+		DataTable getDBMastersList(DynamicSearchResult Result);
+		bool addDataToDBMasters(DynamicSearchResult Result);
+		bool updateDataToDBMasters(DynamicSearchResult Result);
 		MPRRevision updateMPR(MPRRevision mpr);
 		DataTable GetListItems(DynamicSearchResult Result);
 		bool deleteMPRDocument(MPRDocument mprDocument);

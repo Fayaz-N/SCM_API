@@ -20,7 +20,59 @@ namespace DALayer.MPR
 			this.emailTemplateDA = EmailTemplateDA;
 		}
 		YSCMEntities DB = new YSCMEntities();
+		public DataTable getDBMastersList(DynamicSearchResult Result)
+		{
+			Result.connectionString = DB.Database.Connection.ConnectionString;
+			DataTable dtDBMastersList = new DataTable();
+			string query = "";
+			if (Result.tableName != "")
+			{
+				query = "select * from " + Result.tableName;
+				if (Result.sortBy != null)
+				{
+					query += " order by " + Result.sortBy;
+				}
+			}
+			else if (Result.query != "")
+			{
+				query = Result.query;
+			}
 
+			SqlConnection con = new SqlConnection(DB.Database.Connection.ConnectionString);
+			SqlCommand cmd = new SqlCommand(query, con);
+			con.Open();
+			SqlDataAdapter da = new SqlDataAdapter(cmd);
+			da.Fill(dtDBMastersList);
+			con.Close();
+			da.Dispose();
+
+			return dtDBMastersList;
+		}
+
+		public bool addDataToDBMasters(DynamicSearchResult Result)
+		{
+			string query = "insert into " + Result.tableName + "(" + Result.columnNames + ")values('" + Result.columnValues + "')";
+
+			SqlConnection con = new SqlConnection(DB.Database.Connection.ConnectionString);
+			SqlCommand cmd = new SqlCommand(query, con);
+			con.Open();
+			cmd.ExecuteNonQuery();
+			con.Close();
+			return true;
+		}
+
+		public bool updateDataToDBMasters(DynamicSearchResult Result)
+		{
+			Result.connectionString = DB.Database.Connection.ConnectionString;
+			string query = Result.query;
+
+			SqlConnection con = new SqlConnection(DB.Database.Connection.ConnectionString);
+			SqlCommand cmd = new SqlCommand(query, con);
+			con.Open();
+			cmd.ExecuteNonQuery();
+			con.Close();
+			return true;
+		}
 		public DataTable GetListItems(DynamicSearchResult Result)
 		{
 			Result.connectionString = DB.Database.Connection.ConnectionString;

@@ -18,6 +18,21 @@ namespace BALayer
 		{
 			this._mprDataAcess = MPRDA;
 		}
+		public DataTable getDBMastersList(DynamicSearchResult Result)
+		{
+			return this._mprDataAcess.getDBMastersList(Result);
+
+		}
+		public bool addDataToDBMasters(DynamicSearchResult Result)
+		{
+			return this._mprDataAcess.addDataToDBMasters(Result);
+
+		}
+		public bool updateDataToDBMasters(DynamicSearchResult Result)
+		{
+			return this._mprDataAcess.updateDataToDBMasters(Result);
+
+		}
 		public MPRRevision updateMPR(MPRRevision mpr)
 		{
 			return this._mprDataAcess.updateMPR(mpr);

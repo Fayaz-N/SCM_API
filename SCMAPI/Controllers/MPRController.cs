@@ -23,7 +23,28 @@ namespace SCMAPI.Controllers
 			this._mprBusenessAcess = mprBA;
 		}
 
-		[HttpPost]
+        [HttpPost]
+        [Route("getDBMastersList")]
+        public IHttpActionResult getDBMastersList([FromBody] DynamicSearchResult Result)
+        {
+            return Ok(this._mprBusenessAcess.getDBMastersList(Result));
+        }
+
+        [HttpPost]
+        [Route("addDataToDBMasters")]
+        public IHttpActionResult addDataToDBMasters([FromBody] DynamicSearchResult Result)
+        {
+            return Ok(this._mprBusenessAcess.addDataToDBMasters(Result));
+        }
+
+        [HttpPost]
+        [Route("updateDataToDBMasters")]
+        public IHttpActionResult updateDataToDBMasters([FromBody] DynamicSearchResult Result)
+        {
+            return Ok(this._mprBusenessAcess.updateDataToDBMasters(Result));
+        }
+
+        [HttpPost]
 		[Route("GetListItems")]
 		public IHttpActionResult GetListItems([FromBody] DynamicSearchResult Result)
 		{
