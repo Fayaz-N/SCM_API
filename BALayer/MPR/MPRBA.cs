@@ -49,7 +49,7 @@ namespace BALayer
 		{
 			return this._mprDataAcess.getMPRRevisionDetails(RevisionId);
 		}
-		public List<MPRRevision> getMPRList(mprFilterParams mprfilterparams)
+		public List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams)
 		{
 			return this._mprDataAcess.getMPRList(mprfilterparams);
 		}

@@ -131,7 +131,7 @@ namespace DALayer.MPR
 
 							}
 							DB.SaveChanges();
-
+						
 						}
 
 						else if (mpr.MPRVendorDetails.Count > 0)
@@ -265,6 +265,7 @@ namespace DALayer.MPR
 										}
 										DB.SaveChanges();
 									}
+									this.emailTemplateDA.prepareEmailTemplate("", mprRevisionDetails.RevisionId, mprRevisionDetails.PreparedBy, trackItem.MailTo, item.Remarks);
 								}
 							}
 
@@ -410,10 +411,10 @@ namespace DALayer.MPR
 			//	mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(x => x.MPRReminderTrackings).ToList<MPRCommunication>();
 
 			//}
-			foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
-			{
-				item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
-			}
+			//foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
+			//{
+			//	item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
+			//}
 			foreach (MPRDocumentation item in mprRevisionDetails.MPRDocumentations)
 			{
 				item.MPRDocumentationDescription = DB.MPRDocumentationDescriptions.Where(li => li.DocumentationDescriptionId == item.DocumentationDescriptionId).FirstOrDefault();
@@ -423,20 +424,20 @@ namespace DALayer.MPR
 
 		}
 
-		public List<MPRRevision> getMPRList(mprFilterParams mprfilterparams)
+		public List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams)
 		{
-			List<MPRRevision> mprRevisionDetails;
+			List<MPRRevisionDetail> mprRevisionDetails;
 			using (var db = new YSCMEntities()) //ok
 			{
 				//YSCMEntities DB = new YSCMEntities();
 
 				DB.Configuration.ProxyCreationEnabled = false;
 				if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
-					mprRevisionDetails = DB.MPRRevisions.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).Include(x => x.MPRDetail).ToList();
+					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true &&  (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
 				else if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
-					mprRevisionDetails = DB.MPRRevisions.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.ApprovedBy == mprfilterparams.ApprovedBy) && (li.ApprovalStatus == mprfilterparams.Status)).Include(x => x.MPRDetail).ToList();
+					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.ApprovedBy == mprfilterparams.ApprovedBy) && (li.ApprovalStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
 				else
-					mprRevisionDetails = DB.MPRRevisions.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).Include(x => x.MPRDetail).ToList();
+					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).OrderBy(li=>li.PreparedOn).ToList();
 				//mprRevisionDetails.ForEach(a => a.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == a.RequisitionId).FirstOrDefault());
 
 			}
@@ -491,7 +492,7 @@ namespace DALayer.MPR
 						mprrevision.ThirdApproverStatusChangedOn = DateTime.Now;
 					}
 					Context.SaveChanges();
-					this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId);
+					this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId,"","","");
 				}
 				
 			}
