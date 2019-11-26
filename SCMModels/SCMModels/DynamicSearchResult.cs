@@ -14,6 +14,8 @@ namespace SCMModels
 		public string tableName { get; set; }
 		public string updateCondition { get; set; }
 		public string searchCondition { get; set; }
+		public string sortBy { get; set; }
+		public string query { get; set; }
 	}
 	public class searchParams
 	{
