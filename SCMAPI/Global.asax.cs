@@ -9,8 +9,10 @@ using System.Web.Routing;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector;
 using DALayer.MPR;
-using BALayer;
+using BALayer.MPR;
 using DALayer.Emails;
+using DALayer.RFQ;
+using BALayer.RFQ;
 
 namespace SCMAPI
 {
@@ -28,6 +30,8 @@ namespace SCMAPI
 			var container = new Container();
 			container.Register<IMPRBA, MPRBA>();
 			container.Register<IMPRDA, MPRDA>();
+			container.Register<IRFQBA, RFQBA>();
+			container.Register<IRFQDA, RFQDA>();
 			container.Register<IEmailTemplateDA, EmailTemplateDA>();
 			GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
 		}

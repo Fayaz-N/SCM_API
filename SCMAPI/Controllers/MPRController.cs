@@ -1,4 +1,4 @@
-﻿using BALayer;
+﻿using BALayer.MPR;
 using SCMModels;
 using SCMModels.SCMModels;
 using System;
@@ -16,7 +16,6 @@ namespace SCMAPI.Controllers
 	[RoutePrefix("Api/MPR")]
 	public class MPRController : ApiController
 	{
-		YSCMEntities DB = new YSCMEntities();
 		private readonly IMPRBA _mprBusenessAcess;
 		public MPRController(IMPRBA mprBA)
 		{

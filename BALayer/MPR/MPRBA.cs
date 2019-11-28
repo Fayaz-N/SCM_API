@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BALayer
+namespace BALayer.MPR
 {
 
 	public class MPRBA : IMPRBA
