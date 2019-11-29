@@ -266,5 +266,14 @@ namespace SCMAPI.Controllers
             status = await _rfqBusenessAcess.InsertBulkItemInfos(model);
             return Ok(status);
         }
+
+        [Route("GetUnitMasterList")]
+        [ResponseType(typeof(List<UnitMasterModel>))]
+        public async Task<IHttpActionResult> GetUnitMasterList()
+        {
+            List<UnitMasterModel> model = new List<UnitMasterModel>();
+            model = await _rfqBusenessAcess.GetUnitMasterList();
+            return Ok(model);
+        }
     }
 }
