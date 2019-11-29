@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="560edfab3ed94a56a7f1101914483501" Name="Diagram1">
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQCommunication" Width="1.5" PointX="7.5" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQDocument" Width="1.5" PointX="10.5" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQItem" Width="1.5" PointX="5.25" PointY="18.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQItemsInfo" Width="1.5" PointX="7.5" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQMaster" Width="1.5" PointX="0.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQReminderTracking" Width="1.5" PointX="9.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQRevision" Width="1.5" PointX="3" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQStatu" Width="1.5" PointX="5.25" PointY="22.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteRFQVendorTerm" Width="1.5" PointX="5.25" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteVendorMaster" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteVendorRFQTerm" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="VSCMModel.RemoteVendorUserMaster" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="VSCMModel.FK_RFQCommunications_RFQItems" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQCommunications_RFQRevisions" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQReminderTracking_RFQCommunications" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQDocuments_RFQItems" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQDocuments_RFQRevisions" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQItems_RFQRevisions" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQItemsInfo_RFQItems" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQRevisions_RFQMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQStatus_RFQRevisions" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQVendorTerms_RFQRevisions" ManuallyRouted="false" />
+        <AssociationConnector Association="VSCMModel.FK_RFQVendorTerms_VendorRFQTerms" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
