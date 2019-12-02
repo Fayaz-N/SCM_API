@@ -10,7 +10,7 @@ namespace BALayer.RFQ
 	{
 
 		List<RFQQuoteView> getRFQItems(int RevisionId);
-
+        bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList);
 
         //rfqmodule
         Task<RFQMasterModel> GetRFQById(int id);

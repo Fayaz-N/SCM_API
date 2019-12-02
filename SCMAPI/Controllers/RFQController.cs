@@ -1,5 +1,6 @@
 ﻿using BALayer.RFQ;
 using SCMModels.RFQModels;
+using SCMModels.SCMModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -21,6 +22,12 @@ namespace SCMAPI.Controllers
 		{
 			return Ok(this._rfqBusenessAcess.getRFQItems(RevisionId));
 		}
+        [HttpPost]
+        [Route("updateVendorQuotes")]
+        public IHttpActionResult updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
+        {
+            return Ok(this._rfqBusenessAcess.updateVendorQuotes(RFQQuoteViewList));
+        }
 
 
 

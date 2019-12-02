@@ -20,6 +20,11 @@ namespace BALayer.RFQ
 		{
 			return this._rfqDataAcess.getRFQItems(RevisionId);
 		}
+        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
+        {
+            return this._rfqDataAcess.updateVendorQuotes(RFQQuoteViewList);
+
+        }
 
         ///rfqmodule
         public statuscheckmodel CommunicationAdd(RfqCommunicationModel model)

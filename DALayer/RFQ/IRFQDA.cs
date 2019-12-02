@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace DALayer.RFQ
 {
-	public interface IRFQDA
-	{
-		List<RFQQuoteView> getRFQItems(int RevisionId);
-
+    public interface IRFQDA
+    {
+        List<RFQQuoteView> getRFQItems(int RevisionId);
+        bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList);
 
 
         //rfq module
