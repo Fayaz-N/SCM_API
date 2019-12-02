@@ -26,6 +26,7 @@ namespace BALayer.MPR
 		List<MPRRevision> getMPRRevisionList(int RequisitionId);
 		MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
 		List<SCMStatu> getStatusList();
+		List<MPRVendorDetail> updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
 
 	}
 

@@ -22,28 +22,28 @@ namespace SCMAPI.Controllers
 			this._mprBusenessAcess = mprBA;
 		}
 
-        [HttpPost]
-        [Route("getDBMastersList")]
-        public IHttpActionResult getDBMastersList([FromBody] DynamicSearchResult Result)
-        {
-            return Ok(this._mprBusenessAcess.getDBMastersList(Result));
-        }
+		[HttpPost]
+		[Route("getDBMastersList")]
+		public IHttpActionResult getDBMastersList([FromBody] DynamicSearchResult Result)
+		{
+			return Ok(this._mprBusenessAcess.getDBMastersList(Result));
+		}
 
-        [HttpPost]
-        [Route("addDataToDBMasters")]
-        public IHttpActionResult addDataToDBMasters([FromBody] DynamicSearchResult Result)
-        {
-            return Ok(this._mprBusenessAcess.addDataToDBMasters(Result));
-        }
+		[HttpPost]
+		[Route("addDataToDBMasters")]
+		public IHttpActionResult addDataToDBMasters([FromBody] DynamicSearchResult Result)
+		{
+			return Ok(this._mprBusenessAcess.addDataToDBMasters(Result));
+		}
 
-        [HttpPost]
-        [Route("updateDataToDBMasters")]
-        public IHttpActionResult updateDataToDBMasters([FromBody] DynamicSearchResult Result)
-        {
-            return Ok(this._mprBusenessAcess.updateDataToDBMasters(Result));
-        }
+		[HttpPost]
+		[Route("updateDataToDBMasters")]
+		public IHttpActionResult updateDataToDBMasters([FromBody] DynamicSearchResult Result)
+		{
+			return Ok(this._mprBusenessAcess.updateDataToDBMasters(Result));
+		}
 
-        [HttpPost]
+		[HttpPost]
 		[Route("GetListItems")]
 		public IHttpActionResult GetListItems([FromBody] DynamicSearchResult Result)
 		{
@@ -121,6 +121,13 @@ namespace SCMAPI.Controllers
 		public IHttpActionResult getStatusList()
 		{
 			return Ok(this._mprBusenessAcess.getStatusList());
+		}
+		[HttpPost]
+		[Route("updateMPRVendor/{RevisionId}")]
+		public IHttpActionResult updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
+		{
+			return Ok(this._mprBusenessAcess.updateMPRVendor(MPRVendorDetails, RevisionId));
+
 		}
 
 	}

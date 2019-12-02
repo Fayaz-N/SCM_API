@@ -10,7 +10,7 @@ namespace DALayer.RFQ
 {
 	public interface IRFQDA
 	{
-		List<RFQItemsView> getRFQItems(int RevisionId);
+		List<RFQQuoteView> getRFQItems(int RevisionId);
 
 
 

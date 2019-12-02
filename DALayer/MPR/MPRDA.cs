@@ -98,7 +98,7 @@ namespace DALayer.MPR
 				{
 
 					DB.Configuration.ProxyCreationEnabled = false;
-					MPRDetail mprDetails = new MPRDetail();				
+					MPRDetail mprDetails = new MPRDetail();
 					List<MPRRevision> MPRRevisionResult = new List<MPRRevision>();
 					int requestionId = 0;
 					//mpr.RevisionId = 0;
@@ -112,7 +112,7 @@ namespace DALayer.MPR
 						mprRevisionDetails.RevisionNo = Convert.ToByte(mprLastRecord.RevisionNo + 1);
 						mprRevisionDetails.BoolValidRevision = true;
 						mprRevisionDetails.MPRDetail = null;
-						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus=mprRevisionDetails.SecondApproversStatus=mprRevisionDetails.ThirdApproverStatus = "Pending";
+						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
 						DB.MPRRevisions.Add(mprRevisionDetails);
 						DB.SaveChanges();
 						requestionId = mprDetails.RequisitionId;
@@ -156,7 +156,7 @@ namespace DALayer.MPR
 							DB.SaveChanges();
 						}
 
-						 if (mpr.MPRDocuments.Count > 0)
+						if (mpr.MPRDocuments.Count > 0)
 						{
 							foreach (MPRDocument item in mpr.MPRDocuments)
 							{
@@ -183,31 +183,12 @@ namespace DALayer.MPR
 
 							}
 							DB.SaveChanges();
-						
+
 						}
 
 						else if (mpr.MPRVendorDetails.Count > 0)
 						{
-							foreach (MPRVendorDetail item in mpr.MPRVendorDetails)
-							{
-								item.RevisionId = mprRevisionDetails.RevisionId;
-								//item.RevisionId = Convert.ToInt32(mprRevisionDetails.MPRItemInfoes.FirstOrDefault().RevisionId);
 
-								item.UpdatedBy = "User";
-								item.UpdatedDate = DateTime.Now;
-								item.RemoveFlag = false;
-								if (item.VendorDetailsId == 0)
-									mprRevisionDetails.MPRVendorDetails.Add(item);
-								else
-								{
-									MPRVendorDetail MPRVendordetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.VendorDetailsId == item.VendorDetailsId).FirstOrDefault();
-
-									MPRVendordetails.Vendorid = item.Vendorid;
-									DB.SaveChanges();
-								}
-
-							}
-							DB.SaveChanges();
 						}
 
 						else if (mpr.MPRDocumentations.Count > 0)
@@ -463,10 +444,10 @@ namespace DALayer.MPR
 			//	mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(x => x.MPRReminderTrackings).ToList<MPRCommunication>();
 
 			//}
-			//foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
-			//{
-			//	item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
-			//}
+			foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
+			{
+				item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
+			}
 			foreach (MPRDocumentation item in mprRevisionDetails.MPRDocumentations)
 			{
 				item.MPRDocumentationDescription = DB.MPRDocumentationDescriptions.Where(li => li.DocumentationDescriptionId == item.DocumentationDescriptionId).FirstOrDefault();
@@ -485,11 +466,11 @@ namespace DALayer.MPR
 
 				DB.Configuration.ProxyCreationEnabled = false;
 				if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
-					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true &&  (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
+					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
 				else if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
 					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.ApprovedBy == mprfilterparams.ApprovedBy) && (li.ApprovalStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
 				else
-					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).OrderBy(li=>li.PreparedOn).ToList();
+					mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).OrderBy(li => li.PreparedOn).ToList();
 				//mprRevisionDetails.ForEach(a => a.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == a.RequisitionId).FirstOrDefault());
 
 			}
@@ -518,7 +499,7 @@ namespace DALayer.MPR
 			{
 				using (YSCMEntities Context = new YSCMEntities())
 				{
-					 mprrevision = Context.MPRRevisions.Find(mprStatus.RevisionId);
+					mprrevision = Context.MPRRevisions.Find(mprStatus.RevisionId);
 					if (mprStatus.typeOfuser == "Checker")
 					{
 						mprrevision.CheckStatus = mprStatus.status;
@@ -544,9 +525,9 @@ namespace DALayer.MPR
 						mprrevision.ThirdApproverStatusChangedOn = DateTime.Now;
 					}
 					Context.SaveChanges();
-					this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId,"","","");
+					this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
 				}
-				
+
 			}
 			catch (DbEntityValidationException e)
 			{
@@ -566,6 +547,30 @@ namespace DALayer.MPR
 		public List<SCMStatu> getStatusList()
 		{
 			return DB.SCMStatus.ToList();
+		}
+
+		public List<MPRVendorDetail> updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
+		{
+			foreach (MPRVendorDetail item in MPRVendorDetails)
+			{
+				item.RevisionId = RevisionId;
+				//item.RevisionId = Convert.ToInt32(mprRevisionDetails.MPRItemInfoes.FirstOrDefault().RevisionId);
+
+				item.UpdatedBy = "User";
+				item.UpdatedDate = DateTime.Now;
+				item.RemoveFlag = false;
+				if (item.VendorDetailsId == 0)
+					DB.MPRVendorDetails.Add(item);
+				else
+				{
+					MPRVendorDetail MPRVendordetails = DB.MPRVendorDetails.Where(li => li.RevisionId == RevisionId && li.VendorDetailsId == item.VendorDetailsId).FirstOrDefault();
+
+					MPRVendordetails.Vendorid = item.Vendorid;
+					
+				}
+				DB.SaveChanges();
+			}
+			return DB.MPRVendorDetails.Where(li => li.RevisionId == RevisionId).ToList();
 		}
 
 	}

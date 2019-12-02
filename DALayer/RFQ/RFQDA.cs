@@ -16,11 +16,13 @@ namespace DALayer.RFQ
 	{
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
-        public List<RFQItemsView> getRFQItems(int RevisionId)
+        public List<RFQQuoteView> getRFQItems(int RevisionId)
 		{
 			using (YSCMEntities Context = new YSCMEntities())
 			{
-				return Context.RFQItemsViews.Where(li => li.MPRRevisionId == RevisionId).ToList();
+				string query= "select  *  from RFQQuoteView where MPRRevisionId=" + RevisionId+ " ORDER BY  RFQQuoteView.ItemId, RFQQuoteView.UnitPrice";
+				return Context.Database.SqlQuery<RFQQuoteView>(query).ToList();
+				//return Context.RFQQuoteViews.Where(li => li.MPRRevisionId == RevisionId).ToList();
 			}
 		}
 

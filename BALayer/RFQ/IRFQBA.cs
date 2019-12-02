@@ -9,7 +9,7 @@ namespace BALayer.RFQ
 	public interface IRFQBA
 	{
 
-		List<RFQItemsView> getRFQItems(int RevisionId);
+		List<RFQQuoteView> getRFQItems(int RevisionId);
 
 
         //rfqmodule
