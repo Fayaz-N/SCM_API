@@ -42,6 +42,6 @@ namespace BALayer.RFQ
         Task<RfqItemModel> GetRfqItemByMPrId(int id);
         Task<statuscheckmodel> InsertSingleIteminfos(RfqItemInfoModel model);
         Task<statuscheckmodel> InsertBulkItemInfos(List<RfqItemInfoModel> model);
-
+        Task<List<UnitMasterModel>> GetUnitMasterList();
     }
 }

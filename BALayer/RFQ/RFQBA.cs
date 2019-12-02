@@ -176,5 +176,10 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.InsertBulkItemInfos(model);
         }
+
+        public async Task<List<UnitMasterModel>> GetUnitMasterList()
+        {
+            return await _rfqDataAcess.GetUnitMasterList();
+        }
     }
 }

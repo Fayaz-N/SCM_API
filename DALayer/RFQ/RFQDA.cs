@@ -25,7 +25,6 @@ namespace DALayer.RFQ
 				//return Context.RFQQuoteViews.Where(li => li.MPRRevisionId == RevisionId).ToList();
 			}
 		}
-
         public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -1031,6 +1030,81 @@ namespace DALayer.RFQ
             //status.StatusMesssage = model.StatusMesssage;
             return status;
         }
+        public async Task<statuscheckmodel> InsertCommunicationAgainstRevision(RfqCommunicationModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                RemoteRFQCommunication remotecomm = new RemoteRFQCommunication();
+                if (model!=null)
+                {
+                    remotecomm.RfqRevisionId = model.RfqRevisionId;
+                    remotecomm.RemarksFrom = model.RemarksFrom;
+                    remotecomm.RemarksTo = model.RemarksTo;
+                    remotecomm.SendEmail = model.SendEmail;
+                    remotecomm.SetReminder = model.SetReminder;
+                    remotecomm.ReminderDate = model.ReminderDate;
+                    remotecomm.RemarksDate = model.RemarksDate;
+                    remotecomm.Remarks = model.Remarks;
+                    vscm.RemoteRFQCommunications.Add(remotecomm);
+                    vscm.SaveChanges();
+                }
+                int cid = remotecomm.RfqCCid;
+                vscm.Database.Connection.Close();
+
+                RFQCommunication localcomm = new RFQCommunication();
+                obj.Database.Connection.Open();
+                if (model!=null)
+                {
+                    localcomm.RfqCCid = cid;
+                    localcomm.RfqRevisionId = model.RfqRevisionId;
+                    localcomm.RemarksFrom = model.RemarksFrom;
+                    localcomm.RemarksTo = model.RemarksTo;
+                    localcomm.SendEmail = model.SendEmail;
+                    localcomm.SetReminder = model.SetReminder;
+                    localcomm.ReminderDate = model.ReminderDate;
+                    localcomm.RemarksDate = model.RemarksDate;
+                    localcomm.DeleteFlag = false;
+                    localcomm.Remarks = model.Remarks;
+                    obj.RFQCommunications.Add(localcomm);
+                    obj.SaveChanges();
+                }
+                obj.Database.Connection.Close();
+                status.Sid = cid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public async Task<RfqCommunicationModel> GetCommunicationByItemID(int itemid)
+        {
+            RfqCommunicationModel communication = new RfqCommunicationModel();
+            try
+            {
+                var Remotecommunication = vscm.RemoteRFQCommunications.Where(x => x.RfqItemsId == itemid && x.DeleteFlag == false).FirstOrDefault();
+                if (Remotecommunication != null)
+                {
+                    communication.Rfqccid = Remotecommunication.RfqCCid;
+                    communication.RfqRevisionId = Remotecommunication.RfqRevisionId;
+                    communication.RemarksFrom = Remotecommunication.RemarksFrom;
+                    communication.Remarks = Remotecommunication.Remarks;
+                    communication.RemarksTo = Remotecommunication.RemarksTo;
+                    communication.SendEmail = Remotecommunication.SendEmail;
+                    communication.SetReminder = Remotecommunication.SetReminder;
+                    communication.ReminderDate = Remotecommunication.ReminderDate;
+                    communication.RemarksDate = Remotecommunication.RemarksDate;
+                }
+                return  communication;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
         public statuscheckmodel InsertDocument(RfqDocumentsModel model)
         {
             throw new NotImplementedException();
@@ -1135,7 +1209,7 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-        public Task<List<RfqRevisionModel>> GetAllRFQs()
+        public async Task<List<RfqRevisionModel>> GetAllRFQs()
         {
             throw new NotImplementedException();
         }
@@ -1211,7 +1285,6 @@ namespace DALayer.RFQ
             } 
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -1430,7 +1503,6 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-
         public async Task<statuscheckmodel> InsertSingleIteminfos(RfqItemInfoModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -1476,7 +1548,6 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-
         public async Task<statuscheckmodel> InsertBulkItemInfos(List<RfqItemInfoModel> model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -1527,6 +1598,69 @@ namespace DALayer.RFQ
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertRfqRemainder(RfqRemainderTrackingModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                var remotecommunications = vscm.RemoteRFQCommunications.Where(x => x.RfqCCid == model.rfqccid && x.DeleteFlag == false).FirstOrDefault();
+                var remotetracking = new RemoteRFQReminderTracking();
+                if (remotecommunications != null)
+                {
+                    remotetracking.rfqccid = model.rfqccid;
+                    remotetracking.ReminderTo = model.ReminderTo;
+                    remotetracking.MailsSentOn = model.MailsSentOn;
+                    remotetracking.Acknowledgementon = model.Acknowledgementon;
+                    remotetracking.AcknowledgementRemarks = model.AcknowledgementRemarks;
+                    vscm.RemoteRFQReminderTrackings.Add(remotetracking);
+                    vscm.SaveChanges();
+                }
+                int rid = remotetracking.Reminderid;
+                vscm.Database.Connection.Close();
+
+                var localtracking = new RFQReminderTracking();
+                obj.Database.Connection.Open();
+                var localcommunication = obj.RFQCommunications.Where(x => x.RfqCCid == model.rfqccid && x.DeleteFlag == false).FirstOrDefault();
+                if (localcommunication != null)
+                {
+                    localtracking.Reminderid = rid;
+                    localtracking.rfqccid = model.rfqccid;
+                    localtracking.ReminderTo = model.ReminderTo;
+                    localtracking.MailsSentOn = model.MailsSentOn;
+                    localtracking.Acknowledgementon = model.Acknowledgementon;
+                    localtracking.AcknowledgementRemarks = model.AcknowledgementRemarks;
+                    obj.RFQReminderTrackings.Add(localtracking);
+                    obj.SaveChanges();
+                }
+                status.Sid = rid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public async Task<List<UnitMasterModel>> GetUnitMasterList()
+        {
+           List< UnitMasterModel> model = new List< UnitMasterModel>();
+            try
+            {
+                var unitmaster = obj.UnitMasters.Where(x => x.DeleteFlag == false).ToList();
+                model = unitmaster.Select(x => new UnitMasterModel()
+                {
+                    UnitID=x.UnitID,
+                    UnitName=x.UnitName,
+                    Isdeleted=x.DeleteFlag
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }
