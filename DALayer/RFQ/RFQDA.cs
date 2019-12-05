@@ -20,7 +20,7 @@ namespace DALayer.RFQ
         YSCMEntities obj = new YSCMEntities();
 
         
-        public List<RFQQuoteView> getRFQItems(int RevisionId)
+    public List<RFQQuoteView> getRFQItems(int RevisionId)
         {
             using (YSCMEntities Context = new YSCMEntities())
             {
@@ -33,7 +33,6 @@ namespace DALayer.RFQ
         {
             foreach (RFQQuoteView item in RFQQuoteViewList)
             {
-
                 RfqRevisionModel rfqModel = new RfqRevisionModel();
                 rfqModel.rfqmaster = new RFQMasterModel();
                 rfqModel.rfqmaster.MPRRevisionId = Convert.ToInt32(item.MPRRevisionId);
@@ -173,7 +172,7 @@ namespace DALayer.RFQ
                 }
             }
             int masterid = rfqremote.RfqMasterId;
-            int lid = (from x in vscm.RemoteRFQRevisions orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
+            int remoterevisionid= (from x in vscm.RemoteRFQRevisions orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
             int Ritemid = (from x in vscm.RemoteRFQItems orderby x.RFQItemsId descending select x.RFQItemsId).First(); 
             vscm.Database.Connection.Close();
             if (model != null)
@@ -208,7 +207,8 @@ namespace DALayer.RFQ
                 RFQRevision revision = new RFQRevision();
                 if (model.RfqRevisionId == 0)
                 {
-                    revision.rfqMasterId = lid;
+                    revision.rfqRevisionId = remoterevisionid;
+                    revision.rfqMasterId = masterid;
                     revision.RevisionNo = model.RfqRevisionNo;
                     revision.CreatedBy = model.CreatedBy;
                     revision.CreatedDate = model.CreatedDate;
@@ -260,7 +260,7 @@ namespace DALayer.RFQ
                         var rfitems = new RFQItem()
                         {
                         RFQItemsId = Ritemid,
-                        RFQRevisionId = revisionid,
+                        RFQRevisionId = remoterevisionid,
                         MPRItemDetailsid = data.MRPItemsDetailsID,
                         QuotationQty = data.QuotationQty,
                         VendorModelNo = data.VendorModelNo,
