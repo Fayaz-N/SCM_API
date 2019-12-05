@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,6 +57,8 @@ namespace DALayer.RFQ
                 rfqModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
                 RfqItemModel rfqitem = new RfqItemModel();
                 rfqitem.MRPItemsDetailsID = item.MPRItemDetailsid;
+                rfqitem.ItemName = item.ItemName;
+                rfqitem.ItemDescription = item.ItemDescription;
                 rfqitem.QuotationQty = item.QuotationQty;
                 rfqModel.rfqitem.Add(rfqitem);
                 CreateRfQ(rfqModel);
@@ -69,9 +72,10 @@ namespace DALayer.RFQ
         try
         {
             //server data
+            var rfqremote = new RemoteRFQMaster();
             if (model != null)
             {
-                var rfqremote = new RemoteRFQMaster();
+                
                 vscm.Database.Connection.Open();
                 if (model.rfqmaster.RfqMasterId == 0)
                 {
@@ -162,12 +166,15 @@ namespace DALayer.RFQ
                         RequestRemarks = data.RequsetRemarks,
                         ItemName=data.ItemName,
                         ItemDescription=data.ItemDescription,
-                        DeleteFlag = false
+                        
                     };
                     vscm.RemoteRFQItems.Add(rfitems);
-                    obj.SaveChanges();
+                    vscm.SaveChanges();
                 }
             }
+            int masterid = rfqremote.RfqMasterId;
+            int lid = (from x in vscm.RemoteRFQRevisions orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
+            int Ritemid = (from x in vscm.RemoteRFQItems orderby x.RFQItemsId descending select x.RFQItemsId).First(); 
             vscm.Database.Connection.Close();
             if (model != null)
             {
@@ -177,7 +184,8 @@ namespace DALayer.RFQ
                 {
                     //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
                     rfqlocal.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
-
+                    rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                    rfqlocal.RfqMasterId = masterid;
                     rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                     rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
                     rfqlocal.CreatedDate = model.rfqmaster.Created;
@@ -188,6 +196,7 @@ namespace DALayer.RFQ
                 else
                 {
                     rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                    rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
                     //rfqdomain.RfqMasterId = model.RfqMasterId;
                     rfqlocal.VendorId = model.rfqmaster.VendorId;
                     rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
@@ -196,11 +205,10 @@ namespace DALayer.RFQ
                     obj.SaveChanges();
                 }
 
-                int id = rfqlocal.RfqMasterId;
                 RFQRevision revision = new RFQRevision();
                 if (model.RfqRevisionId == 0)
                 {
-                    revision.rfqMasterId = id;
+                    revision.rfqMasterId = lid;
                     revision.RevisionNo = model.RfqRevisionNo;
                     revision.CreatedBy = model.CreatedBy;
                     revision.CreatedDate = model.CreatedDate;
@@ -249,8 +257,9 @@ namespace DALayer.RFQ
 
                 foreach (var data in model.rfqitem)
                 {
-                    var rfitems = new RFQItem()
-                    {
+                        var rfitems = new RFQItem()
+                        {
+                        RFQItemsId = Ritemid,
                         RFQRevisionId = revisionid,
                         MPRItemDetailsid = data.MRPItemsDetailsID,
                         QuotationQty = data.QuotationQty,
@@ -1267,6 +1276,14 @@ namespace DALayer.RFQ
                 Remotedata.HSNCode = model.HSNCode;
                 Remotedata.QuotationQty = model.QuotationQty;
                 Remotedata.VendorModelNo = model.VendorModelNo;
+                Remotedata.IGSTPercentage = model.IGSTPercentage;
+                Remotedata.SGSTPercentage = model.SGSTPercentage;
+                Remotedata.CGSTPercentage = model.CGSTPercentage;
+                Remotedata.PFAmount = model.PFAmount;
+                Remotedata.PFPercentage = model.PFPercentage;
+                Remotedata.FreightAmount = model.FreightAmount;
+                Remotedata.CustomDuty = model.CustomDuty;
+                Remotedata.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
                 vscm.RemoteRFQItems.Add(Remotedata);
                 vscm.SaveChanges();
                 foreach (var item in model.iteminfo)
@@ -1282,11 +1299,6 @@ namespace DALayer.RFQ
                         CurrencyId = item.CurrencyID,
                         CurrencyValue = item.CurrencyValue,
                         Remarks = item.Remarks,
-                        SGSTPercentage = item.SGSTPercentage,
-                        IGSTPercentage = item.IGSTPercentage,
-                        CGSTPercentage = item.CGSTPercentage,
-                        CustomsDuty = item.CustomsDuty,
-                        taxInclusiveOfDiscount = item.taxInclusiveOfDiscount,
                         DeliveryDate = item.DeliveryDate,
                         //GSTPercentage = item.GSTPercentage,
                         SyncDate = System.DateTime.Now
@@ -1315,11 +1327,11 @@ namespace DALayer.RFQ
                     UnitPrice = item.UnitPrice,
                     DiscountPercentage = item.DiscountPercentage,
                     //GSTPercentage = item.GSTPercentage,
-                    SGSTPercentage=item.SGSTPercentage,
-                    IGSTPercentage = item.IGSTPercentage,
-                    CGSTPercentage = item.CGSTPercentage,
-                    CustomsDuty=item.CustomsDuty,
-                    taxInclusiveOfDiscount=item.taxInclusiveOfDiscount,
+                    //SGSTPercentage=item.SGSTPercentage,
+                    //IGSTPercentage = item.IGSTPercentage,
+                    //CGSTPercentage = item.CGSTPercentage,
+                    //CustomsDuty=item.CustomsDuty,
+                    //taxInclusiveOfDiscount=item.taxInclusiveOfDiscount,
                     Discount = item.Discount,
                     CurrencyId = item.CurrencyID,
                     CurrencyValue = item.CurrencyValue,
@@ -1439,11 +1451,7 @@ namespace DALayer.RFQ
             remoteitem.Remarks = model.Remarks;
             remoteitem.DeliveryDate = model.DeliveryDate;
             //remoteitem.GSTPercentage = model.GSTPercentage;
-            remoteitem.IGSTPercentage = model.IGSTPercentage;
-            remoteitem.SGSTPercentage = model.SGSTPercentage;
-            remoteitem.CGSTPercentage = model.CGSTPercentage;
-            remoteitem.CustomsDuty = model.CustomsDuty;
-            remoteitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+          
             vscm.RemoteRFQItemsInfoes.Add(remoteitem);
             vscm.SaveChanges();
             int remoteitemid = remoteitem.RFQItemsId;
@@ -1458,11 +1466,11 @@ namespace DALayer.RFQ
             localitem.UOM = model.UOM;
             localitem.CurrencyValue = model.CurrencyValue;
                 //localitem.GSTPercentage = model.GSTPercentage;
-                localitem.IGSTPercentage = model.IGSTPercentage;
-                localitem.SGSTPercentage = model.SGSTPercentage;
-                localitem.CGSTPercentage = model.CGSTPercentage;
-                localitem.CustomsDuty = model.CustomsDuty;
-                localitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+                //localitem.IGSTPercentage = model.IGSTPercentage;
+                //localitem.SGSTPercentage = model.SGSTPercentage;
+                //localitem.CGSTPercentage = model.CGSTPercentage;
+                //localitem.CustomsDuty = model.CustomsDuty;
+                //localitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
                 localitem.CurrencyId = model.CurrencyID;
             localitem.Remarks = model.Remarks;
             localitem.DeliveryDate = model.DeliveryDate;
@@ -1584,11 +1592,6 @@ namespace DALayer.RFQ
             remoteiteminfo.UOM = model.UOM;
             remoteiteminfo.UnitPrice = model.UnitPrice;
             remoteiteminfo.RFQItemsId = model.RFQItemsId;
-            remoteiteminfo.IGSTPercentage = model.IGSTPercentage;
-            remoteiteminfo.CGSTPercentage = model.CGSTPercentage;
-            remoteiteminfo.SGSTPercentage = model.SGSTPercentage;
-            remoteiteminfo.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
-            remoteiteminfo.CustomsDuty = model.CustomsDuty;
             remoteiteminfo.DiscountPercentage = model.DiscountPercentage;
             remoteiteminfo.Qty = model.Qunatity;
             remoteiteminfo.DeliveryDate = model.DeliveryDate;
@@ -1605,12 +1608,7 @@ namespace DALayer.RFQ
             localiteminfo.UOM = model.UOM;
             localiteminfo.UnitPrice = model.UnitPrice;
             localiteminfo.RFQItemsId = model.RFQItemsId;
-            //localiteminfo.GSTPercentage = model.GSTPercentage;
-            localiteminfo.IGSTPercentage = model.IGSTPercentage;
-            localiteminfo.CGSTPercentage = model.CGSTPercentage;
-            localiteminfo.SGSTPercentage = model.SGSTPercentage;
-            localiteminfo.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
-            localiteminfo.CustomsDuty = model.CustomsDuty;
+            //localiteminfo.CustomsDuty = model.CustomsDuty;
             localiteminfo.DiscountPercentage = model.DiscountPercentage;
             localiteminfo.Qty = model.Qunatity;
             localiteminfo.DeliveryDate = model.DeliveryDate;
@@ -1644,11 +1642,6 @@ namespace DALayer.RFQ
                     remoteiteminfo.RFQItemsId = item.RFQItemsId;
                     //remoteiteminfo.GSTPercentage = item.GSTPercentage;
                     remoteiteminfo.DiscountPercentage = item.DiscountPercentage;
-                    remoteiteminfo.IGSTPercentage = item.IGSTPercentage;
-                    remoteiteminfo.CGSTPercentage = item.CGSTPercentage;
-                    remoteiteminfo.SGSTPercentage = item.SGSTPercentage;
-                    remoteiteminfo.taxInclusiveOfDiscount = item.taxInclusiveOfDiscount;
-                    remoteiteminfo.CustomsDuty = item.CustomsDuty;
                     remoteiteminfo.Qty = item.Qunatity;
                     remoteiteminfo.DeliveryDate = item.DeliveryDate;
                     remoteiteminfo.CurrencyValue = item.CurrencyValue;
@@ -1670,11 +1663,6 @@ namespace DALayer.RFQ
                     localiteminfo.RFQItemsId = item.RFQItemsId;
                     //localiteminfo.GSTPercentage = item.GSTPercentage;
                     localiteminfo.DiscountPercentage = item.DiscountPercentage;
-                    localiteminfo.IGSTPercentage = item.IGSTPercentage;
-                    localiteminfo.CGSTPercentage = item.CGSTPercentage;
-                    localiteminfo.SGSTPercentage = item.SGSTPercentage;
-                    localiteminfo.taxInclusiveOfDiscount = item.taxInclusiveOfDiscount;
-                    localiteminfo.CustomsDuty = item.CustomsDuty;
                     localiteminfo.Qty = item.Qunatity;
                     localiteminfo.DeliveryDate = item.DeliveryDate;
                     localiteminfo.CurrencyValue = item.CurrencyValue;
@@ -2195,7 +2183,602 @@ namespace DALayer.RFQ
         }
 
 
+        public async Task<statuscheckmodel> InsertMprBuyerGroups(MPRBuyerGroupModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new MPRBuyerGroup();
+                if (model != null && model.BuyerGroupId == 0)
+                {
+                   // data.BuyerGroupId = model.BuyerGroupId;
+                    data.BuyerGroup = model.BuyerGroup;
+                    data.BoolInUse = true;
+                }
+                obj.MPRBuyerGroups.Add(data);
+                obj.SaveChanges();
+                byte memberid = data.BuyerGroupId;
+                foreach (var item in model.MPRBuyerGroup)
+                {
+                    var groupmembers = new MPRBuyerGroupMember()
+                    {
+                        BuyerGroupId = memberid,
+                        GroupMember=item.GroupMember
+                    };
+                    data.MPRBuyerGroupMembers.Add(groupmembers);
+                    obj.SaveChanges();
+                }
+                int id = data.BuyerGroupId;
+                status.Sid = id;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertMprBuyerGroupMembers(MPRBuyerGroupMemberModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                if (true)
+                {
+
+                }
+                var groupmember = new MPRBuyerGroupMember();
+                groupmember.BuyerGroupMemberId = model.BuyerGroupMemberId;
+                groupmember.BuyerGroupId = model.BuyerGroupId;
+                groupmember.GroupMember = model.GroupMember;
+                obj.MPRBuyerGroupMembers.Add(groupmember);
+                obj.SaveChanges();
+                int memberid = groupmember.BuyerGroupMemberId;
+                status.Sid = memberid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
        
+        public async Task<statuscheckmodel> InsertMprApprovers(MPRApproverModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new MPRApprover();
+                data.EmployeeNo = model.EmployeeNo;
+                data.DeactivatedBy = model.DeactivatedBy;
+                data.DeactivatedOn = model.DeactivatedOn;
+                obj.MPRApprovers.Add(data);
+                obj.SaveChanges();
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateMprApprovers(MPRApproverModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.MPRApprovers.Where(x => x.EmployeeNo == model.EmployeeNo).FirstOrDefault();
+                data.BoolActive = model.BoolActive;
+                data.DeactivatedBy = model.DeactivatedBy;
+                data.DeactivatedOn = model.DeactivatedOn;
+                obj.MPRApprovers.Add(data);
+                obj.SaveChanges();
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertMprDepartMents(MPRDepartmentModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new MPRDepartment();
+                data.Department = model.Department;
+                data.SecondApprover = model.SecondApprover;
+                data.ThirdApprover = model.ThirdApprover;
+                obj.MPRDepartments.Add(data);
+                obj.SaveChanges();
+                int deptid = data.DepartmentId;
+                status.Sid = deptid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateMprDepartMents(MPRDepartmentModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.MPRDepartments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
+                data.Department = model.Department;
+                data.SecondApprover = model.SecondApprover;
+                data.ThirdApprover = model.ThirdApprover;
+                data.BoolInUse = model.BoolInUse;
+                obj.SaveChanges();
+                int deptid = data.DepartmentId;
+                status.Sid = deptid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertMprProcurement(MPRProcurementSourceModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            var data = new MPRProcurementSource();
+            try
+            {
+                if (model.ProcurementSourceId==0)
+                {
+                    data.ProcurementSource = model.ProcurementSource;
+                    obj.MPRProcurementSources.Add(data);
+                    obj.SaveChanges();
+                }
+                else
+                {
+                    var mprdata = obj.MPRProcurementSources.Where(x => x.ProcurementSourceId == model.ProcurementSourceId).FirstOrDefault();
+                    mprdata.ProcurementSource = model.ProcurementSource;
+                    mprdata.BoolInUse = model.BoolInUse;
+                    obj.SaveChanges();
+                }
+                
+                int pid = data.ProcurementSourceId;
+                status.Sid = pid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertGlobalgroup(GlobalGroupModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new GlobalGroup();
+                data.GlobalGroupDescription = model.GlobalGroupDescription;
+                obj.GlobalGroups.Add(data);
+                obj.SaveChanges();
+                int pid = data.GlobalGroupId;
+                status.Sid = pid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertGlobalgroupEmployee(GlobalGroupEmployeeModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new GlobalGroupEmployee();
+                data.GlobalGroupId = model.GlobalGroupId;
+                data.EmployeeNo = model.EmployeeNo;
+                data.UpdatedOn = model.UpdatedOn;
+                obj.GlobalGroupEmployees.Add(data);
+                obj.SaveChanges();
+
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertMPRDispatchLocations(MPRDispatchLocationModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            
+            try
+            {
+                var data = new MPRDispatchLocation();
+                if (model.DispatchLocationId==0)
+                {
+                    data.DispatchLocation = model.DispatchLocation;
+                    data.XOrder = model.XOrder;
+                    obj.MPRDispatchLocations.Add(data);
+                    obj.SaveChanges();
+                }
+                else
+                {
+                    var mprlocation = obj.MPRDispatchLocations.Where(x => x.DispatchLocationId == model.DispatchLocationId).FirstOrDefault();
+                    mprlocation.DispatchLocation = model.DispatchLocation;
+                    mprlocation.XOrder = model.XOrder;
+                    mprlocation.BoolInUse = model.BoolInUse;
+                    obj.SaveChanges();
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertMPRDocumentationDescription(MPRDocumentationDescriptionModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new MPRDocumentationDescription();
+                if (model.DocumentationDescriptionId==0)
+                {
+                    data.DocumentationDescription = model.DocumentationDescription;
+                    obj.MPRDocumentationDescriptions.Add(data);
+                    obj.SaveChanges();
+                }
+                else
+                {
+
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertMPRCustomDuty(MPRCustomsDutyModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new MPRCustomsDuty();
+                data.CustomsDutyId = model.CustomsDutyId;
+                data.CustomsDuty = model.CustomsDuty;
+                data.BoolInUse = true;
+                obj.SaveChanges();
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<MPRBuyerGroupModel> GetMPRBuyerGroupsById(int id)
+        {
+            MPRBuyerGroupModel model = new MPRBuyerGroupModel();
+            try
+            {
+                var data = obj.MPRBuyerGroups.SqlQuery("select * from  MPRBuyerGroups where BuyerGroupId=@id and BoolInUse=1", new SqlParameter("@id",id)).FirstOrDefault();
+                model.BuyerGroup = data.BuyerGroup;
+                model.BoolInUse = data.BoolInUse;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<MPRBuyerGroupModel>> GetAllMPRBuyerGroups()
+        {
+            List<MPRBuyerGroupModel> model = new List<MPRBuyerGroupModel>();
+            try
+            {
+                var data = obj.MPRBuyerGroups.SqlQuery("select * from  MPRBuyerGroups where  BoolInUse=1");
+                model = data.Select(x => new MPRBuyerGroupModel()
+                {
+                    BuyerGroup = x.BuyerGroup,
+                    BuyerGroupId = x.BuyerGroupId,
+                    BoolInUse=x.BoolInUse
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<MPRApproverModel> GetMPRApprovalsById(int id)
+        {
+            MPRApproverModel model = new MPRApproverModel();
+            try
+            {
+                var data = obj.MPRApprovers.SqlQuery("select * from  MPRApprovers where EmployeeNo=@id and BoolActive=1", new SqlParameter("@id",id)).ToList();
+                model = data.Select(x => new MPRApproverModel()
+                {
+                    EmployeeNo = x.EmployeeNo,
+                    DeactivatedBy=x.DeactivatedBy,
+                    DeactivatedOn=x.DeactivatedOn
+                }).FirstOrDefault();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<MPRApproverModel>> GetAllMPRApprovals()
+        {
+            List<MPRApproverModel> model = new List<MPRApproverModel>();
+            try
+            {
+                var data = obj.MPRApprovers.SqlQuery("select * from  MPRApprovers where  BoolInUse=1");
+                model = data.Select(x => new MPRApproverModel()
+                {
+                    EmployeeNo = x.EmployeeNo,
+                    DeactivatedBy = x.DeactivatedBy,
+                    DeactivatedOn = x.DeactivatedOn
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<MPRDepartmentModel>> GetAllMPRDepartments()
+        {
+            List<MPRDepartmentModel> model = new List<MPRDepartmentModel>();
+            try
+            {
+                var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments where  BoolInUse=1");
+                model = data.Select(x => new MPRDepartmentModel()
+                {
+                    DepartmentId = x.DepartmentId,
+                    Department = x.Department,
+                    SecondApprover = x.SecondApprover,
+                    ThirdApprover=x.ThirdApprover
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<MPRDepartmentModel> GetMPRDepartmentById(int id)
+        {
+            MPRDepartmentModel model = new MPRDepartmentModel();
+            try
+            {
+                var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments where DepartmentId=@id and BoolActive=1", new SqlParameter("@id",id)).ToList();
+                model = data.Select(x => new MPRDepartmentModel()
+                {
+                    DepartmentId = x.DepartmentId,
+                    Department = x.Department,
+                    SecondApprover = x.SecondApprover,
+                    ThirdApprover = x.ThirdApprover
+                }).FirstOrDefault();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<MPRDispatchLocationModel>> GetAllMPRDispatchLocations()
+        {
+            List<MPRDispatchLocationModel> model = new List<MPRDispatchLocationModel>();
+            try
+            {
+                var data = obj.MPRDispatchLocations.SqlQuery("select * from  MPRDepartments where  BoolInUse=1");
+                model = data.Select(x => new MPRDispatchLocationModel()
+                {
+                    DispatchLocationId=x.DispatchLocationId,
+                    DispatchLocation=x.DispatchLocation,
+                    XOrder=x.XOrder,
+                    BoolInUse=x.BoolInUse
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<MPRDispatchLocationModel> GetMPRDispatchLocationById(int id)
+        {
+            MPRDispatchLocationModel model = new MPRDispatchLocationModel();
+            try
+            {
+                var data = obj.MPRDispatchLocations.SqlQuery("select * from  MPRDispatchLocations where DispatchLocationId=@id and BoolActive=1", new SqlParameter("@id",id)).ToList();
+                model = data.Select(x => new MPRDispatchLocationModel()
+                {
+                    DispatchLocationId = x.DispatchLocationId,
+                    DispatchLocation = x.DispatchLocation,
+                    XOrder = x.XOrder,
+                    BoolInUse = x.BoolInUse
+                }).FirstOrDefault();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<MPRCustomsDutyModel>> GetAllCustomDuty()
+        {
+            List<MPRCustomsDutyModel> model = new List<MPRCustomsDutyModel>();
+            try
+            {
+                var data = obj.MPRCustomsDuties.SqlQuery("select * from  MPRCustomsDuty where  BoolActive=1");
+                model = data.Select(x => new MPRCustomsDutyModel()
+                {
+                    CustomsDutyId=x.CustomsDutyId,
+                    CustomsDuty=x.CustomsDuty,
+                    BoolInUse = x.BoolInUse
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertYILTerms(YILTermsandConditionModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new YILTermsandCondition();
+                if (model!=null)
+                {
+                    data.TermGroupId = model.TermGroupId;
+                    data.BuyerGroupId = model.BuyerGroupId;
+                    data.Terms = model.Terms;
+                    data.DisplayOrder = model.DisplayOrder;
+                    data.DefaultSelect = true;
+                    data.CreatedBy = model.CreatedBy;
+                    data.CreatedDate = model.CreatedDate;
+                    data.DeletedBy = model.DeletedBy;
+                    data.DeletedDate = model.DeletedDate;
+                }
+                obj.YILTermsandConditions.Add(data);
+                obj.SaveChanges();
+                int termsid = data.TermId;
+                status.Sid = termsid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertYILTermsGroup(YILTermsGroupModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new YILTermsGroup();
+                if (model!=null)
+                {
+                    data.TermGroup = model.TermGroup;
+                    data.CreatedBy = model.CreatedBy;
+                    data.CreatedDate = model.CreatedDate;
+                    data.DeletedBy = model.DeletedBy;
+                    data.DeletedDate = model.DeletedDate;
+                }
+                obj.YILTermsGroups.Add(data);
+                obj.SaveChanges();
+                int termgroupid = data.TermGroupId;
+                status.Sid = termgroupid;
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertRFQTerms(RFQTermsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var rfqterm = new RFQTerm();
+                if (model!=null)
+                {
+                    rfqterm.RFQrevisionId = model.RFQrevisionId;
+                    rfqterm.termsid = model.termsid;
+                    rfqterm.VendorResponse = model.VendorResponse;
+                    rfqterm.Remarks = model.Remarks;
+                    rfqterm.CreatedBy = model.CreatedBy;
+                    rfqterm.CreatedDate = model.CreatedDate;
+                    rfqterm.UpdatedBy = model.UpdatedBy;
+                    rfqterm.UpdatedDate = model.UpdatedDate;
+                    rfqterm.DeletedBy = model.DeletedBy;
+                    rfqterm.DeletedDate = model.DeletedDate;
+                }
+                obj.RFQTerms.Add(rfqterm);
+                obj.SaveChanges();
+                int termsid =rfqterm.RfqTermsid;
+                status.Sid = termsid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<YILTermsandConditionModel> GetYILTermsByBuyerGroupID(int id)
+        {
+            YILTermsandConditionModel model = new YILTermsandConditionModel();
+            try
+            {
+                var data = from x in obj.YILTermsandConditions where x.BuyerGroupId == id select x;
+                //var data = obj.YILTermsandConditions.SqlQuery("select * from YILTermsandConditions where BuyerGroupId={0} and DeleteFlag=0", id);
+                model = data.Select(x => new YILTermsandConditionModel()
+                {
+                    TermGroupId = x.TermGroupId,
+                    Terms = x.Terms,
+                    DisplayOrder = x.DisplayOrder,
+                    CreatedBy = x.CreatedBy,
+                    CreatedDate = x.CreatedDate,
+                    DeletedBy = x.DeletedBy,
+                    DeletedDate = x.DeletedDate
+                }).FirstOrDefault();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<YILTermsGroupModel> GetYILTermsGroupById(int id)
+        {
+            YILTermsGroupModel model = new YILTermsGroupModel();
+            try
+            {
+                var data = from x in obj.YILTermsGroups where x.TermGroupId == id && x.DeleteFlag==false  select x;
+                //var data = obj.YILTermsGroups.SqlQuery("select * from YILTermsGroup where TermGroupId={0} and DeleteFlag=0", id);
+                model = data.Select(x => new YILTermsGroupModel()
+                {
+                    TermGroupId = x.TermGroupId,
+                    TermGroup = x.TermGroup,
+                    CreatedBy = x.CreatedBy,
+                    CreatedDate = x.CreatedDate,
+                    DeletedBy = x.DeletedBy,
+                    DeletedDate = x.DeletedDate
+                }).FirstOrDefault();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<RFQTermsModel> GetRfqTermsById(int termsid)
+        {
+            RFQTermsModel model = new RFQTermsModel();
+            try
+            {
+                var data = obj.RFQTerms.Where(x => x.RfqTermsid == termsid && x.DeleteFlag == false).FirstOrDefault();
+                model.termsid = data.termsid;
+                model.UpdatedBy = data.UpdatedBy;
+                model.UpdatedDate = data.UpdatedDate;
+                model.VendorResponse = data.VendorResponse;
+                model.CreatedBy = data.CreatedBy;
+                model.CreatedDate = data.CreatedDate;
+                model.DeletedBy = data.DeletedBy;
+                model.DeletedDate = data.DeletedDate;
+                model.Remarks = data.Remarks;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
-}
+}   
 

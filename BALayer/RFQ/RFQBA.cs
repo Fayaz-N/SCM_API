@@ -1,4 +1,5 @@
 ﻿using DALayer.RFQ;
+using SCMModels.MPRMasterModels;
 using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
@@ -254,6 +255,81 @@ namespace BALayer.RFQ
         public async Task<statuscheckmodel> Insertrfqvendorterms(RfqVendorTermModel model)
         {
             return await _rfqDataAcess.Insertrfqvendorterms(model);
+        }
+
+        public async Task<MPRBuyerGroupModel> GetMPRBuyerGroupsById(int id)
+        {
+            return await _rfqDataAcess.GetMPRBuyerGroupsById(id);
+        }
+
+        public async Task<List<MPRBuyerGroupModel>> GetAllMPRBuyerGroups()
+        {
+            return await _rfqDataAcess.GetAllMPRBuyerGroups();
+        }
+
+        public async Task<MPRApproverModel> GetMPRApprovalsById(int id)
+        {
+            return await _rfqDataAcess.GetMPRApprovalsById(id);
+        }
+
+        public async Task<List<MPRApproverModel>> GetAllMPRApprovals()
+        {
+            return await _rfqDataAcess.GetAllMPRApprovals();
+        }
+
+        public async Task<List<MPRDepartmentModel>> GetAllMPRDepartments()
+        {
+            return await _rfqDataAcess.GetAllMPRDepartments();
+        }
+
+        public async Task<MPRDepartmentModel> GetMPRDepartmentById(int id)
+        {
+            return await _rfqDataAcess.GetMPRDepartmentById(id);
+        }
+
+        public async Task<List<MPRDispatchLocationModel>> GetAllMPRDispatchLocations()
+        {
+            return await _rfqDataAcess.GetAllMPRDispatchLocations();
+        }
+
+        public async Task<MPRDispatchLocationModel> GetMPRDispatchLocationById(int id)
+        {
+            return await _rfqDataAcess.GetMPRDispatchLocationById(id);
+        }
+
+        public async Task<List<MPRCustomsDutyModel>> GetAllCustomDuty()
+        {
+            return await _rfqDataAcess.GetAllCustomDuty();
+        }
+
+        public async Task<statuscheckmodel> InsertYILTerms(YILTermsandConditionModel model)
+        {
+            return await _rfqDataAcess.InsertYILTerms(model);
+        }
+
+        public async Task<statuscheckmodel> InsertYILTermsGroup(YILTermsGroupModel model)
+        {
+            return await _rfqDataAcess.InsertYILTermsGroup(model);
+        }
+
+        public async Task<statuscheckmodel> InsertRFQTerms(RFQTermsModel model)
+        {
+            return await _rfqDataAcess.InsertRFQTerms(model);
+        }
+
+        public async Task<RFQTermsModel> GetRfqTermsById(int termsid)
+        {
+            return await _rfqDataAcess.GetRfqTermsById(termsid);
+        }
+
+        public async Task<YILTermsandConditionModel> GetYILTermsByBuyerGroupID(int id)
+        {
+            return await _rfqDataAcess.GetYILTermsByBuyerGroupID(id);
+        }
+
+        public async Task<YILTermsGroupModel> GetYILTermsGroupById(int id)
+        {
+            return await _rfqDataAcess.GetYILTermsGroupById(id);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BALayer.RFQ;
+using SCMModels.MPRMasterModels;
 using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System.Collections.Generic;
@@ -281,6 +282,126 @@ namespace SCMAPI.Controllers
             List<UnitMasterModel> model = new List<UnitMasterModel>();
             model = await _rfqBusenessAcess.GetUnitMasterList();
             return Ok(model);
+        }
+        [Route("GetAllMPRBuyerGroups")]
+        [ResponseType(typeof(List<MPRBuyerGroupModel>))]
+        public async Task<IHttpActionResult> GetAllMPRBuyerGroups()
+        {
+            List<MPRBuyerGroupModel> model = new List<MPRBuyerGroupModel>();
+            model = await _rfqBusenessAcess.GetAllMPRBuyerGroups();
+            return Ok(model);
+        }
+        [Route("GetMPRBuyerGroupsById")]
+        [ResponseType(typeof(MPRBuyerGroupModel))]
+        public async Task<IHttpActionResult> GetMPRBuyerGroupsById(int id)
+        {
+            MPRBuyerGroupModel status = new MPRBuyerGroupModel();
+            status = await _rfqBusenessAcess.GetMPRBuyerGroupsById(id);
+            return Ok(status);
+        }
+        [Route("GetMPRApprovalsById/{id}")]
+        [ResponseType(typeof(MPRApproverModel))]
+        public async Task<IHttpActionResult> GetMPRApprovalsById(int id)
+        {
+            MPRApproverModel model = new MPRApproverModel();
+            model= await _rfqBusenessAcess.GetMPRApprovalsById(id);
+            return Ok(model);
+        }
+        [Route("GetAllMPRApprovals")]
+        [ResponseType(typeof(List<MPRApproverModel>))]
+        public async Task<IHttpActionResult> GetAllMPRApprovals()
+        {
+            List<MPRApproverModel> model = new List<MPRApproverModel>();
+            model = await _rfqBusenessAcess.GetAllMPRApprovals();
+            return Ok(model);
+        }
+        [Route("GetAllMPRDepartments")]
+        [ResponseType(typeof(List<MPRDepartmentModel>))]
+        public async Task<IHttpActionResult> GetAllMPRDepartments()
+        {
+            List<MPRDepartmentModel> model = new List<MPRDepartmentModel>();
+            model = await _rfqBusenessAcess.GetAllMPRDepartments();
+            return Ok(model);
+        }
+        [Route("GetMPRDepartmentById/{id}")]
+        [ResponseType(typeof(MPRDepartmentModel))]
+        public async Task<IHttpActionResult> GetMPRDepartmentById(int id)
+        {
+            MPRDepartmentModel model = new MPRDepartmentModel();
+            model = await _rfqBusenessAcess.GetMPRDepartmentById(id);
+            return Ok(model);
+        }
+        [Route("GetAllMPRDepartments")]
+        [ResponseType(typeof(List<MPRDispatchLocationModel>))]
+        public async Task<IHttpActionResult> GetAllMPRDispatchLocations()
+        {
+            List<MPRDispatchLocationModel> model = new List<MPRDispatchLocationModel>();
+            model = await _rfqBusenessAcess.GetAllMPRDispatchLocations();
+            return Ok(model);
+        }
+        [Route("GetMPRDispatchLocationById/{id}")]
+        [ResponseType(typeof(MPRDispatchLocationModel))]
+        public async Task<IHttpActionResult> GetMPRDispatchLocationById(int id)
+        {
+            MPRDispatchLocationModel model = new MPRDispatchLocationModel();
+            model = await _rfqBusenessAcess.GetMPRDispatchLocationById(id);
+            return Ok(model);
+        }
+        [Route("GetAllCustomDuty")]
+        [ResponseType(typeof(List<MPRCustomsDutyModel>))]
+        public async Task<IHttpActionResult> GetAllCustomDuty()
+        {
+            List<MPRCustomsDutyModel> model = new List<MPRCustomsDutyModel>();
+            model = await _rfqBusenessAcess.GetAllCustomDuty();
+            return Ok(model);
+        }
+        [Route("InsertYILTerms")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertYILTerms(YILTermsandConditionModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.InsertYILTerms(model);
+            return Ok(model);
+        }
+        [Route("InsertYILTermsGroup")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertYILTermsGroup(YILTermsGroupModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.InsertYILTermsGroup(model);
+            return Ok(model);
+        }
+        [Route("InsertRFQTerms")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertRFQTerms(RFQTermsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.InsertRFQTerms(model);
+            return Ok(model);
+        }
+        [Route("GetRfqTermsById")]
+        [ResponseType(typeof(RFQTermsModel))]
+        public async Task<IHttpActionResult> GetRfqTermsById(int id)
+        {
+            RFQTermsModel status = new RFQTermsModel();
+            status = await _rfqBusenessAcess.GetRfqTermsById(id);
+            return Ok(status);
+        }
+        [Route("GetYILTermsByBuyerGroupID")]
+        [ResponseType(typeof(YILTermsandConditionModel))]
+        public async Task<IHttpActionResult> GetYILTermsByBuyerGroupID(int id)
+        {
+            YILTermsandConditionModel status = new YILTermsandConditionModel();
+            status = await _rfqBusenessAcess.GetYILTermsByBuyerGroupID(id);
+            return Ok(status);
+        }
+        [Route("GetYILTermsGroupById")]
+        [ResponseType(typeof(YILTermsGroupModel))]
+        public async Task<IHttpActionResult> GetYILTermsGroupById(int id)
+        {
+            YILTermsGroupModel status = new YILTermsGroupModel();
+            status = await _rfqBusenessAcess.GetYILTermsGroupById(id);
+            return Ok(status);
         }
     }
 }

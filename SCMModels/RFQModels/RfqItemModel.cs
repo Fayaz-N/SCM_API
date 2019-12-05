@@ -22,6 +22,15 @@ namespace SCMModels.RFQModels
         public string ItemDescription { get; set; }
         public string VendorModelNo { get; set; }
         public string HSNCode { get; set; }
+        public Nullable<decimal> CustomDuty { get; set; }
+        public Nullable<decimal> FreightPercentage { get; set; }
+        public Nullable<decimal> FreightAmount { get; set; }
+        public Nullable<decimal> PFPercentage { get; set; }
+        public Nullable<decimal> PFAmount { get; set; }
+        public Nullable<decimal> IGSTPercentage { get; set; }
+        public Nullable<decimal> CGSTPercentage { get; set; }
+        public Nullable<decimal> SGSTPercentage { get; set; }
+        public Nullable<bool> taxInclusiveOfDiscount { get; set; }
         public string RequsetRemarks { get; set; }
         public bool IsDeleted { get; set; }
         public RfqRevisionModel RFQRevision { get; set; }

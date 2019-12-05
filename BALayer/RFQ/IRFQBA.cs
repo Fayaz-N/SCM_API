@@ -1,4 +1,5 @@
-﻿using SCMModels.RFQModels;
+﻿using SCMModels.MPRMasterModels;
+using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,20 @@ namespace BALayer.RFQ
         Task<CurrencyMasterModel> GetMasterCurrencyById(int currencyId);
         Task<statuscheckmodel> RemoveMasterCurrencyById(int currencyId);
         Task<CurrencyHistoryModel> GetcurrencyHistoryById(int currencyId);
-       
+        Task<MPRBuyerGroupModel> GetMPRBuyerGroupsById(int id);
+        Task<List<MPRBuyerGroupModel>> GetAllMPRBuyerGroups();
+        Task<MPRApproverModel> GetMPRApprovalsById(int id);
+        Task<List<MPRApproverModel>> GetAllMPRApprovals();
+        Task<List<MPRDepartmentModel>> GetAllMPRDepartments();
+        Task<MPRDepartmentModel> GetMPRDepartmentById(int id);
+        Task<List<MPRDispatchLocationModel>> GetAllMPRDispatchLocations();
+        Task<MPRDispatchLocationModel> GetMPRDispatchLocationById(int id);
+        Task<List<MPRCustomsDutyModel>> GetAllCustomDuty();
+        Task<statuscheckmodel> InsertYILTerms(YILTermsandConditionModel model);
+        Task<statuscheckmodel> InsertYILTermsGroup(YILTermsGroupModel model);
+        Task<statuscheckmodel> InsertRFQTerms(RFQTermsModel model);
+        Task<YILTermsandConditionModel> GetYILTermsByBuyerGroupID(int id);
+        Task<YILTermsGroupModel> GetYILTermsGroupById(int id);
+        Task<RFQTermsModel> GetRfqTermsById(int termsid);
     }
 }
