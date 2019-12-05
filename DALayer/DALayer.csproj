@@ -102,6 +102,8 @@
     <Compile Include="MPR\IMPRDA.cs" />
     <Compile Include="MPR\MPRDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RFQ\IRFQDA.cs" />
+    <Compile Include="RFQ\RFQDA.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SCMModels\SCMModels.csproj">

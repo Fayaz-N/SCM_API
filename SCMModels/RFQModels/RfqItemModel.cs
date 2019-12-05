@@ -18,6 +18,8 @@ namespace SCMModels.RFQModels
         public int RFQRevisionId { get; set; }
         public int MRPItemsDetailsID { get; set; }
         public double QuotationQty { get; set; }
+        public string ItemName { get; set; }
+        public string ItemDescription { get; set; }
         public string VendorModelNo { get; set; }
         public string HSNCode { get; set; }
         public string RequsetRemarks { get; set; }

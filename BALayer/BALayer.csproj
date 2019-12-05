@@ -44,6 +44,8 @@
     <Compile Include="MPR\IMPRBA.cs" />
     <Compile Include="MPR\MPRBA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RFQ\IRFQBA.cs" />
+    <Compile Include="RFQ\RFQBA.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DALayer\DALayer.csproj">

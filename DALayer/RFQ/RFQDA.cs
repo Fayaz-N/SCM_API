@@ -1,4 +1,5 @@
-﻿using SCMModels.RemoteModel;
+﻿using SCMModels.MPRMasterModels;
+using SCMModels.RemoteModel;
 using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
@@ -16,6 +17,8 @@ namespace DALayer.RFQ
     {
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
+
+        
         public List<RFQQuoteView> getRFQItems(int RevisionId)
         {
             using (YSCMEntities Context = new YSCMEntities())
@@ -25,22 +28,40 @@ namespace DALayer.RFQ
                 //return Context.RFQQuoteViews.Where(li => li.MPRRevisionId == RevisionId).ToList();
             }
         }
-        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
+    public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
         {
-            using (YSCMEntities DB = new YSCMEntities())
+            foreach (RFQQuoteView item in RFQQuoteViewList)
             {
-                foreach (RFQQuoteView item in RFQQuoteViewList)
-                {
 
-                    RFQItemsInfo rfqiteminfo = DB.RFQItemsInfoes.Where(li => li.RFQItemsId == item.RFQItemsId).FirstOrDefault();
-
-                    rfqiteminfo.Qty = item.QuotationQty;
-
-                }
-
-                DB.SaveChanges();
+                RfqRevisionModel rfqModel = new RfqRevisionModel();
+                rfqModel.rfqmaster = new RFQMasterModel();
+                rfqModel.rfqmaster.MPRRevisionId = Convert.ToInt32(item.MPRRevisionId);
+                rfqModel.rfqmaster.VendorId = item.VendorId;
+                rfqModel.rfqmaster.CreatedBy = "190455";
+                rfqModel.rfqmaster.Created = DateTime.Now;
+                rfqModel.CreatedBy = 190455;
+                rfqModel.CreatedDate = DateTime.Now;
+                rfqModel.RfqValidDate = item.RFQValidDate;
+                rfqModel.PackingForwading = item.PackingForwarding;
+                rfqModel.ExciseDuty = item.ExciseDuty;
+                rfqModel.salesTax = item.SalesTax;
+                rfqModel.freight = item.Freight;
+                rfqModel.Insurance = item.Insurance;
+                rfqModel.CustomsDuty = item.CustomsDuty;
+                rfqModel.ShipmentModeId = item.ShipmentModeid;
+                rfqModel.PaymentTermDays = item.PaymentTermDays;
+                rfqModel.PaymentTermRemarks = item.PaymentTermRemarks;
+                rfqModel.BankGuarantee = item.BankGuarantee;
+                rfqModel.DeliveryMinWeeks = item.DeliveryMinWeeks;
+                rfqModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
+                RfqItemModel rfqitem = new RfqItemModel();
+                rfqitem.MRPItemsDetailsID = item.MPRItemDetailsid;
+                rfqitem.QuotationQty = item.QuotationQty;
+                rfqModel.rfqitem.Add(rfqitem);
+                CreateRfQ(rfqModel);
             }
             return true;
+            
         }
     public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
     {
@@ -51,12 +72,12 @@ namespace DALayer.RFQ
             if (model != null)
             {
                 var rfqremote = new RemoteRFQMaster();
-                var remote = vscm.Database.Connection.ConnectionString;
                 vscm.Database.Connection.Open();
                 if (model.rfqmaster.RfqMasterId == 0)
                 {
                     //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
                     rfqremote.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
+                    rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
                     rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                     rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
                     rfqremote.CreatedDate = model.rfqmaster.Created;
@@ -68,6 +89,7 @@ namespace DALayer.RFQ
                 {
                     rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                     //rfqdomain.RfqMasterId = model.RfqMasterId;
+                    rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
                     rfqremote.VendorId = model.rfqmaster.VendorId;
                     rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
                     rfqremote.CreatedDate = model.rfqmaster.Created;
@@ -138,6 +160,8 @@ namespace DALayer.RFQ
                         VendorModelNo = data.VendorModelNo,
                         HSNCode = data.HSNCode,
                         RequestRemarks = data.RequsetRemarks,
+                        ItemName=data.ItemName,
+                        ItemDescription=data.ItemDescription,
                         DeleteFlag = false
                     };
                     vscm.RemoteRFQItems.Add(rfitems);
@@ -225,7 +249,6 @@ namespace DALayer.RFQ
 
                 foreach (var data in model.rfqitem)
                 {
-
                     var rfitems = new RFQItem()
                     {
                         RFQRevisionId = revisionid,
@@ -1259,8 +1282,13 @@ namespace DALayer.RFQ
                         CurrencyId = item.CurrencyID,
                         CurrencyValue = item.CurrencyValue,
                         Remarks = item.Remarks,
+                        SGSTPercentage = item.SGSTPercentage,
+                        IGSTPercentage = item.IGSTPercentage,
+                        CGSTPercentage = item.CGSTPercentage,
+                        CustomsDuty = item.CustomsDuty,
+                        taxInclusiveOfDiscount = item.taxInclusiveOfDiscount,
                         DeliveryDate = item.DeliveryDate,
-                        GSTPercentage = item.GSTPercentage,
+                        //GSTPercentage = item.GSTPercentage,
                         SyncDate = System.DateTime.Now
                     };
                     Remotedata.RemoteRFQItemsInfoes.Add(remoteinfo);
@@ -1286,7 +1314,12 @@ namespace DALayer.RFQ
                     UOM = item.UOM,
                     UnitPrice = item.UnitPrice,
                     DiscountPercentage = item.DiscountPercentage,
-                    GSTPercentage = item.GSTPercentage,
+                    //GSTPercentage = item.GSTPercentage,
+                    SGSTPercentage=item.SGSTPercentage,
+                    IGSTPercentage = item.IGSTPercentage,
+                    CGSTPercentage = item.CGSTPercentage,
+                    CustomsDuty=item.CustomsDuty,
+                    taxInclusiveOfDiscount=item.taxInclusiveOfDiscount,
                     Discount = item.Discount,
                     CurrencyId = item.CurrencyID,
                     CurrencyValue = item.CurrencyValue,
@@ -1405,8 +1438,12 @@ namespace DALayer.RFQ
             remoteitem.CurrencyId = model.CurrencyID;
             remoteitem.Remarks = model.Remarks;
             remoteitem.DeliveryDate = model.DeliveryDate;
-            remoteitem.GSTPercentage = model.GSTPercentage;
-
+            //remoteitem.GSTPercentage = model.GSTPercentage;
+            remoteitem.IGSTPercentage = model.IGSTPercentage;
+            remoteitem.SGSTPercentage = model.SGSTPercentage;
+            remoteitem.CGSTPercentage = model.CGSTPercentage;
+            remoteitem.CustomsDuty = model.CustomsDuty;
+            remoteitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
             vscm.RemoteRFQItemsInfoes.Add(remoteitem);
             vscm.SaveChanges();
             int remoteitemid = remoteitem.RFQItemsId;
@@ -1420,8 +1457,13 @@ namespace DALayer.RFQ
             localitem.UnitPrice = model.UnitPrice;
             localitem.UOM = model.UOM;
             localitem.CurrencyValue = model.CurrencyValue;
-            localitem.GSTPercentage = model.GSTPercentage;
-            localitem.CurrencyId = model.CurrencyID;
+                //localitem.GSTPercentage = model.GSTPercentage;
+                localitem.IGSTPercentage = model.IGSTPercentage;
+                localitem.SGSTPercentage = model.SGSTPercentage;
+                localitem.CGSTPercentage = model.CGSTPercentage;
+                localitem.CustomsDuty = model.CustomsDuty;
+                localitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+                localitem.CurrencyId = model.CurrencyID;
             localitem.Remarks = model.Remarks;
             localitem.DeliveryDate = model.DeliveryDate;
             obj.RFQItemsInfoes.Add(localitem);
@@ -1491,28 +1533,40 @@ namespace DALayer.RFQ
                 revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
             }
 
-            //var rfqitemss = obj.RFQItems.Where(x => x.RFQRevisionId == revisionId).GroupBy(x => x.RFQRevisionId).Select(x => x.Last());
-            var rfqitemss = localrevision.RFQItems.GroupBy(x => x.RFQRevisionId).Select(x => x.Last());
-            foreach (var item in rfqitemss)
-            {
-                //revision.rfqitem= localrevision.RFQItems.Select(x => new RfqItemModel()
-                //  {
-                //      HSNCode = item.HSNCode,
-                //      RFQItemID = item.RFQItemID,
-                //      RFQRevisionId = item.RFQRevisionId,
-                //      QuotationQty = item.QuotationQty,
-                //      VendorModelNo = item.VendorModelNo,
-                //      RequsetRemarks = item.RequsetRemarks
-                //  }).ToList();
-                RfqItemModel rfqitems = new RfqItemModel();
-                rfqitems.HSNCode = item.HSNCode;
-                rfqitems.QuotationQty = item.QuotationQty;
-                rfqitems.RFQRevisionId = item.RFQRevisionId;
-                rfqitems.RFQItemID = item.RFQItemsId;
-                revision.rfqitem.Add(rfqitems);
-            }
+                var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
+                var masters = new RFQMasterModel();
+                foreach (var item in rfqmasters)
+                {
+                    masters.RfqMasterId = item.RfqMasterId;
+                    masters.RfqNo = item.RFQNo;
+                    masters.RfqUniqueNo = item.RFQUniqueNo;
+                    masters.VendorId = item.VendorId;
+                    masters.MPRRevisionId = (int)item.MPRRevisionId;
+                    masters.CreatedBy = item.CreatedBy;
+                }
+                revision.rfqmaster = masters;
+                var rfqitemss = obj.RFQItems.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId).ToList();
+                foreach (var item in rfqitemss)
+                {
+                    //revision.rfqitem= localrevision.RFQItems.Select(x => new RfqItemModel()
+                    //  {
+                    //      HSNCode = item.HSNCode,
+                    //      RFQItemID = item.RFQItemID,
+                    //      RFQRevisionId = item.RFQRevisionId,
+                    //      QuotationQty = item.QuotationQty,
+                    //      VendorModelNo = item.VendorModelNo,
+                    //      RequsetRemarks = item.RequsetRemarks
+                    //  }).ToList();
+                    RfqItemModel rfqitems = new RfqItemModel();
+                    rfqitems.HSNCode = item.HSNCode;
+                    rfqitems.MRPItemsDetailsID = item.MPRItemDetailsid;
+                    rfqitems.QuotationQty = item.QuotationQty;
+                    rfqitems.RFQRevisionId = item.RFQRevisionId;
+                    rfqitems.RFQItemID = item.RFQItemsId;
+                    revision.rfqitem.Add(rfqitems);
+                }
 
-            return revision;
+                return revision;
         }
         catch (Exception ex)
         {
@@ -1530,7 +1584,11 @@ namespace DALayer.RFQ
             remoteiteminfo.UOM = model.UOM;
             remoteiteminfo.UnitPrice = model.UnitPrice;
             remoteiteminfo.RFQItemsId = model.RFQItemsId;
-            remoteiteminfo.GSTPercentage = model.GSTPercentage;
+            remoteiteminfo.IGSTPercentage = model.IGSTPercentage;
+            remoteiteminfo.CGSTPercentage = model.CGSTPercentage;
+            remoteiteminfo.SGSTPercentage = model.SGSTPercentage;
+            remoteiteminfo.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+            remoteiteminfo.CustomsDuty = model.CustomsDuty;
             remoteiteminfo.DiscountPercentage = model.DiscountPercentage;
             remoteiteminfo.Qty = model.Qunatity;
             remoteiteminfo.DeliveryDate = model.DeliveryDate;
@@ -1547,7 +1605,12 @@ namespace DALayer.RFQ
             localiteminfo.UOM = model.UOM;
             localiteminfo.UnitPrice = model.UnitPrice;
             localiteminfo.RFQItemsId = model.RFQItemsId;
-            localiteminfo.GSTPercentage = model.GSTPercentage;
+            //localiteminfo.GSTPercentage = model.GSTPercentage;
+            localiteminfo.IGSTPercentage = model.IGSTPercentage;
+            localiteminfo.CGSTPercentage = model.CGSTPercentage;
+            localiteminfo.SGSTPercentage = model.SGSTPercentage;
+            localiteminfo.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+            localiteminfo.CustomsDuty = model.CustomsDuty;
             localiteminfo.DiscountPercentage = model.DiscountPercentage;
             localiteminfo.Qty = model.Qunatity;
             localiteminfo.DeliveryDate = model.DeliveryDate;
@@ -1579,8 +1642,13 @@ namespace DALayer.RFQ
                     remoteiteminfo.UOM = item.UOM;
                     remoteiteminfo.UnitPrice = item.UnitPrice;
                     remoteiteminfo.RFQItemsId = item.RFQItemsId;
-                    remoteiteminfo.GSTPercentage = item.GSTPercentage;
+                    //remoteiteminfo.GSTPercentage = item.GSTPercentage;
                     remoteiteminfo.DiscountPercentage = item.DiscountPercentage;
+                    remoteiteminfo.IGSTPercentage = item.IGSTPercentage;
+                    remoteiteminfo.CGSTPercentage = item.CGSTPercentage;
+                    remoteiteminfo.SGSTPercentage = item.SGSTPercentage;
+                    remoteiteminfo.taxInclusiveOfDiscount = item.taxInclusiveOfDiscount;
+                    remoteiteminfo.CustomsDuty = item.CustomsDuty;
                     remoteiteminfo.Qty = item.Qunatity;
                     remoteiteminfo.DeliveryDate = item.DeliveryDate;
                     remoteiteminfo.CurrencyValue = item.CurrencyValue;
@@ -1600,8 +1668,13 @@ namespace DALayer.RFQ
                     localiteminfo.UOM = item.UOM;
                     localiteminfo.UnitPrice = item.UnitPrice;
                     localiteminfo.RFQItemsId = item.RFQItemsId;
-                    localiteminfo.GSTPercentage = item.GSTPercentage;
+                    //localiteminfo.GSTPercentage = item.GSTPercentage;
                     localiteminfo.DiscountPercentage = item.DiscountPercentage;
+                    localiteminfo.IGSTPercentage = item.IGSTPercentage;
+                    localiteminfo.CGSTPercentage = item.CGSTPercentage;
+                    localiteminfo.SGSTPercentage = item.SGSTPercentage;
+                    localiteminfo.taxInclusiveOfDiscount = item.taxInclusiveOfDiscount;
+                    localiteminfo.CustomsDuty = item.CustomsDuty;
                     localiteminfo.Qty = item.Qunatity;
                     localiteminfo.DeliveryDate = item.DeliveryDate;
                     localiteminfo.CurrencyValue = item.CurrencyValue;
@@ -1681,6 +1754,448 @@ namespace DALayer.RFQ
             throw;
         }
     }
-}
+        public async Task<RfqRemainderTrackingModel> getrfqremaindersById(int id)
+        {
+            RfqRemainderTrackingModel model = new RfqRemainderTrackingModel();
+            try
+            {
+                var Tracking = obj.RFQReminderTrackings.Where(x => x.rfqccid == id && x.DeleteFlag == false).FirstOrDefault();
+                if (Tracking != null)
+                {
+                    model.Reminderid = Tracking.Reminderid;
+                    model.ReminderTo = Tracking.ReminderTo;
+                    model.MailsSentOn = Tracking.MailsSentOn;
+                    model.Acknowledgementon = Tracking.Acknowledgementon;
+                    model.AcknowledgementRemarks = Tracking.AcknowledgementRemarks;
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        //public statuscheckmodel InsertDocument(RfqDocumentsModel model)
+        //{
+        //    throw new NotImplementedException();
+        //}
+        public async Task<statuscheckmodel> Insertrfqvendorterms(RfqVendorTermModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            var rfqterms = new RemoteRFQVendorTerm();
+            try
+            {
+                vscm.Database.Connection.Open();
+                if (model != null)
+                {
+                    rfqterms.RFQversionId = model.RFQversionId;
+                    rfqterms.VendorTermsid = model.VendorTermsid;
+                    rfqterms.updatedBY = model.updatedBY;
+                    rfqterms.UpdateDate = model.UpdateDate;
+                }
+                vscm.RemoteRFQVendorTerms.Add(rfqterms);
+                vscm.SaveChanges();
+                int remoterfqid = rfqterms.RFQTermsid;
+                vscm.Database.Connection.Close();
+                var rfqlocalterms = new RFQVendorTerm();
+                obj.Database.Connection.Open();
+                if (model != null)
+                {
+                    rfqlocalterms.RFQTermsid = remoterfqid;
+                    rfqlocalterms.RFQversionId = model.RFQversionId;
+                    rfqlocalterms.VendorTermsid = model.VendorTermsid;
+                    rfqlocalterms.updatedBY = model.updatedBY;
+                    rfqlocalterms.UpdateDate = model.UpdateDate;
+                }
+                obj.RFQVendorTerms.Add(rfqlocalterms);
+                obj.SaveChanges();
+                status.Sid = remoterfqid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public async Task<RfqVendorTermModel> getRfqVendorById(int id)
+        {
+            RfqVendorTermModel model = new RfqVendorTermModel();
+            try
+            {
+                var remotedata = vscm.RemoteRFQVendorTerms.Where(x => x.RFQversionId == id).SingleOrDefault();
+                model.RFQTermsid = remotedata.RFQTermsid;
+                model.RFQversionId = remotedata.RFQversionId;
+                var terms = from x in vscm.RemoteVendorRFQTerms where x.VendorTermsid == remotedata.VendorTermsid select x;
+                var vendorterms = new VendorRfqtermModel();
+                foreach (var item in terms)
+                {
+                    vendorterms.Terms = item.Terms;
+                    vendorterms.Indexno = item.Indexno;
+                    vendorterms.TermsCategoryId = item.TermsCategoryId;
+                    vendorterms.VendorID = item.VendorID;
+                }
+                model.VendorRFQTerm = vendorterms;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> RemoveRfqVendorTermsById(int id)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                var rfqterms = vscm.RemoteRFQVendorTerms.Where(x => x.RFQversionId == id && x.DeleteFlag == false).SingleOrDefault();
+                if (rfqterms != null)
+                {
+                    rfqterms.DeleteFlag = true;
+                    vscm.SaveChanges();
+                }
+                vscm.Database.Connection.Close();
+
+                var rfqlocalterms = obj.RFQVendorTerms.Where(x => x.RFQversionId == id && x.DeleteFlag == false).SingleOrDefault();
+                if (rfqlocalterms != null)
+                {
+                    rfqlocalterms.DeleteFlag = true;
+                    obj.SaveChanges();
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<VendorRfqtermModel> getVendorRfqTermsByid(int id)
+        {
+            VendorRfqtermModel rfqterm = new VendorRfqtermModel();
+            try
+            {
+                var vendorrfq = vscm.RemoteVendorRFQTerms.Where(x => x.VendorTermsid == id && x.deleteFlag == false).SingleOrDefault();
+                if (vendorrfq != null)
+                {
+                    rfqterm.VendorTermsid = vendorrfq.VendorTermsid;
+                    rfqterm.TermsCategoryId = vendorrfq.TermsCategoryId;
+                    rfqterm.VendorID = vendorrfq.VendorID;
+                    rfqterm.Terms = vendorrfq.Terms;
+                    rfqterm.Indexno = vendorrfq.Indexno;
+                }
+                return rfqterm;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> RemoveVendorRfqByid(int id)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            vscm.Database.Connection.Open();
+            try
+            {
+                var remotevendor = vscm.RemoteVendorRFQTerms.Where(x => x.VendorTermsid == id && x.deleteFlag == false).SingleOrDefault();
+                if (remotevendor != null)
+                {
+                    remotevendor.deleteFlag = true;
+                    vscm.SaveChanges();
+                }
+                var data = remotevendor.VendorTermsid;
+                vscm.Database.Connection.Close();
+
+                obj.Database.Connection.Open();
+                var localvendor = obj.VendorRFQTerms.Where(x => x.VendorTermsid == data && x.deleteFlag == false).SingleOrDefault();
+                if (localvendor != null)
+                {
+                    localvendor.deleteFlag = true;
+                    obj.SaveChanges();
+                }
+                status.Sid = data;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertNewCurrencyMaster(CurrencyMasterModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                obj.Database.Connection.Open();
+                var data = new CurrencyMaster();
+                if (model != null)
+                {
+                    data.CurrencyName = model.CurrencyName;
+                    data.CurrencyCode = model.CurrencyCode;
+                    data.UpdatedBy = model.UpdatedBy;
+                    data.updateddate = model.updateddate;
+                    data.DeletedBy = model.DeletedBy;
+                    data.DeletedDate = model.DeletedDate;
+                    data.DeleteFlag = false;
+                }
+                obj.CurrencyMasters.Add(data);
+                obj.SaveChanges();
+                Byte currenyid = data.CurrenyId;
+                obj.Database.Connection.Close();
+                var remotedata = new RemoteCurrencyMaster();
+                vscm.Database.Connection.Open();
+                if (model != null)
+                {
+                    remotedata.CurrenyId = currenyid;
+                    remotedata.CurrencyCode = model.CurrencyCode;
+                    remotedata.CurrencyName = model.CurrencyName;
+                    remotedata.UpdatedBy = model.UpdatedBy;
+                    remotedata.updateddate = model.updateddate;
+                    remotedata.DeletedBy = model.DeletedBy;
+                    remotedata.DeletedDate = model.DeletedDate;
+                    remotedata.DeleteFlag = false;
+                }
+                vscm.RemoteCurrencyMasters.Add(remotedata);
+                vscm.SaveChanges();
+                status.Sid = currenyid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateNewCurrencyMaster(CurrencyMasterModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                obj.Database.Connection.Open();
+                var data = obj.CurrencyMasters.Where(x => x.CurrenyId == model.CurrenyId && x.DeleteFlag == false).FirstOrDefault();
+                if (model != null)
+                {
+                    data.CurrencyName = model.CurrencyName;
+                    data.CurrencyCode = model.CurrencyCode;
+                    data.UpdatedBy = model.UpdatedBy;
+                    data.updateddate = model.updateddate;
+                    data.DeletedBy = model.DeletedBy;
+                    data.DeletedDate = model.DeletedDate;
+                    data.DeleteFlag = false;
+                }
+                obj.CurrencyMasters.Add(data);
+                obj.SaveChanges();
+                Byte currenyid = data.CurrenyId;
+                obj.Database.Connection.Close();
+                var remotedata = new RemoteCurrencyMaster();
+                vscm.Database.Connection.Open();
+                if (model != null)
+                {
+                    remotedata.CurrenyId = currenyid;
+                    remotedata.CurrencyCode = model.CurrencyCode;
+                    remotedata.CurrencyName = model.CurrencyName;
+                    remotedata.UpdatedBy = model.UpdatedBy;
+                    remotedata.updateddate = model.updateddate;
+                    remotedata.DeletedBy = model.DeletedBy;
+                    remotedata.DeletedDate = model.DeletedDate;
+                    remotedata.DeleteFlag = false;
+                }
+                vscm.RemoteCurrencyMasters.Add(remotedata);
+                vscm.SaveChanges();
+                status.Sid = currenyid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertCurrentCurrencyHistory(CurrencyHistoryModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new CurrencyHistory();
+                obj.Database.Connection.Open();
+                if (model != null)
+                {
+                    data.CurrencyId = model.CurrencyId;
+                    data.CurrencyValue = model.CurrencyValue;
+                    data.EffectiveFrom = model.EffectiveFrom;
+                    data.EffectiveTo = model.EffectiveTo;
+                    data.UpdatedBy = model.UpdatedBy;
+                    data.UpdatedDate = model.UpdatedDate;
+                    data.IsActive = true;
+                }
+                obj.CurrencyHistories.Add(data);
+                obj.SaveChanges();
+                int historyid = data.CurrencyHistoryId;
+                obj.Database.Connection.Close();
+
+                var Remotedata = new RemoteCurrencyHistory();
+                vscm.Database.Connection.Open();
+                if (model != null)
+                {
+                    Remotedata.CurrencyId = model.CurrencyId;
+                    Remotedata.CurrencyValue = model.CurrencyValue;
+                    Remotedata.EffectiveFrom = model.EffectiveFrom;
+                    Remotedata.EffectiveTo = model.EffectiveTo;
+                    Remotedata.UpdatedBy = model.UpdatedBy;
+                    Remotedata.UpdatedDate = model.UpdatedDate;
+                    Remotedata.IsActive = true;
+                }
+                vscm.RemoteCurrencyHistories.Add(Remotedata);
+                vscm.SaveChanges();
+                status.Sid = historyid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateCurrentCurrencyHistory(CurrencyHistoryModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+
+                obj.Database.Connection.Open();
+                var data = obj.CurrencyHistories.Where(x => x.CurrencyId == model.CurrencyId).FirstOrDefault();
+                if (model != null)
+                {
+                    data.CurrencyId = model.CurrencyId;
+                    data.CurrencyValue = model.CurrencyValue;
+                    data.EffectiveFrom = model.EffectiveFrom;
+                    data.EffectiveTo = model.EffectiveTo;
+                    data.UpdatedBy = model.UpdatedBy;
+                    data.UpdatedDate = model.UpdatedDate;
+                    data.IsActive = true;
+                }
+                obj.CurrencyHistories.Add(data);
+                obj.SaveChanges();
+                int historyid = data.CurrencyHistoryId;
+                obj.Database.Connection.Close();
+
+
+                vscm.Database.Connection.Open();
+                var Remotedata = vscm.RemoteCurrencyHistories.Where(x => x.CurrencyId == model.CurrencyId).FirstOrDefault();
+                if (model != null)
+                {
+                    Remotedata.CurrencyId = model.CurrencyId;
+                    Remotedata.CurrencyValue = model.CurrencyValue;
+                    Remotedata.EffectiveFrom = model.EffectiveFrom;
+                    Remotedata.EffectiveTo = model.EffectiveTo;
+                    Remotedata.UpdatedBy = model.UpdatedBy;
+                    Remotedata.UpdatedDate = model.UpdatedDate;
+                    Remotedata.IsActive = true;
+                }
+                vscm.RemoteCurrencyHistories.Add(Remotedata);
+                vscm.SaveChanges();
+                status.Sid = historyid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<CurrencyMasterModel>> GetAllMasterCurrency()
+        {
+            List<CurrencyMasterModel> model = new List<CurrencyMasterModel>();
+            try
+            {
+                var currencydata = obj.CurrencyMasters.Where(x => x.DeleteFlag == false).ToList();
+                model = currencydata.Select(x => new CurrencyMasterModel()
+                {
+                    CurrencyCode = x.CurrencyCode,
+                    CurrencyName = x.CurrencyName,
+                    CurrenyId = x.CurrenyId,
+                    UpdatedBy = x.UpdatedBy,
+                    updateddate = x.updateddate,
+                    DeletedBy = x.DeletedBy,
+                    DeletedDate = x.DeletedDate
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<CurrencyMasterModel> GetMasterCurrencyById(int currencyId)
+        {
+            CurrencyMasterModel model = new CurrencyMasterModel();
+            try
+            {
+                var currencydata = obj.CurrencyMasters.Where(x => x.CurrenyId == currencyId && x.DeleteFlag == false).FirstOrDefault<CurrencyMaster>();
+                model.CurrencyName = currencydata.CurrencyName;
+                model.CurrencyCode = currencydata.CurrencyCode;
+                model.UpdatedBy = currencydata.UpdatedBy;
+                model.updateddate = currencydata.updateddate;
+                model.DeletedBy = currencydata.DeletedBy;
+                model.DeletedDate = currencydata.DeletedDate;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> RemoveMasterCurrencyById(int currencyId)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var currencydata = obj.CurrencyMasters.Where(x => x.CurrenyId == currencyId && x.DeleteFlag == false).FirstOrDefault<CurrencyMaster>();
+                if (currencydata != null)
+                {
+                    currencydata.DeleteFlag = true;
+                    obj.SaveChanges();
+
+                    var currencyhistorydata = obj.CurrencyHistories.Where(x => x.CurrencyId == currencydata.CurrenyId).FirstOrDefault<CurrencyHistory>();
+                    if (currencyhistorydata != null)
+                    {
+                        currencyhistorydata.IsActive = false;
+                        obj.SaveChanges();
+                    }
+                }
+                int id = currencydata.CurrenyId;
+                status.Sid = id;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<CurrencyHistoryModel> GetcurrencyHistoryById(int currencyId)
+        {
+            CurrencyHistoryModel model = new CurrencyHistoryModel();
+            try
+            {
+                var currenyhistorydata = obj.CurrencyHistories.Where(x => x.CurrencyId == currencyId && x.IsActive == true).ToList();
+                foreach (var item in currenyhistorydata)
+                {
+                    model.CurrencyHistoryId = item.CurrencyHistoryId;
+                    model.CurrencyValue = item.CurrencyValue;
+                    model.editedBy = item.editedBy;
+                    model.EditedDate = item.EditedDate;
+                    model.EffectiveFrom = item.EffectiveFrom;
+                    model.EffectiveTo = item.EffectiveTo;
+                    model.UpdatedBy = item.UpdatedBy;
+                    model.UpdatedDate = item.UpdatedDate;
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+       
+    }
 }
 

@@ -46,5 +46,20 @@ namespace DALayer.RFQ
         Task<statuscheckmodel> InsertSingleIteminfos(RfqItemInfoModel model);
         Task<statuscheckmodel> InsertBulkItemInfos(List<RfqItemInfoModel> model);
         Task<List<UnitMasterModel>> GetUnitMasterList();
+        Task<statuscheckmodel> InsertRfqRemainder(RfqRemainderTrackingModel model);
+        Task<RfqRemainderTrackingModel> getrfqremaindersById(int id);
+        Task<statuscheckmodel> Insertrfqvendorterms(RfqVendorTermModel model);
+        Task<RfqVendorTermModel> getRfqVendorById(int id);
+        Task<statuscheckmodel> RemoveRfqVendorTermsById(int id);
+        Task<statuscheckmodel> RemoveVendorRfqByid(int id);
+        Task<statuscheckmodel> InsertNewCurrencyMaster(CurrencyMasterModel model);
+        Task<statuscheckmodel> UpdateNewCurrencyMaster(CurrencyMasterModel model);
+        Task<statuscheckmodel> InsertCurrentCurrencyHistory(CurrencyHistoryModel model);
+        Task<statuscheckmodel> UpdateCurrentCurrencyHistory(CurrencyHistoryModel model);
+        Task<List<CurrencyMasterModel>> GetAllMasterCurrency();
+        Task<CurrencyMasterModel> GetMasterCurrencyById(int currencyId);
+        Task<statuscheckmodel> RemoveMasterCurrencyById(int currencyId);
+        Task<CurrencyHistoryModel> GetcurrencyHistoryById(int currencyId);
+      
     }
 }

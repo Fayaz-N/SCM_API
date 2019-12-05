@@ -186,5 +186,74 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.GetUnitMasterList();
         }
+        public async Task<statuscheckmodel> InsertRfqRemainder(RfqRemainderTrackingModel model)
+        {
+            return await _rfqDataAcess.InsertRfqRemainder(model);
+        }
+
+        public async Task<RfqRemainderTrackingModel> getrfqremaindersById(int id)
+        {
+            return await _rfqDataAcess.getrfqremaindersById(id);
+        }
+
+        public async Task<RfqVendorTermModel> getRfqVendorById(int id)
+        {
+            return await _rfqDataAcess.getRfqVendorById(id);
+        }
+
+        public async Task<statuscheckmodel> RemoveRfqVendorTermsById(int id)
+        {
+            return await _rfqDataAcess.RemoveRfqVendorTermsById(id);
+        }
+
+        public async Task<statuscheckmodel> RemoveVendorRfqByid(int id)
+        {
+            return await _rfqDataAcess.RemoveVendorRfqByid(id);
+        }
+
+        public async Task<statuscheckmodel> InsertNewCurrencyMaster(CurrencyMasterModel model)
+        {
+            return await _rfqDataAcess.InsertNewCurrencyMaster(model);
+        }
+
+        public async Task<statuscheckmodel> UpdateNewCurrencyMaster(CurrencyMasterModel model)
+        {
+            return await _rfqDataAcess.UpdateNewCurrencyMaster(model);
+        }
+
+        public async Task<statuscheckmodel> InsertCurrentCurrencyHistory(CurrencyHistoryModel model)
+        {
+            return await _rfqDataAcess.InsertCurrentCurrencyHistory(model);
+        }
+
+        public async Task<statuscheckmodel> UpdateCurrentCurrencyHistory(CurrencyHistoryModel model)
+        {
+            return await _rfqDataAcess.UpdateCurrentCurrencyHistory(model);
+        }
+
+        public async Task<List<CurrencyMasterModel>> GetAllMasterCurrency()
+        {
+            return await _rfqDataAcess.GetAllMasterCurrency();
+        }
+
+        public async Task<CurrencyMasterModel> GetMasterCurrencyById(int currencyId)
+        {
+            return await _rfqDataAcess.GetMasterCurrencyById(currencyId);
+        }
+
+        public async Task<statuscheckmodel> RemoveMasterCurrencyById(int currencyId)
+        {
+            return await _rfqDataAcess.RemoveMasterCurrencyById(currencyId);
+        }
+
+        public async Task<CurrencyHistoryModel> GetcurrencyHistoryById(int currencyId)
+        {
+            return await _rfqDataAcess.GetcurrencyHistoryById(currencyId);
+        }
+
+        public async Task<statuscheckmodel> Insertrfqvendorterms(RfqVendorTermModel model)
+        {
+            return await _rfqDataAcess.Insertrfqvendorterms(model);
+        }
     }
 }

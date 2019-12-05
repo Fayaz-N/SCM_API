@@ -53,10 +53,102 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MPRMasterModels\GlobalGroupEmployeeModel.cs" />
+    <Compile Include="MPRMasterModels\GlobalGroupModel.cs" />
+    <Compile Include="MPRMasterModels\MPRApproverModel.cs" />
+    <Compile Include="MPRMasterModels\MPRBuyerGroupModel.cs" />
+    <Compile Include="MPRMasterModels\MPRCustomsDutyModel.cs" />
+    <Compile Include="MPRMasterModels\MPRDepartmentModel.cs" />
+    <Compile Include="MPRMasterModels\MPRDispatchLocationModel.cs" />
+    <Compile Include="MPRMasterModels\MPRDocumentationDescriptionModel.cs" />
+    <Compile Include="MPRMasterModels\MPRProcurementSourceModel.cs" />
+    <Compile Include="MPRMasterModels\MPRRevisionModel.cs" />
+    <Compile Include="RemoteModel\RemoteCurrencyHistory.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteCurrencyMaster.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RemoteModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RemoteModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQCommunication.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQDocument.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQItem.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQItemsInfo.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQMaster.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQReminderTracking.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQRevision.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQStatu.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteRFQVendorTerm.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteUnitMaster.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteVendorMaster.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteVendorRFQTerm.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RemoteVendorUserMaster.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteModel\RFQPendingQuotation.cs">
+      <DependentUpon>RemoteModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RFQModels\CurrencyMasterModel.cs" />
+    <Compile Include="RFQModels\MaterialMasterModel.cs" />
+    <Compile Include="RFQModels\MPRItemInfoModel.cs" />
+    <Compile Include="RFQModels\RfqCommonModel.cs" />
+    <Compile Include="RFQModels\RfqCommunicationModel.cs" />
+    <Compile Include="RFQModels\RfqDocumentsModel.cs" />
+    <Compile Include="RFQModels\RfqItemInfoModel.cs" />
+    <Compile Include="RFQModels\RfqItemModel.cs" />
+    <Compile Include="RFQModels\RFQMasterModel.cs" />
+    <Compile Include="RFQModels\RfqRemainderTrackingModel.cs" />
+    <Compile Include="RFQModels\RfqRevisionModel.cs" />
+    <Compile Include="RFQModels\RFQStatusModel.cs" />
+    <Compile Include="RFQModels\statuscheckmodel.cs" />
+    <Compile Include="RFQModels\UnitMasterModel.cs" />
+    <Compile Include="RFQModels\VendormasterModel.cs" />
+    <Compile Include="RFQModels\VendorRfqtermModel.cs" />
     <Compile Include="SCMModels\AccessGroupMaster.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SCMModels\AccessName.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\AccessRoleView.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SCMModels\AuthorizationItem.cs">
@@ -68,6 +160,12 @@
     <Compile Include="SCMModels\ClientLogin.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SCMModels\CurrencyHistory.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\CurrencyMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SCMModels\CustomerMasterYG.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
@@ -77,6 +175,18 @@
     <Compile Include="SCMModels\DynamicSearchResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SCMModels\Employee.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\getrevision.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\getrevision1.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\GlobalGroup.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\GlobalGroupEmployee.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SCMModels\Grade.cs">
@@ -181,6 +291,9 @@
     <Compile Include="SCMModels\MPRRevision.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SCMModels\MPRRevisionDetail.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SCMModels\MPRScope.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
@@ -211,7 +324,16 @@
     <Compile Include="SCMModels\RFQItemsInfo.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SCMModels\RFQItemsView.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SCMModels\RFQMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQQuoteView.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SCMModels\RFQQuoteView1.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SCMModels\RFQReminderTracking.cs">
@@ -283,6 +405,9 @@
     <Compile Include="SCMModels\VendorRFQTerm.cs">
       <DependentUpon>SCMModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SCMModels\VendorUserMaster.cs">
+      <DependentUpon>SCMModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
@@ -291,6 +416,13 @@
       <LastGenOutput>SCMModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="packages.config" />
+    <EntityDeploy Include="RemoteModel\RemoteModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>RemoteModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="RemoteModel\RemoteModel.edmx.diagram">
+      <DependentUpon>RemoteModel.edmx</DependentUpon>
+    </None>
     <None Include="SCMModels\SCMModel.edmx.diagram">
       <DependentUpon>SCMModel.edmx</DependentUpon>
     </None>
@@ -299,6 +431,16 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="RemoteModel\RemoteModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>RemoteModel.edmx</DependentUpon>
+      <LastGenOutput>RemoteModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="RemoteModel\RemoteModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>RemoteModel.edmx</DependentUpon>
+      <LastGenOutput>RemoteModel.cs</LastGenOutput>
+    </Content>
     <Content Include="SCMModels\SCMModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SCMModel.edmx</DependentUpon>

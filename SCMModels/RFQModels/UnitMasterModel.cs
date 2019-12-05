@@ -10,6 +10,6 @@ namespace SCMModels.RFQModels
     {
         public byte UnitID { get; set; }
         public string UnitName { get; set; }
-        public Nullable<bool> DeleteFlag { get; set; }
+        public Nullable<bool> Isdeleted { get; set; }
     }
 }
