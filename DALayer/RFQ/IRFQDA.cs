@@ -17,7 +17,7 @@ namespace DALayer.RFQ
 
         //rfq module
 
-        Task<RFQMasterModel> GetRFQById(int id);
+        Task<RFQMasterModel> GetRFQById(int masterID);
         Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model);
         //Task<List<RfqRevisionModel>> GetAllRFQs();
         Task<List<RFQMasterModel>> getallrfqlist();
@@ -76,5 +76,7 @@ namespace DALayer.RFQ
         Task<YILTermsandConditionModel> GetYILTermsByBuyerGroupID(int id);
         Task<YILTermsGroupModel> GetYILTermsGroupById(int id);
         Task<RFQTermsModel> GetRfqTermsById(int termsid);
+        Task<RfqItemModel> GetItemByItemId(int id);
+        Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid);
     }
 }

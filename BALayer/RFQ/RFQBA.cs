@@ -43,9 +43,9 @@ namespace BALayer.RFQ
             return _rfqDataAcess.DeleteBulkItemsByItemId(id);
         }
 
-        public statuscheckmodel DeleteRfqById(int id)
+        public statuscheckmodel DeleteRfqById(int rfqmasterid)
         {
-            return _rfqDataAcess.DeleteRfqById(id);
+            return _rfqDataAcess.DeleteRfqById(rfqmasterid);
         }
 
         public statuscheckmodel DeleteRfqItemById(int id)
@@ -88,9 +88,9 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.GetItemsByRevisionId(id);
         }
 
-        public async Task<RFQMasterModel> GetRFQById(int id)
+        public async Task<RFQMasterModel> GetRFQById(int masterID)
         {
-            return await _rfqDataAcess.GetRFQById(id);
+            return await _rfqDataAcess.GetRFQById(masterID);
         }
 
         public Task<RfqRevisionModel> getrfqrevisionbyid(int id)
@@ -330,6 +330,16 @@ namespace BALayer.RFQ
         public async Task<YILTermsGroupModel> GetYILTermsGroupById(int id)
         {
             return await _rfqDataAcess.GetYILTermsGroupById(id);
+        }
+
+        public async Task<RfqItemModel> GetItemByItemId(int id)
+        {
+            return await _rfqDataAcess.GetItemByItemId(id);
+        }
+
+        public async Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid)
+        {
+            return await _rfqDataAcess.GetRfqByVendorId(vendorid);
         }
     }
 }

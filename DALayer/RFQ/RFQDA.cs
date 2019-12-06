@@ -19,8 +19,8 @@ namespace DALayer.RFQ
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
 
-        
-    public List<RFQQuoteView> getRFQItems(int RevisionId)
+
+        public List<RFQQuoteView> getRFQItems(int RevisionId)
         {
             using (YSCMEntities Context = new YSCMEntities())
             {
@@ -29,7 +29,7 @@ namespace DALayer.RFQ
                 //return Context.RFQQuoteViews.Where(li => li.MPRRevisionId == RevisionId).ToList();
             }
         }
-    public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
+        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
         {
             foreach (RFQQuoteView item in RFQQuoteViewList)
             {
@@ -63,1232 +63,1458 @@ namespace DALayer.RFQ
                 CreateRfQ(rfqModel);
             }
             return true;
-            
+
         }
-    public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
+        public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
         {
-            //server data
-            var rfqremote = new RemoteRFQMaster();
-            if (model != null)
+            statuscheckmodel status = new statuscheckmodel();
+            try
             {
-                
-                vscm.Database.Connection.Open();
-                if (model.rfqmaster.RfqMasterId == 0)
-                {
-                    //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
-                    rfqremote.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
-                    rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
-                    rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
-                    rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
-                    rfqremote.CreatedDate = model.rfqmaster.Created;
-                    rfqremote.VendorId = model.rfqmaster.VendorId;
-                    vscm.RemoteRFQMasters.Add(rfqremote);
-                    vscm.SaveChanges();
-                }
-                else
-                {
-                    rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
-                    //rfqdomain.RfqMasterId = model.RfqMasterId;
-                    rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
-                    rfqremote.VendorId = model.rfqmaster.VendorId;
-                    rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
-                    rfqremote.CreatedDate = model.rfqmaster.Created;
-                    vscm.RemoteRFQMasters.Add(rfqremote);
-                    vscm.SaveChanges();
-                }
-
-                int id = rfqremote.RfqMasterId;
-
-                RemoteRFQRevision revision = new RemoteRFQRevision();
-                if (model.RfqRevisionId == 0)
-                {
-                    revision.rfqMasterId = id;
-                    revision.RevisionNo = model.RfqRevisionNo;
-                    revision.CreatedBy = model.CreatedBy;
-                    revision.CreatedDate = model.CreatedDate;
-                    revision.RFQValidDate = model.RfqValidDate;
-                    revision.SalesTax = model.salesTax;
-                    revision.PaymentTermRemarks = model.PaymentTermRemarks;
-                    revision.PackingForwarding = model.PackingForwading;
-                    revision.PaymentTermDays = model.PaymentTermDays;
-                    revision.Insurance = model.Insurance;
-                    revision.ExciseDuty = model.ExciseDuty;
-                    revision.ShipmentModeid = model.ShipmentModeId;
-                    revision.BankGuarantee = model.BankGuarantee;
-                    revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
-                    revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
-                    //revision.RemoteRFQStatus.Select(x => new Remotedata.RFQStatu()
-                    //{
-                    //    StatusId = Convert.ToInt32(Enum.GetName(typeof(RFQStatusType), RFQStatusType.requested))
-                    //});
-
-                    vscm.RemoteRFQRevisions.Add(revision);
-                    vscm.SaveChanges();
-                }
-                else
-                {
-                    revision.RevisionNo = model.RfqRevisionNo;
-                    revision.CreatedBy = model.CreatedBy;
-                    revision.CreatedDate = model.CreatedDate;
-                    revision.RFQValidDate = model.RfqValidDate;
-                    revision.SalesTax = model.salesTax;
-                    revision.PaymentTermRemarks = model.PaymentTermRemarks;
-                    revision.PackingForwarding = model.PackingForwading;
-                    revision.PaymentTermDays = model.PaymentTermDays;
-                    revision.Insurance = model.Insurance;
-                    revision.ExciseDuty = model.ExciseDuty;
-                    revision.ShipmentModeid = model.ShipmentModeId;
-                    revision.BankGuarantee = model.BankGuarantee;
-                    revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
-                    revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
-
-                    vscm.RemoteRFQRevisions.Add(revision);
-                    vscm.SaveChanges();
-                }
-
-
-                int revisionid = revision.rfqRevisionId;
-
-                foreach (var data in model.rfqitem)
+                //server data
+                var rfqremote = new RemoteRFQMaster();
+                if (model != null)
                 {
 
-                    var rfitems = new RemoteRFQItem()
+                    vscm.Database.Connection.Open();
+                    if (model.rfqmaster.RfqMasterId == 0)
                     {
-                        RFQRevisionId = revisionid,
-                        MPRItemDetailsid = data.MRPItemsDetailsID,
-                        QuotationQty = data.QuotationQty,
-                        VendorModelNo = data.VendorModelNo,
-                        HSNCode = data.HSNCode,
-                        RequestRemarks = data.RequsetRemarks,
-                        ItemName=data.ItemName,
-                        ItemDescription=data.ItemDescription,
-                        
-                    };
-                    vscm.RemoteRFQItems.Add(rfitems);
-                    vscm.SaveChanges();
+                        //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
+                        rfqremote.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
+                        rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
+                        rfqremote.CreatedDate = model.rfqmaster.Created;
+                        rfqremote.VendorId = model.rfqmaster.VendorId;
+                        vscm.RemoteRFQMasters.Add(rfqremote);
+                        vscm.SaveChanges();
+                    }
+                    else
+                    {
+                        rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        //rfqdomain.RfqMasterId = model.RfqMasterId;
+                        rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        rfqremote.VendorId = model.rfqmaster.VendorId;
+                        rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
+                        rfqremote.CreatedDate = model.rfqmaster.Created;
+                        vscm.RemoteRFQMasters.Add(rfqremote);
+                        vscm.SaveChanges();
+                    }
+
+                    int id = rfqremote.RfqMasterId;
+
+                    RemoteRFQRevision revision = new RemoteRFQRevision();
+                    if (model.RfqRevisionId == 0)
+                    {
+                        revision.rfqMasterId = id;
+                        revision.RevisionNo = model.RfqRevisionNo;
+                        revision.CreatedBy = model.CreatedBy;
+                        revision.CreatedDate = model.CreatedDate;
+                        revision.RFQValidDate = model.RfqValidDate;
+                        revision.SalesTax = model.salesTax;
+                        revision.PaymentTermRemarks = model.PaymentTermRemarks;
+                        revision.PackingForwarding = model.PackingForwading;
+                        revision.PaymentTermDays = model.PaymentTermDays;
+                        revision.Insurance = model.Insurance;
+                        revision.ExciseDuty = model.ExciseDuty;
+                        revision.ShipmentModeid = model.ShipmentModeId;
+                        revision.BankGuarantee = model.BankGuarantee;
+                        revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
+                        revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                        //revision.RemoteRFQStatus.Select(x => new Remotedata.RFQStatu()
+                        //{
+                        //    StatusId = Convert.ToInt32(Enum.GetName(typeof(RFQStatusType), RFQStatusType.requested))
+                        //});
+
+                        vscm.RemoteRFQRevisions.Add(revision);
+                        vscm.SaveChanges();
+                    }
+                    else
+                    {
+                        revision.RevisionNo = model.RfqRevisionNo;
+                        revision.CreatedBy = model.CreatedBy;
+                        revision.CreatedDate = model.CreatedDate;
+                        revision.RFQValidDate = model.RfqValidDate;
+                        revision.SalesTax = model.salesTax;
+                        revision.PaymentTermRemarks = model.PaymentTermRemarks;
+                        revision.PackingForwarding = model.PackingForwading;
+                        revision.PaymentTermDays = model.PaymentTermDays;
+                        revision.Insurance = model.Insurance;
+                        revision.ExciseDuty = model.ExciseDuty;
+                        revision.ShipmentModeid = model.ShipmentModeId;
+                        revision.BankGuarantee = model.BankGuarantee;
+                        revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
+                        revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+
+                        vscm.RemoteRFQRevisions.Add(revision);
+                        vscm.SaveChanges();
+                    }
+
+
+                    int revisionid = revision.rfqRevisionId;
+
+                    foreach (var data in model.rfqitem)
+                    {
+
+                        var rfitems = new RemoteRFQItem()
+                        {
+                            RFQRevisionId = revisionid,
+                            MPRItemDetailsid = data.MRPItemsDetailsID,
+                            QuotationQty = data.QuotationQty,
+                            VendorModelNo = data.VendorModelNo,
+                            HSNCode = data.HSNCode,
+                            RequestRemarks = data.RequsetRemarks,
+                            ItemName = data.ItemName,
+                            ItemDescription = data.ItemDescription,
+
+                        };
+                        vscm.RemoteRFQItems.Add(rfitems);
+                        vscm.SaveChanges();
+                    }
                 }
-            }
-            int masterid = rfqremote.RfqMasterId;
-            int remoterevisionid= (from x in vscm.RemoteRFQRevisions orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
-            int Ritemid = (from x in vscm.RemoteRFQItems orderby x.RFQItemsId descending select x.RFQItemsId).First(); 
-            vscm.Database.Connection.Close();
-            if (model != null)
-            {
-                obj.Database.Connection.Open();
-                var rfqlocal = new RFQMaster();
-                if (model.rfqmaster.RfqMasterId == 0)
+                int masterid = rfqremote.RfqMasterId;
+                int remoterevisionid = (from x in vscm.RemoteRFQRevisions orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
+                int Ritemid = (from x in vscm.RemoteRFQItems orderby x.RFQItemsId descending select x.RFQItemsId).First();
+                vscm.Database.Connection.Close();
+                if (model != null)
                 {
-                    //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
-                    rfqlocal.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
-                    rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
-                    rfqlocal.RfqMasterId = masterid;
-                    rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
-                    rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
-                    rfqlocal.CreatedDate = model.rfqmaster.Created;
-                    rfqlocal.VendorId = model.rfqmaster.VendorId;
-                    obj.RFQMasters.Add(rfqlocal);
-                    obj.SaveChanges();
-                }
-                else
-                {
-                    rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
-                    rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
-                    //rfqdomain.RfqMasterId = model.RfqMasterId;
-                    rfqlocal.VendorId = model.rfqmaster.VendorId;
-                    rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
-                    rfqlocal.CreatedDate = model.rfqmaster.Created;
-                    obj.RFQMasters.Add(rfqlocal);
-                    obj.SaveChanges();
-                }
+                    obj.Database.Connection.Open();
+                    var rfqlocal = new RFQMaster();
+                    if (model.rfqmaster.RfqMasterId == 0)
+                    {
+                        //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
+                        rfqlocal.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
+                        rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        rfqlocal.RfqMasterId = masterid;
+                        rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
+                        rfqlocal.CreatedDate = model.rfqmaster.Created;
+                        rfqlocal.VendorId = model.rfqmaster.VendorId;
+                        obj.RFQMasters.Add(rfqlocal);
+                        obj.SaveChanges();
+                    }
+                    else
+                    {
+                        rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        //rfqdomain.RfqMasterId = model.RfqMasterId;
+                        rfqlocal.VendorId = model.rfqmaster.VendorId;
+                        rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
+                        rfqlocal.CreatedDate = model.rfqmaster.Created;
+                        obj.RFQMasters.Add(rfqlocal);
+                        obj.SaveChanges();
+                    }
 
-                RFQRevision revision = new RFQRevision();
-                if (model.RfqRevisionId == 0)
-                {
-                    revision.rfqRevisionId = remoterevisionid;
-                    revision.rfqMasterId = masterid;
-                    revision.RevisionNo = model.RfqRevisionNo;
-                    revision.CreatedBy = model.CreatedBy;
-                    revision.CreatedDate = model.CreatedDate;
-                    revision.RFQValidDate = model.RfqValidDate;
-                    revision.SalesTax = model.salesTax;
-                    revision.PaymentTermRemarks = model.PaymentTermRemarks;
-                    revision.PackingForwarding = model.PackingForwading;
-                    revision.PaymentTermDays = model.PaymentTermDays;
-                    revision.Insurance = model.Insurance;
-                    revision.ExciseDuty = model.ExciseDuty;
-                    revision.ShipmentModeid = model.ShipmentModeId;
-                    revision.BankGuarantee = model.BankGuarantee;
-                    revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
-                    revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
-                    //revision.RFQStatus.Select(x => new RFQStatu()
-                    //{
-                    //    StatusId = Convert.ToInt32(Enum.GetName(typeof(RFQStatusType), RFQStatusType.requested))
-                    //});
+                    RFQRevision revision = new RFQRevision();
+                    if (model.RfqRevisionId == 0)
+                    {
+                        revision.rfqRevisionId = remoterevisionid;
+                        revision.rfqMasterId = masterid;
+                        revision.RevisionNo = model.RfqRevisionNo;
+                        revision.CreatedBy = model.CreatedBy;
+                        revision.CreatedDate = model.CreatedDate;
+                        revision.RFQValidDate = model.RfqValidDate;
+                        revision.SalesTax = model.salesTax;
+                        revision.PaymentTermRemarks = model.PaymentTermRemarks;
+                        revision.PackingForwarding = model.PackingForwading;
+                        revision.PaymentTermDays = model.PaymentTermDays;
+                        revision.Insurance = model.Insurance;
+                        revision.ExciseDuty = model.ExciseDuty;
+                        revision.ShipmentModeid = model.ShipmentModeId;
+                        revision.BankGuarantee = model.BankGuarantee;
+                        revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
+                        revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                        //revision.RFQStatus.Select(x => new RFQStatu()
+                        //{
+                        //    StatusId = Convert.ToInt32(Enum.GetName(typeof(RFQStatusType), RFQStatusType.requested))
+                        //});
 
-                    obj.RFQRevisions.Add(revision);
-                    obj.SaveChanges();
-                }
-                else
-                {
-                    revision.RevisionNo = model.RfqRevisionNo;
-                    revision.CreatedBy = model.CreatedBy;
-                    revision.CreatedDate = model.CreatedDate;
-                    revision.RFQValidDate = model.RfqValidDate;
-                    revision.SalesTax = model.salesTax;
-                    revision.PaymentTermRemarks = model.PaymentTermRemarks;
-                    revision.PackingForwarding = model.PackingForwading;
-                    revision.PaymentTermDays = model.PaymentTermDays;
-                    revision.Insurance = model.Insurance;
-                    revision.ExciseDuty = model.ExciseDuty;
-                    revision.ShipmentModeid = model.ShipmentModeId;
-                    revision.BankGuarantee = model.BankGuarantee;
-                    revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
-                    revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                        obj.RFQRevisions.Add(revision);
+                        obj.SaveChanges();
+                    }
+                    else
+                    {
+                        revision.RevisionNo = model.RfqRevisionNo;
+                        revision.CreatedBy = model.CreatedBy;
+                        revision.CreatedDate = model.CreatedDate;
+                        revision.RFQValidDate = model.RfqValidDate;
+                        revision.SalesTax = model.salesTax;
+                        revision.PaymentTermRemarks = model.PaymentTermRemarks;
+                        revision.PackingForwarding = model.PackingForwading;
+                        revision.PaymentTermDays = model.PaymentTermDays;
+                        revision.Insurance = model.Insurance;
+                        revision.ExciseDuty = model.ExciseDuty;
+                        revision.ShipmentModeid = model.ShipmentModeId;
+                        revision.BankGuarantee = model.BankGuarantee;
+                        revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
+                        revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
 
-                    obj.RFQRevisions.Add(revision);
-                    obj.SaveChanges();
-                }
+                        obj.RFQRevisions.Add(revision);
+                        obj.SaveChanges();
+                    }
 
 
-                int revisionid = revision.rfqRevisionId;
+                    int revisionid = revision.rfqRevisionId;
 
-                foreach (var data in model.rfqitem)
-                {
+                    foreach (var data in model.rfqitem)
+                    {
                         var rfitems = new RFQItem()
                         {
-                        RFQItemsId = Ritemid,
-                        RFQRevisionId = remoterevisionid,
-                        MPRItemDetailsid = data.MRPItemsDetailsID,
-                        QuotationQty = data.QuotationQty,
-                        VendorModelNo = data.VendorModelNo,
-                        HSNCode = data.HSNCode,
-                        RequestRemarks = data.RequsetRemarks,
-                        DeleteFlag = false
-                    };
-                    revision.RFQItems.Add(rfitems);
-                    obj.SaveChanges();
+                            RFQItemsId = Ritemid,
+                            RFQRevisionId = remoterevisionid,
+                            MPRItemDetailsid = data.MRPItemsDetailsID,
+                            QuotationQty = data.QuotationQty,
+                            VendorModelNo = data.VendorModelNo,
+                            HSNCode = data.HSNCode,
+                            RequestRemarks = data.RequsetRemarks,
+                            DeleteFlag = false
+                        };
+                        revision.RFQItems.Add(rfitems);
+                        obj.SaveChanges();
+                    }
+                    status.Sid = rfqlocal.RfqMasterId;
                 }
-                status.Sid = rfqlocal.RfqMasterId;
+                return status;
             }
-            return status;
-        }
-        catch (DbEntityValidationException e)
-        {
-            foreach (var eve in e.EntityValidationErrors)
+            catch (DbEntityValidationException e)
             {
-                Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                       eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                foreach (var ve in eve.ValidationErrors)
+                foreach (var eve in e.EntityValidationErrors)
                 {
-                    Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                           ve.PropertyName, ve.ErrorMessage);
-                }
-            }
-            throw;
-        }
-
-    }
-    public async Task<statuscheckmodel> CreateNewRfq(RFQMasterModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            var rfqremote = new RemoteRFQMaster();
-            if (model != null)
-            {
-                //var remoteconnection = obj.Database.Connection.ConnectionString;
-                var remote = vscm.Database.Connection.ConnectionString;
-                vscm.Database.Connection.Open();
-                //vscm.Database.Connection.Close();
-                var result = obj.Database.Connection.ConnectionString;
-
-                rfqremote.RFQNo = model.RfqNo;
-                rfqremote.RFQUniqueNo = model.RfqUniqueNo;
-                rfqremote.MPRRevisionId = model.MPRRevisionId;
-                rfqremote.VendorId = model.VendorId;
-                rfqremote.CreatedBy = model.CreatedBy;
-                rfqremote.CreatedDate = model.Created;
-                vscm.RemoteRFQMasters.Add(rfqremote);
-                vscm.SaveChanges();
-            }
-            int masterid = rfqremote.RfqMasterId;
-            vscm.Database.Connection.Close();
-            var rfqlocal = new RFQMaster();
-            if (model != null)
-            {
-                var localconnection = vscm.Database.Connection.ConnectionString;
-                obj.Database.Connection.Open();
-                rfqlocal.RfqMasterId = masterid;
-                rfqlocal.RFQNo = model.RfqNo;
-                rfqlocal.RFQUniqueNo = model.RfqUniqueNo;
-                rfqlocal.MPRRevisionId = model.MPRRevisionId;
-                rfqlocal.VendorId = model.VendorId;
-                rfqlocal.CreatedBy = model.CreatedBy;
-                rfqlocal.CreatedDate = model.Created;
-                obj.RFQMasters.Add(rfqlocal);
-                obj.SaveChanges();
-                obj.Database.Connection.Close();
-            }
-
-            return status;
-        }
-
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-
-    }
-    public async Task<List<RFQMasterModel>> getallrfqlist()
-    {
-        List<RFQMasterModel> master = new List<RFQMasterModel>();
-        try
-        {
-            var result = obj.RFQMasters.Where(x => x.DeleteFlag == false).Include(x => x.RFQRevisions).ToList();
-            if (result != null)
-            {
-                foreach (var item in result)
-                {
-                    master = result.ConvertAll(x => new RFQMasterModel()
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                           eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
                     {
-                        RfqMasterId = x.RfqMasterId,
-                        VendorId = x.VendorId,
-                        RfqNo = x.RFQNo,
-                        RfqUniqueNo = x.RFQUniqueNo,
-                        Created = x.CreatedDate,
-                        CreatedBy = x.CreatedBy,
-                        Revision = x.RFQRevisions.Where(y => y.rfqMasterId == x.RfqMasterId).Select(y => new RfqRevisionModel()
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                               ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
+
+        }
+        public async Task<statuscheckmodel> CreateNewRfq(RFQMasterModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var rfqremote = new RemoteRFQMaster();
+                if (model != null)
+                {
+                    //var remoteconnection = obj.Database.Connection.ConnectionString;
+                    var remote = vscm.Database.Connection.ConnectionString;
+                    vscm.Database.Connection.Open();
+                    //vscm.Database.Connection.Close();
+                    var result = obj.Database.Connection.ConnectionString;
+
+                    rfqremote.RFQNo = model.RfqNo;
+                    rfqremote.RFQUniqueNo = model.RfqUniqueNo;
+                    rfqremote.MPRRevisionId = model.MPRRevisionId;
+                    rfqremote.VendorId = model.VendorId;
+                    rfqremote.CreatedBy = model.CreatedBy;
+                    rfqremote.CreatedDate = model.Created;
+                    vscm.RemoteRFQMasters.Add(rfqremote);
+                    vscm.SaveChanges();
+                }
+                int masterid = rfqremote.RfqMasterId;
+                vscm.Database.Connection.Close();
+                var rfqlocal = new RFQMaster();
+                if (model != null)
+                {
+                    var localconnection = vscm.Database.Connection.ConnectionString;
+                    obj.Database.Connection.Open();
+                    rfqlocal.RfqMasterId = masterid;
+                    rfqlocal.RFQNo = model.RfqNo;
+                    rfqlocal.RFQUniqueNo = model.RfqUniqueNo;
+                    rfqlocal.MPRRevisionId = model.MPRRevisionId;
+                    rfqlocal.VendorId = model.VendorId;
+                    rfqlocal.CreatedBy = model.CreatedBy;
+                    rfqlocal.CreatedDate = model.Created;
+                    obj.RFQMasters.Add(rfqlocal);
+                    obj.SaveChanges();
+                    obj.Database.Connection.Close();
+                }
+
+                return status;
+            }
+
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+        public async Task<List<RFQMasterModel>> getallrfqlist()
+        {
+            List<RFQMasterModel> master = new List<RFQMasterModel>();
+            try
+            {
+                var result = obj.RFQMasters.Where(x => x.DeleteFlag == false).Include(x => x.RFQRevisions).ToList();
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        master = result.ConvertAll(x => new RFQMasterModel()
                         {
-                            RfqRevisionId = y.rfqRevisionId,
-                            RfqValidDate = y.RFQValidDate,
-                            RfqMasterId = y.rfqMasterId,
-                            RfqRevisionNo = y.RevisionNo
-                        }).ToList()
-                    });
+                            RfqMasterId = x.RfqMasterId,
+                            VendorId = x.VendorId,
+                            RfqNo = x.RFQNo,
+                            RfqUniqueNo = x.RFQUniqueNo,
+                            Created = x.CreatedDate,
+                            CreatedBy = x.CreatedBy,
+                            Revision = x.RFQRevisions.Where(y => y.rfqMasterId == x.RfqMasterId).Select(y => new RfqRevisionModel()
+                            {
+                                RfqRevisionId = y.rfqRevisionId,
+                                RfqValidDate = y.RFQValidDate,
+                                RfqMasterId = y.rfqMasterId,
+                                RfqRevisionNo = y.RevisionNo
+                            }).ToList()
+                        });
+
+                    }
 
                 }
+                //remote data
+                //var remotedata = vscm.RemoteRFQMasters.Where(x => x.DeleteFlag == false).Include(x => x.RemoteRFQRevisions).ToList();
+                //if (remotedata != null)
+                //{
+                //    foreach (var item in remotedata)
+                //    {
+                //        master = result.ConvertAll(x => new RFQMasterModel()
+                //        {
+                //            RfqMasterId = x.RfqMasterId,
+                //            VendorId = x.VendorId,
+                //            RfqNo = x.RFQNo,
+                //            RfqUniqueNo = x.RFQUniqueNo,
+                //            Created = x.CreatedDate,
+                //            CreatedBy = x.CreatedBy,
+                //            Revision = x.RFQRevisions.Where(y => y.rfqMasterId == x.RfqMasterId).Select(y => new RfqRevisionModel()
+                //            {
+                //                RfqRevisionId = y.rfqRevisionId,
+                //                RfqValidDate = y.RFQValidDate,
+                //                RfqMasterId = y.rfqMasterId,
+                //                RfqRevisionNo = y.RevisionNo
+                //            }).ToList()
+                //        });
+
+                //    }
+
+                //}
+                return master;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        //public async Task<List<RfqRevisionModel>> GetAllRFQs()
+        //{
+        //    List<RfqRevisionModel> model;
+
+        //    try
+        //    {
+        //        obj.Configuration.ProxyCreationEnabled = false;
+        //        model = obj.RFQRevisions.Where(x => x.DeleteFlag == false).Include(x => x.RFQMaster).ToList();
+        //        //foreach (var item in revision)
+        //        //{
+        //        //    model = revision.Select(x => new RfqRevisionModel()
+        //        //    {
+        //        //        RfqRevisionId = x.rfqRevisionId,
+        //        //        RfqRevisionNo = x.RevisionNo,
+        //        //        RfqValidDate = x.RFQValidDate,
+        //        //        CreatedBy = x.CreatedBy,
+        //        //        CreatedDate = x.CreatedDate,
+        //        //    }).ToList();
+        //        //    foreach (var items in revision)
+        //        //    {
+        //        //        foreach (var masters in revision)
+        //        //        {
+
+        //        //        }
+        //        //    }
+
+        //        //}   
+
+
+
+
+        //        //foreach (var item in revision)
+        //        //{
+        //        //    revision.Select(x => new RfqRevisionModel()
+        //        //    {
+        //        //        RfqRevisionId = item.rfqRevisionId,
+        //        //        CreatedDate = item.CreatedDate,
+        //        //        RfqValidDate = item.RFQValidDate,
+        //        //    }).ToList();
+        //        //    revision.Select(x => new RFQMasterModel()
+        //        //    {
+        //        //        RfqMasterId=item.RFQMaster.RfqMasterId,
+        //        //        RfqUniqueNo=item.RFQMaster.RFQUniqueNo,
+        //        //        RfqNo=item.RFQMaster.RFQNo
+        //        //    }).ToList();
+
+        //        //}
+        //        return model;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+        //public async Task<RFQMasterDataModel> GetAllRFQs()
+        //{
+        //    RFQMasterDataModel rfqitems = new RFQMasterDataModel();
+        //    //var rfqs = from x in obj.RFQMasters where x.DeleteFlag=="false"  select x;
+        //    try
+        //    {
+        //        var rfqs = obj.RFQMasters.Where(x => x.DeleteFlag == false).Select(x => x).ToList();
+        //        //var rfqs = obj.RFQMasters.SqlQuery("select * from RFQMaster where DeleteFlag=0");
+        //        // var rfqs = obj.RFQMasters.Where(x => x.DeleteFlag = false).ToList();
+        //        //List<RFQMasterModel> rfqs = (from x in obj.RFQMasters where x.DeleteFlag == false select x)
+        //        RFQMasterModel model = new RFQMasterModel();
+        //        foreach (var item in rfqs)
+        //        {
+        //            model.Created = item.CreatedDate;
+        //            model.CreatedBy = item.CreatedBy;
+        //            model.RfqMasterId = item.RfqMasterId;
+        //            model.RfqNo = item.RFQNo;
+        //            model.RfqUniqueNo = item.RFQUniqueNo;
+        //            model.VendorId = item.VendorId;
+        //            rfqitems.RFQlist.Add(model);
+        //        }
+        //        return rfqitems;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw;
+        //    }
+
+        //}
+        ////public async Task<RFQMasterDataModel> GetAllRFQs()
+        //{
+        //    RFQMasterDataModel rfqitems = new RFQMasterDataModel();
+        //    List< RFQMasterModel> rfqs = new List< RFQMasterModel>();
+        //    //var rfqs = from x in obj.RFQMasters where x.DeleteFlag=="false"  select x;
+        //    try
+        //    {
+        //         rfqs = (from x in obj.RFQMasters
+        //                    where x.DeleteFlag == false
+        //                    select new RFQMasterModel
+        //                    {
+        //                       RfqMasterId=x.RfqMasterId,
+        //                       RfqUniqueNo=x.RFQUniqueNo,
+        //                       RfqNo=x.RFQNo,
+        //                       VendorId=x.VendorId,
+        //                       CreatedBy=x.CreatedBy,
+        //                       Created=x.CreatedDate
+        //                    }).ToList();
+        //        rfqitems.RFQlist.Add(rfqs);
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw;
+        //    }
+
+        //}
+        public async Task<List<RfqRevisionModel>> GetAllrevisionRFQs()
+        {
+            List<RfqRevisionModel> rfq = new List<RfqRevisionModel>();
+            try
+            {
+                return (from x in obj.RFQRevisions
+                        where x.DeleteFlag == false
+                        select new RfqRevisionModel()
+                        {
+                            RfqRevisionId = x.rfqRevisionId,
+                            RfqMasterId = x.rfqMasterId,
+                            CreatedBy = x.CreatedBy,
+                            CreatedDate = x.CreatedDate,
+                            RfqRevisionNo = x.RevisionNo,
+                            RfqValidDate = x.RFQValidDate
+                        }).ToList();
 
             }
-            //remote data
-            //var remotedata = vscm.RemoteRFQMasters.Where(x => x.DeleteFlag == false).Include(x => x.RemoteRFQRevisions).ToList();
-            //if (remotedata != null)
-            //{
-            //    foreach (var item in remotedata)
-            //    {
-            //        master = result.ConvertAll(x => new RFQMasterModel()
-            //        {
-            //            RfqMasterId = x.RfqMasterId,
-            //            VendorId = x.VendorId,
-            //            RfqNo = x.RFQNo,
-            //            RfqUniqueNo = x.RFQUniqueNo,
-            //            Created = x.CreatedDate,
-            //            CreatedBy = x.CreatedBy,
-            //            Revision = x.RFQRevisions.Where(y => y.rfqMasterId == x.RfqMasterId).Select(y => new RfqRevisionModel()
-            //            {
-            //                RfqRevisionId = y.rfqRevisionId,
-            //                RfqValidDate = y.RFQValidDate,
-            //                RfqMasterId = y.rfqMasterId,
-            //                RfqRevisionNo = y.RevisionNo
-            //            }).ToList()
-            //        });
 
-            //    }
+            catch (Exception ex)
+            {
 
-            //}
-            return master;
+                throw;
+            }
+
         }
-        catch (Exception)
+        public async Task<RFQMasterModel> GetRFQById(int masterID)
         {
-
-            throw;
-        }
-    }
-    //public async Task<List<RfqRevisionModel>> GetAllRFQs()
-    //{
-    //    List<RfqRevisionModel> model;
-
-    //    try
-    //    {
-    //        obj.Configuration.ProxyCreationEnabled = false;
-    //        model = obj.RFQRevisions.Where(x => x.DeleteFlag == false).Include(x => x.RFQMaster).ToList();
-    //        //foreach (var item in revision)
-    //        //{
-    //        //    model = revision.Select(x => new RfqRevisionModel()
-    //        //    {
-    //        //        RfqRevisionId = x.rfqRevisionId,
-    //        //        RfqRevisionNo = x.RevisionNo,
-    //        //        RfqValidDate = x.RFQValidDate,
-    //        //        CreatedBy = x.CreatedBy,
-    //        //        CreatedDate = x.CreatedDate,
-    //        //    }).ToList();
-    //        //    foreach (var items in revision)
-    //        //    {
-    //        //        foreach (var masters in revision)
-    //        //        {
-
-    //        //        }
-    //        //    }
-
-    //        //}   
+            RFQMasterModel model = new RFQMasterModel();
+            RFQMaster rfq = new RFQMaster();
+            RFQItem rfqitem = new RFQItem();
+            try
+            {
+                rfq = obj.RFQMasters.Where(x => x.RfqMasterId == masterID).Include(x => x.RFQRevisions).SingleOrDefault<RFQMaster>();
+                //rfq.RFQRevisions = obj.RFQRevisions.Where(x => x.rfqMasterId == id).Include(x=>x.RFQItems).ToList<RFQRevision>();
+                if (rfq != null)
+                {
+                    model.RfqMasterId = rfq.RfqMasterId;
+                    model.RfqNo = rfq.RFQNo;
+                    model.RfqUniqueNo = rfq.RFQUniqueNo;
+                    model.VendorId = rfq.VendorId;
+                    model.CreatedBy = rfq.CreatedBy;
 
 
-
-
-    //        //foreach (var item in revision)
-    //        //{
-    //        //    revision.Select(x => new RfqRevisionModel()
-    //        //    {
-    //        //        RfqRevisionId = item.rfqRevisionId,
-    //        //        CreatedDate = item.CreatedDate,
-    //        //        RfqValidDate = item.RFQValidDate,
-    //        //    }).ToList();
-    //        //    revision.Select(x => new RFQMasterModel()
-    //        //    {
-    //        //        RfqMasterId=item.RFQMaster.RfqMasterId,
-    //        //        RfqUniqueNo=item.RFQMaster.RFQUniqueNo,
-    //        //        RfqNo=item.RFQMaster.RFQNo
-    //        //    }).ToList();
-
-    //        //}
-    //        return model;
-    //    }
-    //    catch (Exception)
-    //    {
-
-    //        throw;
-    //    }
-    //}
-    //public async Task<RFQMasterDataModel> GetAllRFQs()
-    //{
-    //    RFQMasterDataModel rfqitems = new RFQMasterDataModel();
-    //    //var rfqs = from x in obj.RFQMasters where x.DeleteFlag=="false"  select x;
-    //    try
-    //    {
-    //        var rfqs = obj.RFQMasters.Where(x => x.DeleteFlag == false).Select(x => x).ToList();
-    //        //var rfqs = obj.RFQMasters.SqlQuery("select * from RFQMaster where DeleteFlag=0");
-    //        // var rfqs = obj.RFQMasters.Where(x => x.DeleteFlag = false).ToList();
-    //        //List<RFQMasterModel> rfqs = (from x in obj.RFQMasters where x.DeleteFlag == false select x)
-    //        RFQMasterModel model = new RFQMasterModel();
-    //        foreach (var item in rfqs)
-    //        {
-    //            model.Created = item.CreatedDate;
-    //            model.CreatedBy = item.CreatedBy;
-    //            model.RfqMasterId = item.RfqMasterId;
-    //            model.RfqNo = item.RFQNo;
-    //            model.RfqUniqueNo = item.RFQUniqueNo;
-    //            model.VendorId = item.VendorId;
-    //            rfqitems.RFQlist.Add(model);
-    //        }
-    //        return rfqitems;
-    //    }
-    //    catch (Exception ex)
-    //    {
-
-    //        throw;
-    //    }
-
-    //}
-    ////public async Task<RFQMasterDataModel> GetAllRFQs()
-    //{
-    //    RFQMasterDataModel rfqitems = new RFQMasterDataModel();
-    //    List< RFQMasterModel> rfqs = new List< RFQMasterModel>();
-    //    //var rfqs = from x in obj.RFQMasters where x.DeleteFlag=="false"  select x;
-    //    try
-    //    {
-    //         rfqs = (from x in obj.RFQMasters
-    //                    where x.DeleteFlag == false
-    //                    select new RFQMasterModel
-    //                    {
-    //                       RfqMasterId=x.RfqMasterId,
-    //                       RfqUniqueNo=x.RFQUniqueNo,
-    //                       RfqNo=x.RFQNo,
-    //                       VendorId=x.VendorId,
-    //                       CreatedBy=x.CreatedBy,
-    //                       Created=x.CreatedDate
-    //                    }).ToList();
-    //        rfqitems.RFQlist.Add(rfqs);
-    //    }
-    //    catch (Exception ex)
-    //    {
-
-    //        throw;
-    //    }
-
-    //}
-    public async Task<List<RfqRevisionModel>> GetAllrevisionRFQs()
-    {
-        List<RfqRevisionModel> rfq = new List<RfqRevisionModel>();
-        try
-        {
-            return (from x in obj.RFQRevisions
-                    where x.DeleteFlag == false
-                    select new RfqRevisionModel()
+                    foreach (var item in rfq.RFQRevisions)
                     {
-                        RfqRevisionId = x.rfqRevisionId,
-                        RfqMasterId = x.rfqMasterId,
-                        CreatedBy = x.CreatedBy,
-                        CreatedDate = x.CreatedDate,
-                        RfqRevisionNo = x.RevisionNo,
-                        RfqValidDate = x.RFQValidDate
-                    }).ToList();
+                        RfqRevisionModel RfqRevisionModel = new RfqRevisionModel();
+                        RfqRevisionModel.RfqMasterId = item.rfqMasterId;
+                        RfqRevisionModel.RfqRevisionId = item.rfqRevisionId;
+                        RfqRevisionModel.RfqValidDate = item.RFQValidDate;
+                        RfqRevisionModel.CreatedBy = item.CreatedBy;
+                        RfqRevisionModel.CreatedDate = item.CreatedDate;
+                        RfqRevisionModel.salesTax = item.SalesTax;
+                        RfqRevisionModel.PaymentTermDays = item.PaymentTermDays;
+                        RfqRevisionModel.freight = item.Freight;
+                        RfqRevisionModel.Insurance = item.Insurance;
+                        RfqRevisionModel.IsDeleted = item.DeleteFlag;
+                        RfqRevisionModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
+                        RfqRevisionModel.DeliveryMinWeeks = item.DeliveryMinWeeks;
+                        RfqRevisionModel.CustomsDuty = item.CustomsDuty;
+                        RfqRevisionModel.BankGuarantee = item.BankGuarantee;
+                        RfqRevisionModel.ExciseDuty = item.ExciseDuty;
 
-        }
-
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-
-    }
-    public async Task<RFQMasterModel> GetRFQById(int id)
-    {
-        RFQMasterModel model = new RFQMasterModel();
-        RFQMaster rfq = new RFQMaster();
-        RFQItem rfqitem = new RFQItem();
-        try
-        {
-            rfq = obj.RFQMasters.Where(x => x.RfqMasterId == id).Include(x => x.RFQRevisions).SingleOrDefault<RFQMaster>();
-            //rfq.RFQRevisions = obj.RFQRevisions.Where(x => x.rfqMasterId == id).Include(x=>x.RFQItems).ToList<RFQRevision>();
-            if (rfq != null)
-            {
-                model.RfqMasterId = rfq.RfqMasterId;
-                model.RfqNo = rfq.RFQNo;
-                model.RfqUniqueNo = rfq.RFQUniqueNo;
-                model.VendorId = rfq.VendorId;
-                model.CreatedBy = rfq.CreatedBy;
+                        model.Revision.Add(RfqRevisionModel);
 
 
-                foreach (var item in rfq.RFQRevisions)
-                {
-                    RfqRevisionModel RfqRevisionModel = new RfqRevisionModel();
-                    RfqRevisionModel.RfqMasterId = item.rfqMasterId;
-                    RfqRevisionModel.RfqRevisionId = item.rfqRevisionId;
-                    RfqRevisionModel.RfqValidDate = item.RFQValidDate;
-                    RfqRevisionModel.CreatedBy = item.CreatedBy;
-                    RfqRevisionModel.CreatedDate = item.CreatedDate;
-                    RfqRevisionModel.salesTax = item.SalesTax;
-                    RfqRevisionModel.PaymentTermDays = item.PaymentTermDays;
-                    RfqRevisionModel.freight = item.Freight;
-                    RfqRevisionModel.Insurance = item.Insurance;
-                    RfqRevisionModel.IsDeleted = item.DeleteFlag;
-                    RfqRevisionModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
-                    RfqRevisionModel.DeliveryMinWeeks = item.DeliveryMinWeeks;
-                    RfqRevisionModel.CustomsDuty = item.CustomsDuty;
-                    RfqRevisionModel.BankGuarantee = item.BankGuarantee;
-                    RfqRevisionModel.ExciseDuty = item.ExciseDuty;
+                        //var result = obj.RFQItems.Where(x => x.RFQRevisionId == RfqRevisionModel.RfqRevisionId).ToList<RFQItem>();
+                        //if (result != null)
+                        //{
+                        //    RfqItemModel rfqs = new RfqItemModel();
+                        //    foreach (RFQItem items in item.RFQItems)
+                        //    {
+                        //        rfqs.RFQItemID = items.RFQItemsId;
+                        //        rfqs.HSNCode = items.HSNCode;
+                        //        rfqs.RFQRevisionId = items.RFQRevisionId;
+                        //        rfqs.MRPItemsDetailsID = items.MPRItemDetailsid;
+                        //        rfqs.QuotationQty = items.QuotationQty;
+                        //        rfqs.VendorModelNo = items.VendorModelNo;
+                        //        rfqs.RequsetRemarks = items.RequestRemarks;
 
-                    model.Revision.Add(RfqRevisionModel);
+                        //        RfqRevisionModel.rfqitem.Add(rfqs);
+                        //    }
 
+                        //}
 
-                    //var result = obj.RFQItems.Where(x => x.RFQRevisionId == RfqRevisionModel.RfqRevisionId).ToList<RFQItem>();
-                    //if (result != null)
-                    //{
-                    //    RfqItemModel rfqs = new RfqItemModel();
-                    //    foreach (RFQItem items in item.RFQItems)
-                    //    {
-                    //        rfqs.RFQItemID = items.RFQItemsId;
-                    //        rfqs.HSNCode = items.HSNCode;
-                    //        rfqs.RFQRevisionId = items.RFQRevisionId;
-                    //        rfqs.MRPItemsDetailsID = items.MPRItemDetailsid;
-                    //        rfqs.QuotationQty = items.QuotationQty;
-                    //        rfqs.VendorModelNo = items.VendorModelNo;
-                    //        rfqs.RequsetRemarks = items.RequestRemarks;
-
-                    //        RfqRevisionModel.rfqitem.Add(rfqs);
-                    //    }
-
-                    //}
-
+                    }
                 }
+                //var gets = from x in obj.RFQMasters where x.RfqMasterId == id select x;
+
+                return model;
             }
-            //var gets = from x in obj.RFQMasters where x.RfqMasterId == id select x;
-
-            return model;
-        }
-        catch (DbEntityValidationException e)
-        {
-            foreach (var eve in e.EntityValidationErrors)
+            catch (DbEntityValidationException e)
             {
-                Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                       eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                foreach (var ve in eve.ValidationErrors)
+                foreach (var eve in e.EntityValidationErrors)
                 {
-                    Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                           ve.PropertyName, ve.ErrorMessage);
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                           eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                               ve.PropertyName, ve.ErrorMessage);
+                    }
                 }
+                throw;
             }
-            throw;
+
         }
-
-    }
-    public statuscheckmodel DeleteRfqById(int id)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        var domainentity = obj.Set<RFQMaster>().Where(x => x.RfqMasterId == id && x.DeleteFlag == false).Include(x => x.RFQRevisions).SingleOrDefault();
-
-
-        if (domainentity != null)
+        public statuscheckmodel DeleteRfqById(int rfqmasterid)
         {
-            domainentity.DeleteFlag = true;
-            obj.SaveChanges();
-            var revision = obj.RFQRevisions.Where(l => l.rfqMasterId == domainentity.RfqMasterId && l.DeleteFlag == false).ToList();
-            if (revision != null)
-            {
-                foreach (var item in revision)
-                {
-                    item.DeleteFlag = true;
-                    obj.SaveChanges();
-                }
+            statuscheckmodel status = new statuscheckmodel();
+            var domainentity = obj.Set<RFQMaster>().Where(x => x.RfqMasterId == rfqmasterid && x.DeleteFlag == false).Include(x => x.RFQRevisions).SingleOrDefault();
 
-                var ids = revision.Select(x => x.rfqRevisionId).ToList();
-                var itemlist = obj.RFQItems.Where(x => ids.Contains(x.RFQRevisionId) && x.DeleteFlag == false).ToList();
-                if (itemlist != null)
+            if (domainentity != null)
+            {
+                domainentity.DeleteFlag = true;
+                obj.SaveChanges();
+                var revision = obj.RFQRevisions.Where(l => l.rfqMasterId == domainentity.RfqMasterId && l.DeleteFlag == false).ToList();
+                if (revision != null)
                 {
-                    foreach (var item in itemlist)
+                    foreach (var item in revision)
                     {
                         item.DeleteFlag = true;
                         obj.SaveChanges();
                     }
-                }
-            }
-        }
-        return status;
-    }
 
-    //public async Task<statusmodel> UpdateRfqRevision(RFQMasterModel model)
-    //{
-    //    statusmodel status = new statusmodel();
-    //    var result = obj.RFQMasters.Where(x => x.RfqMasterId == model.RfqMasterId).Include(x=>x.RFQRevisions).FirstOrDefault<RFQMaster>();
-    //    try
-    //    {
-    //        if (result!=null)
-    //        {
-    //            foreach (var item in model.Revision)
-    //            {
-    //                // var revision = new RFQRevision();
-    //                var existing = result.RFQRevisions.Where(x => x.rfqMasterId == item.RfqMasterId).ToList<RFQRevision>();
-    //                if (existing!=null)
-    //                {
-    //                    obj.Entry(existing).CurrentValues.SetValues(item);
-    //                }
-
-    //                //revision.SalesTax = item.salesTax;
-    //                //revision.RFQValidDate = item.RfqValidDate;
-    //                //revision.CreatedBy = item.CreatedBy;
-    //                //revision.PaymentTermDays = item.PaymentTermDays;
-    //                //revision.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
-    //                //revision.DeliveryMinWeeks = item.DeliveryMinWeeks;
-    //                //revision.BankGuarantee = item.BankGuarantee;
-    //                //revision.ExciseDuty = item.ExciseDuty;
-    //                //revision.CustomsDuty = item.CustomsDuty;
-    //                //revision.Insurance = item.Insurance;
-    //                //revision.Freight = item.freight;
-    //                //revision.PackingForwarding = item.PackingForwading;
-    //                //revision.CreatedDate = item.CreatedDate;
-    //            }
-
-    //            await obj.SaveChangesAsync();
-    //        }
-    //        status.Sid = model.RfqMasterId;
-    //        return  status;
-    //    }
-    //    catch (Exception ex)
-    //    {
-
-    //        throw;
-    //    }
-    //}
-    public async Task<statuscheckmodel> UpdateRfqRevision(RfqRevisionModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        var result = obj.RFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevisionId).Include(x => x.RFQMaster).FirstOrDefault<RFQRevision>();
-        try
-        {
-
-            if (result != null)
-            {
-                RFQRevision revision = new RFQRevision();
-
-                result.SalesTax = model.salesTax;
-                result.RFQValidDate = model.RfqValidDate;
-                result.CreatedBy = model.CreatedBy;
-                result.PaymentTermDays = model.PaymentTermDays;
-                result.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
-                result.DeliveryMinWeeks = model.DeliveryMinWeeks;
-                result.BankGuarantee = model.BankGuarantee;
-                result.ExciseDuty = model.ExciseDuty;
-                result.CustomsDuty = model.CustomsDuty;
-                result.Insurance = model.Insurance;
-                result.Freight = model.freight;
-                result.PackingForwarding = model.PackingForwading;
-                result.CreatedDate = model.CreatedDate;
-
-                obj.SaveChanges();
-                obj.Database.Connection.Close();
-            }
-            vscm.Database.Connection.Open();
-            var remotedata = vscm.RemoteRFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevisionId).Include(x => x.RemoteRFQMaster).FirstOrDefault<RemoteRFQRevision>();
-            if (remotedata != null)
-            {
-                RemoteRFQRevision revision = new RemoteRFQRevision();
-                remotedata.SalesTax = model.salesTax;
-                remotedata.RFQValidDate = model.RfqValidDate;
-                remotedata.CreatedBy = model.CreatedBy;
-                remotedata.PaymentTermDays = model.PaymentTermDays;
-                remotedata.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
-                remotedata.DeliveryMinWeeks = model.DeliveryMinWeeks;
-                remotedata.BankGuarantee = model.BankGuarantee;
-                remotedata.ExciseDuty = model.ExciseDuty;
-                remotedata.CustomsDuty = model.CustomsDuty;
-                remotedata.Insurance = model.Insurance;
-                remotedata.Freight = model.freight;
-                remotedata.PackingForwarding = model.PackingForwading;
-                remotedata.CreatedDate = model.CreatedDate;
-                vscm.SaveChanges();
-            }
-            status.Sid = model.RfqMasterId;
-            return status;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        var result = obj.RFQRevisions.Where(x => x.rfqMasterId == model.RfqMasterId).Include(x => x.RFQMaster).ToList<RFQRevision>();
-        try
-        {
-
-            if (result != null)
-            {
-                foreach (var item in result)
-                {
-                    item.SalesTax = model.salesTax;
-                    item.RFQValidDate = model.RfqValidDate;
-                    item.CreatedBy = model.CreatedBy;
-                    item.PaymentTermDays = model.PaymentTermDays;
-                    item.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
-                    item.DeliveryMinWeeks = model.DeliveryMinWeeks;
-                    item.BankGuarantee = model.BankGuarantee;
-                    item.ExciseDuty = model.ExciseDuty;
-                    item.CustomsDuty = model.CustomsDuty;
-                    item.Insurance = model.Insurance;
-                    item.Freight = model.freight;
-                    item.PackingForwarding = model.PackingForwading;
-                    item.CreatedDate = model.CreatedDate;
-
-                    obj.SaveChanges();
-                }
-
-            }
-            status.Sid = model.RfqMasterId;
-            return status;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> UpdateRfqItemByBulk(RfqItemModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        RFQRevision revision = new RFQRevision();
-        try
-        {
-            var result = obj.RFQItems.Where(x => x.RFQRevisionId == model.RFQRevisionId).Include(x => x.RFQRevision).ToList<RFQItem>();
-
-            if (result != null)
-            {
-                foreach (var item in result)
-                {
-                    item.HSNCode = model.HSNCode;
-                    item.QuotationQty = model.QuotationQty;
-                    item.VendorModelNo = model.VendorModelNo;
-                    item.RequestRemarks = model.RequsetRemarks;
-                    obj.SaveChanges();
-                }
-            }
-
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public async Task<List<RfqItemModel>> GetItemsByRevisionId(int id)
-    {
-        List<RfqItemModel> rfq = new List<RfqItemModel>();
-
-        try
-        {
-            return (from x in obj.RFQItems
-                    where x.RFQRevisionId == id
-                    select new RfqItemModel
+                    var ids = revision.Select(x => x.rfqRevisionId).ToList();
+                    var itemlist = obj.RFQItems.Where(x => ids.Contains(x.RFQRevisionId) && x.DeleteFlag == false).ToList();
+                    if (itemlist != null)
                     {
-                        HSNCode = x.HSNCode,
-                        QuotationQty = x.QuotationQty,
-                        RFQRevisionId = x.RFQRevisionId,
-                        VendorModelNo = x.VendorModelNo,
-                        RequsetRemarks = x.RequestRemarks,
-                        RFQItemID = x.RFQItemsId
-                    }).ToList();
-
-            //foreach (var item in revision.RFQVendorTerms)
-            //{
-            //    item.
-            //} 
-
+                        foreach (var item in itemlist)
+                        {
+                            item.DeleteFlag = true;
+                            obj.SaveChanges();
+                        }
+                    }
+                }
+            }
+            return status;
         }
 
-        catch (Exception ex)
+        //public async Task<statusmodel> UpdateRfqRevision(RFQMasterModel model)
+        //{
+        //    statusmodel status = new statusmodel();
+        //    var result = obj.RFQMasters.Where(x => x.RfqMasterId == model.RfqMasterId).Include(x=>x.RFQRevisions).FirstOrDefault<RFQMaster>();
+        //    try
+        //    {
+        //        if (result!=null)
+        //        {
+        //            foreach (var item in model.Revision)
+        //            {
+        //                // var revision = new RFQRevision();
+        //                var existing = result.RFQRevisions.Where(x => x.rfqMasterId == item.RfqMasterId).ToList<RFQRevision>();
+        //                if (existing!=null)
+        //                {
+        //                    obj.Entry(existing).CurrentValues.SetValues(item);
+        //                }
+
+        //                //revision.SalesTax = item.salesTax;
+        //                //revision.RFQValidDate = item.RfqValidDate;
+        //                //revision.CreatedBy = item.CreatedBy;
+        //                //revision.PaymentTermDays = item.PaymentTermDays;
+        //                //revision.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
+        //                //revision.DeliveryMinWeeks = item.DeliveryMinWeeks;
+        //                //revision.BankGuarantee = item.BankGuarantee;
+        //                //revision.ExciseDuty = item.ExciseDuty;
+        //                //revision.CustomsDuty = item.CustomsDuty;
+        //                //revision.Insurance = item.Insurance;
+        //                //revision.Freight = item.freight;
+        //                //revision.PackingForwarding = item.PackingForwading;
+        //                //revision.CreatedDate = item.CreatedDate;
+        //            }
+
+        //            await obj.SaveChangesAsync();
+        //        }
+        //        status.Sid = model.RfqMasterId;
+        //        return  status;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+        public async Task<statuscheckmodel> UpdateRfqRevision(RfqRevisionModel model)
         {
+            statuscheckmodel status = new statuscheckmodel();
 
-            throw;
-        }
-    }
-
-    //public RFQMasterModel getItemsbyRevisionno(string id)
-    // {
-    //     RFQMasterModel master = new RFQMasterModel();
-    //     try
-    //     {
-    //         var masters = obj.RFQMasters.Where(x => x.RFQNo == id && x.DeleteFlag == false).Include(x => x.RFQRevisions).Select(x => x).SingleOrDefault();
-    //         if (masters!=null)
-    //         {
-
-    //         }
-    //     }
-    //     catch (Exception)
-    //     {
-
-    //         throw;
-    //     }
-    // }
-    public async Task<statuscheckmodel> UpdateSingleRfqItem(RfqItemModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        var data = obj.RFQItems.Where(x => x.RFQRevisionId == model.RFQRevisionId).Include(x => x.RFQRevision).FirstOrDefault<RFQItem>();
-        try
-        {
-            if (data != null)
+            try
             {
+                vscm.Database.Connection.Open();
+                var remotedata = vscm.RemoteRFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevisionId).Include(x => x.RemoteRFQMaster).FirstOrDefault<RemoteRFQRevision>();
+                if (remotedata != null)
+                {
+                    RemoteRFQRevision revision = new RemoteRFQRevision();
+                    remotedata.SalesTax = model.salesTax;
+                    remotedata.RFQValidDate = model.RfqValidDate;
+                    remotedata.CreatedBy = model.CreatedBy;
+                    remotedata.PaymentTermDays = model.PaymentTermDays;
+                    remotedata.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
+                    remotedata.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                    remotedata.BankGuarantee = model.BankGuarantee;
+                    remotedata.ExciseDuty = model.ExciseDuty;
+                    remotedata.CustomsDuty = model.CustomsDuty;
+                    remotedata.Insurance = model.Insurance;
+                    remotedata.Freight = model.freight;
+                    remotedata.PackingForwarding = model.PackingForwading;
+                    remotedata.CreatedDate = model.CreatedDate;
+                    vscm.SaveChanges();
+                }
+                vscm.Database.Connection.Close();
+                obj.Database.Connection.Open();
+                var result = obj.RFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevisionId).Include(x => x.RFQMaster).FirstOrDefault<RFQRevision>();
+                if (result != null)
+                {
+                    RFQRevision revision = new RFQRevision();
+                    result.SalesTax = model.salesTax;
+                    result.RFQValidDate = model.RfqValidDate;
+                    result.CreatedBy = model.CreatedBy;
+                    result.PaymentTermDays = model.PaymentTermDays;
+                    result.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
+                    result.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                    result.BankGuarantee = model.BankGuarantee;
+                    result.ExciseDuty = model.ExciseDuty;
+                    result.CustomsDuty = model.CustomsDuty;
+                    result.Insurance = model.Insurance;
+                    result.Freight = model.freight;
+                    result.PackingForwarding = model.PackingForwading;
+                    result.CreatedDate = model.CreatedDate;
+
+                    obj.SaveChanges();
+
+                }
+
+                status.Sid = model.RfqMasterId;
+                return status;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            var result = obj.RFQRevisions.Where(x => x.rfqMasterId == model.RfqMasterId).Include(x => x.RFQMaster).ToList<RFQRevision>();
+            try
+            {
+
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        item.SalesTax = model.salesTax;
+                        item.RFQValidDate = model.RfqValidDate;
+                        item.CreatedBy = model.CreatedBy;
+                        item.PaymentTermDays = model.PaymentTermDays;
+                        item.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
+                        item.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                        item.BankGuarantee = model.BankGuarantee;
+                        item.ExciseDuty = model.ExciseDuty;
+                        item.CustomsDuty = model.CustomsDuty;
+                        item.Insurance = model.Insurance;
+                        item.Freight = model.freight;
+                        item.PackingForwarding = model.PackingForwading;
+                        item.CreatedDate = model.CreatedDate;
+
+                        obj.SaveChanges();
+                    }
+
+                }
+                status.Sid = model.RfqMasterId;
+                return status;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateRfqItemByBulk(RfqItemModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                var Remoteresult = vscm.RemoteRFQItems.Where(x => x.RFQRevisionId == model.RFQRevisionId).Include(x => x.RemoteRFQRevision).ToList<RemoteRFQItem>();
+
+                if (Remoteresult != null)
+                {
+                    foreach (var item in Remoteresult)
+                    {
+                        item.HSNCode = model.HSNCode;
+                        item.QuotationQty = model.QuotationQty;
+                        item.VendorModelNo = model.VendorModelNo;
+                        item.RequestRemarks = model.RequsetRemarks;
+                        item.CGSTPercentage = model.CGSTPercentage;
+                        item.SGSTPercentage = model.SGSTPercentage;
+                        item.IGSTPercentage = model.IGSTPercentage;
+                        item.FreightAmount = model.FreightAmount;
+                        item.FreightPercentage = model.FreightPercentage;
+                        item.PFAmount = model.PFAmount;
+                        item.PFPercentage = model.PFPercentage;
+                        item.RequestRemarks = model.RequsetRemarks;
+                        obj.SaveChanges();
+                    }
+                }
+                vscm.Database.Connection.Close();
+
+                obj.Database.Connection.Open();
+
+                var result = obj.RFQItems.Where(x => x.RFQRevisionId == model.RFQRevisionId).Include(x => x.RFQRevision).ToList<RFQItem>();
+
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        item.HSNCode = model.HSNCode;
+                        item.QuotationQty = model.QuotationQty;
+                        item.VendorModelNo = model.VendorModelNo;
+                        item.RequestRemarks = model.RequsetRemarks;
+                        item.CGSTPercentage = model.CGSTPercentage;
+                        item.SGSTPercentage = model.SGSTPercentage;
+                        item.IGSTPercentage = model.IGSTPercentage;
+                        item.FreightAmount = model.FreightAmount;
+                        item.FreightPercentage = model.FreightPercentage;
+                        item.PFAmount = model.PFAmount;
+                        item.PFPercentage = model.PFPercentage;
+                        item.RequestRemarks = model.RequsetRemarks;
+                        obj.SaveChanges();
+                    }
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid)
+        {
+            List<RfqItemModel> rfq = new List<RfqItemModel>();
+            try
+            {
+                return (from x in obj.RFQItems
+                        where x.RFQRevisionId == revisionid
+                        select new RfqItemModel
+                        {
+                            HSNCode = x.HSNCode,
+                            QuotationQty = x.QuotationQty,
+                            RFQRevisionId = x.RFQRevisionId,
+                            VendorModelNo = x.VendorModelNo,
+                            RequsetRemarks = x.RequestRemarks,
+                            RFQItemID = x.RFQItemsId
+                        }).ToList();
+
+            }
+
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        //public RFQMasterModel getItemsbyRevisionno(string id)
+        // {
+        //     RFQMasterModel master = new RFQMasterModel();
+        //     try
+        //     {
+        //         var masters = obj.RFQMasters.Where(x => x.RFQNo == id && x.DeleteFlag == false).Include(x => x.RFQRevisions).Select(x => x).SingleOrDefault();
+        //         if (masters!=null)
+        //         {
+
+        //         }
+        //     }
+        //     catch (Exception)
+        //     {
+
+        //         throw;
+        //     }
+        // }
+        public async Task<statuscheckmodel> UpdateSingleRfqItem(RfqItemModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                var remotedata = vscm.RemoteRFQItems.Where(x => x.RFQItemsId == model.RFQItemID).Include(x => x.RemoteRFQRevision).FirstOrDefault<RemoteRFQItem>();
+                if (remotedata != null)
+                {
+                    remotedata.HSNCode = model.HSNCode;
+                    remotedata.QuotationQty = model.QuotationQty;
+                    remotedata.VendorModelNo = model.VendorModelNo;
+                    remotedata.RequestRemarks = model.RequsetRemarks;
+                    remotedata.CGSTPercentage = model.CGSTPercentage;
+                    remotedata.SGSTPercentage = model.SGSTPercentage;
+                    remotedata.IGSTPercentage = model.IGSTPercentage;
+                    remotedata.FreightAmount = model.FreightAmount;
+                    remotedata.FreightPercentage = model.FreightPercentage;
+                    remotedata.PFAmount = model.PFAmount;
+                    remotedata.PFPercentage = model.PFPercentage;
+                    remotedata.RequestRemarks = model.RequsetRemarks;
+                    vscm.SaveChanges();
+                }
+                vscm.Database.Connection.Close();
+
+                obj.Database.Connection.Open();
+                var data = obj.RFQItems.Where(x => x.RFQItemsId == model.RFQItemID).Include(x => x.RFQRevision).FirstOrDefault<RFQItem>();
+                if (data != null)
+                {
+                    data.HSNCode = model.HSNCode;
+                    data.QuotationQty = model.QuotationQty;
+                    data.VendorModelNo = model.VendorModelNo;
+                    data.RequestRemarks = model.RequsetRemarks;
+                    data.CGSTPercentage = model.CGSTPercentage;
+                    data.SGSTPercentage = model.SGSTPercentage;
+                    data.IGSTPercentage = model.IGSTPercentage;
+                    data.FreightAmount = model.FreightAmount;
+                    data.FreightPercentage = model.FreightPercentage;
+                    data.PFAmount = model.PFAmount;
+                    data.PFPercentage = model.PFPercentage;
+                    data.RequestRemarks = model.RequsetRemarks;
+                    obj.SaveChanges();
+                }
+                int id = remotedata.RFQItemsId;
+                status.Sid = id;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public statuscheckmodel DeleteRfqRevisionbyId(int id)
+        {
+            statuscheckmodel staus = new statuscheckmodel();
+            try
+            {
+                var data = obj.RFQRevisions.Where(x => x.rfqRevisionId == id && x.DeleteFlag == false).Select(x => x).SingleOrDefault();
+                if (data != null)
+                {
+                    data.DeleteFlag = true;
+                    obj.SaveChanges();
+                }
+                return staus;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public statuscheckmodel DeleteRfqItemById(int id)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.RFQItems.Where(x => x.RFQRevisionId == id && x.DeleteFlag == false).Select(x => x).SingleOrDefault();
+                if (data != null)
+                {
+                    data.DeleteFlag = true;
+                    obj.SaveChanges();
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public statuscheckmodel DeleteBulkItemsByItemId(List<int> id)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.RFQItems.Where(x => id.Contains(x.RFQItemsId)).ToList();
+                if (data != null)
+                {
+                    data.Select(x => x.DeleteFlag == true);
+                    obj.SaveChanges();
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        //public statusmodel InsertDocument(RfqDocumentsModel model)
+        //{
+        //    if (true)
+        //    {
+        //        try
+        //        {
+        //            string PhotoPath = Convert.ToString(ConfigurationManager.AppSettings["ImagePath"]);
+        //            RFQDocument newObj = new RFQDocument();
+        //            newObj.DocumentName = model.DocumentName;
+        //            newObj.DocumentType = model.DocumentType;
+        //            newObj.Path = model.Path;
+        //            newObj.UploadedBy = model.UploadedBy;
+        //            newObj.uploadedDate = model.UploadedDate;
+        //            newObj.Status = model.Status;
+        //            newObj.StatusBy = model.StatusBy;
+        //            newObj.StatusDate = model.Statusdate;
+
+        //            if (String.IsNullOrEmpty(newObj.Path))
+        //            {
+
+        //            }
+        //            else
+        //            {
+        //               // string startingFilePath = PhotoPath;
+
+        //                string FilePath = SaveImage(newObj.Path, startingFilePath, newObj.DocumentName);
+
+        //                FileInfo fInfo = new FileInfo(FilePath);
+
+        //                newObj.Content = fInfo.Name;
+        //            }
+
+
+
+        //            return Request.CreateResponse(HttpStatusCode.Created, newArticle);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+        //    }
+        //}
+        private string SaveImage(string base64, string FilePath, string ImageName)
+        {
+            //Get the file type to save in
+            var FilePathWithExtension = "";
+            string localBase64 = "";
+
+            if (base64.Contains("data:image/jpeg;base64,"))
+            {
+                FilePathWithExtension = FilePath + ImageName + ".jpg";
+                localBase64 = base64.Replace("data:image/jpeg;base64,", "");
+            }
+            else if (base64.Contains("data:image/png;base64,"))
+            {
+                FilePathWithExtension = FilePath + ImageName + ".png";
+                localBase64 = base64.Replace("data:image/png;base64,", "");
+            }
+            else if (base64.Contains("data:image/bmp;base64"))
+            {
+                FilePathWithExtension = FilePath + ImageName + ".bmp";
+                localBase64 = base64.Replace("data:image/bmp;base64", "");
+            }
+            else if (base64.Contains("data:application/msword;base64,"))
+            {
+                FilePathWithExtension = FilePath + ImageName + ".doc";
+                localBase64 = base64.Replace("data:application/msword;base64,", "");
+            }
+            else if (base64.Contains("data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,"))
+            {
+                FilePathWithExtension = FilePath + ImageName + ".docx";
+                localBase64 = base64.Replace("data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,", "");
+            }
+            else if (base64.Contains("data:application/pdf;base64,"))
+            {
+                FilePathWithExtension = FilePath + ImageName + ".pdf";
+                localBase64 = base64.Replace("data:application/pdf;base64,", "");
+            }
+
+            using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(localBase64)))
+            {
+                using (FileStream fs = new FileStream(FilePathWithExtension, FileMode.Create, FileAccess.Write))
+                {
+                    //Create the specified directory if it does not exist
+                    var photofolder = System.IO.Path.GetDirectoryName(FilePathWithExtension);
+                    if (!Directory.Exists(photofolder))
+                    {
+                        Directory.CreateDirectory(photofolder);
+                    }
+
+                    ms.WriteTo(fs);
+                    fs.Close();
+                    ms.Close();
+                }
+            }
+
+            return FilePathWithExtension;
+        }
+        public statuscheckmodel CommunicationAdd(RfqCommunicationModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            var revision = obj.RFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevision.RfqRevisionId && x.DeleteFlag == false).Include(x => x.RFQItems).SingleOrDefault();
+            var item = revision.RFQItems.Where(x => x.RFQItemsId == model.RfqItem.RFQItemID && x.DeleteFlag == false).Select(x => x);
+            // var result=from x in obj.MPRRevisions where x.RevisionId==model.re
+            if (item != null)
+            {
+                RFQCommunication communication = new RFQCommunication();
+                communication.RemarksFrom = model.RemarksFrom;
+                communication.RemarksTo = model.RemarksTo;
+                communication.ReminderDate = model.ReminderDate;
+                communication.SendEmail = model.SendEmail;
+                communication.SetReminder = model.SetReminder;
+                communication.RemarksDate = model.RemarksDate;
+                communication.Remarks = model.Remarks;
+                communication.RfqItemsId = model.RfqItem.RFQItemID;
+                communication.RfqRevisionId = model.RfqRevision.RfqRevisionId;
+
+                obj.RFQCommunications.Add(communication);
+                obj.SaveChanges();
+            }
+            status.Sid = model.Rfqccid;
+            //status.StatusMesssage = model.StatusMesssage;
+            return status;
+        }
+        public async Task<statuscheckmodel> InsertCommunicationAgainstRevision(RfqCommunicationModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                RemoteRFQCommunication remotecomm = new RemoteRFQCommunication();
+                if (model != null)
+                {
+                    remotecomm.RfqRevisionId = model.RfqRevisionId;
+                    remotecomm.RemarksFrom = model.RemarksFrom;
+                    remotecomm.RemarksTo = model.RemarksTo;
+                    remotecomm.SendEmail = model.SendEmail;
+                    remotecomm.SetReminder = model.SetReminder;
+                    remotecomm.ReminderDate = model.ReminderDate;
+                    remotecomm.RemarksDate = model.RemarksDate;
+                    remotecomm.Remarks = model.Remarks;
+                    vscm.RemoteRFQCommunications.Add(remotecomm);
+                    vscm.SaveChanges();
+                }
+                int cid = remotecomm.RfqCCid;
+                vscm.Database.Connection.Close();
+
+                RFQCommunication localcomm = new RFQCommunication();
+                obj.Database.Connection.Open();
+                if (model != null)
+                {
+                    localcomm.RfqCCid = cid;
+                    localcomm.RfqRevisionId = model.RfqRevisionId;
+                    localcomm.RemarksFrom = model.RemarksFrom;
+                    localcomm.RemarksTo = model.RemarksTo;
+                    localcomm.SendEmail = model.SendEmail;
+                    localcomm.SetReminder = model.SetReminder;
+                    localcomm.ReminderDate = model.ReminderDate;
+                    localcomm.RemarksDate = model.RemarksDate;
+                    localcomm.DeleteFlag = false;
+                    localcomm.Remarks = model.Remarks;
+                    obj.RFQCommunications.Add(localcomm);
+                    obj.SaveChanges();
+                }
+                obj.Database.Connection.Close();
+                status.Sid = cid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public async Task<RfqCommunicationModel> GetCommunicationByItemID(int itemid)
+        {
+            RfqCommunicationModel communication = new RfqCommunicationModel();
+            try
+            {
+                var Remotecommunication = vscm.RemoteRFQCommunications.Where(x => x.RfqItemsId == itemid && x.DeleteFlag == false).FirstOrDefault();
+                if (Remotecommunication != null)
+                {
+                    communication.Rfqccid = Remotecommunication.RfqCCid;
+                    communication.RfqRevisionId = Remotecommunication.RfqRevisionId;
+                    communication.RemarksFrom = Remotecommunication.RemarksFrom;
+                    communication.Remarks = Remotecommunication.Remarks;
+                    communication.RemarksTo = Remotecommunication.RemarksTo;
+                    communication.SendEmail = Remotecommunication.SendEmail;
+                    communication.SetReminder = Remotecommunication.SetReminder;
+                    communication.ReminderDate = Remotecommunication.ReminderDate;
+                    communication.RemarksDate = Remotecommunication.RemarksDate;
+                }
+                return communication;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public statuscheckmodel InsertDocument(RfqDocumentsModel model)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<RfqItemModel> GetItemsByItemId(int id)
+        {
+            RfqItemModel model = new RfqItemModel();
+            try
+            {
+                var items = from x in obj.RFQItems where x.RFQItemsId == id && x.DeleteFlag == false select x;
+                foreach (var item in items)
+                {
+                    model.HSNCode = item.HSNCode;
+                    model.QuotationQty = item.QuotationQty;
+                    model.VendorModelNo = item.VendorModelNo;
+                    model.RequsetRemarks = item.RequestRemarks;
+                    model.CGSTPercentage = item.CGSTPercentage;
+                    model.IGSTPercentage = item.IGSTPercentage;
+                    model.SGSTPercentage = item.SGSTPercentage;
+                    model.CustomDuty = item.CustomDuty;
+                    model.FreightAmount = item.FreightAmount;
+                    model.FreightPercentage = item.FreightPercentage;
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<RfqItemModel> GetItemByItemId(int id)
+        {
+            RfqItemModel model = new RfqItemModel();
+            try
+            {
+                //var items = from x in obj.RFQItems where x.RFQItemsId == id && x.DeleteFlag == false select x;
+                var items = obj.RFQItems.Where(x => x.RFQItemsId == id && x.DeleteFlag == false).Include(x => x.RFQItemsInfoes).FirstOrDefault();
+                model.HSNCode = items.HSNCode;
+                model.QuotationQty = items.QuotationQty;
+                model.VendorModelNo = items.VendorModelNo;
+                model.RequsetRemarks = items.RequestRemarks;
+                model.CGSTPercentage = items.CGSTPercentage;
+                model.IGSTPercentage = items.IGSTPercentage;
+                model.SGSTPercentage = items.SGSTPercentage;
+                model.CustomDuty = items.CustomDuty;
+                model.FreightAmount = items.FreightAmount;
+                model.FreightPercentage = items.FreightPercentage;
+                //var data= obj.RFQItemsInfoes.Where(x => x.RFQItemsId == items.RFQItemsId).Select(x => new RfqItemInfoModel()
+                // {
+                //     UnitPrice = x.UnitPrice
+                // });
+                var price = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == items.RFQItemsId).FirstOrDefault();
+                model.ItemUnitPrice = price.UnitPrice;
+                Nullable<decimal> Discountpercentage = price.DiscountPercentage;
+                Nullable<decimal> Discount = price.Discount;
+                if (items.CustomDuty != 0 && items.CustomDuty != null)
+                {
+                    model.CustomDutyAmount = (model.ItemUnitPrice * items.CustomDuty) / 100;
+                    if (items.taxInclusiveOfDiscount == false)
+                    {
+                        model.NetAmount = model.ItemUnitPrice + model.CustomDutyAmount;
+                        if (Discountpercentage != 0 || Discount != 0)
+                        {
+                            if (Discount != 0 && Discount != null)
+                            {
+                                model.DiscountAmount = Discount;
+                                model.NetAmount = model.NetAmount - model.DiscountAmount;
+                                model.FinalNetAmount = model.NetAmount;
+                            }
+                            else
+                            {
+                                model.Discountpercentage = Discountpercentage;
+                                model.DiscountAmount = (model.NetAmount) * (Discountpercentage / 100);
+                                model.FinalNetAmount = (model.NetAmount) - (model.DiscountAmount);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Discountpercentage != 0 || Discount != 0 || Discountpercentage != null)
+                        {
+                            if (Discount != 0 && Discount != null)
+                            {
+                                model.DiscountAmount = Discount;
+                                model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
+                                model.NetAmount = model.ItemUnitPrice + model.CustomDutyAmount;
+                            }
+                            else
+                            {
+                                model.DiscountAmount = (model.ItemUnitPrice) * (Discountpercentage / 100);
+                                model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
+                                model.NetAmount = model.ItemUnitPrice + model.CustomDutyAmount;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (items.taxInclusiveOfDiscount == false || items.taxInclusiveOfDiscount == null)
+                    {
+                        if (Discountpercentage != 0 || Discount != 0)
+                        {
+                            if (Discountpercentage != 0 || Discount != 0 || Discountpercentage != null)
+                            {
+                                if (Discount != 0 && Discount != null)
+                                {
+                                    model.DiscountAmount = Discount;
+                                    model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
+                                    model.SGSTAmount = (model.NetAmount * items.SGSTPercentage) / 100;
+                                    model.CGSTAmount = (model.NetAmount * items.CGSTPercentage) / 100;
+                                    model.IGSTAmount = (model.NetAmount * items.IGSTPercentage) / 100;
+                                    model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
+                                    model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
+                                }
+                                else
+                                {
+                                    model.DiscountAmount = (model.NetAmount * Discountpercentage) / 100;
+                                    model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
+                                    model.SGSTAmount = (model.NetAmount * items.SGSTPercentage) / 100;
+                                    model.CGSTAmount = (model.NetAmount * items.CGSTPercentage) / 100;
+                                    model.IGSTAmount = (model.NetAmount * items.IGSTPercentage) / 100;
+                                    model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
+                                    model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
+                                }
+                            }
+                        }
+
+
+                    }
+                    else
+                    {
+                        if (Discountpercentage != 0 || Discount != 0 || Discountpercentage != null)
+                        {
+                            if (Discount != 0 && Discount != null)
+                            {
+                                model.DiscountAmount = Discount;
+                                model.NetAmount = model.ItemUnitPrice - model.DiscountAmount;
+                                model.SGSTAmount = (model.NetAmount * items.SGSTPercentage) / 100;
+                                model.CGSTAmount = (model.NetAmount * items.CGSTPercentage) / 100;
+                                model.IGSTAmount = (model.NetAmount * items.IGSTPercentage) / 100;
+                                model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
+                                model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
+                            }
+                            else
+                            {
+                                model.DiscountAmount = (model.ItemUnitPrice * Discountpercentage) / 100;
+                                model.NetAmount = model.ItemUnitPrice - model.DiscountAmount;
+                                model.SGSTAmount = (model.ItemUnitPrice * items.SGSTPercentage) / 100;
+                                model.CGSTAmount = (model.ItemUnitPrice * items.CGSTPercentage) / 100;
+                                model.IGSTAmount = (model.ItemUnitPrice * items.IGSTPercentage) / 100;
+                                model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
+                                model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
+                            }
+                        }
+                    }
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public List<VendormasterModel> GetAllvendorList()
+        {
+            List<VendormasterModel> vendor = new List<VendormasterModel>();
+            try
+            {
+                var data = obj.VendorMasters.Where(x => x.Deleteflag == false).ToList();
+                vendor = data.Select(x => new VendormasterModel()
+                {
+                    ContactNo = x.ContactNo,
+                    Vendorid = x.Vendorid,
+                    VendorCode = x.VendorCode,
+                    VendorName = x.VendorName,
+
+                }).ToList();
+                return vendor;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public async Task<VendormasterModel> GetvendorById(int id)
+        {
+            VendormasterModel vendor = new VendormasterModel();
+            try
+            {
+                var data = obj.VendorMasters.Where(x => x.Vendorid == id && x.Deleteflag == false).SingleOrDefault();
+                if (data != null)
+                {
+                    vendor.ContactNo = data.ContactNo;
+                    vendor.Emailid = data.Emailid;
+                    vendor.VendorCode = data.VendorCode;
+                    vendor.VendorName = data.VendorName;
+                }
+                return vendor;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertVendorterms(VendorRfqtermModel vendor)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                if (vendor != null)
+                {
+                    var data = new VendorRFQTerm();
+                    data.VendorTermsid = vendor.VendorTermsid;
+                    data.VendorID = vendor.VendorID;
+                    data.Terms = vendor.Terms;
+                    data.Indexno = vendor.Indexno;
+                    obj.VendorRFQTerms.Add(data);
+                    obj.SaveChanges();
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateRfqStatus(int id)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.RFQStatus.Select(x => x.RfqStatusId).ToList();
+
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<RfqRevisionModel>> GetAllRFQs()
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<statuscheckmodel> InsertRfqItemInfo(RfqItemModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                //for remoteserver
+                if (model != null)
+                {
+                    vscm.Database.Connection.Open();
+                    var Remotedata = new RemoteRFQItem();
+                    var rfqRemoteitem = from x in vscm.RemoteRFQItems where x.RFQItemsId == model.RFQItemID select x;
+                    Remotedata.HSNCode = model.HSNCode;
+                    Remotedata.QuotationQty = model.QuotationQty;
+                    Remotedata.VendorModelNo = model.VendorModelNo;
+                    Remotedata.IGSTPercentage = model.IGSTPercentage;
+                    Remotedata.SGSTPercentage = model.SGSTPercentage;
+                    Remotedata.CGSTPercentage = model.CGSTPercentage;
+                    Remotedata.PFAmount = model.PFAmount;
+                    Remotedata.PFPercentage = model.PFPercentage;
+                    Remotedata.FreightAmount = model.FreightAmount;
+                    Remotedata.CustomDuty = model.CustomDuty;
+                    Remotedata.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+                    vscm.RemoteRFQItems.Add(Remotedata);
+                    vscm.SaveChanges();
+                    foreach (var item in model.iteminfo)
+                    {
+                        var remoteinfo = new RemoteRFQItemsInfo()
+                        {
+                            RFQItemsId = item.RFQItemsId,
+                            Qty = item.Qunatity,
+                            UOM = item.UOM,
+                            UnitPrice = item.UnitPrice,
+                            DiscountPercentage = item.DiscountPercentage,
+                            Discount = item.Discount,
+                            CurrencyId = item.CurrencyID,
+                            CurrencyValue = item.CurrencyValue,
+                            Remarks = item.Remarks,
+                            DeliveryDate = item.DeliveryDate,
+                            //GSTPercentage = item.GSTPercentage,
+                            SyncDate = System.DateTime.Now
+                        };
+                        Remotedata.RemoteRFQItemsInfoes.Add(remoteinfo);
+                        obj.SaveChanges();
+                    }
+                }
+                vscm.Database.Connection.Close();
+                ///for local datbase
+                var data = new RFQItem();
+                obj.Database.Connection.Open();
+                var rfqitem = from x in obj.RFQItems where x.RFQItemsId == model.RFQItemID select x;
                 data.HSNCode = model.HSNCode;
                 data.QuotationQty = model.QuotationQty;
                 data.VendorModelNo = model.VendorModelNo;
-                data.RequestRemarks = model.RequsetRemarks;
+                obj.RFQItems.Add(data);
                 obj.SaveChanges();
-            }
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public statuscheckmodel DeleteRfqRevisionbyId(int id)
-    {
-        statuscheckmodel staus = new statuscheckmodel();
-        try
-        {
-            var data = obj.RFQRevisions.Where(x => x.rfqRevisionId == id && x.DeleteFlag == false).Select(x => x).SingleOrDefault();
-            if (data != null)
-            {
-                data.DeleteFlag = true;
-                obj.SaveChanges();
-            }
-            return staus;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-    public statuscheckmodel DeleteRfqItemById(int id)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            var data = obj.RFQItems.Where(x => x.RFQRevisionId == id && x.DeleteFlag == false).Select(x => x).SingleOrDefault();
-            if (data != null)
-            {
-                data.DeleteFlag = true;
-                obj.SaveChanges();
-            }
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public statuscheckmodel DeleteBulkItemsByItemId(List<int> id)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            var data = obj.RFQItems.Where(x => id.Contains(x.RFQItemsId)).ToList();
-            if (data != null)
-            {
-                data.Select(x => x.DeleteFlag == true);
-                obj.SaveChanges();
-            }
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-
-    //public statusmodel InsertDocument(RfqDocumentsModel model)
-    //{
-    //    if (true)
-    //    {
-    //        try
-    //        {
-    //            string PhotoPath = Convert.ToString(ConfigurationManager.AppSettings["ImagePath"]);
-    //            RFQDocument newObj = new RFQDocument();
-    //            newObj.DocumentName = model.DocumentName;
-    //            newObj.DocumentType = model.DocumentType;
-    //            newObj.Path = model.Path;
-    //            newObj.UploadedBy = model.UploadedBy;
-    //            newObj.uploadedDate = model.UploadedDate;
-    //            newObj.Status = model.Status;
-    //            newObj.StatusBy = model.StatusBy;
-    //            newObj.StatusDate = model.Statusdate;
-
-    //            if (String.IsNullOrEmpty(newObj.Path))
-    //            {
-
-    //            }
-    //            else
-    //            {
-    //               // string startingFilePath = PhotoPath;
-
-    //                string FilePath = SaveImage(newObj.Path, startingFilePath, newObj.DocumentName);
-
-    //                FileInfo fInfo = new FileInfo(FilePath);
-
-    //                newObj.Content = fInfo.Name;
-    //            }
-
-
-
-    //            return Request.CreateResponse(HttpStatusCode.Created, newArticle);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
-    //    }
-    //}
-    private string SaveImage(string base64, string FilePath, string ImageName)
-    {
-        //Get the file type to save in
-        var FilePathWithExtension = "";
-        string localBase64 = "";
-
-        if (base64.Contains("data:image/jpeg;base64,"))
-        {
-            FilePathWithExtension = FilePath + ImageName + ".jpg";
-            localBase64 = base64.Replace("data:image/jpeg;base64,", "");
-        }
-        else if (base64.Contains("data:image/png;base64,"))
-        {
-            FilePathWithExtension = FilePath + ImageName + ".png";
-            localBase64 = base64.Replace("data:image/png;base64,", "");
-        }
-        else if (base64.Contains("data:image/bmp;base64"))
-        {
-            FilePathWithExtension = FilePath + ImageName + ".bmp";
-            localBase64 = base64.Replace("data:image/bmp;base64", "");
-        }
-        else if (base64.Contains("data:application/msword;base64,"))
-        {
-            FilePathWithExtension = FilePath + ImageName + ".doc";
-            localBase64 = base64.Replace("data:application/msword;base64,", "");
-        }
-        else if (base64.Contains("data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,"))
-        {
-            FilePathWithExtension = FilePath + ImageName + ".docx";
-            localBase64 = base64.Replace("data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,", "");
-        }
-        else if (base64.Contains("data:application/pdf;base64,"))
-        {
-            FilePathWithExtension = FilePath + ImageName + ".pdf";
-            localBase64 = base64.Replace("data:application/pdf;base64,", "");
-        }
-
-        using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(localBase64)))
-        {
-            using (FileStream fs = new FileStream(FilePathWithExtension, FileMode.Create, FileAccess.Write))
-            {
-                //Create the specified directory if it does not exist
-                var photofolder = System.IO.Path.GetDirectoryName(FilePathWithExtension);
-                if (!Directory.Exists(photofolder))
-                {
-                    Directory.CreateDirectory(photofolder);
-                }
-
-                ms.WriteTo(fs);
-                fs.Close();
-                ms.Close();
-            }
-        }
-
-        return FilePathWithExtension;
-    }
-    public statuscheckmodel CommunicationAdd(RfqCommunicationModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        var revision = obj.RFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevision.RfqRevisionId && x.DeleteFlag == false).Include(x => x.RFQItems).SingleOrDefault();
-        var item = revision.RFQItems.Where(x => x.RFQItemsId == model.RfqItem.RFQItemID && x.DeleteFlag == false).Select(x => x);
-        // var result=from x in obj.MPRRevisions where x.RevisionId==model.re
-        if (item != null)
-        {
-            RFQCommunication communication = new RFQCommunication();
-            communication.RemarksFrom = model.RemarksFrom;
-            communication.RemarksTo = model.RemarksTo;
-            communication.ReminderDate = model.ReminderDate;
-            communication.SendEmail = model.SendEmail;
-            communication.SetReminder = model.SetReminder;
-            communication.RemarksDate = model.RemarksDate;
-            communication.Remarks = model.Remarks;
-            communication.RfqItemsId = model.RfqItem.RFQItemID;
-            communication.RfqRevisionId = model.RfqRevision.RfqRevisionId;
-
-            obj.RFQCommunications.Add(communication);
-            obj.SaveChanges();
-        }
-        status.Sid = model.Rfqccid;
-        //status.StatusMesssage = model.StatusMesssage;
-        return status;
-    }
-    public async Task<statuscheckmodel> InsertCommunicationAgainstRevision(RfqCommunicationModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            vscm.Database.Connection.Open();
-            RemoteRFQCommunication remotecomm = new RemoteRFQCommunication();
-            if (model != null)
-            {
-                remotecomm.RfqRevisionId = model.RfqRevisionId;
-                remotecomm.RemarksFrom = model.RemarksFrom;
-                remotecomm.RemarksTo = model.RemarksTo;
-                remotecomm.SendEmail = model.SendEmail;
-                remotecomm.SetReminder = model.SetReminder;
-                remotecomm.ReminderDate = model.ReminderDate;
-                remotecomm.RemarksDate = model.RemarksDate;
-                remotecomm.Remarks = model.Remarks;
-                vscm.RemoteRFQCommunications.Add(remotecomm);
-                vscm.SaveChanges();
-            }
-            int cid = remotecomm.RfqCCid;
-            vscm.Database.Connection.Close();
-
-            RFQCommunication localcomm = new RFQCommunication();
-            obj.Database.Connection.Open();
-            if (model != null)
-            {
-                localcomm.RfqCCid = cid;
-                localcomm.RfqRevisionId = model.RfqRevisionId;
-                localcomm.RemarksFrom = model.RemarksFrom;
-                localcomm.RemarksTo = model.RemarksTo;
-                localcomm.SendEmail = model.SendEmail;
-                localcomm.SetReminder = model.SetReminder;
-                localcomm.ReminderDate = model.ReminderDate;
-                localcomm.RemarksDate = model.RemarksDate;
-                localcomm.DeleteFlag = false;
-                localcomm.Remarks = model.Remarks;
-                obj.RFQCommunications.Add(localcomm);
-                obj.SaveChanges();
-            }
-            obj.Database.Connection.Close();
-            status.Sid = cid;
-            return status;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-    public async Task<RfqCommunicationModel> GetCommunicationByItemID(int itemid)
-    {
-        RfqCommunicationModel communication = new RfqCommunicationModel();
-        try
-        {
-            var Remotecommunication = vscm.RemoteRFQCommunications.Where(x => x.RfqItemsId == itemid && x.DeleteFlag == false).FirstOrDefault();
-            if (Remotecommunication != null)
-            {
-                communication.Rfqccid = Remotecommunication.RfqCCid;
-                communication.RfqRevisionId = Remotecommunication.RfqRevisionId;
-                communication.RemarksFrom = Remotecommunication.RemarksFrom;
-                communication.Remarks = Remotecommunication.Remarks;
-                communication.RemarksTo = Remotecommunication.RemarksTo;
-                communication.SendEmail = Remotecommunication.SendEmail;
-                communication.SetReminder = Remotecommunication.SetReminder;
-                communication.ReminderDate = Remotecommunication.ReminderDate;
-                communication.RemarksDate = Remotecommunication.RemarksDate;
-            }
-            return communication;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public statuscheckmodel InsertDocument(RfqDocumentsModel model)
-    {
-        throw new NotImplementedException();
-    }
-    public async Task<RfqItemModel> GetItemsByItemId(int id)
-    {
-        RfqItemModel model = new RfqItemModel();
-        try
-        {
-            var items = from x in obj.RFQItems where x.RFQItemsId == id && x.DeleteFlag == false select x;
-            foreach (var item in items)
-            {
-                model.HSNCode = item.HSNCode;
-                model.QuotationQty = item.QuotationQty;
-                model.VendorModelNo = item.VendorModelNo;
-                model.RequsetRemarks = item.RequestRemarks;
-            }
-            return model;
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public List<VendormasterModel> GetAllvendorList()
-    {
-        List<VendormasterModel> vendor = new List<VendormasterModel>();
-        try
-        {
-            var data = obj.VendorMasters.Where(x => x.Deleteflag == false).ToList();
-            vendor = data.Select(x => new VendormasterModel()
-            {
-                ContactNo = x.ContactNo,
-                Vendorid = x.Vendorid,
-                VendorCode = x.VendorCode,
-                VendorName = x.VendorName,
-
-            }).ToList();
-            return vendor;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-    public async Task<VendormasterModel> GetvendorById(int id)
-    {
-        VendormasterModel vendor = new VendormasterModel();
-        try
-        {
-            var data = obj.VendorMasters.Where(x => x.Vendorid == id && x.Deleteflag == false).SingleOrDefault();
-            if (data != null)
-            {
-                vendor.ContactNo = data.ContactNo;
-                vendor.Emailid = data.Emailid;
-                vendor.VendorCode = data.VendorCode;
-                vendor.VendorName = data.VendorName;
-            }
-            return vendor;
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> InsertVendorterms(VendorRfqtermModel vendor)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            if (vendor != null)
-            {
-                var data = new VendorRFQTerm();
-                data.VendorTermsid = vendor.VendorTermsid;
-                data.VendorID = vendor.VendorID;
-                data.Terms = vendor.Terms;
-                data.Indexno = vendor.Indexno;
-                obj.VendorRFQTerms.Add(data);
-                obj.SaveChanges();
-            }
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> UpdateRfqStatus(int id)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            var data = obj.RFQStatus.Select(x => x.RfqStatusId).ToList();
-
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public async Task<List<RfqRevisionModel>> GetAllRFQs()
-    {
-        throw new NotImplementedException();
-    }
-    public async Task<statuscheckmodel> InsertRfqItemInfo(RfqItemModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            //for remoteserver
-            if (model != null)
-            {
-                vscm.Database.Connection.Open();
-                var Remotedata = new RemoteRFQItem();
-                var rfqRemoteitem = from x in vscm.RemoteRFQItems where x.RFQItemsId == model.RFQItemID select x;
-                Remotedata.HSNCode = model.HSNCode;
-                Remotedata.QuotationQty = model.QuotationQty;
-                Remotedata.VendorModelNo = model.VendorModelNo;
-                Remotedata.IGSTPercentage = model.IGSTPercentage;
-                Remotedata.SGSTPercentage = model.SGSTPercentage;
-                Remotedata.CGSTPercentage = model.CGSTPercentage;
-                Remotedata.PFAmount = model.PFAmount;
-                Remotedata.PFPercentage = model.PFPercentage;
-                Remotedata.FreightAmount = model.FreightAmount;
-                Remotedata.CustomDuty = model.CustomDuty;
-                Remotedata.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
-                vscm.RemoteRFQItems.Add(Remotedata);
-                vscm.SaveChanges();
                 foreach (var item in model.iteminfo)
                 {
-                    var remoteinfo = new RemoteRFQItemsInfo()
+                    var info = new RFQItemsInfo()
                     {
                         RFQItemsId = item.RFQItemsId,
                         Qty = item.Qunatity,
@@ -1299,247 +1525,203 @@ namespace DALayer.RFQ
                         CurrencyId = item.CurrencyID,
                         CurrencyValue = item.CurrencyValue,
                         Remarks = item.Remarks,
-                        DeliveryDate = item.DeliveryDate,
-                        //GSTPercentage = item.GSTPercentage,
-                        SyncDate = System.DateTime.Now
+                        DeliveryDate = item.DeliveryDate
                     };
-                    Remotedata.RemoteRFQItemsInfoes.Add(remoteinfo);
+                    data.RFQItemsInfoes.Add(info);
                     obj.SaveChanges();
                 }
+                obj.Database.Connection.Close();
+
+                return status;
             }
-            vscm.Database.Connection.Close();
-            ///for local datbase
-            var data = new RFQItem();
-            obj.Database.Connection.Open();
-            var rfqitem = from x in obj.RFQItems where x.RFQItemsId == model.RFQItemID select x;
-            data.HSNCode = model.HSNCode;
-            data.QuotationQty = model.QuotationQty;
-            data.VendorModelNo = model.VendorModelNo;
-            obj.RFQItems.Add(data);
-            obj.SaveChanges();
-            foreach (var item in model.iteminfo)
+            catch (Exception ex)
             {
-                var info = new RFQItemsInfo()
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> DeleteRfqIteminfoByid(List<int> id)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                var Remotedata = vscm.RemoteRFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
+                if (Remotedata != null)
                 {
-                    RFQItemsId = item.RFQItemsId,
-                    Qty = item.Qunatity,
-                    UOM = item.UOM,
-                    UnitPrice = item.UnitPrice,
-                    DiscountPercentage = item.DiscountPercentage,
-                    //GSTPercentage = item.GSTPercentage,
-                    //SGSTPercentage=item.SGSTPercentage,
-                    //IGSTPercentage = item.IGSTPercentage,
-                    //CGSTPercentage = item.CGSTPercentage,
-                    //CustomsDuty=item.CustomsDuty,
-                    //taxInclusiveOfDiscount=item.taxInclusiveOfDiscount,
-                    Discount = item.Discount,
-                    CurrencyId = item.CurrencyID,
-                    CurrencyValue = item.CurrencyValue,
-                    Remarks = item.Remarks,
-                    DeliveryDate = item.DeliveryDate
-                };
-                data.RFQItemsInfoes.Add(info);
-                obj.SaveChanges();
-            }
-            obj.Database.Connection.Close();
+                    Remotedata.DeleteFlag = true;
+                    vscm.SaveChanges();
+                }
+                vscm.Database.Connection.Close();
 
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> DeleteRfqIteminfoByid(List<int> id)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            vscm.Database.Connection.Open();
-            var Remotedata = vscm.RemoteRFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
-            if (Remotedata != null)
-            {
-                Remotedata.DeleteFlag = true;
-                vscm.SaveChanges();
-            }
-            vscm.Database.Connection.Close();
-
-            obj.Database.Connection.Open();
-            var Localdata = obj.RFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
-            if (Localdata != null)
-            {
-                Localdata.DeleteFlag = true;
-                obj.SaveChanges();
-            }
-            status.Sid = Localdata.RFQItemsId;
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> DeleteRfqitemandinfosById(int id)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            //remotedata
-            vscm.Database.Connection.Open();
-            var Remotedata = vscm.RemoteRFQItems.Where(x => x.RFQItemsId == id && x.DeleteFlag == false).FirstOrDefault();
-            if (Remotedata != null)
-            {
-                Remotedata.DeleteFlag = true;
-                vscm.SaveChanges();
-
-                var remoteitemsdata = vscm.RemoteRFQItemsInfoes.Where(x => x.RFQItemsId == Remotedata.RFQItemsId && x.DeleteFlag == false).ToList();
-                if (remoteitemsdata != null)
+                obj.Database.Connection.Open();
+                var Localdata = obj.RFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
+                if (Localdata != null)
                 {
-                    foreach (var item in remoteitemsdata)
+                    Localdata.DeleteFlag = true;
+                    obj.SaveChanges();
+                }
+                status.Sid = Localdata.RFQItemsId;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> DeleteRfqitemandinfosById(int id)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                //remotedata
+                vscm.Database.Connection.Open();
+                var Remotedata = vscm.RemoteRFQItems.Where(x => x.RFQItemsId == id && x.DeleteFlag == false).FirstOrDefault();
+                if (Remotedata != null)
+                {
+                    Remotedata.DeleteFlag = true;
+                    vscm.SaveChanges();
+
+                    var remoteitemsdata = vscm.RemoteRFQItemsInfoes.Where(x => x.RFQItemsId == Remotedata.RFQItemsId && x.DeleteFlag == false).ToList();
+                    if (remoteitemsdata != null)
                     {
-                        item.DeleteFlag = true;
-                        vscm.SaveChanges();
+                        foreach (var item in remoteitemsdata)
+                        {
+                            item.DeleteFlag = true;
+                            vscm.SaveChanges();
+                        }
+                    }
+                    //int Itemid = Remotedata.RFQItemsId;
+                }
+                vscm.Database.Connection.Close();
+
+                //localdata
+                obj.Database.Connection.Open();
+                var Localdata = obj.RFQItems.Where(x => x.RFQItemsId == id && x.DeleteFlag == false).FirstOrDefault();
+                if (Localdata != null)
+                {
+                    Localdata.DeleteFlag = true;
+                    obj.SaveChanges();
+
+                    var localitemsdata = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == Remotedata.RFQItemsId && x.DeleteFlag == false).ToList();
+                    if (localitemsdata != null)
+                    {
+                        foreach (var item in localitemsdata)
+                        {
+                            item.DeleteFlag = true;
+                            obj.SaveChanges();
+                        }
                     }
                 }
-                //int Itemid = Remotedata.RFQItemsId;
+                int Itemid = Localdata.RFQItemsId;
+                obj.Database.Connection.Close();
+                status.Sid = Itemid;
+                return status;
             }
-            vscm.Database.Connection.Close();
-
-            //localdata
-            obj.Database.Connection.Open();
-            var Localdata = obj.RFQItems.Where(x => x.RFQItemsId == id && x.DeleteFlag == false).FirstOrDefault();
-            if (Localdata != null)
+            catch (Exception ex)
             {
-                Localdata.DeleteFlag = true;
-                obj.SaveChanges();
 
-                var localitemsdata = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == Remotedata.RFQItemsId && x.DeleteFlag == false).ToList();
-                if (localitemsdata != null)
-                {
-                    foreach (var item in localitemsdata)
-                    {
-                        item.DeleteFlag = true;
-                        obj.SaveChanges();
-                    }
-                }
+                throw;
             }
-            int Itemid = Localdata.RFQItemsId;
-            obj.Database.Connection.Close();
-            status.Sid = Itemid;
-            return status;
         }
-        catch (Exception ex)
+        public async Task<statuscheckmodel> UpdateRfqItemInfoById(RfqItemInfoModel model)
         {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                //remote data
+                var remoteitem = vscm.RemoteRFQItemsInfoes.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
+                remoteitem.Discount = model.Discount;
+                remoteitem.DiscountPercentage = model.DiscountPercentage;
+                remoteitem.Qty = model.Qunatity;
+                remoteitem.UnitPrice = model.UnitPrice;
+                remoteitem.UOM = model.UOM;
+                remoteitem.CurrencyValue = model.CurrencyValue;
+                remoteitem.CurrencyId = model.CurrencyID;
+                remoteitem.Remarks = model.Remarks;
+                remoteitem.DeliveryDate = model.DeliveryDate;
 
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> UpdateRfqItemInfoById(RfqItemInfoModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            //remote data
-            var remoteitem = vscm.RemoteRFQItemsInfoes.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
-            remoteitem.Discount = model.Discount;
-            remoteitem.DiscountPercentage = model.DiscountPercentage;
-            remoteitem.Qty = model.Qunatity;
-            remoteitem.UnitPrice = model.UnitPrice;
-            remoteitem.UOM = model.UOM;
-            remoteitem.CurrencyValue = model.CurrencyValue;
-            remoteitem.CurrencyId = model.CurrencyID;
-            remoteitem.Remarks = model.Remarks;
-            remoteitem.DeliveryDate = model.DeliveryDate;
-            //remoteitem.GSTPercentage = model.GSTPercentage;
-          
-            vscm.RemoteRFQItemsInfoes.Add(remoteitem);
-            vscm.SaveChanges();
-            int remoteitemid = remoteitem.RFQItemsId;
-            vscm.Database.Connection.Close();
+                vscm.RemoteRFQItemsInfoes.Add(remoteitem);
+                vscm.SaveChanges();
+                int remoteitemid = remoteitem.RFQItemsId;
+                vscm.Database.Connection.Close();
 
-            obj.Database.Connection.Open();
-            var localitem = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
-            localitem.Discount = model.Discount;
-            localitem.DiscountPercentage = model.DiscountPercentage;
-            localitem.Qty = model.Qunatity;
-            localitem.UnitPrice = model.UnitPrice;
-            localitem.UOM = model.UOM;
-            localitem.CurrencyValue = model.CurrencyValue;
-                //localitem.GSTPercentage = model.GSTPercentage;
-                //localitem.IGSTPercentage = model.IGSTPercentage;
-                //localitem.SGSTPercentage = model.SGSTPercentage;
-                //localitem.CGSTPercentage = model.CGSTPercentage;
-                //localitem.CustomsDuty = model.CustomsDuty;
-                //localitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+                obj.Database.Connection.Open();
+                var localitem = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
+                localitem.Discount = model.Discount;
+                localitem.DiscountPercentage = model.DiscountPercentage;
+                localitem.Qty = model.Qunatity;
+                localitem.UnitPrice = model.UnitPrice;
+                localitem.UOM = model.UOM;
+                localitem.CurrencyValue = model.CurrencyValue;
                 localitem.CurrencyId = model.CurrencyID;
-            localitem.Remarks = model.Remarks;
-            localitem.DeliveryDate = model.DeliveryDate;
-            obj.RFQItemsInfoes.Add(localitem);
-            obj.SaveChanges();
-            return status;
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-    public async Task<RfqItemModel> GetRfqItemByMPrId(int id)
-    {
-        RfqItemModel itemmodel = new RfqItemModel();
-        try
-        {
-            vscm.Database.Connection.Open();
-            RfqItemInfoModel iteminfo = new RfqItemInfoModel();
-            var itemdetails = vscm.RemoteRFQItems.Where(x => x.MPRItemDetailsid == id).Include(x => x.RemoteRFQItemsInfoes).FirstOrDefault();
-            itemmodel.HSNCode = itemdetails.HSNCode;
-            itemmodel.RFQItemID = itemdetails.RFQItemsId;
-            itemmodel.QuotationQty = itemdetails.QuotationQty;
-            itemmodel.VendorModelNo = itemdetails.VendorModelNo;
-            itemmodel.RequsetRemarks = itemdetails.RequestRemarks;
-            foreach (var item in itemdetails.RemoteRFQItemsInfoes)
-            {
-                iteminfo.RFQItemsId = item.RFQItemsId;
-                iteminfo.RFQSplitItemId = item.RFQSplitItemId;
-                iteminfo.UnitPrice = item.UnitPrice;
-                iteminfo.UOM = item.UOM;
-                iteminfo.Remarks = item.Remarks;
-                iteminfo.DiscountPercentage = item.DiscountPercentage;
-                iteminfo.Discount = item.Discount;
-                iteminfo.DeliveryDate = item.DeliveryDate;
-                iteminfo.CurrencyID = item.CurrencyId;
-                iteminfo.CurrencyValue = item.CurrencyValue;
-                itemmodel.iteminfo.Add(iteminfo);
+                localitem.Remarks = model.Remarks;
+                localitem.DeliveryDate = model.DeliveryDate;
+                obj.RFQItemsInfoes.Add(localitem);
+                obj.SaveChanges();
+                return status;
             }
-            return itemmodel;
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
-        catch (Exception ex)
+        public async Task<RfqItemModel> GetRfqItemByMPrId(int id)
         {
+            RfqItemModel itemmodel = new RfqItemModel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                RfqItemInfoModel iteminfo = new RfqItemInfoModel();
+                var itemdetails = vscm.RemoteRFQItems.Where(x => x.MPRItemDetailsid == id).Include(x => x.RemoteRFQItemsInfoes).FirstOrDefault();
+                itemmodel.HSNCode = itemdetails.HSNCode;
+                itemmodel.RFQItemID = itemdetails.RFQItemsId;
+                itemmodel.QuotationQty = itemdetails.QuotationQty;
+                itemmodel.VendorModelNo = itemdetails.VendorModelNo;
+                itemmodel.RequsetRemarks = itemdetails.RequestRemarks;
+                foreach (var item in itemdetails.RemoteRFQItemsInfoes)
+                {
+                    iteminfo.RFQItemsId = item.RFQItemsId;
+                    iteminfo.RFQSplitItemId = item.RFQSplitItemId;
+                    iteminfo.UnitPrice = item.UnitPrice;
+                    iteminfo.UOM = item.UOM;
+                    iteminfo.Remarks = item.Remarks;
+                    iteminfo.DiscountPercentage = item.DiscountPercentage;
+                    iteminfo.Discount = item.Discount;
+                    iteminfo.DeliveryDate = item.DeliveryDate;
+                    iteminfo.CurrencyID = item.CurrencyId;
+                    iteminfo.CurrencyValue = item.CurrencyValue;
+                    itemmodel.iteminfo.Add(iteminfo);
+                }
+                return itemmodel;
+            }
+            catch (Exception ex)
+            {
 
-            throw;
-        }
-    }
-    public async Task<RfqRevisionModel> GetRfqDetailsById(int revisionId)
-    {
-        RfqRevisionModel revision = new RfqRevisionModel();
-        try
-        {
-            var localrevision = obj.RFQRevisions.Where(x => x.rfqRevisionId == revisionId && x.DeleteFlag == false).Include(x => x.RFQMaster).Include(x => x.RFQItems).FirstOrDefault();
-            if (localrevision != null)
-            {
-                revision.RfqMasterId = localrevision.rfqMasterId;
-                revision.RfqRevisionNo = localrevision.RevisionNo;
-                revision.CreatedBy = localrevision.CreatedBy;
-                revision.CreatedDate = localrevision.CreatedDate;
-                revision.PackingForwading = localrevision.PackingForwarding;
-                revision.salesTax = localrevision.SalesTax;
-                revision.Insurance = localrevision.Insurance;
-                revision.CustomsDuty = localrevision.CustomsDuty;
-                revision.PaymentTermDays = localrevision.PaymentTermDays;
-                revision.PaymentTermRemarks = localrevision.PaymentTermRemarks;
-                revision.BankGuarantee = localrevision.BankGuarantee;
-                revision.DeliveryMaxWeeks = localrevision.DeliveryMaxWeeks;
-                revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
+                throw;
             }
+        }
+        public async Task<RfqRevisionModel> GetRfqDetailsById(int revisionId)
+        {
+            RfqRevisionModel revision = new RfqRevisionModel();
+            try
+            {
+                var localrevision = obj.RFQRevisions.Where(x => x.rfqRevisionId == revisionId && x.DeleteFlag == false).Include(x => x.RFQMaster).Include(x => x.RFQItems).FirstOrDefault();
+                if (localrevision != null)
+                {
+                    revision.RfqMasterId = localrevision.rfqMasterId;
+                    revision.RfqRevisionNo = localrevision.RevisionNo;
+                    revision.CreatedBy = localrevision.CreatedBy;
+                    revision.CreatedDate = localrevision.CreatedDate;
+                    revision.PackingForwading = localrevision.PackingForwarding;
+                    revision.salesTax = localrevision.SalesTax;
+                    revision.Insurance = localrevision.Insurance;
+                    revision.CustomsDuty = localrevision.CustomsDuty;
+                    revision.PaymentTermDays = localrevision.PaymentTermDays;
+                    revision.PaymentTermRemarks = localrevision.PaymentTermRemarks;
+                    revision.BankGuarantee = localrevision.BankGuarantee;
+                    revision.DeliveryMaxWeeks = localrevision.DeliveryMaxWeeks;
+                    revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
+                }
 
                 var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
                 var masters = new RFQMasterModel();
@@ -1575,173 +1757,176 @@ namespace DALayer.RFQ
                 }
 
                 return revision;
-        }
-        catch (Exception ex)
-        {
+            }
+            catch (Exception ex)
+            {
 
-            throw;
+                throw;
+            }
         }
-    }
-    public async Task<statuscheckmodel> InsertSingleIteminfos(RfqItemInfoModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
+        public async Task<statuscheckmodel> InsertSingleIteminfos(RfqItemInfoModel model)
         {
-            vscm.Database.Connection.Open();
-            var remoteiteminfo = new RemoteRFQItemsInfo();
-            remoteiteminfo.UOM = model.UOM;
-            remoteiteminfo.UnitPrice = model.UnitPrice;
-            remoteiteminfo.RFQItemsId = model.RFQItemsId;
-            remoteiteminfo.DiscountPercentage = model.DiscountPercentage;
-            remoteiteminfo.Qty = model.Qunatity;
-            remoteiteminfo.DeliveryDate = model.DeliveryDate;
-            remoteiteminfo.CurrencyValue = model.CurrencyValue;
-            remoteiteminfo.CurrencyId = model.CurrencyID;
-
-            vscm.RemoteRFQItemsInfoes.Add(remoteiteminfo);
-            vscm.SaveChanges();
-            int Remotesplitid = remoteiteminfo.RFQSplitItemId;
-            vscm.Database.Connection.Close();
-
-            obj.Database.Connection.Open();
-            var localiteminfo = new RFQItemsInfo();
-            localiteminfo.UOM = model.UOM;
-            localiteminfo.UnitPrice = model.UnitPrice;
-            localiteminfo.RFQItemsId = model.RFQItemsId;
-            //localiteminfo.CustomsDuty = model.CustomsDuty;
-            localiteminfo.DiscountPercentage = model.DiscountPercentage;
-            localiteminfo.Qty = model.Qunatity;
-            localiteminfo.DeliveryDate = model.DeliveryDate;
-            localiteminfo.CurrencyValue = model.CurrencyValue;
-            localiteminfo.CurrencyId = model.CurrencyID;
-            obj.RFQItemsInfoes.Add(localiteminfo);
-            obj.SaveChanges();
-            int localsplitid = localiteminfo.RFQSplitItemId;
-            status.Sid = localsplitid;
-            return status;
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> InsertBulkItemInfos(List<RfqItemInfoModel> model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            if (model != null)
+            statuscheckmodel status = new statuscheckmodel();
+            try
             {
                 vscm.Database.Connection.Open();
                 var remoteiteminfo = new RemoteRFQItemsInfo();
-                foreach (var item in model)
-                {
-                    remoteiteminfo.UOM = item.UOM;
-                    remoteiteminfo.UnitPrice = item.UnitPrice;
-                    remoteiteminfo.RFQItemsId = item.RFQItemsId;
-                    //remoteiteminfo.GSTPercentage = item.GSTPercentage;
-                    remoteiteminfo.DiscountPercentage = item.DiscountPercentage;
-                    remoteiteminfo.Qty = item.Qunatity;
-                    remoteiteminfo.DeliveryDate = item.DeliveryDate;
-                    remoteiteminfo.CurrencyValue = item.CurrencyValue;
-                    remoteiteminfo.CurrencyId = item.CurrencyID;
-                    vscm.RemoteRFQItemsInfoes.Add(remoteiteminfo);
-                    vscm.SaveChanges();
-                }
-                // vscm.SaveChanges();
-            }
-            vscm.Database.Connection.Close();
-            if (model != null)
-            {
+                remoteiteminfo.UOM = model.UOM;
+                remoteiteminfo.UnitPrice = model.UnitPrice;
+                remoteiteminfo.RFQItemsId = model.RFQItemsId;
+                remoteiteminfo.DiscountPercentage = model.DiscountPercentage;
+                remoteiteminfo.Qty = model.Qunatity;
+                remoteiteminfo.DeliveryDate = model.DeliveryDate;
+                remoteiteminfo.CurrencyValue = model.CurrencyValue;
+                remoteiteminfo.CurrencyId = model.CurrencyID;
+                remoteiteminfo.Remarks = model.Remarks;
+
+                vscm.RemoteRFQItemsInfoes.Add(remoteiteminfo);
+                vscm.SaveChanges();
+                int Remotesplitid = remoteiteminfo.RFQSplitItemId;
+                vscm.Database.Connection.Close();
+
                 obj.Database.Connection.Open();
                 var localiteminfo = new RFQItemsInfo();
-                foreach (var item in model)
+                localiteminfo.RFQSplitItemId = Remotesplitid;
+                localiteminfo.UOM = model.UOM;
+                localiteminfo.UnitPrice = model.UnitPrice;
+                localiteminfo.RFQItemsId = model.RFQItemsId;
+                localiteminfo.Remarks = model.Remarks;
+                localiteminfo.DiscountPercentage = model.DiscountPercentage;
+                localiteminfo.Qty = model.Qunatity;
+                localiteminfo.DeliveryDate = model.DeliveryDate;
+                localiteminfo.CurrencyValue = model.CurrencyValue;
+                localiteminfo.CurrencyId = model.CurrencyID;
+                obj.RFQItemsInfoes.Add(localiteminfo);
+                obj.SaveChanges();
+                int localsplitid = localiteminfo.RFQSplitItemId;
+                status.Sid = localsplitid;
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertBulkItemInfos(List<RfqItemInfoModel> model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                if (model != null)
                 {
-                    localiteminfo.UOM = item.UOM;
-                    localiteminfo.UnitPrice = item.UnitPrice;
-                    localiteminfo.RFQItemsId = item.RFQItemsId;
-                    //localiteminfo.GSTPercentage = item.GSTPercentage;
-                    localiteminfo.DiscountPercentage = item.DiscountPercentage;
-                    localiteminfo.Qty = item.Qunatity;
-                    localiteminfo.DeliveryDate = item.DeliveryDate;
-                    localiteminfo.CurrencyValue = item.CurrencyValue;
-                    localiteminfo.CurrencyId = item.CurrencyID;
-                    obj.RFQItemsInfoes.Add(localiteminfo);
+                    vscm.Database.Connection.Open();
+                    var remoteiteminfo = new RemoteRFQItemsInfo();
+                    foreach (var item in model)
+                    {
+                        remoteiteminfo.UOM = item.UOM;
+                        remoteiteminfo.UnitPrice = item.UnitPrice;
+                        remoteiteminfo.RFQItemsId = item.RFQItemsId;
+                        //remoteiteminfo.GSTPercentage = item.GSTPercentage;
+                        remoteiteminfo.DiscountPercentage = item.DiscountPercentage;
+                        remoteiteminfo.Qty = item.Qunatity;
+                        remoteiteminfo.DeliveryDate = item.DeliveryDate;
+                        remoteiteminfo.CurrencyValue = item.CurrencyValue;
+                        remoteiteminfo.CurrencyId = item.CurrencyID;
+                        vscm.RemoteRFQItemsInfoes.Add(remoteiteminfo);
+                        vscm.SaveChanges();
+                    }
+                    //List<int> id=vscm.RemoteRFQItemsInfoes.Where
+                    // vscm.SaveChanges();
+                }
+                vscm.Database.Connection.Close();
+                if (model != null)
+                {
+                    obj.Database.Connection.Open();
+                    var localiteminfo = new RFQItemsInfo();
+                    foreach (var item in model)
+                    {
+                        localiteminfo.UOM = item.UOM;
+                        localiteminfo.UnitPrice = item.UnitPrice;
+                        localiteminfo.RFQItemsId = item.RFQItemsId;
+                        //localiteminfo.GSTPercentage = item.GSTPercentage;
+                        localiteminfo.DiscountPercentage = item.DiscountPercentage;
+                        localiteminfo.Qty = item.Qunatity;
+                        localiteminfo.DeliveryDate = item.DeliveryDate;
+                        localiteminfo.CurrencyValue = item.CurrencyValue;
+                        localiteminfo.CurrencyId = item.CurrencyID;
+                        obj.RFQItemsInfoes.Add(localiteminfo);
+                        obj.SaveChanges();
+                    }
+                }
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertRfqRemainder(RfqRemainderTrackingModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                vscm.Database.Connection.Open();
+                var remotecommunications = vscm.RemoteRFQCommunications.Where(x => x.RfqCCid == model.rfqccid && x.DeleteFlag == false).FirstOrDefault();
+                var remotetracking = new RemoteRFQReminderTracking();
+                if (remotecommunications != null)
+                {
+                    remotetracking.rfqccid = model.rfqccid;
+                    remotetracking.ReminderTo = model.ReminderTo;
+                    remotetracking.MailsSentOn = model.MailsSentOn;
+                    remotetracking.Acknowledgementon = model.Acknowledgementon;
+                    remotetracking.AcknowledgementRemarks = model.AcknowledgementRemarks;
+                    vscm.RemoteRFQReminderTrackings.Add(remotetracking);
+                    vscm.SaveChanges();
+                }
+                int rid = remotetracking.Reminderid;
+                vscm.Database.Connection.Close();
+
+                var localtracking = new RFQReminderTracking();
+                obj.Database.Connection.Open();
+                var localcommunication = obj.RFQCommunications.Where(x => x.RfqCCid == model.rfqccid && x.DeleteFlag == false).FirstOrDefault();
+                if (localcommunication != null)
+                {
+                    localtracking.Reminderid = rid;
+                    localtracking.rfqccid = model.rfqccid;
+                    localtracking.ReminderTo = model.ReminderTo;
+                    localtracking.MailsSentOn = model.MailsSentOn;
+                    localtracking.Acknowledgementon = model.Acknowledgementon;
+                    localtracking.AcknowledgementRemarks = model.AcknowledgementRemarks;
+                    obj.RFQReminderTrackings.Add(localtracking);
                     obj.SaveChanges();
                 }
+                status.Sid = rid;
+                return status;
             }
-            return status;
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-    public async Task<statuscheckmodel> InsertRfqRemainder(RfqRemainderTrackingModel model)
-    {
-        statuscheckmodel status = new statuscheckmodel();
-        try
-        {
-            vscm.Database.Connection.Open();
-            var remotecommunications = vscm.RemoteRFQCommunications.Where(x => x.RfqCCid == model.rfqccid && x.DeleteFlag == false).FirstOrDefault();
-            var remotetracking = new RemoteRFQReminderTracking();
-            if (remotecommunications != null)
+            catch (Exception ex)
             {
-                remotetracking.rfqccid = model.rfqccid;
-                remotetracking.ReminderTo = model.ReminderTo;
-                remotetracking.MailsSentOn = model.MailsSentOn;
-                remotetracking.Acknowledgementon = model.Acknowledgementon;
-                remotetracking.AcknowledgementRemarks = model.AcknowledgementRemarks;
-                vscm.RemoteRFQReminderTrackings.Add(remotetracking);
-                vscm.SaveChanges();
+
+                throw;
             }
-            int rid = remotetracking.Reminderid;
-            vscm.Database.Connection.Close();
-
-            var localtracking = new RFQReminderTracking();
-            obj.Database.Connection.Open();
-            var localcommunication = obj.RFQCommunications.Where(x => x.RfqCCid == model.rfqccid && x.DeleteFlag == false).FirstOrDefault();
-            if (localcommunication != null)
+        }
+        public async Task<List<UnitMasterModel>> GetUnitMasterList()
+        {
+            List<UnitMasterModel> model = new List<UnitMasterModel>();
+            try
             {
-                localtracking.Reminderid = rid;
-                localtracking.rfqccid = model.rfqccid;
-                localtracking.ReminderTo = model.ReminderTo;
-                localtracking.MailsSentOn = model.MailsSentOn;
-                localtracking.Acknowledgementon = model.Acknowledgementon;
-                localtracking.AcknowledgementRemarks = model.AcknowledgementRemarks;
-                obj.RFQReminderTrackings.Add(localtracking);
-                obj.SaveChanges();
+                var unitmaster = obj.UnitMasters.Where(x => x.DeleteFlag == false).ToList();
+                model = unitmaster.Select(x => new UnitMasterModel()
+                {
+                    UnitID = x.UnitID,
+                    UnitName = x.UnitName,
+                    //Isdeleted=x.DeleteFlag
+                }).ToList();
+                return model;
             }
-            status.Sid = rid;
-            return status;
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-    public async Task<List<UnitMasterModel>> GetUnitMasterList()
-    {
-        List<UnitMasterModel> model = new List<UnitMasterModel>();
-        try
-        {
-            var unitmaster = obj.UnitMasters.Where(x => x.DeleteFlag == false).ToList();
-            model = unitmaster.Select(x => new UnitMasterModel()
+            catch (Exception ex)
             {
-                UnitID = x.UnitID,
-                UnitName = x.UnitName,
-                //Isdeleted=x.DeleteFlag
-            }).ToList();
-            return model;
+                throw;
+            }
         }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
         public async Task<RfqRemainderTrackingModel> getrfqremaindersById(int id)
         {
             RfqRemainderTrackingModel model = new RfqRemainderTrackingModel();
@@ -2191,7 +2376,7 @@ namespace DALayer.RFQ
                 var data = new MPRBuyerGroup();
                 if (model != null && model.BuyerGroupId == 0)
                 {
-                   // data.BuyerGroupId = model.BuyerGroupId;
+                    // data.BuyerGroupId = model.BuyerGroupId;
                     data.BuyerGroup = model.BuyerGroup;
                     data.BoolInUse = true;
                 }
@@ -2203,7 +2388,7 @@ namespace DALayer.RFQ
                     var groupmembers = new MPRBuyerGroupMember()
                     {
                         BuyerGroupId = memberid,
-                        GroupMember=item.GroupMember
+                        GroupMember = item.GroupMember
                     };
                     data.MPRBuyerGroupMembers.Add(groupmembers);
                     obj.SaveChanges();
@@ -2242,7 +2427,7 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-       
+
         public async Task<statuscheckmodel> InsertMprApprovers(MPRApproverModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -2325,7 +2510,7 @@ namespace DALayer.RFQ
             var data = new MPRProcurementSource();
             try
             {
-                if (model.ProcurementSourceId==0)
+                if (model.ProcurementSourceId == 0)
                 {
                     data.ProcurementSource = model.ProcurementSource;
                     obj.MPRProcurementSources.Add(data);
@@ -2338,7 +2523,7 @@ namespace DALayer.RFQ
                     mprdata.BoolInUse = model.BoolInUse;
                     obj.SaveChanges();
                 }
-                
+
                 int pid = data.ProcurementSourceId;
                 status.Sid = pid;
                 return status;
@@ -2388,11 +2573,11 @@ namespace DALayer.RFQ
         public async Task<statuscheckmodel> InsertMPRDispatchLocations(MPRDispatchLocationModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
-            
+
             try
             {
                 var data = new MPRDispatchLocation();
-                if (model.DispatchLocationId==0)
+                if (model.DispatchLocationId == 0)
                 {
                     data.DispatchLocation = model.DispatchLocation;
                     data.XOrder = model.XOrder;
@@ -2420,7 +2605,7 @@ namespace DALayer.RFQ
             try
             {
                 var data = new MPRDocumentationDescription();
-                if (model.DocumentationDescriptionId==0)
+                if (model.DocumentationDescriptionId == 0)
                 {
                     data.DocumentationDescription = model.DocumentationDescription;
                     obj.MPRDocumentationDescriptions.Add(data);
@@ -2459,7 +2644,7 @@ namespace DALayer.RFQ
             MPRBuyerGroupModel model = new MPRBuyerGroupModel();
             try
             {
-                var data = obj.MPRBuyerGroups.SqlQuery("select * from  MPRBuyerGroups where BuyerGroupId=@id and BoolInUse=1", new SqlParameter("@id",id)).FirstOrDefault();
+                var data = obj.MPRBuyerGroups.SqlQuery("select * from  MPRBuyerGroups where BuyerGroupId=@id and BoolInUse=1", new SqlParameter("@id", id)).FirstOrDefault();
                 model.BuyerGroup = data.BuyerGroup;
                 model.BoolInUse = data.BoolInUse;
                 return model;
@@ -2479,7 +2664,7 @@ namespace DALayer.RFQ
                 {
                     BuyerGroup = x.BuyerGroup,
                     BuyerGroupId = x.BuyerGroupId,
-                    BoolInUse=x.BoolInUse
+                    BoolInUse = x.BoolInUse
                 }).ToList();
                 return model;
             }
@@ -2493,12 +2678,12 @@ namespace DALayer.RFQ
             MPRApproverModel model = new MPRApproverModel();
             try
             {
-                var data = obj.MPRApprovers.SqlQuery("select * from  MPRApprovers where EmployeeNo=@id and BoolActive=1", new SqlParameter("@id",id)).ToList();
+                var data = obj.MPRApprovers.SqlQuery("select * from  MPRApprovers where EmployeeNo=@id and BoolActive=1", new SqlParameter("@id", id)).ToList();
                 model = data.Select(x => new MPRApproverModel()
                 {
                     EmployeeNo = x.EmployeeNo,
-                    DeactivatedBy=x.DeactivatedBy,
-                    DeactivatedOn=x.DeactivatedOn
+                    DeactivatedBy = x.DeactivatedBy,
+                    DeactivatedOn = x.DeactivatedOn
                 }).FirstOrDefault();
                 return model;
             }
@@ -2537,7 +2722,7 @@ namespace DALayer.RFQ
                     DepartmentId = x.DepartmentId,
                     Department = x.Department,
                     SecondApprover = x.SecondApprover,
-                    ThirdApprover=x.ThirdApprover
+                    ThirdApprover = x.ThirdApprover
                 }).ToList();
                 return model;
             }
@@ -2551,7 +2736,7 @@ namespace DALayer.RFQ
             MPRDepartmentModel model = new MPRDepartmentModel();
             try
             {
-                var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments where DepartmentId=@id and BoolActive=1", new SqlParameter("@id",id)).ToList();
+                var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments where DepartmentId=@id and BoolActive=1", new SqlParameter("@id", id)).ToList();
                 model = data.Select(x => new MPRDepartmentModel()
                 {
                     DepartmentId = x.DepartmentId,
@@ -2574,10 +2759,10 @@ namespace DALayer.RFQ
                 var data = obj.MPRDispatchLocations.SqlQuery("select * from  MPRDepartments where  BoolInUse=1");
                 model = data.Select(x => new MPRDispatchLocationModel()
                 {
-                    DispatchLocationId=x.DispatchLocationId,
-                    DispatchLocation=x.DispatchLocation,
-                    XOrder=x.XOrder,
-                    BoolInUse=x.BoolInUse
+                    DispatchLocationId = x.DispatchLocationId,
+                    DispatchLocation = x.DispatchLocation,
+                    XOrder = x.XOrder,
+                    BoolInUse = x.BoolInUse
                 }).ToList();
                 return model;
             }
@@ -2591,7 +2776,7 @@ namespace DALayer.RFQ
             MPRDispatchLocationModel model = new MPRDispatchLocationModel();
             try
             {
-                var data = obj.MPRDispatchLocations.SqlQuery("select * from  MPRDispatchLocations where DispatchLocationId=@id and BoolActive=1", new SqlParameter("@id",id)).ToList();
+                var data = obj.MPRDispatchLocations.SqlQuery("select * from  MPRDispatchLocations where DispatchLocationId=@id and BoolActive=1", new SqlParameter("@id", id)).ToList();
                 model = data.Select(x => new MPRDispatchLocationModel()
                 {
                     DispatchLocationId = x.DispatchLocationId,
@@ -2614,8 +2799,8 @@ namespace DALayer.RFQ
                 var data = obj.MPRCustomsDuties.SqlQuery("select * from  MPRCustomsDuty where  BoolActive=1");
                 model = data.Select(x => new MPRCustomsDutyModel()
                 {
-                    CustomsDutyId=x.CustomsDutyId,
-                    CustomsDuty=x.CustomsDuty,
+                    CustomsDutyId = x.CustomsDutyId,
+                    CustomsDuty = x.CustomsDuty,
                     BoolInUse = x.BoolInUse
                 }).ToList();
                 return model;
@@ -2631,7 +2816,7 @@ namespace DALayer.RFQ
             try
             {
                 var data = new YILTermsandCondition();
-                if (model!=null)
+                if (model != null)
                 {
                     data.TermGroupId = model.TermGroupId;
                     data.BuyerGroupId = model.BuyerGroupId;
@@ -2660,7 +2845,7 @@ namespace DALayer.RFQ
             try
             {
                 var data = new YILTermsGroup();
-                if (model!=null)
+                if (model != null)
                 {
                     data.TermGroup = model.TermGroup;
                     data.CreatedBy = model.CreatedBy;
@@ -2686,7 +2871,7 @@ namespace DALayer.RFQ
             try
             {
                 var rfqterm = new RFQTerm();
-                if (model!=null)
+                if (model != null)
                 {
                     rfqterm.RFQrevisionId = model.RFQrevisionId;
                     rfqterm.termsid = model.termsid;
@@ -2701,7 +2886,7 @@ namespace DALayer.RFQ
                 }
                 obj.RFQTerms.Add(rfqterm);
                 obj.SaveChanges();
-                int termsid =rfqterm.RfqTermsid;
+                int termsid = rfqterm.RfqTermsid;
                 status.Sid = termsid;
                 return status;
             }
@@ -2739,7 +2924,7 @@ namespace DALayer.RFQ
             YILTermsGroupModel model = new YILTermsGroupModel();
             try
             {
-                var data = from x in obj.YILTermsGroups where x.TermGroupId == id && x.DeleteFlag==false  select x;
+                var data = from x in obj.YILTermsGroups where x.TermGroupId == id && x.DeleteFlag == false select x;
                 //var data = obj.YILTermsGroups.SqlQuery("select * from YILTermsGroup where TermGroupId={0} and DeleteFlag=0", id);
                 model = data.Select(x => new YILTermsGroupModel()
                 {
@@ -2779,6 +2964,52 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+        public async Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid)
+        {
+            List<RFQMasterModel> model = new List<RFQMasterModel>();
+            try
+            {
+                var data = vscm.RemoteRFQMasters.Where(x => x.VendorId == vendorid && x.DeleteFlag == false).Include(x => x.RemoteRFQRevisions).ToList();
+                if (data != null)
+                {
+                    model = data.Select(x => new RFQMasterModel()
+                    {
+                        RfqNo = x.RFQNo,
+                        RfqMasterId = x.RfqMasterId,
+                        MPRRevisionId = (int)x.MPRRevisionId,
+                        CreatedBy = x.CreatedBy,
+                        Revision = x.RemoteRFQRevisions.Select(y => new RfqRevisionModel()
+                        {
+                            RfqRevisionNo = y.RevisionNo,
+                            RfqRevisionId = y.rfqRevisionId,
+                            RfqValidDate = y.RFQValidDate,
+                            CreatedBy = y.CreatedBy,
+                            PackingForwading = y.PackingForwarding,
+                            ExciseDuty = y.ExciseDuty,
+                            salesTax = y.SalesTax,
+                            freight = y.Freight
+                        }).ToList()
+
+                    }).ToList();
+
+
+                    //var revisions = vscm.RemoteRFQRevisions.Where(x => x.rfqMasterId == data.RfqMasterId).ToList();
+                    //RfqRevisionModel revisionmodel = new RfqRevisionModel();
+                    //foreach (var item in revisions)
+                    //{
+                    //    revisionmodel.RfqRevisionId = item.rfqRevisionId;
+                    //    revisionmodel.RfqValidDate = item.RFQValidDate;
+                    //    revisionmodel.RfqRevisionNo = item.RevisionNo;
+                    //    model.Revision.Add(revisionmodel);
+                    //}
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
-}   
+}
 

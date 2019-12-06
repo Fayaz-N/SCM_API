@@ -73,5 +73,7 @@ namespace BALayer.RFQ
         Task<YILTermsandConditionModel> GetYILTermsByBuyerGroupID(int id);
         Task<YILTermsGroupModel> GetYILTermsGroupById(int id);
         Task<RFQTermsModel> GetRfqTermsById(int termsid);
+        Task<RfqItemModel> GetItemByItemId(int id);
+        Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid);
     }
 }
