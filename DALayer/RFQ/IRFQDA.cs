@@ -26,13 +26,13 @@ namespace DALayer.RFQ
         Task<statuscheckmodel> UpdateRfqItemByBulk(RfqItemModel model);
         Task<statuscheckmodel> UpdateSingleRfqItem(RfqItemModel model);
         Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model);
-        statuscheckmodel DeleteRfqById(int id);
+        statuscheckmodel DeleteRfqById(int rfqmasterid);
         statuscheckmodel DeleteRfqRevisionbyId(int id);
         statuscheckmodel DeleteRfqItemById(int id);
         statuscheckmodel DeleteBulkItemsByItemId(List<int> id);
         statuscheckmodel InsertDocument(RfqDocumentsModel model);
         statuscheckmodel CommunicationAdd(RfqCommunicationModel model);
-        Task<List<RfqItemModel>> GetItemsByRevisionId(int id);
+        Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid);
         Task<List<RfqRevisionModel>> GetAllrevisionRFQs();
         Task<RfqItemModel> GetItemsByItemId(int id);
         List<VendormasterModel> GetAllvendorList();

@@ -2366,8 +2366,6 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-
-
         public async Task<statuscheckmodel> InsertMprBuyerGroups(MPRBuyerGroupModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -2427,7 +2425,6 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-
         public async Task<statuscheckmodel> InsertMprApprovers(MPRApproverModel model)
         {
             statuscheckmodel status = new statuscheckmodel();

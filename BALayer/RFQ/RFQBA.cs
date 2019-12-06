@@ -83,9 +83,9 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.GetItemsByItemId(id);
         }
 
-        public async Task<List<RfqItemModel>> GetItemsByRevisionId(int id)
+        public async Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid)
         {
-            return await _rfqDataAcess.GetItemsByRevisionId(id);
+            return await _rfqDataAcess.GetItemsByRevisionId(revisionid);
         }
 
         public async Task<RFQMasterModel> GetRFQById(int masterID)

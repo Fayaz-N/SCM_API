@@ -87,7 +87,7 @@ namespace SCMAPI.Controllers
         public IHttpActionResult DeleteRfqById(int rfqmasterid)
         {
             statuscheckmodel status = new statuscheckmodel();
-            status = _rfqBusenessAcess.DeleteRfqById(id);
+            status = _rfqBusenessAcess.DeleteRfqById(rfqmasterid);
             return Ok();
         }
         [Route("UpdateRfqRevision")]

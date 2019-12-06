@@ -14,7 +14,7 @@ namespace BALayer.RFQ
         bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList);
 
         //rfqmodule
-        Task<RFQMasterModel> GetRFQById(int id);
+        Task<RFQMasterModel> GetRFQById(int masterID);
         Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model);
         //Task<List<RfqRevisionModel>> GetAllRFQs();
         Task<List<RFQMasterModel>> getallrfqlist();
@@ -23,13 +23,13 @@ namespace BALayer.RFQ
         Task<statuscheckmodel> UpdateRfqItemByBulk(RfqItemModel model);
         Task<statuscheckmodel> UpdateSingleRfqItem(RfqItemModel model);
         Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model);
-        statuscheckmodel DeleteRfqById(int id);
+        statuscheckmodel DeleteRfqById(int rfqmasterid);
         statuscheckmodel DeleteRfqRevisionbyId(int id);
         statuscheckmodel DeleteRfqItemById(int id);
         statuscheckmodel DeleteBulkItemsByItemId(List<int> id);
         statuscheckmodel InsertDocument(RfqDocumentsModel model);
         statuscheckmodel CommunicationAdd(RfqCommunicationModel model);
-        Task<List<RfqItemModel>> GetItemsByRevisionId(int id);
+        Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid);
         Task<List<RfqRevisionModel>> GetAllrevisionRFQs();
         Task<RfqItemModel> GetItemsByItemId(int id);
         List<VendormasterModel> GetAllvendorList();
