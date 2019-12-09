@@ -12,7 +12,7 @@ namespace DALayer.RFQ
     public interface IRFQDA
     {
         List<RFQQuoteView> getRFQItems(int RevisionId);
-        bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList);
+        bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
 
 
         //rfq module

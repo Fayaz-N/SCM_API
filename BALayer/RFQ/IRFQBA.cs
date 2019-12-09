@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BALayer.RFQ
 {
-	public interface IRFQBA
-	{
+    public interface IRFQBA
+    {
 
-		List<RFQQuoteView> getRFQItems(int RevisionId);
-        bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList);
+        List<RFQQuoteView> getRFQItems(int RevisionId);
+        bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
 
         //rfqmodule
         Task<RFQMasterModel> GetRFQById(int masterID);

@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace BALayer.RFQ
 {
-	public class RFQBA:IRFQBA
-	{
-		public readonly IRFQDA _rfqDataAcess;
-		public RFQBA(IRFQDA RFQDA)
-		{
-			this._rfqDataAcess = RFQDA;
-		}
-		public List<RFQQuoteView> getRFQItems(int RevisionId)
-		{
-			return this._rfqDataAcess.getRFQItems(RevisionId);
-		}
-        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
+    public class RFQBA : IRFQBA
+    {
+        public readonly IRFQDA _rfqDataAcess;
+        public RFQBA(IRFQDA RFQDA)
         {
-            return this._rfqDataAcess.updateVendorQuotes(RFQQuoteViewList);
+            this._rfqDataAcess = RFQDA;
+        }
+        public List<RFQQuoteView> getRFQItems(int RevisionId)
+        {
+            return this._rfqDataAcess.getRFQItems(RevisionId);
+        }
+        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList)
+        {
+            return this._rfqDataAcess.updateVendorQuotes(RFQQuoteViewList, termsList);
 
         }
 

@@ -4,6 +4,7 @@ using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
@@ -29,8 +30,21 @@ namespace DALayer.RFQ
                 //return Context.RFQQuoteViews.Where(li => li.MPRRevisionId == RevisionId).ToList();
             }
         }
-        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
+        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList)
         {
+            List<RFQTermsModel> rfqList = new List<RFQTermsModel>();
+            foreach (var data in termsList)
+            {
+                if (data.DefaultSelect == true)
+                {
+                    RFQTermsModel rfqterm = new RFQTermsModel();
+                    rfqterm.termsid = data.TermId;
+                    rfqterm.CreatedBy = "190455";
+                    rfqterm.CreatedDate = DateTime.Now;
+                    rfqList.Add(rfqterm);
+                }
+
+            }
             foreach (RFQQuoteView item in RFQQuoteViewList)
             {
                 RfqRevisionModel rfqModel = new RfqRevisionModel();
@@ -60,10 +74,23 @@ namespace DALayer.RFQ
                 rfqitem.ItemDescription = item.ItemDescription;
                 rfqitem.QuotationQty = item.QuotationQty;
                 rfqModel.rfqitem.Add(rfqitem);
+                rfqModel.RFQTerms = rfqList;
                 CreateRfQ(rfqModel);
             }
             return true;
 
+        }
+
+        public List<DataTable> getRFQCompareItems(int RevisionId)
+        {
+            List<DataTable> retVal = new List<DataTable>();
+            using (YSCMEntities Context = new YSCMEntities())
+            {
+
+                string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where MPRRevisionId=" + RevisionId + "";
+                retVal = Context.Database.SqlQuery<DataTable>(query).ToList();
+            }
+            return retVal;
         }
         public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
         {
@@ -272,6 +299,11 @@ namespace DALayer.RFQ
                         obj.SaveChanges();
                     }
                     status.Sid = rfqlocal.RfqMasterId;
+                    foreach (RFQTermsModel terms in model.RFQTerms)
+                    {
+                        terms.RFQrevisionId = revisionid;
+                        InsertRFQTerms(terms);
+                    }
                 }
                 return status;
             }

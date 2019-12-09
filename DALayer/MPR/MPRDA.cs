@@ -25,7 +25,7 @@ namespace DALayer.MPR
 			Result.connectionString = DB.Database.Connection.ConnectionString;
 			DataTable dtDBMastersList = new DataTable();
 			string query = "";
-			if (Result.tableName != "")
+			if (!string.IsNullOrEmpty(Result.tableName))
 			{
 				query = "select * from " + Result.tableName;
 				if (Result.sortBy != null)

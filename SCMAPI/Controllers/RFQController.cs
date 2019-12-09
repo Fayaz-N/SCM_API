@@ -1,4 +1,5 @@
 ﻿using BALayer.RFQ;
+using SCMModels;
 using SCMModels.MPRMasterModels;
 using SCMModels.RFQModels;
 using SCMModels.SCMModels;
@@ -9,35 +10,33 @@ using System.Web.Http.Description;
 
 namespace SCMAPI.Controllers
 {
-	[RoutePrefix("Api/RFQ")]
-	public class RFQController : ApiController
+    [RoutePrefix("Api/RFQ")]
+    public class RFQController : ApiController
     {
-		private readonly IRFQBA _rfqBusenessAcess;
-		public RFQController(IRFQBA rfqBA)
-		{
-			this._rfqBusenessAcess = rfqBA;
-		}
-		[HttpGet]
-		[Route("getRFQItems/{RevisionId}")]
-		public IHttpActionResult getRFQItems(int RevisionId)
-		{
-			return Ok(this._rfqBusenessAcess.getRFQItems(RevisionId));
-		}
+        private readonly IRFQBA _rfqBusenessAcess;
+        public RFQController(IRFQBA rfqBA)
+        {
+            this._rfqBusenessAcess = rfqBA;
+        }
+        [HttpGet]
+        [Route("getRFQItems/{RevisionId}")]
+        public IHttpActionResult getRFQItems(int RevisionId)
+        {
+            return Ok(this._rfqBusenessAcess.getRFQItems(RevisionId));
+        }
         [HttpPost]
         [Route("updateVendorQuotes")]
-        public IHttpActionResult updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList)
+        public IHttpActionResult updateVendorQuotes([FromBody] DataModel Result)
         {
-            return Ok(this._rfqBusenessAcess.updateVendorQuotes(RFQQuoteViewList));
+            return Ok(this._rfqBusenessAcess.updateVendorQuotes(Result.RFQQuoteViewList, Result.TermsList));
         }
-
-
 
         [Route("GetRFQById")]
         [ResponseType(typeof(RFQMasterModel))]
-        public async Task<IHttpActionResult> GetRFQById(int masterID)
+        public async Task<IHttpActionResult> GetRFQById(int id)
         {
             RFQMasterModel model = new RFQMasterModel();
-            model = await _rfqBusenessAcess.GetRFQById(masterID);
+            model = await _rfqBusenessAcess.GetRFQById(id);
             return Ok(model);
         }
         //[Route("GetAllRFQs")]
@@ -67,10 +66,10 @@ namespace SCMAPI.Controllers
         }
         [Route("GetItemsByRevisionId/{id}")]
         [ResponseType(typeof(List<RfqItemModel>))]
-        public async Task<IHttpActionResult> GetItemsByRevisionId(int revisionid)
+        public async Task<IHttpActionResult> GetItemsByRevisionId(int id)
         {
             List<RfqItemModel> status = new List<RfqItemModel>();
-            status = await _rfqBusenessAcess.GetItemsByRevisionId(revisionid);
+            status = await _rfqBusenessAcess.GetItemsByRevisionId(id);
             return Ok(status);
         }
         [Route("GetAllrevisionRFQs")]
@@ -84,10 +83,10 @@ namespace SCMAPI.Controllers
 
         [Route("DeleteRfqById")]
         [ResponseType(typeof(statuscheckmodel))]
-        public IHttpActionResult DeleteRfqById(int rfqmasterid)
+        public IHttpActionResult DeleteRfqById(int id)
         {
             statuscheckmodel status = new statuscheckmodel();
-            status = _rfqBusenessAcess.DeleteRfqById(rfqmasterid);
+            status = _rfqBusenessAcess.DeleteRfqById(id);
             return Ok();
         }
         [Route("UpdateRfqRevision")]
@@ -304,7 +303,7 @@ namespace SCMAPI.Controllers
         public async Task<IHttpActionResult> GetMPRApprovalsById(int id)
         {
             MPRApproverModel model = new MPRApproverModel();
-            model= await _rfqBusenessAcess.GetMPRApprovalsById(id);
+            model = await _rfqBusenessAcess.GetMPRApprovalsById(id);
             return Ok(model);
         }
         [Route("GetAllMPRApprovals")]
@@ -377,7 +376,7 @@ namespace SCMAPI.Controllers
         {
             statuscheckmodel status = new statuscheckmodel();
             status = await _rfqBusenessAcess.InsertRFQTerms(model);
-            return Ok(status);
+            return Ok(model);
         }
         [Route("GetRfqTermsById")]
         [ResponseType(typeof(RFQTermsModel))]
@@ -401,22 +400,6 @@ namespace SCMAPI.Controllers
         {
             YILTermsGroupModel status = new YILTermsGroupModel();
             status = await _rfqBusenessAcess.GetYILTermsGroupById(id);
-            return Ok(status);
-        }
-        [Route("GetItemByItemId")]
-        [ResponseType(typeof(RfqItemModel))]
-        public async Task<IHttpActionResult> GetItemByItemId(int id)
-        {
-            RfqItemModel status = new RfqItemModel();
-            status = await _rfqBusenessAcess.GetItemByItemId(id);
-            return Ok(status);
-        }
-        [Route("GetRfqByVendorId")]
-        [ResponseType(typeof(List<RFQMasterModel>))]
-        public async Task<IHttpActionResult> GetRfqByVendorId(int vendorid)
-        {
-            List<RFQMasterModel> status = new List<RFQMasterModel>();
-            status = await _rfqBusenessAcess.GetRfqByVendorId(vendorid);
             return Ok(status);
         }
     }

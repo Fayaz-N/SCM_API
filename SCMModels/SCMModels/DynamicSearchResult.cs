@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCMModels.SCMModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,5 +41,10 @@ namespace SCMModels
 		public string CheckedBy { get; set; }
 		public string ApprovedBy { get; set; }
 	}
+    public  class DataModel
+    {
+        public List<RFQQuoteView> RFQQuoteViewList { get; set; }
+        public List<YILTermsandCondition> TermsList { get; set; }
+    }
 
 }
