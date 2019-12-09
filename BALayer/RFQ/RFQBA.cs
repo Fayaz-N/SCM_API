@@ -341,5 +341,10 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.GetRfqByVendorId(vendorid);
         }
+
+        public async Task<statuscheckmodel> UpdateRFQTerms(RFQTermsModel model)
+        {
+            return await _rfqDataAcess.UpdateRFQTerms(model);
+        }
     }
 }
