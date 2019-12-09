@@ -377,7 +377,7 @@ namespace SCMAPI.Controllers
         {
             statuscheckmodel status = new statuscheckmodel();
             status = await _rfqBusenessAcess.InsertRFQTerms(model);
-            return Ok(model);
+            return Ok(status);
         }
         [Route("GetRfqTermsById")]
         [ResponseType(typeof(RFQTermsModel))]

@@ -2867,12 +2867,38 @@ namespace DALayer.RFQ
             statuscheckmodel status = new statuscheckmodel();
             try
             {
+                var remoteterm = new RemoteRfqTerm();
+                vscm.Database.Connection.Open();
+                if (model!=null)
+                {
+                    remoteterm.RfqRevisionId = model.RFQrevisionId;
+                    remoteterm.termsid =model.termsid;
+                    remoteterm.VendorResponse = model.VendorResponse;
+                    remoteterm.TermGroup = model.TermGroup;
+                    remoteterm.Remarks = model.Remarks;
+                    remoteterm.Terms = model.Terms;
+                    remoteterm.CreatedBy = model.CreatedBy;
+                    remoteterm.CreatedDate =  model.CreatedDate;
+                    remoteterm.UpdatedBy = model.UpdatedBy;
+                    remoteterm.UpdatedDate = model.UpdatedDate;
+                    remoteterm.DeletedBy = model.DeletedBy;
+                    remoteterm.DeletedDate = model.DeletedDate;
+                    //remoteterm.SyncStatus = true;
+                }
+                vscm.RemoteRfqTerms.Add(remoteterm);
+                vscm.SaveChanges();
+                vscm.Database.Connection.Close();
+                int termsid = remoteterm.VRfqTermsid;
+
                 var rfqterm = new RFQTerm();
+                obj.Database.Connection.Open();
                 if (model != null)
                 {
+                    rfqterm.RfqTermsid = termsid;
                     rfqterm.RFQrevisionId = model.RFQrevisionId;
                     rfqterm.termsid = model.termsid;
                     rfqterm.VendorResponse = model.VendorResponse;
+                    //rfqterm.TermGroup = model.TermGroup;
                     rfqterm.Remarks = model.Remarks;
                     rfqterm.CreatedBy = model.CreatedBy;
                     rfqterm.CreatedDate = model.CreatedDate;
@@ -2880,11 +2906,59 @@ namespace DALayer.RFQ
                     rfqterm.UpdatedDate = model.UpdatedDate;
                     rfqterm.DeletedBy = model.DeletedBy;
                     rfqterm.DeletedDate = model.DeletedDate;
+                   
                 }
                 obj.RFQTerms.Add(rfqterm);
                 obj.SaveChanges();
-                int termsid = rfqterm.RfqTermsid;
                 status.Sid = termsid;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateRFQTerms(RFQTermsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var remoteterm = new RemoteRfqTerm();
+                vscm.Database.Connection.Open();
+                var remotedata = vscm.RemoteRfqTerms.Where(x => x.VRfqTermsid == model.RfqTermsid).FirstOrDefault();
+                if (model != null)
+                {
+                    remotedata.RfqRevisionId = model.RFQrevisionId;
+                    remotedata.termsid = (int)model.termsid;
+                    remotedata.VendorResponse = model.VendorResponse;
+                    remotedata.TermGroup = model.TermGroup;
+                    remotedata.Remarks = model.Remarks;
+                    remotedata.CreatedBy = model.CreatedBy;
+                    remotedata.CreatedDate = (DateTime)model.CreatedDate;
+                    remotedata.UpdatedBy = model.UpdatedBy;
+                    remotedata.UpdatedDate = model.UpdatedDate;
+                    remotedata.DeletedBy = model.DeletedBy;
+                    remotedata.DeletedDate = model.DeletedDate;
+                    vscm.SaveChanges();
+                }
+                vscm.Database.Connection.Close();
+               
+                obj.Database.Connection.Open();
+                var localdata = obj.RFQTerms.Where(x => x.RfqTermsid == remotedata.VRfqTermsid).FirstOrDefault();
+                if (model != null)
+                {
+                    localdata.RFQrevisionId = model.RFQrevisionId;
+                    localdata.termsid = model.termsid;
+                    localdata.VendorResponse = model.VendorResponse;
+                    localdata.Remarks = model.Remarks;
+                    localdata.CreatedBy = model.CreatedBy;
+                    localdata.CreatedDate = model.CreatedDate;
+                    localdata.UpdatedBy = model.UpdatedBy;
+                    localdata.UpdatedDate = model.UpdatedDate;
+                    localdata.DeletedBy = model.DeletedBy;
+                    localdata.DeletedDate = model.DeletedDate;
+                    obj.SaveChanges();
+                }
                 return status;
             }
             catch (Exception ex)
