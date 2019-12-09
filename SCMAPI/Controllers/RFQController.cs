@@ -378,6 +378,14 @@ namespace SCMAPI.Controllers
             status = await _rfqBusenessAcess.InsertRFQTerms(model);
             return Ok(model);
         }
+        [Route("UpdateRFQTerms")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> UpdateRFQTerms(RFQTermsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.UpdateRFQTerms(model);
+            return Ok(status);
+        }
         [Route("GetRfqTermsById")]
         [ResponseType(typeof(RFQTermsModel))]
         public async Task<IHttpActionResult> GetRfqTermsById(int id)

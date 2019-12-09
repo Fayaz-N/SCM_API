@@ -73,6 +73,7 @@ namespace DALayer.RFQ
         Task<statuscheckmodel> InsertYILTerms(YILTermsandConditionModel model);
         Task<statuscheckmodel> InsertYILTermsGroup(YILTermsGroupModel model);
         Task<statuscheckmodel> InsertRFQTerms(RFQTermsModel model);
+        Task<statuscheckmodel> UpdateRFQTerms(RFQTermsModel model);
         Task<YILTermsandConditionModel> GetYILTermsByBuyerGroupID(int id);
         Task<YILTermsGroupModel> GetYILTermsGroupById(int id);
         Task<RFQTermsModel> GetRfqTermsById(int termsid);
