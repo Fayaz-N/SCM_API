@@ -39,6 +39,8 @@ namespace DALayer.RFQ
                 {
                     RFQTermsModel rfqterm = new RFQTermsModel();
                     rfqterm.termsid = data.TermId;
+                    rfqterm.TermGroup =Convert.ToString(data.TermGroupId);
+                    rfqterm.Terms = data.Terms;
                     rfqterm.CreatedBy = "190455";
                     rfqterm.CreatedDate = DateTime.Now;
                     rfqList.Add(rfqterm);
@@ -2923,7 +2925,7 @@ namespace DALayer.RFQ
                 int termsid = remoteterm.VRfqTermsid;
 
                 var rfqterm = new RFQTerm();
-                obj.Database.Connection.Open();
+                //obj.Database.Connection.Open();
                 if (model != null)
                 {
                     rfqterm.RfqTermsid = termsid;
