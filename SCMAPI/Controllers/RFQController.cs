@@ -38,9 +38,9 @@ namespace SCMAPI.Controllers
         }
         [HttpPost]
         [Route("rfqStatusUpdate")]
-        public IHttpActionResult rfqStatusUpdate([FromBody] List<RFQItem> vendorList)
+        public IHttpActionResult rfqStatusUpdate([FromBody] DataModel Result)
         {
-            return Ok(this._rfqBusenessAcess.rfqStatusUpdate(vendorList));
+            return Ok(this._rfqBusenessAcess.rfqStatusUpdate(Result.RFQQuoteViewList));
         }
 
         [Route("GetRFQById")]

@@ -15,7 +15,7 @@ namespace DALayer.RFQ
         List<RFQQuoteView> getRFQItems(int RevisionId);
         bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
         DataTable getRFQCompareItems(int RevisionId);
-        bool rfqStatusUpdate(List<RFQItem> RFQQuoteViewList);
+        bool rfqStatusUpdate(List<RFQQuoteView> RFQQuoteViewList);
 
         //rfq module
 

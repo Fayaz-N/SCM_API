@@ -13,7 +13,7 @@ namespace BALayer.RFQ
         List<RFQQuoteView> getRFQItems(int RevisionId);
         bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
         DataTable getRFQCompareItems(int RevisionId);
-        bool rfqStatusUpdate(List<RFQItem> RFQQuoteViewList);
+        bool rfqStatusUpdate(List<RFQQuoteView> RFQQuoteViewList);
         //rfqmodule
         Task<RFQMasterModel> GetRFQById(int masterID);
         Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model);

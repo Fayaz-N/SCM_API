@@ -89,7 +89,7 @@ namespace DALayer.RFQ
             using (YSCMEntities Context = new YSCMEntities())
             {
 
-                string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where MPRRevisionId=" + RevisionId + "";
+                string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where (Status not like '%Approved%' or Status is null) and MPRRevisionId=" + RevisionId + "";
                 var cmd = Context.Database.Connection.CreateCommand();
                 cmd.CommandText = query;
 
@@ -99,7 +99,7 @@ namespace DALayer.RFQ
             }
             return table;
         }
-        public bool rfqStatusUpdate(List<RFQItem> vendorList)
+        public bool rfqStatusUpdate(List<RFQQuoteView> vendorList)
         {
             using (YSCMEntities Context = new YSCMEntities())
             {

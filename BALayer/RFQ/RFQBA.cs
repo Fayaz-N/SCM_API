@@ -32,7 +32,7 @@ namespace BALayer.RFQ
             return this._rfqDataAcess.getRFQCompareItems(RevisionId);
 
         }
-        public bool rfqStatusUpdate(List<RFQItem> vendorList)
+        public bool rfqStatusUpdate(List<RFQQuoteView> vendorList)
         {
             return this._rfqDataAcess.rfqStatusUpdate(vendorList);
 
