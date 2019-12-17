@@ -56,6 +56,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
@@ -97,8 +98,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\ConfigAccessRepoDA.cs" />
+    <Compile Include="Authorization\IConfigAccessInterfaceDA.cs" />
     <Compile Include="Emails\EmailTemplateDA.cs" />
     <Compile Include="Emails\IEmailTemplateDA.cs" />
+    <Compile Include="Login\ILoginDA.cs" />
+    <Compile Include="Login\LoginDA.cs" />
     <Compile Include="MPR\IMPRDA.cs" />
     <Compile Include="MPR\MPRDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

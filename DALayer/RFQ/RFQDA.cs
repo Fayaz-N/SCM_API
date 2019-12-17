@@ -108,7 +108,7 @@ namespace DALayer.RFQ
                     RFQItem rfqItem = Context.RFQItems.Where(li => li.RFQItemsId == item.RFQItemsId).FirstOrDefault<RFQItem>();
                     rfqItem.Status = "Approved";
                     rfqItem.StatusUpdatedBy = "190455";
-                    rfqItem.StatusUpdatedDate = DateTime.Now;
+                    rfqItem.StatusUpdateddate = DateTime.Now;
                     Context.SaveChanges();
 
                 }

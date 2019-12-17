@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\ConfigAccessRepoBA.cs" />
+    <Compile Include="Authorization\IConfigAccessInterfaceBA.cs" />
+    <Compile Include="Login\ILoginBA.cs" />
+    <Compile Include="Login\LoginBA.cs" />
     <Compile Include="MPR\IMPRBA.cs" />
     <Compile Include="MPR\MPRBA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,5 +64,6 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

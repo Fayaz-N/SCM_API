@@ -37,7 +37,9 @@ namespace SCMAPI
 			container.Register<IRFQBA, RFQBA>();
 			container.Register<IRFQDA, RFQDA>();
 			container.Register<IEmailTemplateDA, EmailTemplateDA>();
-			GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
+            container.Register<IConfigAccessInterfaceBA, ConfigAccessRepoBA>();
+            container.Register<IConfigAccessInterfaceDA, ConfigAccessRepoDA>();
+            GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
 		}
 	}
 }
