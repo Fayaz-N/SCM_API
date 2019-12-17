@@ -4,7 +4,7 @@ using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using System.Data;
 namespace BALayer.RFQ
 {
     public interface IRFQBA
@@ -12,7 +12,8 @@ namespace BALayer.RFQ
 
         List<RFQQuoteView> getRFQItems(int RevisionId);
         bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
-
+        DataTable getRFQCompareItems(int RevisionId);
+        bool rfqStatusUpdate(List<RFQItem> RFQQuoteViewList);
         //rfqmodule
         Task<RFQMasterModel> GetRFQById(int masterID);
         Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model);

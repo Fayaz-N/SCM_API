@@ -19,16 +19,28 @@ namespace SCMAPI.Controllers
             this._rfqBusenessAcess = rfqBA;
         }
         [HttpGet]
-        [Route("getRFQItems/{RevisionId}")]
-        public IHttpActionResult getRFQItems(int RevisionId)
+        [Route("getRFQItems/{MPRRevisionId}")]
+        public IHttpActionResult getRFQItems(int MPRRevisionId)
         {
-            return Ok(this._rfqBusenessAcess.getRFQItems(RevisionId));
+            return Ok(this._rfqBusenessAcess.getRFQItems(MPRRevisionId));
         }
         [HttpPost]
         [Route("updateVendorQuotes")]
         public IHttpActionResult updateVendorQuotes([FromBody] DataModel Result)
         {
             return Ok(this._rfqBusenessAcess.updateVendorQuotes(Result.RFQQuoteViewList, Result.TermsList));
+        }
+        [HttpGet]
+        [Route("getRFQCompareItems/{MPRRevisionId}")]
+        public IHttpActionResult getRFQCompareItems(int MPRRevisionId)
+        {
+            return Ok(this._rfqBusenessAcess.getRFQCompareItems(MPRRevisionId));
+        }
+        [HttpPost]
+        [Route("rfqStatusUpdate")]
+        public IHttpActionResult rfqStatusUpdate([FromBody] List<RFQItem> vendorList)
+        {
+            return Ok(this._rfqBusenessAcess.rfqStatusUpdate(vendorList));
         }
 
         [Route("GetRFQById")]

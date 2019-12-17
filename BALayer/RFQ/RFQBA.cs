@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace BALayer.RFQ
 {
@@ -24,6 +25,16 @@ namespace BALayer.RFQ
         public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList)
         {
             return this._rfqDataAcess.updateVendorQuotes(RFQQuoteViewList, termsList);
+
+        }
+        public DataTable getRFQCompareItems(int RevisionId)
+        {
+            return this._rfqDataAcess.getRFQCompareItems(RevisionId);
+
+        }
+        public bool rfqStatusUpdate(List<RFQItem> vendorList)
+        {
+            return this._rfqDataAcess.rfqStatusUpdate(vendorList);
 
         }
 

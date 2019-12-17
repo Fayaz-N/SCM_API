@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace DALayer.RFQ
 {
@@ -13,7 +14,8 @@ namespace DALayer.RFQ
     {
         List<RFQQuoteView> getRFQItems(int RevisionId);
         bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
-
+        DataTable getRFQCompareItems(int RevisionId);
+        bool rfqStatusUpdate(List<RFQItem> RFQQuoteViewList);
 
         //rfq module
 

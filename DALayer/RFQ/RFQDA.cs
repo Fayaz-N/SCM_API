@@ -20,7 +20,6 @@ namespace DALayer.RFQ
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
 
-
         public List<RFQQuoteView> getRFQItems(int RevisionId)
         {
             using (YSCMEntities Context = new YSCMEntities())
@@ -39,7 +38,7 @@ namespace DALayer.RFQ
                 {
                     RFQTermsModel rfqterm = new RFQTermsModel();
                     rfqterm.termsid = data.TermId;
-                    rfqterm.TermGroup =Convert.ToString(data.TermGroupId);
+                    rfqterm.TermGroup = Convert.ToString(data.TermGroupId);
                     rfqterm.Terms = data.Terms;
                     rfqterm.CreatedBy = "190455";
                     rfqterm.CreatedDate = DateTime.Now;
@@ -83,16 +82,38 @@ namespace DALayer.RFQ
 
         }
 
-        public List<DataTable> getRFQCompareItems(int RevisionId)
+        public DataTable getRFQCompareItems(int RevisionId)
         {
-            List<DataTable> retVal = new List<DataTable>();
+            DataTable table = new DataTable();
+
             using (YSCMEntities Context = new YSCMEntities())
             {
 
                 string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where MPRRevisionId=" + RevisionId + "";
-                retVal = Context.Database.SqlQuery<DataTable>(query).ToList();
+                var cmd = Context.Database.Connection.CreateCommand();
+                cmd.CommandText = query;
+
+                cmd.Connection.Open();
+                table.Load(cmd.ExecuteReader());
+                cmd.Connection.Close();
             }
-            return retVal;
+            return table;
+        }
+        public bool rfqStatusUpdate(List<RFQItem> vendorList)
+        {
+            using (YSCMEntities Context = new YSCMEntities())
+            {
+                foreach (var item in vendorList)
+                {
+                    RFQItem rfqItem = Context.RFQItems.Where(li => li.RFQItemsId == item.RFQItemsId).FirstOrDefault<RFQItem>();
+                    rfqItem.Status = "Approved";
+                    rfqItem.StatusUpdatedBy = "190455";
+                    rfqItem.StatusUpdatedDate = DateTime.Now;
+                    Context.SaveChanges();
+
+                }
+            }
+            return true;
         }
         public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
         {
@@ -2903,16 +2924,16 @@ namespace DALayer.RFQ
             {
                 var remoteterm = new RemoteRfqTerm();
                 vscm.Database.Connection.Open();
-                if (model!=null)
+                if (model != null)
                 {
                     remoteterm.RfqRevisionId = model.RFQrevisionId;
-                    remoteterm.termsid =model.termsid;
+                    remoteterm.termsid = model.termsid;
                     remoteterm.VendorResponse = model.VendorResponse;
                     remoteterm.TermGroup = model.TermGroup;
                     remoteterm.Remarks = model.Remarks;
                     remoteterm.Terms = model.Terms;
                     remoteterm.CreatedBy = model.CreatedBy;
-                    remoteterm.CreatedDate =  model.CreatedDate;
+                    remoteterm.CreatedDate = model.CreatedDate;
                     remoteterm.UpdatedBy = model.UpdatedBy;
                     remoteterm.UpdatedDate = model.UpdatedDate;
                     remoteterm.DeletedBy = model.DeletedBy;
@@ -2940,7 +2961,7 @@ namespace DALayer.RFQ
                     rfqterm.UpdatedDate = model.UpdatedDate;
                     rfqterm.DeletedBy = model.DeletedBy;
                     rfqterm.DeletedDate = model.DeletedDate;
-                   
+
                 }
                 obj.RFQTerms.Add(rfqterm);
                 obj.SaveChanges();
@@ -2976,7 +2997,7 @@ namespace DALayer.RFQ
                     vscm.SaveChanges();
                 }
                 vscm.Database.Connection.Close();
-               
+
                 obj.Database.Connection.Open();
                 var localdata = obj.RFQTerms.Where(x => x.RfqTermsid == remotedata.VRfqTermsid).FirstOrDefault();
                 if (model != null)
@@ -3115,7 +3136,7 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-       
+
     }
 }
 
