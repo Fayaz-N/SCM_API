@@ -24,7 +24,7 @@ namespace DALayer.MPR
 		MPRRevision getMPRRevisionDetails(int RevisionId);
 		List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams);
 		List<Employee> getEmployeeList();
-		List<MPRRevision> getMPRRevisionList(int RequisitionId);
+		List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId);
 		MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
 		List<SCMStatu> getStatusList();
 		List<MPRVendorDetail> updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);

@@ -72,7 +72,7 @@ namespace BALayer.MPR
 		{
 			return this._mprDataAcess.getEmployeeList();
 		}
-		public List<MPRRevision> getMPRRevisionList(int RequisitionId)
+		public List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId)
 		{
 			return this._mprDataAcess.getMPRRevisionList(RequisitionId);
 		}
