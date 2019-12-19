@@ -65,6 +65,10 @@ namespace DALayer.RFQ
         Task<CurrencyHistoryModel> GetcurrencyHistoryById(int currencyId);
         Task<MPRBuyerGroupModel> GetMPRBuyerGroupsById(int id);
         Task<List<MPRBuyerGroupModel>> GetAllMPRBuyerGroups();
+        Task<List<MPRApproversViewModel>> GetAllMPRApprovers();
+        Task<statuscheckmodel> InsertMprBuyerGroups(MPRBuyerGroupModel model);
+        Task<statuscheckmodel> UpdateMprBuyerGroups(MPRBuyerGroupModel model);
+        Task<statuscheckmodel> InsertMPRApprover(MPRApproverModel model);
         Task<MPRApproverModel> GetMPRApprovalsById(int id);
         Task<List<MPRApproverModel>> GetAllMPRApprovals();
         Task<List<MPRDepartmentModel>> GetAllMPRDepartments();

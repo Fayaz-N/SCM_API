@@ -277,7 +277,22 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.GetAllMPRBuyerGroups();
         }
-
+         public async Task<List<MPRApproversViewModel>> GetAllMPRApprovers()
+        {
+            return await _rfqDataAcess.GetAllMPRApprovers();
+        }
+        public async Task<statuscheckmodel> InsertMprBuyerGroups(MPRBuyerGroupModel model)
+        {
+            return await _rfqDataAcess.InsertMprBuyerGroups(model);
+        }
+        public async Task<statuscheckmodel> UpdateMprBuyerGroups(MPRBuyerGroupModel model)
+        {
+            return await _rfqDataAcess.UpdateMprBuyerGroups(model);
+        }
+        public async Task<statuscheckmodel> InsertMPRApprover(MPRApproverModel model)
+        {
+            return await _rfqDataAcess.InsertMPRApprover(model);
+        }
         public async Task<MPRApproverModel> GetMPRApprovalsById(int id)
         {
             return await _rfqDataAcess.GetMPRApprovalsById(id);

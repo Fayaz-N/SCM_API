@@ -302,12 +302,20 @@ namespace SCMAPI.Controllers
             model = await _rfqBusenessAcess.GetAllMPRBuyerGroups();
             return Ok(model);
         }
-        [Route("GetMPRBuyerGroupsById")]
-        [ResponseType(typeof(MPRBuyerGroupModel))]
-        public async Task<IHttpActionResult> GetMPRBuyerGroupsById(int id)
+        [Route("InsertBuyerGroup")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertBuyerGroup(MPRBuyerGroupModel model)
         {
-            MPRBuyerGroupModel status = new MPRBuyerGroupModel();
-            status = await _rfqBusenessAcess.GetMPRBuyerGroupsById(id);
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.InsertMprBuyerGroups(model);
+            return Ok(status);
+        }
+        [Route("UpdateMprBuyerGroups")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> UpdateMprBuyerGroups(MPRBuyerGroupModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.UpdateMprBuyerGroups(model);
             return Ok(status);
         }
         [Route("GetMPRApprovalsById/{id}")]
@@ -318,6 +326,34 @@ namespace SCMAPI.Controllers
             model = await _rfqBusenessAcess.GetMPRApprovalsById(id);
             return Ok(model);
         }
+
+        [Route("GetAllMPRApprovers")]
+        [ResponseType(typeof(List<MPRApproversViewModel>))]
+        public async Task<IHttpActionResult> GetAllMPRApprovers()
+        {
+            List<MPRApproversViewModel> model = new List<MPRApproversViewModel>();
+            model = await _rfqBusenessAcess.GetAllMPRApprovers();
+            return Ok(model);
+        }
+
+        [Route("InsertMPRApprover")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertMPRApprover(MPRApproverModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.InsertMPRApprover(model);
+            return Ok(status);
+        }
+
+        [Route("GetMPRBuyerGroupsById")]
+        [ResponseType(typeof(MPRBuyerGroupModel))]
+        public async Task<IHttpActionResult> GetMPRBuyerGroupsById(int id)
+        {
+            MPRBuyerGroupModel status = new MPRBuyerGroupModel();
+            status = await _rfqBusenessAcess.GetMPRBuyerGroupsById(id);
+            return Ok(status);
+        }
+
         [Route("GetAllMPRApprovals")]
         [ResponseType(typeof(List<MPRApproverModel>))]
         public async Task<IHttpActionResult> GetAllMPRApprovals()

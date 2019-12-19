@@ -918,7 +918,7 @@ namespace DALayer.RFQ
             List<RfqItemModel> rfq = new List<RfqItemModel>();
             try
             {
-                return (from x in obj.RFQItems
+                return (from x in vscm.RemoteRFQItems
                         where x.RFQRevisionId == revisionid
                         select new RfqItemModel
                         {
@@ -927,7 +927,9 @@ namespace DALayer.RFQ
                             RFQRevisionId = x.RFQRevisionId,
                             VendorModelNo = x.VendorModelNo,
                             RequsetRemarks = x.RequestRemarks,
-                            RFQItemID = x.RFQItemsId
+                            RFQItemID = x.RFQItemsId,
+                            ItemName=x.ItemName,
+                            ItemDescription=x.ItemDescription
                         }).ToList();
 
             }
@@ -2421,6 +2423,26 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+        public async Task<List<MPRApproversViewModel>> GetAllMPRApprovers()
+        {
+            List<MPRApproversViewModel> model = new List<MPRApproversViewModel>();
+            try
+            {
+                var data = obj.MPRApproversViews.SqlQuery("select * from MPRApproversView");
+                model = data.Select(x => new MPRApproversViewModel()
+                {
+                    EmployeeNo = x.EmployeeNo,
+                    Name = x.Name,
+                    DeactivatedBy = x.DeactivatedBy,
+                    DeactivatedOn = x.DeactivatedOn
+                }).ToList();
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
         public async Task<statuscheckmodel> InsertMprBuyerGroups(MPRBuyerGroupModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -2455,6 +2477,28 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+        public async Task<statuscheckmodel> UpdateMprBuyerGroups(MPRBuyerGroupModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.MPRBuyerGroups.Where(x => x.BuyerGroupId == model.BuyerGroupId).FirstOrDefault();
+                if (model != null)
+                {
+                    data.BuyerGroup = model.BuyerGroup;
+                    data.BoolInUse = model.BoolInUse;
+                    obj.SaveChanges();
+                }
+                int id = data.BuyerGroupId;
+                status.Sid = id;
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public async Task<statuscheckmodel> InsertMprBuyerGroupMembers(MPRBuyerGroupMemberModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -2477,6 +2521,23 @@ namespace DALayer.RFQ
             catch (Exception ex)
             {
 
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertMPRApprover(MPRApproverModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = new MPRApprover();
+                data.EmployeeNo = model.EmployeeNo;
+                data.BoolActive = true;
+                obj.MPRApprovers.Add(data);
+                obj.SaveChanges();
+                return status;
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }

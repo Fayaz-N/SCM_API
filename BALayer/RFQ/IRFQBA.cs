@@ -62,6 +62,10 @@ namespace BALayer.RFQ
         Task<MPRBuyerGroupModel> GetMPRBuyerGroupsById(int id);
         Task<List<MPRBuyerGroupModel>> GetAllMPRBuyerGroups();
         Task<MPRApproverModel> GetMPRApprovalsById(int id);
+        Task<List<MPRApproversViewModel>> GetAllMPRApprovers();
+        Task<statuscheckmodel> InsertMprBuyerGroups(MPRBuyerGroupModel model);
+        Task<statuscheckmodel> UpdateMprBuyerGroups(MPRBuyerGroupModel model);
+        Task<statuscheckmodel> InsertMPRApprover(MPRApproverModel model);
         Task<List<MPRApproverModel>> GetAllMPRApprovals();
         Task<List<MPRDepartmentModel>> GetAllMPRDepartments();
         Task<MPRDepartmentModel> GetMPRDepartmentById(int id);
