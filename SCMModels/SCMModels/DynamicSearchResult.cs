@@ -41,6 +41,15 @@ namespace SCMModels
 		public string CheckedBy { get; set; }
 		public string ApprovedBy { get; set; }
 	}
+    public class rfqFilterParams
+    {     
+        public string typeOfFilter { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public string RFQNo { get; set; }
+        public string VendorName { get; set; }
+        public string DocumentNo { get; set; }     
+    }
     public  class DataModel
     {
         public List<RFQQuoteView> RFQQuoteViewList { get; set; }
