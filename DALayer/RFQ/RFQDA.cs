@@ -1,4 +1,5 @@
-﻿using SCMModels.MPRMasterModels;
+﻿using SCMModels;
+using SCMModels.MPRMasterModels;
 using SCMModels.RemoteModel;
 using SCMModels.RFQModels;
 using SCMModels.SCMModels;
@@ -90,6 +91,23 @@ namespace DALayer.RFQ
             {
 
                 string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where (Status not like '%Approved%' or Status is null) and MPRRevisionId=" + RevisionId + "";
+                var cmd = Context.Database.Connection.CreateCommand();
+                cmd.CommandText = query;
+
+                cmd.Connection.Open();
+                table.Load(cmd.ExecuteReader());
+                cmd.Connection.Close();
+            }
+            return table;
+        }
+        public DataTable gerRFQVendorQuoteDetails(int rfqRevisionId)
+        {
+            DataTable table = new DataTable();
+
+            using (YSCMEntities Context = new YSCMEntities())
+            {
+
+                string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where (Status not like '%Approved%' or Status is null) and rfqRevisionId=" + rfqRevisionId + "";
                 var cmd = Context.Database.Connection.CreateCommand();
                 cmd.CommandText = query;
 
@@ -928,8 +946,8 @@ namespace DALayer.RFQ
                             VendorModelNo = x.VendorModelNo,
                             RequsetRemarks = x.RequestRemarks,
                             RFQItemID = x.RFQItemsId,
-                            ItemName=x.ItemName,
-                            ItemDescription=x.ItemDescription
+                            ItemName = x.ItemName,
+                            ItemDescription = x.ItemDescription
                         }).ToList();
 
             }
@@ -1778,49 +1796,69 @@ namespace DALayer.RFQ
                     revision.BankGuarantee = localrevision.BankGuarantee;
                     revision.DeliveryMaxWeeks = localrevision.DeliveryMaxWeeks;
                     revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
-                }
 
-                var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
-                var masters = new RFQMasterModel();
-                foreach (var item in rfqmasters)
-                {
-                    masters.RfqMasterId = item.RfqMasterId;
-                    masters.RfqNo = item.RFQNo;
-                    masters.RfqUniqueNo = item.RFQUniqueNo;
-                    masters.VendorId = item.VendorId;
-                    masters.MPRRevisionId = (int)item.MPRRevisionId;
-                    masters.CreatedBy = item.CreatedBy;
-                }
-                revision.rfqmaster = masters;
-                var rfqitemss = obj.RFQItems.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId).ToList();
-                foreach (var item in rfqitemss)
-                {
-                    //revision.rfqitem= localrevision.RFQItems.Select(x => new RfqItemModel()
-                    //  {
-                    //      HSNCode = item.HSNCode,
-                    //      RFQItemID = item.RFQItemID,
-                    //      RFQRevisionId = item.RFQRevisionId,
-                    //      QuotationQty = item.QuotationQty,
-                    //      VendorModelNo = item.VendorModelNo,
-                    //      RequsetRemarks = item.RequsetRemarks
-                    //  }).ToList();
-                    RfqItemModel rfqitems = new RfqItemModel();
-                    rfqitems.HSNCode = item.HSNCode;
-                    rfqitems.MRPItemsDetailsID = item.MPRItemDetailsid;
-                    rfqitems.QuotationQty = item.QuotationQty;
-                    rfqitems.RFQRevisionId = item.RFQRevisionId;
-                    rfqitems.RFQItemID = item.RFQItemsId;
-                    revision.rfqitem.Add(rfqitems);
-                }
 
-                return revision;
+                    var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
+                    var masters = new RFQMasterModel();
+                    foreach (var item in rfqmasters)
+                    {
+                        masters.RfqMasterId = item.RfqMasterId;
+                        masters.RfqNo = item.RFQNo;
+                        masters.RfqUniqueNo = item.RFQUniqueNo;
+                        masters.VendorId = item.VendorId;
+                        var vendorMaster =obj.VendorMasters.FirstOrDefault(li => li.Vendorid == item.VendorId);
+                        masters.Vendor = new VendormasterModel();
+                        masters.Vendor.VendorName = vendorMaster.VendorName;
+                        masters.Vendor.Emailid = vendorMaster.Emailid;
+                        masters.MPRRevisionId = (int)item.MPRRevisionId;
+                        masters.CreatedBy = item.CreatedBy;
+                    }
+                    revision.rfqmaster = masters;
+                    var rfqitemss = obj.RFQItems.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId).ToList();
+                    foreach (var item in rfqitemss)
+                    {
+                        //revision.rfqitem= localrevision.RFQItems.Select(x => new RfqItemModel()
+                        //  {
+                        //      HSNCode = item.HSNCode,
+                        //      RFQItemID = item.RFQItemID,
+                        //      RFQRevisionId = item.RFQRevisionId,
+                        //      QuotationQty = item.QuotationQty,
+                        //      VendorModelNo = item.VendorModelNo,
+                        //      RequsetRemarks = item.RequsetRemarks
+                        //  }).ToList();
+                        MPRItemInfo mprItem = obj.MPRItemInfoes.FirstOrDefault(li => li.Itemdetailsid == item.MPRItemDetailsid);
+                        RfqItemModel rfqitems = new RfqItemModel();
+                        rfqitems.HSNCode = item.HSNCode;
+                        rfqitems.MRPItemsDetailsID = item.MPRItemDetailsid;
+                        rfqitems.QuotationQty = item.QuotationQty;
+                        rfqitems.RFQRevisionId = item.RFQRevisionId;
+                        rfqitems.RFQItemID = item.RFQItemsId;
+                        rfqitems.ItemName = obj.MaterialMasters.FirstOrDefault(li => li.ItemId == mprItem.Itemid).ItemName;
+                        rfqitems.ItemDescription = mprItem.ItemDescription;
+                        revision.rfqitem.Add(rfqitems);
+                    }
+                    var rfqterms = obj.RFQTerms.Where(x => x.RFQrevisionId == revisionId).ToList();
+                    foreach (var item in rfqterms)
+                    {
+                        RFQTermsModel terms = new RFQTermsModel();
+                        terms.RfqTermsid = item.RfqTermsid;
+                        terms.termsid = item.termsid;
+                        terms.Terms = obj.YILTermsandConditions.FirstOrDefault(li=>li.TermId== item.termsid).Terms;
+                        terms.VendorResponse = item.VendorResponse;
+                        terms.Remarks = item.Remarks;
+
+                        revision.RFQTerms.Add(terms);
+                    }
+                }
             }
             catch (Exception ex)
             {
 
                 throw;
             }
+            return revision;
         }
+
         public async Task<statuscheckmodel> InsertSingleIteminfos(RfqItemInfoModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -2433,8 +2471,8 @@ namespace DALayer.RFQ
                 {
                     EmployeeNo = x.EmployeeNo,
                     Name = x.Name,
-                    DeactivatedBy = x.DeactivatedBy,
-                    DeactivatedOn = x.DeactivatedOn
+                    //DeactivatedBy = x.DeactivatedBy,
+                    //DeactivatedOn = x.DeactivatedOn
                 }).ToList();
                 return model;
             }
@@ -3197,6 +3235,20 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+        public List<RFQListView> getRFQList(rfqFilterParams rfqfilterparams)
+		{
+			List<RFQListView> mprRevisionDetails;
+			using (var db = new YSCMEntities()) //ok
+			{
+				obj.Configuration.ProxyCreationEnabled = false;
+                if (!string.IsNullOrEmpty(rfqfilterparams.typeOfFilter))
+                    mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate).ToList();					
+				else
+                    mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate).ToList();
+
+            }
+			return mprRevisionDetails;
+		}
 
     }
 }

@@ -15,6 +15,7 @@ namespace SCMModels.RFQModels
         public string Remarks { get; set; }
         public string Terms { get; set; }
         public string TermGroup { get; set; }
+        public bool SyncStatus { get; set; }
         public string CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<bool> DeleteFlag { get; set; }

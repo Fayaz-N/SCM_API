@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using SCMModels;
 
 namespace DALayer.RFQ
 {
@@ -85,5 +86,6 @@ namespace DALayer.RFQ
         Task<RFQTermsModel> GetRfqTermsById(int termsid);
         Task<RfqItemModel> GetItemByItemId(int id);
         Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid);
+        List<RFQListView> getRFQList(rfqFilterParams Rfqfilterparams);
     }
 }

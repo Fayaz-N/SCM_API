@@ -188,12 +188,12 @@ namespace SCMAPI.Controllers
             return Ok(status);
         }
 
-        [Route("GetRfqDetailsById")]
+        [Route("GetRfqDetailsById/{RevisionId}")]
         [ResponseType(typeof(RfqRevisionModel))]
-        public async Task<IHttpActionResult> GetRfqDetailsById(int revisionId)
+        public async Task<IHttpActionResult> GetRfqDetailsById(int RevisionId)
         {
             RfqRevisionModel revision = new RfqRevisionModel();
-            revision = await _rfqBusenessAcess.GetRfqDetailsById(revisionId);
+            revision = await _rfqBusenessAcess.GetRfqDetailsById(RevisionId);
             return Ok(revision);
         }
 
@@ -457,6 +457,12 @@ namespace SCMAPI.Controllers
             YILTermsGroupModel status = new YILTermsGroupModel();
             status = await _rfqBusenessAcess.GetYILTermsGroupById(id);
             return Ok(status);
+        }
+        [HttpPost]
+        [Route("getRFQList")]
+        public IHttpActionResult getRFQList(rfqFilterParams rfqfilterparams)
+        {
+            return Ok(this._rfqBusenessAcess.getRFQList(rfqfilterparams));
         }
     }
 }

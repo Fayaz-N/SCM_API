@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Data;
+using SCMModels;
+
 namespace BALayer.RFQ
 {
     public interface IRFQBA
@@ -81,5 +83,6 @@ namespace BALayer.RFQ
         Task<RFQTermsModel> GetRfqTermsById(int termsid);
         Task<RfqItemModel> GetItemByItemId(int id);
         Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid);
+        List<RFQListView> getRFQList(rfqFilterParams Rfqfilterparams);
     }
 }

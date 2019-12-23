@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using SCMModels;
 
 namespace BALayer.RFQ
 {
@@ -371,6 +372,10 @@ namespace BALayer.RFQ
         public async Task<statuscheckmodel> UpdateRFQTerms(RFQTermsModel model)
         {
             return await _rfqDataAcess.UpdateRFQTerms(model);
+        }
+       public List<RFQListView> getRFQList(rfqFilterParams Rfqfilterparams)
+        {
+            return  _rfqDataAcess.getRFQList(Rfqfilterparams);
         }
     }
 }
