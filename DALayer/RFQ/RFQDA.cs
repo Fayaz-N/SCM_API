@@ -2209,13 +2209,13 @@ namespace DALayer.RFQ
                 }
                 obj.CurrencyMasters.Add(data);
                 obj.SaveChanges();
-                Byte currenyid = data.CurrenyId;
+                Byte currenyid = data.CurrencyId;
                 obj.Database.Connection.Close();
                 var remotedata = new RemoteCurrencyMaster();
                 vscm.Database.Connection.Open();
                 if (model != null)
                 {
-                    remotedata.CurrenyId = currenyid;
+                    remotedata.CurrencyId = currenyid;
                     remotedata.CurrencyCode = model.CurrencyCode;
                     remotedata.CurrencyName = model.CurrencyName;
                     remotedata.UpdatedBy = model.UpdatedBy;
@@ -2240,7 +2240,7 @@ namespace DALayer.RFQ
             try
             {
                 obj.Database.Connection.Open();
-                var data = obj.CurrencyMasters.Where(x => x.CurrenyId == model.CurrenyId && x.DeleteFlag == false).FirstOrDefault();
+                var data = obj.CurrencyMasters.Where(x => x.CurrencyId == model.CurrenyId && x.DeleteFlag == false).FirstOrDefault();
                 if (model != null)
                 {
                     data.CurrencyName = model.CurrencyName;
@@ -2253,13 +2253,13 @@ namespace DALayer.RFQ
                 }
                 obj.CurrencyMasters.Add(data);
                 obj.SaveChanges();
-                Byte currenyid = data.CurrenyId;
+                Byte currenyid = data.CurrencyId;
                 obj.Database.Connection.Close();
                 var remotedata = new RemoteCurrencyMaster();
                 vscm.Database.Connection.Open();
                 if (model != null)
                 {
-                    remotedata.CurrenyId = currenyid;
+                    remotedata.CurrencyId = currenyid;
                     remotedata.CurrencyCode = model.CurrencyCode;
                     remotedata.CurrencyName = model.CurrencyName;
                     remotedata.UpdatedBy = model.UpdatedBy;
@@ -2378,7 +2378,7 @@ namespace DALayer.RFQ
                 {
                     CurrencyCode = x.CurrencyCode,
                     CurrencyName = x.CurrencyName,
-                    CurrenyId = x.CurrenyId,
+                    CurrenyId = x.CurrencyId,
                     UpdatedBy = x.UpdatedBy,
                     updateddate = x.updateddate,
                     DeletedBy = x.DeletedBy,
@@ -2396,7 +2396,7 @@ namespace DALayer.RFQ
             CurrencyMasterModel model = new CurrencyMasterModel();
             try
             {
-                var currencydata = obj.CurrencyMasters.Where(x => x.CurrenyId == currencyId && x.DeleteFlag == false).FirstOrDefault<CurrencyMaster>();
+                var currencydata = obj.CurrencyMasters.Where(x => x.CurrencyId == currencyId && x.DeleteFlag == false).FirstOrDefault<CurrencyMaster>();
                 model.CurrencyName = currencydata.CurrencyName;
                 model.CurrencyCode = currencydata.CurrencyCode;
                 model.UpdatedBy = currencydata.UpdatedBy;
@@ -2415,20 +2415,20 @@ namespace DALayer.RFQ
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                var currencydata = obj.CurrencyMasters.Where(x => x.CurrenyId == currencyId && x.DeleteFlag == false).FirstOrDefault<CurrencyMaster>();
+                var currencydata = obj.CurrencyMasters.Where(x => x.CurrencyId == currencyId && x.DeleteFlag == false).FirstOrDefault<CurrencyMaster>();
                 if (currencydata != null)
                 {
                     currencydata.DeleteFlag = true;
                     obj.SaveChanges();
 
-                    var currencyhistorydata = obj.CurrencyHistories.Where(x => x.CurrencyId == currencydata.CurrenyId).FirstOrDefault<CurrencyHistory>();
+                    var currencyhistorydata = obj.CurrencyHistories.Where(x => x.CurrencyId == currencydata.CurrencyId).FirstOrDefault<CurrencyHistory>();
                     if (currencyhistorydata != null)
                     {
                         currencyhistorydata.IsActive = false;
                         obj.SaveChanges();
                     }
                 }
-                int id = currencydata.CurrenyId;
+                int id = currencydata.CurrencyId;
                 status.Sid = id;
                 return status;
             }
