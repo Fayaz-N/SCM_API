@@ -1,4 +1,5 @@
-﻿using SCMModels;
+﻿using DALayer.MPR;
+using SCMModels;
 using SCMModels.MPRMasterModels;
 using SCMModels.RemoteModel;
 using SCMModels.RFQModels;
@@ -18,6 +19,11 @@ namespace DALayer.RFQ
 {
     public class RFQDA : IRFQDA
     {
+        private IMPRDA MPRDA = default(IMPRDA);
+        public RFQDA(IMPRDA MPRDA)
+        {
+            this.MPRDA = MPRDA;
+        }
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
 
@@ -39,7 +45,7 @@ namespace DALayer.RFQ
                 {
                     RFQTermsModel rfqterm = new RFQTermsModel();
                     rfqterm.termsid = data.TermId;
-                    rfqterm.TermGroup = Convert.ToString(data.TermGroupId);
+                    rfqterm.TermGroup = obj.YILTermsGroups.Where(li => li.TermGroupId == data.TermGroupId).FirstOrDefault<YILTermsGroup>().TermGroup;
                     rfqterm.Terms = data.Terms;
                     rfqterm.CreatedBy = "190455";
                     rfqterm.CreatedDate = DateTime.Now;
@@ -78,6 +84,13 @@ namespace DALayer.RFQ
                 rfqModel.rfqitem.Add(rfqitem);
                 rfqModel.RFQTerms = rfqList;
                 CreateRfQ(rfqModel);
+                MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
+                mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == item.MPRRevisionId).FirstOrDefault().RequisitionId;
+                mPRStatusTrackDetails.RevisionId =Convert.ToInt32(item.MPRRevisionId);
+                mPRStatusTrackDetails.StatusId = 7;
+                mPRStatusTrackDetails.UpdatedBy = "190455";
+                mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
+               this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
             }
             return true;
 
@@ -1833,7 +1846,7 @@ namespace DALayer.RFQ
                         rfqitems.QuotationQty = item.QuotationQty;
                         rfqitems.RFQRevisionId = item.RFQRevisionId;
                         rfqitems.RFQItemID = item.RFQItemsId;
-                        rfqitems.ItemName = obj.MaterialMasters.FirstOrDefault(li => li.ItemId == mprItem.Itemid).ItemName;
+                        rfqitems.ItemName = obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == mprItem.Itemid).Materialdescription;
                         rfqitems.ItemDescription = mprItem.ItemDescription;
                         revision.rfqitem.Add(rfqitems);
                     }

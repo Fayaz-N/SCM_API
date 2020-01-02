@@ -91,13 +91,20 @@ namespace SCMAPI.Controllers
 			return Ok(this._mprBusenessAcess.getMPRRevisionDetails(RevisionId));
 		}
 
-		[HttpPost]
-		[Route("getMPRList")]
-		public IHttpActionResult getMPRList(mprFilterParams mprfilterparams)
-		{
-			return Ok(this._mprBusenessAcess.getMPRList(mprfilterparams));
-		}
-		[HttpGet]
+        [HttpPost]
+        [Route("getMPRList")]
+        public IHttpActionResult getMPRList(mprFilterParams mprfilterparams)
+        {
+            return Ok(this._mprBusenessAcess.getMPRList(mprfilterparams));
+        }
+
+        [HttpPost]
+		[Route("getMPRPendingListCnt/{preparedBy}")]
+        public IHttpActionResult getMPRPendingListCnt(string preparedBy)
+        {
+            return Ok(this._mprBusenessAcess.getMPRPendingListCnt(preparedBy));
+        }
+        [HttpGet]
 		[Route("getEmployeeList")]
 		public IHttpActionResult getEmployeeList()
 		{
@@ -126,7 +133,9 @@ namespace SCMAPI.Controllers
 		[Route("updateMPRVendor/{RevisionId}")]
 		public IHttpActionResult updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
 		{
-			return Ok(this._mprBusenessAcess.updateMPRVendor(MPRVendorDetails, RevisionId));
+            var result = this._mprBusenessAcess.updateMPRVendor(MPRVendorDetails, RevisionId);
+
+            return Ok(result);
 
 		}
 

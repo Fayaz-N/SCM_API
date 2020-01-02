@@ -11,6 +11,6 @@ namespace BALayer
 {
     public interface ILoginBA
     {
-        bool ValidateLoginCredentials(DynamicSearchResult Result);
+        EmployeeModel ValidateLoginCredentials(DynamicSearchResult Result);
     }
 }

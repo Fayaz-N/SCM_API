@@ -1,4 +1,5 @@
 ﻿using SCMModels;
+using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
@@ -8,35 +9,95 @@ using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
 using System.DirectoryServices.AccountManagement;
-
+using System.Web;
+using System.Web.Services;
 
 namespace DALayer.Login
 {
-    public class LoginDA: ILoginDA
+    public class LoginDA : ILoginDA
     {
         YSCMEntities DB = new YSCMEntities();
+        //public bool ValidateLoginCredentials(DynamicSearchResult Result)
+        //{
+        //    bool loginFlag = false;
+        //    string[] UserCredentials = Result.columnValues.Split(',');
+        //    string Id = UserCredentials[0].ToString();
+        //    PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
 
-        public bool ValidateLoginCredentials(DynamicSearchResult Result)
+        //    UserPrincipal user = UserPrincipal.FindByIdentity(ctx, UserCredentials[0].Trim());
+        //    if (user != null)
+        //    {
+        //        if (ctx.ValidateCredentials(UserCredentials[0], UserCredentials[1]))
+        //        {
+        //            loginFlag = true;
+        //        }
+        //    }
+        //    else if (user == null)
+        //    {
+        //        string empNo = DB.Employees.Where(li => li.DomainId == Id).Select(li => li.EmployeeNo).SingleOrDefault();
+        //        if (empNo != "")
+        //        {
+        //            loginFlag = true;
+        //        }
+        //    }
+        //    return loginFlag;
+        //}
+
+        [WebMethod(enableSession: true)]
+        public EmployeeModel ValidateLoginCredentials(DynamicSearchResult Result)
         {
-            bool loginFlag = false;
+            //var session = HttpContext.Current.Session;
+            EmployeeModel employee = new EmployeeModel();
             string[] UserCredentials = Result.columnValues.Split(',');
-            string DomainId = UserCredentials[0].ToString(), Password = UserCredentials[1].ToString();
+            string Id = UserCredentials[0].ToString();
             PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
 
-            UserPrincipal user = UserPrincipal.FindByIdentity(ctx, DomainId.Trim());
+            UserPrincipal user = UserPrincipal.FindByIdentity(ctx, UserCredentials[0].Trim());
             if (user != null)
             {
-                if (ctx.ValidateCredentials(DomainId, Password))
+                if (ctx.ValidateCredentials(UserCredentials[0], UserCredentials[1]))
                 {
-                    loginFlag = true;
+                    var data = DB.Employees.Where(li => li.DomainId == Id).FirstOrDefault();
+                    if (data != null)
+                    {
+                        employee.EmployeeNo = data.EmployeeNo;
+                        employee.Name = data.Name;
+                        employee.EMail = data.EMail;
+                        employee.DeptID = data.DepartmentId;
+                        employee.RoleId = data.RoleId;
+                    }
                 }
             }
             else if (user == null)
             {
-                string tableName = Result.tableName;
-                loginFlag = DB.Employees.Any(u => u.DomainId == DomainId && u.PWD == Password);
+                var data = DB.Employees.Where(li => li.DomainId == Id).FirstOrDefault();
+                if (data != null)
+                {
+                    employee.EmployeeNo = data.EmployeeNo;
+                    employee.Name = data.Name;
+                    employee.EMail = data.EMail;
+                    employee.DeptID = data.DepartmentId;
+                    employee.RoleId = data.RoleId;
+                }
+                //else
+                //{
+                //    InValidUser();
+                //}
             }
-            return loginFlag;
+            //if (session != null)
+            //{
+            //    session["name"] = employee.Name;
+            //    session["id"] = employee.EmployeeNo.ToString();
+            //    string SessionID = session.SessionID;
+            //}
+            return employee;
+        }
+        public void InValidUser()
+        {
+            HttpResponse resp = HttpContext.Current.Response;
+            resp.StatusCode = 401;
+            resp.End();
         }
     }
+
 }

@@ -68,7 +68,11 @@ namespace BALayer.MPR
 		{
 			return this._mprDataAcess.getMPRList(mprfilterparams);
 		}
-		public List<Employee> getEmployeeList()
+        public int getMPRPendingListCnt(string preparedBy)
+        {
+            return this._mprDataAcess.getMPRPendingListCnt(preparedBy);
+        }
+        public List<Employee> getEmployeeList()
 		{
 			return this._mprDataAcess.getEmployeeList();
 		}
@@ -84,7 +88,7 @@ namespace BALayer.MPR
 		{
 			return this._mprDataAcess.getStatusList();
 		}
-		public List<MPRVendorDetail> updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
+		public bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
 		{
 			return this._mprDataAcess.updateMPRVendor(MPRVendorDetails,RevisionId);
 		}

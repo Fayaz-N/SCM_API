@@ -11,6 +11,6 @@ namespace DALayer.Login
 {
     public interface ILoginDA
     {
-        bool ValidateLoginCredentials(DynamicSearchResult Result);
+        EmployeeModel ValidateLoginCredentials(DynamicSearchResult Result);
     }
 }

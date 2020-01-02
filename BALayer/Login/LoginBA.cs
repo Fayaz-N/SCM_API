@@ -17,7 +17,7 @@ namespace BALayer
         {
             this._mprLoginAccess = LoginDA;
         }
-        public bool ValidateLoginCredentials(DynamicSearchResult Result)
+        public EmployeeModel ValidateLoginCredentials(DynamicSearchResult Result)
         {
             return this._mprLoginAccess.ValidateLoginCredentials(Result);
         }

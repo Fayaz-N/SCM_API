@@ -23,10 +23,13 @@ namespace DALayer.MPR
 		bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation);
 		MPRRevision getMPRRevisionDetails(int RevisionId);
 		List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams);
-		List<Employee> getEmployeeList();
+        int getMPRPendingListCnt(string preparedBy);
+        List<Employee> getEmployeeList();
 		List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId);
 		MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
 		List<SCMStatu> getStatusList();
-		List<MPRVendorDetail> updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
-	}
+		bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
+        void updateMprstatusTrack(MPRStatusTrack mprStatusTrackDetails);
+
+    }
 }

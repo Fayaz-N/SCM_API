@@ -99,5 +99,6 @@ namespace SCMModels.SCMModels
         public Nullable<byte> ExpenseCategoryId { get; set; }
         public bool BoolExpatriate { get; set; }
         public string PWD { get; set; }
+        public Nullable<int> RoleId { get; set; }
     }
 }
