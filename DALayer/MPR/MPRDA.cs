@@ -20,7 +20,7 @@ namespace DALayer.MPR
             this.emailTemplateDA = EmailTemplateDA;
         }
         YSCMEntities DB = new YSCMEntities();
-        object session = HttpContext.Current.Session;
+       
         public DataTable getDBMastersList(DynamicSearchResult Result)
         {
             Result.connectionString = DB.Database.Connection.ConnectionString;
@@ -466,6 +466,12 @@ namespace DALayer.MPR
             {
                 item.MPRDocumentationDescription = DB.MPRDocumentationDescriptions.Where(li => li.DocumentationDescriptionId == item.DocumentationDescriptionId).FirstOrDefault();
             }
+            foreach (MPRCommunication item in mprRevisionDetails.MPRCommunications)
+            {
+                item.Employee = DB.Employees.Where(li => li.EmployeeNo == item.RemarksFrom).FirstOrDefault();
+                item.MPRReminderTrackings = DB.MPRReminderTrackings.Include(x => x.Employee).Where(li => li.MPRCCId == item.MPRCCId).ToList();
+
+            }
             return mprRevisionDetails;
 
 
@@ -473,7 +479,6 @@ namespace DALayer.MPR
 
         public List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams)
         {
-            List<MPRRevisionDetail> mprRevisionDetails;
             using (YSCMEntities Context = new YSCMEntities())
             {
                 var query = default(string);
@@ -494,6 +499,18 @@ namespace DALayer.MPR
                 if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
                     query += " and ApprovedBy=" + mprfilterparams.ApprovedBy + " and ApprovalStatus='" + mprfilterparams.Status + "'";
 
+                if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
+                    query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.JobCode))
+                    query += " and JobCode='" + mprfilterparams.JobCode + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.IssuePurposeId))
+                    query += " and IssuePurposeId='" + mprfilterparams.IssuePurposeId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+                    query += " and ItemDescription='" + mprfilterparams.ItemDescription + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.GEPSApprovalId))
+                    query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";              
+                if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
+                    query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
 
 
                 //if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))

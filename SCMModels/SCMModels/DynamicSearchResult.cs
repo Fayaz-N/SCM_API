@@ -45,6 +45,14 @@ namespace SCMModels
         public string PreparedBy { get; set; }
         public string CheckedBy { get; set; }
         public string ApprovedBy { get; set; }
+
+        public string IssuePurposeId { get; set; }
+        public string JobCode { get; set; }
+        public string ItemDescription { get; set; }
+        public string DepartmentId { get; set; }
+        public string GEPSApprovalId { get; set; }
+        public string BuyerGroupId { get; set; }
+      
     }
     public class rfqFilterParams
     {
