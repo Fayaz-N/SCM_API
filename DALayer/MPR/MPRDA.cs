@@ -152,6 +152,8 @@ namespace DALayer.MPR
                                     item.UnitId = mPRItemInfo.UnitId;
                                     item.SOLineItemNo = mPRItemInfo.SOLineItemNo;
                                     item.ReferenceDocNo = mPRItemInfo.ReferenceDocNo;
+                                    item.MfgModeltNumber = mPRItemInfo.MfgModeltNumber;
+                                    item.MfgPartNumber = mPRItemInfo.MfgPartNumber;
                                     item.TargetSpend = mPRItemInfo.TargetSpend;
                                 }
                             }
@@ -168,7 +170,7 @@ namespace DALayer.MPR
                                     item.ItemDetailsId = mprRevisionDetails.MPRItemInfoes.FirstOrDefault().Itemdetailsid;
                                 item.UploadedBy = "User";
                                 item.UplaodedDate = DateTime.Now;
-                                item.Path = "";
+                                //item.Path = "";
                                 item.Deleteflag = false;
                                 if (item.MprDocId == 0)
                                     mprRevisionDetails.MPRDocuments.Add(item);
@@ -669,6 +671,6 @@ namespace DALayer.MPR
                 mprStatusTrackDetailss.UpdatedDate = DateTime.Now;
             }
             DB.SaveChanges();
-        }
+        }      
     }
 }

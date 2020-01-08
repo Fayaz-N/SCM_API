@@ -73,7 +73,8 @@ namespace SCMModels
         public string EmployeeNo { get; set; }
         public string Name { get; set; }
         public string EMail { get; set; }
-        public Nullable<byte> DeptID { get; set; }
+        public Nullable<short> OrgDepartmentId { get; set; }
+        public Nullable<System.DateTime> DOL { get; set; }
         public Nullable<int> RoleId { get; set; }
     }
 

@@ -63,7 +63,8 @@ namespace DALayer.Login
                         employee.EmployeeNo = data.EmployeeNo;
                         employee.Name = data.Name;
                         employee.EMail = data.EMail;
-                        employee.DeptID = data.DepartmentId;
+                        employee.OrgDepartmentId = data.OrgDepartmentId;
+                        employee.DOL = data.DOL;
                         employee.RoleId = data.RoleId;
                     }
                 }
@@ -76,8 +77,8 @@ namespace DALayer.Login
                     employee.EmployeeNo = data.EmployeeNo;
                     employee.Name = data.Name;
                     employee.EMail = data.EMail;
-                    employee.DeptID = data.DepartmentId;
-                    employee.RoleId = data.RoleId;
+                    employee.OrgDepartmentId = data.OrgDepartmentId;
+                    employee.DOL = data.DOL;
                 }
                 //else
                 //{
