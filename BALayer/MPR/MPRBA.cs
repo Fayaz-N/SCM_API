@@ -88,7 +88,11 @@ namespace BALayer.MPR
 		{
 			return this._mprDataAcess.getStatusList();
 		}
-		public bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
+        public List<UserPermission> getAccessList(int RoleId)
+        {
+            return this._mprDataAcess.getAccessList(RoleId);
+        }
+        public bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
 		{
 			return this._mprDataAcess.updateMPRVendor(MPRVendorDetails,RevisionId);
 		}

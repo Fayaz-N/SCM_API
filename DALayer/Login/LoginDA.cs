@@ -79,6 +79,7 @@ namespace DALayer.Login
                     employee.EMail = data.EMail;
                     employee.OrgDepartmentId = data.OrgDepartmentId;
                     employee.DOL = data.DOL;
+                    employee.RoleId = data.RoleId;
                 }
                 //else
                 //{

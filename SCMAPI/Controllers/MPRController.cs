@@ -127,6 +127,12 @@ namespace SCMAPI.Controllers
         {
             return Ok(this._mprBusenessAcess.getStatusList());
         }
+        [HttpGet]
+        [Route("getAccessList/{RoleId}")]
+        public IHttpActionResult getAccessList(int RoleId)
+        {
+            return Ok(this._mprBusenessAcess.getAccessList(RoleId));
+        }
         [HttpPost]
         [Route("updateMPRVendor/{RevisionId}")]
         public IHttpActionResult updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)

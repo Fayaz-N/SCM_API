@@ -152,8 +152,8 @@ namespace DALayer.MPR
                                     item.UnitId = mPRItemInfo.UnitId;
                                     item.SOLineItemNo = mPRItemInfo.SOLineItemNo;
                                     item.ReferenceDocNo = mPRItemInfo.ReferenceDocNo;
-                                    item.MfgModeltNumber = mPRItemInfo.MfgModeltNumber;
-                                    item.MfgPartNumber = mPRItemInfo.MfgPartNumber;
+                                    item.MfgModelNo = mPRItemInfo.MfgModelNo;
+                                    item.MfgPartNo = mPRItemInfo.MfgPartNo;
                                     item.TargetSpend = mPRItemInfo.TargetSpend;
                                 }
                             }
@@ -486,12 +486,12 @@ namespace DALayer.MPR
                 var query = default(string);
                 var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
                 var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");
-                query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedBy='" + mprfilterparams.PreparedBy + "' and PreparedOn <= '" + toDate + "' and PreparedOn >= '" + frmDate + "'";
+                query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + toDate + "' and PreparedOn >= '" + frmDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
+                if(!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+                    query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";  
                 if (mprfilterparams.ListType == "MPRPendingList")
-                {
                     query += " and CheckedBy ='-'";
-                }
                 if (!string.IsNullOrEmpty(mprfilterparams.DocumentNo))
                     query += " and DocumentNo='" + mprfilterparams.DocumentNo + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.DocumentDescription))
@@ -630,6 +630,13 @@ namespace DALayer.MPR
             }
         }
 
+        public List<UserPermission> getAccessList(int RoleId)
+        {
+            using(YSCMEntities context=new YSCMEntities())
+            {
+                return context.UserPermissions.Where(li => li.RoleId == RoleId).ToList();
+            }
+        }
         public bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
         {
             foreach (MPRVendorDetail item in MPRVendorDetails)

@@ -28,7 +28,8 @@ namespace DALayer.MPR
 		List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId);
 		MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
 		List<SCMStatu> getStatusList();
-		bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
+        List<UserPermission> getAccessList(int RoleId);
+        bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
         void updateMprstatusTrack(MPRStatusTrack mprStatusTrackDetails);
 
     }
