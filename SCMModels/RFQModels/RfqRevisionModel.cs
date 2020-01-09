@@ -27,6 +27,7 @@ namespace SCMModels.RFQModels
         public string freight { get; set; }
         public string Insurance { get; set; }
         public string CustomsDuty { get; set; }
+        public string VendorName { get; set; }
         public Nullable<int> ShipmentModeId { get; set; }
         public Nullable<int> PaymentTermDays { get; set; }
         public string PaymentTermRemarks { get; set; }

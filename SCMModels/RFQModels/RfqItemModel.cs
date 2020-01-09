@@ -13,6 +13,7 @@ namespace SCMModels.RFQModels
             communication = new List<RfqCommunicationModel>();
             iteminfo = new List<RfqItemInfoModel>();
             documents = new List<RfqDocumentsModel>();
+            rfqterms = new List<RFQTermsModel>();
         }
         public int RFQItemID { get; set; }
         public int RFQRevisionId { get; set; }
@@ -22,6 +23,12 @@ namespace SCMModels.RFQModels
         public string ItemDescription { get; set; }
         public string VendorModelNo { get; set; }
         public string HSNCode { get; set; }
+        public string VendorName { get; set; }
+        public string DocumentyNo { get; set; }
+        public decimal TargetSpend { get; set; }
+        public string SaleOrderNo { get; set; }
+        public decimal UnitPrice { get; set; }
+        public string PaymentTermCode { get; set; }
         public Nullable<decimal> CustomDuty { get; set; }
         public Nullable<decimal> CustomDutyAmount { get; set; }
         public Nullable<decimal> FreightPercentage { get; set; }
@@ -45,8 +52,23 @@ namespace SCMModels.RFQModels
         public string RequsetRemarks { get; set; }
         public bool IsDeleted { get; set; }
         public RfqRevisionModel RFQRevision { get; set; }
+        public List<RFQTermsModel> rfqterms { get; set; }
         public List<RfqItemInfoModel> iteminfo { get; set; }
         public List<RfqCommunicationModel> communication { get; set; }
         public List<RfqDocumentsModel> documents { get; set; }
+        public MPRPADetailsModel mprpa { get; set; }
+
     }
+    public class PADetailsModel
+    {
+        public int VendorId { get; set; }
+        public int RequisitionIds { get; set; }
+        public int RevisionId { get; set; }
+        public string DocumentNumber { get; set; }
+        public string RFQNo { get; set; }
+        public int BuyerGroupId { get; set; }
+        public string SaleOrderNo { get; set; }
+        public int DeptID { get; set; }
+    }
+
 }

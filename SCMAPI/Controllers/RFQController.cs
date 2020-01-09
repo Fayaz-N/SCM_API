@@ -464,5 +464,229 @@ namespace SCMAPI.Controllers
         {
             return Ok(this._rfqBusenessAcess.getRFQList(rfqfilterparams));
         }
+        //pa authorization
+        [Route("InsertPAAuthorizationLimits")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.InsertPAAuthorizationLimits(model);
+            return Ok(status);
+        }
+        [Route("GetPAAuthorizationLimitById")]
+        [ResponseType(typeof(PAAuthorizationLimitModel))]
+        public async Task<IHttpActionResult> GetPAAuthorizationLimitById(int deptid)
+        {
+            PAAuthorizationLimitModel status = new PAAuthorizationLimitModel();
+            status = await _rfqBusenessAcess.GetPAAuthorizationLimitById(deptid);
+            return Ok(status);
+        }
+        [Route("CreatePAAuthirizationEmployeeMapping")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.CreatePAAuthirizationEmployeeMapping(model);
+            return Ok(status);
+        }
+        [Route("GetMappingEmployee")]
+        [ResponseType(typeof(PAAuthorizationEmployeeMappingModel))]
+        public async Task<IHttpActionResult> GetMappingEmployee(PAAuthorizationLimitModel model)
+        {
+            PAAuthorizationEmployeeMappingModel status = new PAAuthorizationEmployeeMappingModel();
+            status = await _rfqBusenessAcess.GetMappingEmployee(model);
+            return Ok(status);
+        }
+        [Route("CreatePACreditDaysmaster")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> CreatePACreditDaysmaster(PACreditDaysMasterModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.CreatePACreditDaysmaster(model);
+            return Ok(status);
+        }
+        [Route("GetCreditdaysMasterByID")]
+        [ResponseType(typeof(PACreditDaysMasterModel))]
+        public async Task<IHttpActionResult> GetCreditdaysMasterByID(int creditdaysid)
+        {
+            PACreditDaysMasterModel status = new PACreditDaysMasterModel();
+            status = await _rfqBusenessAcess.GetCreditdaysMasterByID(creditdaysid);
+            return Ok(status);
+        }
+        [Route("AssignCreditdaysToEmployee")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> AssignCreditdaysToEmployee(PACreditDaysApproverModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.AssignCreditdaysToEmployee(model);
+            return Ok(status);
+        }
+        [Route("RemovePAAuthorizationLimitsByID")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> RemovePAAuthorizationLimitsByID(int authid)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.RemovePAAuthorizationLimitsByID(authid);
+            return Ok(status);
+        }
+        [Route("RemovePACreditDaysMaster")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> RemovePACreditDaysMaster(int creditid)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.RemovePACreditDaysMaster(creditid);
+            return Ok(status);
+        }
+        [Route("GetPAAuthorizationLimitsByDeptId")]
+        [ResponseType(typeof(List<PAAuthorizationLimitModel>))]
+        public async Task<IHttpActionResult> GetPAAuthorizationLimitsByDeptId(int departmentid)
+        {
+            List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
+            model = await _rfqBusenessAcess.GetPAAuthorizationLimitsByDeptId(departmentid);
+            return Ok(model);
+        }
+        [Route("RemovePACreditDaysApprover")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> RemovePACreditDaysApprover(int ApprovalId)
+        {
+            statuscheckmodel model = new statuscheckmodel();
+            model = await _rfqBusenessAcess.RemovePACreditDaysApprover(ApprovalId);
+            return Ok(model);
+        }
+        [Route("GetPACreditDaysApproverById")]
+        [ResponseType(typeof(PACreditDaysApproverModel))]
+        public async Task<IHttpActionResult> GetPACreditDaysApproverById(int ApprovalId)
+        {
+            PACreditDaysApproverModel status = new PACreditDaysApproverModel();
+            status = await _rfqBusenessAcess.GetPACreditDaysApproverById(ApprovalId);
+            return Ok(status);
+        }
+
+        [HttpPost]
+        [Route("GetEmployeeMappings")]
+        [ResponseType(typeof(List<EmployeModel>))]
+        public async Task<IHttpActionResult> GetEmployeeMappings(PAConfigurationModel model)
+        {
+            List<EmployeModel> employee = new List<EmployeModel>();
+            employee = await _rfqBusenessAcess.GetEmployeeMappings(model);
+            return Ok(employee);
+        }
+        [Route("GetRfqItemsByRevisionId")]
+        [ResponseType(typeof(List<RfqItemModel>))]
+        public async Task<IHttpActionResult> GetRfqItemsByRevisionId(int revisionid)
+        {
+            List<RfqItemModel> model = new List<RfqItemModel>();
+            model = await _rfqBusenessAcess.GetRfqItemsByRevisionId(revisionid);
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("GetItemsByMasterIDs")]
+        [ResponseType(typeof(List<LoadItemsByID>))]
+        public async Task<IHttpActionResult> GetItemsByMasterIDs(PADetailsModel masters)
+        {
+
+            List<LoadItemsByID> model = new List<LoadItemsByID>();
+            model = await _rfqBusenessAcess.GetItemsByMasterIDs(masters);
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllDepartments")]
+        [ResponseType(typeof(List<DepartmentModel>))]
+        public async Task<IHttpActionResult> GetAllDepartments()
+        {
+            List<DepartmentModel> model = new List<DepartmentModel>();
+            model = await _rfqBusenessAcess.GetAllDepartments();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetSlabsByDepartmentID/{DeptID}")]
+        [ResponseType(typeof(List<PAAuthorizationLimitModel>))]
+        public async Task<IHttpActionResult> GetSlabsByDepartmentID(int DeptID)
+        {
+            List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
+            model = await _rfqBusenessAcess.GetSlabsByDepartmentID(DeptID);
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllEmployee")]
+        [ResponseType(typeof(List<EmployeeModel>))]
+        public async Task<IHttpActionResult> GetAllEmployee()
+        {
+            List<EmployeModel> model = new List<EmployeModel>();
+            model = await _rfqBusenessAcess.GetAllEmployee();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllCredits")]
+        [ResponseType(typeof(List<PAAuthorizationLimitModel>))]
+        public async Task<IHttpActionResult> GetAllCredits()
+        {
+            List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
+            model = await _rfqBusenessAcess.GetAllCredits();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllCreditDays")]
+        [ResponseType(typeof(List<PACreditDaysMasterModel>))]
+        public async Task<IHttpActionResult> GetAllCreditDays()
+        {
+            List<PACreditDaysMasterModel> model = new List<PACreditDaysMasterModel>();
+            model = await _rfqBusenessAcess.GetAllCreditDays();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllMprPAPurchaseModes")]
+        [ResponseType(typeof(List<MPRPAPurchaseModesModel>))]
+        public async Task<IHttpActionResult> GetAllMprPAPurchaseModes()
+        {
+            List<MPRPAPurchaseModesModel> model = new List<MPRPAPurchaseModesModel>();
+            model = await _rfqBusenessAcess.GetAllMprPAPurchaseModes();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllMprPAPurchaseTypes")]
+        [ResponseType(typeof(List<MPRPAPurchaseTypesModel>))]
+        public async Task<IHttpActionResult> GetAllMprPAPurchaseTypes()
+        {
+            List<MPRPAPurchaseTypesModel> model = new List<MPRPAPurchaseTypesModel>();
+            model = await _rfqBusenessAcess.GetAllMprPAPurchaseTypes();
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("InsertPurchaseAuthorization")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertPurchaseAuthorization(MPRPADetailsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.InsertPurchaseAuthorization(model);
+            return Ok(status);
+        }
+        [HttpGet]
+        [Route("GetMPRPADeatilsByPAID/{PID}")]
+        [ResponseType(typeof(MPRPADetailsModel))]
+        public async Task<IHttpActionResult> GetMPRPADeatilsByPAID(int PID)
+        {
+            MPRPADetailsModel model = new MPRPADetailsModel();
+            model = await _rfqBusenessAcess.GetMPRPADeatilsByPAID(PID);
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllMPRPAList")]
+        [ResponseType(typeof(List<MPRPADetailsModel>))]
+        public async Task<IHttpActionResult> GetAllMPRPAList()
+        {
+            List<MPRPADetailsModel> model = new List<MPRPADetailsModel>();
+            model = await _rfqBusenessAcess.GetAllMPRPAList();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllPAFunctionalRoles")]
+        [ResponseType(typeof(List<PAFunctionalRolesModel>))]
+        public async Task<IHttpActionResult> GetAllPAFunctionalRoles()
+        {
+            List<PAFunctionalRolesModel> model = new List<PAFunctionalRolesModel>();
+            model = await _rfqBusenessAcess.GetAllPAFunctionalRoles();
+            return Ok(model);
+        }
     }
 }

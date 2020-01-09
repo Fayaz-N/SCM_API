@@ -87,5 +87,33 @@ namespace DALayer.RFQ
         Task<RfqItemModel> GetItemByItemId(int id);
         Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid);
         List<RFQListView> getRFQList(rfqFilterParams Rfqfilterparams);
+
+        //pa authorization
+        Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model);
+        Task<PAAuthorizationLimitModel> GetPAAuthorizationLimitById(int deptid);
+        Task<statuscheckmodel> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model);
+        Task<PAAuthorizationEmployeeMappingModel> GetMappingEmployee(PAAuthorizationLimitModel limit);
+        Task<statuscheckmodel> CreatePACreditDaysmaster(PACreditDaysMasterModel model);
+        Task<PACreditDaysMasterModel> GetCreditdaysMasterByID(int creditdaysid);
+        Task<statuscheckmodel> AssignCreditdaysToEmployee(PACreditDaysApproverModel model);
+        Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid);
+        Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid);
+        Task<List<PAAuthorizationLimitModel>> GetPAAuthorizationLimitsByDeptId(int departmentid);
+        Task<statuscheckmodel> RemovePACreditDaysApprover(int ApprovalId);
+        Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId);
+        Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model);
+        Task<List<RfqItemModel>> GetRfqItemsByRevisionId(int revisionid);
+        Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters);
+        Task<List<DepartmentModel>> GetAllDepartments();
+        Task<List<PAAuthorizationLimitModel>> GetSlabsByDepartmentID(int DeptID);
+        Task<List<EmployeModel>> GetAllEmployee();
+        Task<List<PAAuthorizationLimitModel>> GetAllCredits();
+        Task<List<PACreditDaysMasterModel>> GetAllCreditDays();
+        Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes();
+        Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes();
+        Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model);
+        Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID);
+        Task<List<MPRPADetailsModel>> GetAllMPRPAList();
+        Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles();
     }
 }
