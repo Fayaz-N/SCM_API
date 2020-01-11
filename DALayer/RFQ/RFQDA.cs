@@ -47,7 +47,7 @@ namespace DALayer.RFQ
                     rfqterm.termsid = data.TermId;
                     rfqterm.TermGroup = obj.YILTermsGroups.Where(li => li.TermGroupId == data.TermGroupId).FirstOrDefault<YILTermsGroup>().TermGroup;
                     rfqterm.Terms = data.Terms;
-                    rfqterm.CreatedBy = "190455";
+                    rfqterm.CreatedBy = data.CreatedBy;
                     rfqterm.CreatedDate = DateTime.Now;
                     rfqList.Add(rfqterm);
                 }
@@ -59,9 +59,9 @@ namespace DALayer.RFQ
                 rfqModel.rfqmaster = new RFQMasterModel();
                 rfqModel.rfqmaster.MPRRevisionId = Convert.ToInt32(item.MPRRevisionId);
                 rfqModel.rfqmaster.VendorId = item.VendorId;
-                rfqModel.rfqmaster.CreatedBy = "190455";
+                rfqModel.rfqmaster.CreatedBy = item.CreatedBy;
                 rfqModel.rfqmaster.Created = DateTime.Now;
-                rfqModel.CreatedBy = 190455;
+                rfqModel.CreatedBy =Convert.ToInt32(item.CreatedBy);
                 rfqModel.CreatedDate = DateTime.Now;
                 rfqModel.RfqValidDate = item.RFQValidDate;
                 rfqModel.PackingForwading = item.PackingForwarding;
@@ -88,7 +88,7 @@ namespace DALayer.RFQ
                 mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == item.MPRRevisionId).FirstOrDefault().RequisitionId;
                 mPRStatusTrackDetails.RevisionId =Convert.ToInt32(item.MPRRevisionId);
                 mPRStatusTrackDetails.StatusId = 7;
-                mPRStatusTrackDetails.UpdatedBy = "190455";
+                mPRStatusTrackDetails.UpdatedBy =item.CreatedBy;
                 mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
                this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
             }
@@ -138,7 +138,7 @@ namespace DALayer.RFQ
                 {
                     RFQItem rfqItem = Context.RFQItems.Where(li => li.RFQItemsId == item.RFQItemsId).FirstOrDefault<RFQItem>();
                     rfqItem.Status = "Approved";
-                    rfqItem.StatusUpdatedBy = "190455";
+                    rfqItem.StatusUpdatedBy = item.CreatedBy;
                     rfqItem.StatusUpdateddate = DateTime.Now;
                     Context.SaveChanges();
 
@@ -2168,7 +2168,7 @@ namespace DALayer.RFQ
                 var unitmaster = obj.UnitMasters.Where(x => x.DeleteFlag == false).ToList();
                 model = unitmaster.Select(x => new UnitMasterModel()
                 {
-                    UnitID = x.UnitID,
+                    UnitID = x.UnitId,
                     UnitName = x.UnitName,
                     //Isdeleted=x.DeleteFlag
                 }).ToList();

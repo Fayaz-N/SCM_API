@@ -38,7 +38,11 @@ namespace BALayer.MPR
 			return this._mprDataAcess.updateMPR(mpr);
 
 		}
-		public DataTable GetListItems(DynamicSearchResult Result)
+        public int  addNewVendor(VendorMaster vendor)
+        {
+            return this._mprDataAcess.addNewVendor(vendor);
+        }
+        public DataTable GetListItems(DynamicSearchResult Result)
 		{
 			return this._mprDataAcess.GetListItems(Result);
 		}

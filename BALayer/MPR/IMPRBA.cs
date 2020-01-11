@@ -15,7 +15,8 @@ namespace BALayer.MPR
 		bool addDataToDBMasters(DynamicSearchResult Result);
 		bool updateDataToDBMasters(DynamicSearchResult Result);
 		MPRRevision updateMPR(MPRRevision mpr);
-		DataTable GetListItems(DynamicSearchResult Result);
+        int addNewVendor(VendorMaster vendor);
+        DataTable GetListItems(DynamicSearchResult Result);
 		bool deleteMPRDocument(MPRDocument mprDocument);
 		bool deleteMPRItemInfo(MPRItemInfo mprItemInfo);
 		bool deleteMPRVendor(MPRVendorDetail mprVendor);

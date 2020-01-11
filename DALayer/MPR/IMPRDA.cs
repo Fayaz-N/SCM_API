@@ -9,25 +9,27 @@ using System.Threading.Tasks;
 
 namespace DALayer.MPR
 {
-	public interface IMPRDA
-	{
+    public interface IMPRDA
+    {
 
-		DataTable getDBMastersList(DynamicSearchResult Result);
-		bool addDataToDBMasters(DynamicSearchResult Result);
-		bool updateDataToDBMasters(DynamicSearchResult Result);
-		MPRRevision updateMPR(MPRRevision mpr);
-		DataTable GetListItems(DynamicSearchResult Result);
-		bool deleteMPRDocument(MPRDocument mprDocument);
-		bool deleteMPRItemInfo(MPRItemInfo mprItemInfo);
-		bool deleteMPRVendor(MPRVendorDetail mprVendor);
-		bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation);
-		MPRRevision getMPRRevisionDetails(int RevisionId);
-		List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams);
+        DataTable getDBMastersList(DynamicSearchResult Result);
+        bool addDataToDBMasters(DynamicSearchResult Result);
+        bool updateDataToDBMasters(DynamicSearchResult Result);
+        MPRRevision updateMPR(MPRRevision mpr);
+        int addNewVendor(VendorMaster vendor);
+
+        DataTable GetListItems(DynamicSearchResult Result);
+        bool deleteMPRDocument(MPRDocument mprDocument);
+        bool deleteMPRItemInfo(MPRItemInfo mprItemInfo);
+        bool deleteMPRVendor(MPRVendorDetail mprVendor);
+        bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation);
+        MPRRevision getMPRRevisionDetails(int RevisionId);
+        List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams);
         int getMPRPendingListCnt(string preparedBy);
         List<Employee> getEmployeeList();
-		List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId);
-		MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
-		List<SCMStatu> getStatusList();
+        List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId);
+        MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
+        List<SCMStatu> getStatusList();
         List<UserPermission> getAccessList(int RoleId);
         bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
         void updateMprstatusTrack(MPRStatusTrack mprStatusTrackDetails);

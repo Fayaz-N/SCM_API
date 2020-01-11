@@ -55,6 +55,12 @@ namespace SCMAPI.Controllers
             return Ok(this._mprBusenessAcess.updateMPR(mpr));
         }
         [HttpPost]
+        [Route("addNewVendor")]
+        public IHttpActionResult addNewVendor([FromBody] VendorMaster vendor)
+        {
+            return Ok(this._mprBusenessAcess.addNewVendor(vendor));
+        }
+        [HttpPost]
         [Route("deleteMPRDocument")]
         public IHttpActionResult deleteMPRDocument([FromBody] MPRDocument mprDocument)
         {

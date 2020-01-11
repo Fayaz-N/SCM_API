@@ -20,7 +20,7 @@ namespace DALayer.MPR
             this.emailTemplateDA = EmailTemplateDA;
         }
         YSCMEntities DB = new YSCMEntities();
-       
+
         public DataTable getDBMastersList(DynamicSearchResult Result)
         {
             Result.connectionString = DB.Database.Connection.ConnectionString;
@@ -122,8 +122,18 @@ namespace DALayer.MPR
                     mprRevisionDetails = DB.MPRRevisions.Where(li => li.RevisionId == mpr.RevisionId && li.RequisitionId == mpr.RequisitionId).FirstOrDefault<MPRRevision>();
                     if (mprRevisionDetails == null)
                     {
-                        mpr.MPRDetail.DocumentNo = "MPR/" + DateTime.Now.ToString("MMyy") + "/" + DateTime.Now.ToString("hmmss");
-                        mpr.MPRDetail.SubmittedBy = "User";
+                        Int64 sequenceNo = Convert.ToInt64(DB.MPRDetails.Max(li => li.MPRSeqNo));
+                        if (sequenceNo == null || sequenceNo == 0)
+                            sequenceNo = 1;
+                        else
+                        {
+                            sequenceNo = sequenceNo + 1;
+                        }
+                        var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+
+                        mpr.MPRDetail.DocumentNo = "MPR/" + DateTime.Now.ToString("MMyy") + "/" + value;
+                        mpr.MPRDetail.MPRSeqNo = sequenceNo;
+                        mpr.MPRDetail.SubmittedBy = mpr.PreparedBy;
                         mpr.MPRDetail.SubmittedDate = DateTime.Now;
                         mprRevisionDetails = mpr;
                         mprRevisionDetails.RevisionNo = 0;
@@ -147,6 +157,8 @@ namespace DALayer.MPR
                                 foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
                                 {
                                     item.Itemid = mPRItemInfo.Itemid;
+                                    if (mPRItemInfo.Itemid == "NewItem")
+                                        item.Itemid = "0000";
                                     item.ItemDescription = mPRItemInfo.ItemDescription;
                                     item.Quantity = mPRItemInfo.Quantity;
                                     item.UnitId = mPRItemInfo.UnitId;
@@ -168,7 +180,7 @@ namespace DALayer.MPR
                                 //item.RevisionId = Convert.ToInt32(mprRevisionDetails.MPRItemInfoes.FirstOrDefault().RevisionId);
                                 if (item.DocumentTypeid == 1)
                                     item.ItemDetailsId = mprRevisionDetails.MPRItemInfoes.FirstOrDefault().Itemdetailsid;
-                                item.UploadedBy = "User";
+                                item.UploadedBy = mpr.PreparedBy; ;
                                 item.UplaodedDate = DateTime.Now;
                                 //item.Path = "";
                                 item.Deleteflag = false;
@@ -383,7 +395,17 @@ namespace DALayer.MPR
             }
             return mprRevisionDetails;
         }
-
+        public int addNewVendor(VendorMaster vendor)
+        {
+            using (YSCMEntities Context = new YSCMEntities())
+            {
+                vendor.AutoAssignmentofRFQ = true;
+                vendor.Deleteflag = true;
+                Context.VendorMasters.Add(vendor);
+                Context.SaveChanges();
+                return vendor.Vendorid;
+            }
+        }
         public bool deleteMPRDocument(MPRDocument mprDocument)
         {
             using (YSCMEntities Context = new YSCMEntities())
@@ -484,12 +506,12 @@ namespace DALayer.MPR
             using (YSCMEntities Context = new YSCMEntities())
             {
                 var query = default(string);
-                var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
-                var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");
-                query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + toDate + "' and PreparedOn >= '" + frmDate + "'";
+                //var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
+                //var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");
+                query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
-                if(!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
-                    query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";  
+                if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+                    query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
                 if (mprfilterparams.ListType == "MPRPendingList")
                     query += " and CheckedBy ='-'";
                 if (!string.IsNullOrEmpty(mprfilterparams.DocumentNo))
@@ -510,7 +532,7 @@ namespace DALayer.MPR
                 if (!string.IsNullOrEmpty(mprfilterparams.ItemDescription))
                     query += " and ItemDescription='" + mprfilterparams.ItemDescription + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.GEPSApprovalId))
-                    query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";              
+                    query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
                     query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
 
@@ -546,7 +568,6 @@ namespace DALayer.MPR
             {
                 item.MPRStatusTrackDetails = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == RequisitionId).ToList();
             }
-
 
             //mprRevisionDetails.ForEach(a => a.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == a.RequisitionId).FirstOrDefault());
             return mprRevisionDetails;
@@ -632,7 +653,7 @@ namespace DALayer.MPR
 
         public List<UserPermission> getAccessList(int RoleId)
         {
-            using(YSCMEntities context=new YSCMEntities())
+            using (YSCMEntities context = new YSCMEntities())
             {
                 return context.UserPermissions.Where(li => li.RoleId == RoleId).ToList();
             }
@@ -644,7 +665,7 @@ namespace DALayer.MPR
                 item.RevisionId = RevisionId;
                 //item.RevisionId = Convert.ToInt32(mprRevisionDetails.MPRItemInfoes.FirstOrDefault().RevisionId);
 
-                item.UpdatedBy = "User";
+                item.UpdatedBy = item.UpdatedBy;
                 item.UpdatedDate = DateTime.Now;
                 item.RemoveFlag = false;
                 if (item.VendorDetailsId == 0)
@@ -678,6 +699,6 @@ namespace DALayer.MPR
                 mprStatusTrackDetailss.UpdatedDate = DateTime.Now;
             }
             DB.SaveChanges();
-        }      
+        }
     }
 }
