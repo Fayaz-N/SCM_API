@@ -5,6 +5,56 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="VSCMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="RemoteBankDetailsForVendor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BankDetails" Type="varchar" MaxLength="50" />
+          <Property Name="BankerName" Type="varchar" MaxLength="80" />
+          <Property Name="IFSCCode" Type="varchar" MaxLength="15" />
+          <Property Name="AccountHolderName" Type="varchar" MaxLength="80" />
+          <Property Name="LocationOrBranch" Type="varchar" MaxLength="50" />
+          <Property Name="AccNo" Type="varchar" MaxLength="30" />
+          <Property Name="VendorId" Type="int" />
+        </EntityType>
+        <EntityType Name="RemoteCurrencyHistory">
+          <Key>
+            <PropertyRef Name="CurrencyHistoryId" />
+          </Key>
+          <Property Name="CurrencyHistoryId" Type="int" Nullable="false" />
+          <Property Name="CurrencyId" Type="tinyint" Nullable="false" />
+          <Property Name="CurrencyValue" Type="money" Nullable="false" />
+          <Property Name="EffectiveFrom" Type="date" Nullable="false" />
+          <Property Name="EffectiveTo" Type="date" Nullable="false" />
+          <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="UpdatedDate" Type="date" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="editedBy" Type="char" MaxLength="6" />
+          <Property Name="EditedDate" Type="date" />
+        </EntityType>
+        <EntityType Name="RemoteCurrencyMaster">
+          <Key>
+            <PropertyRef Name="CurrencyId" />
+          </Key>
+          <Property Name="CurrencyId" Type="tinyint" Nullable="false" />
+          <Property Name="CurrencyName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CurrencyCode" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="updateddate" Type="date" Nullable="false" />
+          <Property Name="DeletedBy" Type="char" MaxLength="6" />
+          <Property Name="DeletedDate" Type="date" />
+          <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RemoteNatureOfBusinessMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NatureOfBusinessType" Type="varchar" MaxLength="30" />
+          <Property Name="SubmittedOn" Type="date" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
         <EntityType Name="RemoteRFQCommunications">
           <Key>
             <PropertyRef Name="RfqCCid" />
@@ -46,12 +96,25 @@
           <Key>
             <PropertyRef Name="RFQItemsId" />
           </Key>
-          <Property Name="RFQItemsId" Type="int" Nullable="false" />
+          <Property Name="RFQItemsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RFQRevisionId" Type="int" Nullable="false" />
           <Property Name="MPRItemDetailsid" Type="int" Nullable="false" />
+          <Property Name="ItemName" Type="varchar" MaxLength="100" />
+          <Property Name="ItemDescription" Type="varchar" MaxLength="2000" />
           <Property Name="QuotationQty" Type="float" Nullable="false" />
           <Property Name="VendorModelNo" Type="varchar" MaxLength="50" />
+          <Property Name="MfgPartNo" Type="varchar" MaxLength="100" />
+          <Property Name="MfgModelNo" Type="varchar" MaxLength="100" />
           <Property Name="HSNCode" Type="varchar" MaxLength="8" />
+          <Property Name="CustomDuty" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="FreightPercentage" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="FreightAmount" Type="money" />
+          <Property Name="PFPercentage" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="PFAmount" Type="money" />
+          <Property Name="IGSTPercentage" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="CGSTPercentage" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="SGSTPercentage" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="taxInclusiveOfDiscount" Type="bit" />
           <Property Name="RequestRemarks" Type="varchar" MaxLength="500" />
           <Property Name="DeleteFlag" Type="bit" Nullable="false" />
           <Property Name="SyncDate" Type="date" />
@@ -70,8 +133,7 @@
           <Property Name="Discount" Type="money" Nullable="false" />
           <Property Name="CurrencyId" Type="int" Nullable="false" />
           <Property Name="CurrencyValue" Type="money" Nullable="false" />
-          <Property Name="GSTPercentage" Type="decimal" Precision="5" Scale="2" />
-          <Property Name="Remarks" Type="varchar" MaxLength="500" />
+          <Property Name="Remarks" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="DeliveryDate" Type="date" Nullable="false" />
           <Property Name="DeleteFlag" Type="bit" Nullable="false" />
           <Property Name="SyncDate" Type="date" />
@@ -142,6 +204,27 @@
           <Property Name="updatedDate" Type="date" />
           <Property Name="DeleteFlag" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="RemoteRfqTerms">
+          <Key>
+            <PropertyRef Name="VRfqTermsid" />
+          </Key>
+          <Property Name="VRfqTermsid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RfqRevisionId" Type="int" Nullable="false" />
+          <Property Name="termsid" Type="int" Nullable="false" />
+          <Property Name="TermGroup" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Terms" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="VendorResponse" Type="varchar" MaxLength="15" />
+          <Property Name="Remarks" Type="varchar" MaxLength="500" />
+          <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="CreatedDate" Type="date" Nullable="false" />
+          <Property Name="DeletedBy" Type="char" MaxLength="6" />
+          <Property Name="DeletedDate" Type="date" />
+          <Property Name="UpdatedBy" Type="char" MaxLength="6" />
+          <Property Name="UpdatedDate" Type="date" />
+          <Property Name="SyncStatus" Type="bit" Nullable="false" />
+          <Property Name="SyncDate" Type="date" />
+        </EntityType>
         <EntityType Name="RemoteRFQVendorTerms">
           <Key>
             <PropertyRef Name="RFQTermsid" />
@@ -152,6 +235,35 @@
           <Property Name="updatedBY" Type="char" MaxLength="6" Nullable="false" />
           <Property Name="UpdateDate" Type="date" Nullable="false" />
           <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RemoteShipmentModeMaster">
+          <Key>
+            <PropertyRef Name="ShipmentModeid" />
+          </Key>
+          <Property Name="ShipmentModeid" Type="int" Nullable="false" />
+          <Property Name="Mode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UpdatedBy" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="updatedDate" Type="date" Nullable="false" />
+          <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+          <Property Name="DeletedBY" Type="char" MaxLength="6" />
+          <Property Name="DeletedDate" Type="date" />
+        </EntityType>
+        <EntityType Name="RemoteStateMaster">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateName" Type="varchar" MaxLength="60" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="CreatedOn" Type="date" />
+        </EntityType>
+        <EntityType Name="RemoteUnitMaster">
+          <Key>
+            <PropertyRef Name="UnitID" />
+          </Key>
+          <Property Name="UnitID" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UnitName" Type="varchar" MaxLength="50" />
+          <Property Name="DeleteFlag" Type="bit" />
         </EntityType>
         <EntityType Name="RemoteVendorMaster">
           <Key>
@@ -175,6 +287,50 @@
           <Property Name="AutoAssignmentofRFQ" Type="bit" Nullable="false" />
           <Property Name="Deleteflag" Type="bit" />
         </EntityType>
+        <EntityType Name="RemoteVendorRegisterDocumenetMaster">
+          <Key>
+            <PropertyRef Name="DocumentationTypeId" />
+          </Key>
+          <Property Name="DocumentationTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Documentype" Type="varchar" MaxLength="200" />
+          <Property Name="IsNewRegister" Type="bit" />
+        </EntityType>
+        <EntityType Name="RemoteVendorRegisterDocumentDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VendorId" Type="int" />
+          <Property Name="PhysicalPath" Type="varchar" MaxLength="80" />
+          <Property Name="UploadedOn" Type="date" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="DocumentationTypeId" Type="int" />
+        </EntityType>
+        <EntityType Name="RemoteVendorRegisterMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Onetimevendor" Type="bit" />
+          <Property Name="EvaluationRequired" Type="bit" />
+          <Property Name="VendorNoInSAP" Type="varchar" MaxLength="30" />
+          <Property Name="RequestedOn" Type="date" />
+          <Property Name="VendorName" Type="varchar" MaxLength="80" />
+          <Property Name="Address" Type="varchar" MaxLength="100" />
+          <Property Name="PostalCode" Type="varchar" MaxLength="15" />
+          <Property Name="City" Type="varchar" MaxLength="40" />
+          <Property Name="LocalBranchOffice" Type="varchar" MaxLength="50" />
+          <Property Name="PhoneAndExtn" Type="varchar" MaxLength="20" />
+          <Property Name="Fax" Type="varchar" MaxLength="20" />
+          <Property Name="ContactPerson" Type="varchar" MaxLength="80" />
+          <Property Name="Phone" Type="varchar" MaxLength="15" />
+          <Property Name="GSTNo" Type="varchar" MaxLength="20" />
+          <Property Name="NatureofBusiness" Type="int" />
+          <Property Name="PANNo" Type="varchar" MaxLength="15" />
+          <Property Name="CINNo" Type="varchar" MaxLength="15" />
+          <Property Name="TanNo" Type="varchar" MaxLength="15" />
+          <Property Name="PaymentTerms" Type="varchar" MaxLength="200" />
+        </EntityType>
         <EntityType Name="RemoteVendorRFQTerms">
           <Key>
             <PropertyRef Name="VendorTermsid" />
@@ -196,6 +352,84 @@
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="SuperUser" Type="bit" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'VSCM.dbo.RFQPendingQuotations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RFQPendingQuotations">
+          <Key>
+            <PropertyRef Name="RfqMasterId" />
+            <PropertyRef Name="rfqRevisionId" />
+            <PropertyRef Name="RFQNo" />
+            <PropertyRef Name="CreatedDate" />
+            <PropertyRef Name="RFQValidDate" />
+            <PropertyRef Name="RevisionNo" />
+          </Key>
+          <Property Name="RfqMasterId" Type="int" Nullable="false" />
+          <Property Name="rfqRevisionId" Type="int" Nullable="false" />
+          <Property Name="RFQNo" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="CreatedDate" Type="date" Nullable="false" />
+          <Property Name="RFQValidDate" Type="date" Nullable="false" />
+          <Property Name="RevisionNo" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__BankDetai__Vendo__308E3499">
+          <End Role="RemoteVendorRegisterMaster" Type="Self.RemoteVendorRegisterMaster" Multiplicity="0..1" />
+          <End Role="RemoteBankDetailsForVendor" Type="Self.RemoteBankDetailsForVendor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteVendorRegisterMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RemoteBankDetailsForVendor">
+              <PropertyRef Name="VendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VendorReg__Docum__336AA144">
+          <End Role="RemoteVendorRegisterMaster" Type="Self.RemoteVendorRegisterMaster" Multiplicity="0..1" />
+          <End Role="RemoteVendorRegisterDocumentDetails" Type="Self.RemoteVendorRegisterDocumentDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteVendorRegisterMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RemoteVendorRegisterDocumentDetails">
+              <PropertyRef Name="VendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VendorReg__Docum__345EC57D">
+          <End Role="RemoteVendorRegisterDocumenetMaster" Type="Self.RemoteVendorRegisterDocumenetMaster" Multiplicity="0..1" />
+          <End Role="RemoteVendorRegisterDocumentDetails" Type="Self.RemoteVendorRegisterDocumentDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteVendorRegisterDocumenetMaster">
+              <PropertyRef Name="DocumentationTypeId" />
+            </Principal>
+            <Dependent Role="RemoteVendorRegisterDocumentDetails">
+              <PropertyRef Name="DocumentationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VendorReg__Payme__2DB1C7EE">
+          <End Role="RemoteNatureOfBusinessMaster" Type="Self.RemoteNatureOfBusinessMaster" Multiplicity="0..1" />
+          <End Role="RemoteVendorRegisterMaster" Type="Self.RemoteVendorRegisterMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteNatureOfBusinessMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RemoteVendorRegisterMaster">
+              <PropertyRef Name="NatureofBusiness" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RemoteCurrencyHistory_RemoteCurrencyMaster">
+          <End Role="RemoteCurrencyMaster" Type="Self.RemoteCurrencyMaster" Multiplicity="1" />
+          <End Role="RemoteCurrencyHistory" Type="Self.RemoteCurrencyHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteCurrencyMaster">
+              <PropertyRef Name="CurrencyId" />
+            </Principal>
+            <Dependent Role="RemoteCurrencyHistory">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RFQCommunications_RFQItems">
           <End Role="RemoteRFQItems" Type="Self.RemoteRFQItems" Multiplicity="0..1" />
           <End Role="RemoteRFQCommunications" Type="Self.RemoteRFQCommunications" Multiplicity="*" />
@@ -329,6 +563,10 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="VSCMModelStoreContainer">
+          <EntitySet Name="RemoteBankDetailsForVendor" EntityType="Self.RemoteBankDetailsForVendor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteCurrencyHistory" EntityType="Self.RemoteCurrencyHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteCurrencyMaster" EntityType="Self.RemoteCurrencyMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteNatureOfBusinessMaster" EntityType="Self.RemoteNatureOfBusinessMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteRFQCommunications" EntityType="Self.RemoteRFQCommunications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteRFQDocuments" EntityType="Self.RemoteRFQDocuments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteRFQItems" EntityType="Self.RemoteRFQItems" Schema="dbo" store:Type="Tables" />
@@ -337,10 +575,47 @@
           <EntitySet Name="RemoteRFQReminderTracking" EntityType="Self.RemoteRFQReminderTracking" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteRFQRevisions" EntityType="Self.RemoteRFQRevisions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteRFQStatus" EntityType="Self.RemoteRFQStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteRfqTerms" EntityType="Self.RemoteRfqTerms" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteRFQVendorTerms" EntityType="Self.RemoteRFQVendorTerms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteShipmentModeMaster" EntityType="Self.RemoteShipmentModeMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteStateMaster" EntityType="Self.RemoteStateMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteUnitMaster" EntityType="Self.RemoteUnitMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteVendorMaster" EntityType="Self.RemoteVendorMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteVendorRegisterDocumenetMaster" EntityType="Self.RemoteVendorRegisterDocumenetMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteVendorRegisterDocumentDetails" EntityType="Self.RemoteVendorRegisterDocumentDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RemoteVendorRegisterMaster" EntityType="Self.RemoteVendorRegisterMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteVendorRFQTerms" EntityType="Self.RemoteVendorRFQTerms" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RemoteVendorUserMaster" EntityType="Self.RemoteVendorUserMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RFQPendingQuotations" EntityType="Self.RFQPendingQuotations" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [RFQPendingQuotations].[RfqMasterId] AS [RfqMasterId], 
+    [RFQPendingQuotations].[rfqRevisionId] AS [rfqRevisionId], 
+    [RFQPendingQuotations].[RFQNo] AS [RFQNo], 
+    [RFQPendingQuotations].[CreatedDate] AS [CreatedDate], 
+    [RFQPendingQuotations].[RFQValidDate] AS [RFQValidDate], 
+    [RFQPendingQuotations].[RevisionNo] AS [RevisionNo]
+    FROM [dbo].[RFQPendingQuotations] AS [RFQPendingQuotations]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__BankDetai__Vendo__308E3499" Association="Self.FK__BankDetai__Vendo__308E3499">
+            <End Role="RemoteVendorRegisterMaster" EntitySet="RemoteVendorRegisterMaster" />
+            <End Role="RemoteBankDetailsForVendor" EntitySet="RemoteBankDetailsForVendor" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VendorReg__Docum__336AA144" Association="Self.FK__VendorReg__Docum__336AA144">
+            <End Role="RemoteVendorRegisterMaster" EntitySet="RemoteVendorRegisterMaster" />
+            <End Role="RemoteVendorRegisterDocumentDetails" EntitySet="RemoteVendorRegisterDocumentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VendorReg__Docum__345EC57D" Association="Self.FK__VendorReg__Docum__345EC57D">
+            <End Role="RemoteVendorRegisterDocumenetMaster" EntitySet="RemoteVendorRegisterDocumenetMaster" />
+            <End Role="RemoteVendorRegisterDocumentDetails" EntitySet="RemoteVendorRegisterDocumentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VendorReg__Payme__2DB1C7EE" Association="Self.FK__VendorReg__Payme__2DB1C7EE">
+            <End Role="RemoteNatureOfBusinessMaster" EntitySet="RemoteNatureOfBusinessMaster" />
+            <End Role="RemoteVendorRegisterMaster" EntitySet="RemoteVendorRegisterMaster" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RemoteCurrencyHistory_RemoteCurrencyMaster" Association="Self.FK_RemoteCurrencyHistory_RemoteCurrencyMaster">
+            <End Role="RemoteCurrencyMaster" EntitySet="RemoteCurrencyMaster" />
+            <End Role="RemoteCurrencyHistory" EntitySet="RemoteCurrencyHistory" />
+          </AssociationSet>
           <AssociationSet Name="FK_RFQCommunications_RFQItems" Association="Self.FK_RFQCommunications_RFQItems">
             <End Role="RemoteRFQItems" EntitySet="RemoteRFQItems" />
             <End Role="RemoteRFQCommunications" EntitySet="RemoteRFQCommunications" />
@@ -390,6 +665,150 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="VSCMModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="VSCMEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="RemoteBankDetailsForVendors" EntityType="VSCMModel.RemoteBankDetailsForVendor" />
+          <EntitySet Name="RemoteCurrencyHistories" EntityType="VSCMModel.RemoteCurrencyHistory" />
+          <EntitySet Name="RemoteCurrencyMasters" EntityType="VSCMModel.RemoteCurrencyMaster" />
+          <EntitySet Name="RemoteNatureOfBusinessMasters" EntityType="VSCMModel.RemoteNatureOfBusinessMaster" />
+          <EntitySet Name="RemoteRFQCommunications" EntityType="VSCMModel.RemoteRFQCommunication" />
+          <EntitySet Name="RemoteRFQDocuments" EntityType="VSCMModel.RemoteRFQDocument" />
+          <EntitySet Name="RemoteRFQItems" EntityType="VSCMModel.RemoteRFQItem" />
+          <EntitySet Name="RemoteRFQItemsInfoes" EntityType="VSCMModel.RemoteRFQItemsInfo" />
+          <EntitySet Name="RemoteRFQMasters" EntityType="VSCMModel.RemoteRFQMaster" />
+          <EntitySet Name="RemoteRFQReminderTrackings" EntityType="VSCMModel.RemoteRFQReminderTracking" />
+          <EntitySet Name="RemoteRFQRevisions" EntityType="VSCMModel.RemoteRFQRevision" />
+          <EntitySet Name="RemoteRFQStatus" EntityType="VSCMModel.RemoteRFQStatu" />
+          <EntitySet Name="RemoteRfqTerms" EntityType="VSCMModel.RemoteRfqTerm" />
+          <EntitySet Name="RemoteRFQVendorTerms" EntityType="VSCMModel.RemoteRFQVendorTerm" />
+          <EntitySet Name="RemoteShipmentModeMasters" EntityType="VSCMModel.RemoteShipmentModeMaster" />
+          <EntitySet Name="RemoteStateMasters" EntityType="VSCMModel.RemoteStateMaster" />
+          <EntitySet Name="RemoteUnitMasters" EntityType="VSCMModel.RemoteUnitMaster" />
+          <EntitySet Name="RemoteVendorMasters" EntityType="VSCMModel.RemoteVendorMaster" />
+          <EntitySet Name="RemoteVendorRegisterDocumenetMasters" EntityType="VSCMModel.RemoteVendorRegisterDocumenetMaster" />
+          <EntitySet Name="RemoteVendorRegisterDocumentDetails" EntityType="VSCMModel.RemoteVendorRegisterDocumentDetail" />
+          <EntitySet Name="RemoteVendorRegisterMasters" EntityType="VSCMModel.RemoteVendorRegisterMaster" />
+          <EntitySet Name="RemoteVendorRFQTerms" EntityType="VSCMModel.RemoteVendorRFQTerm" />
+          <EntitySet Name="RemoteVendorUserMasters" EntityType="VSCMModel.RemoteVendorUserMaster" />
+          <EntitySet Name="RFQPendingQuotations" EntityType="VSCMModel.RFQPendingQuotation" />
+          <AssociationSet Name="FK__BankDetai__Vendo__308E3499" Association="VSCMModel.FK__BankDetai__Vendo__308E3499">
+            <End Role="RemoteVendorRegisterMaster" EntitySet="RemoteVendorRegisterMasters" />
+            <End Role="RemoteBankDetailsForVendor" EntitySet="RemoteBankDetailsForVendors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RemoteCurrencyHistory_RemoteCurrencyMaster" Association="VSCMModel.FK_RemoteCurrencyHistory_RemoteCurrencyMaster">
+            <End Role="RemoteCurrencyMaster" EntitySet="RemoteCurrencyMasters" />
+            <End Role="RemoteCurrencyHistory" EntitySet="RemoteCurrencyHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VendorReg__Payme__2DB1C7EE" Association="VSCMModel.FK__VendorReg__Payme__2DB1C7EE">
+            <End Role="RemoteNatureOfBusinessMaster" EntitySet="RemoteNatureOfBusinessMasters" />
+            <End Role="RemoteVendorRegisterMaster" EntitySet="RemoteVendorRegisterMasters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQCommunications_RFQItems" Association="VSCMModel.FK_RFQCommunications_RFQItems">
+            <End Role="RemoteRFQItem" EntitySet="RemoteRFQItems" />
+            <End Role="RemoteRFQCommunication" EntitySet="RemoteRFQCommunications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQCommunications_RFQRevisions" Association="VSCMModel.FK_RFQCommunications_RFQRevisions">
+            <End Role="RemoteRFQRevision" EntitySet="RemoteRFQRevisions" />
+            <End Role="RemoteRFQCommunication" EntitySet="RemoteRFQCommunications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQReminderTracking_RFQCommunications" Association="VSCMModel.FK_RFQReminderTracking_RFQCommunications">
+            <End Role="RemoteRFQCommunication" EntitySet="RemoteRFQCommunications" />
+            <End Role="RemoteRFQReminderTracking" EntitySet="RemoteRFQReminderTrackings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQDocuments_RFQItems" Association="VSCMModel.FK_RFQDocuments_RFQItems">
+            <End Role="RemoteRFQItem" EntitySet="RemoteRFQItems" />
+            <End Role="RemoteRFQDocument" EntitySet="RemoteRFQDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQDocuments_RFQRevisions" Association="VSCMModel.FK_RFQDocuments_RFQRevisions">
+            <End Role="RemoteRFQRevision" EntitySet="RemoteRFQRevisions" />
+            <End Role="RemoteRFQDocument" EntitySet="RemoteRFQDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQItems_RFQRevisions" Association="VSCMModel.FK_RFQItems_RFQRevisions">
+            <End Role="RemoteRFQRevision" EntitySet="RemoteRFQRevisions" />
+            <End Role="RemoteRFQItem" EntitySet="RemoteRFQItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQItemsInfo_RFQItems" Association="VSCMModel.FK_RFQItemsInfo_RFQItems">
+            <End Role="RemoteRFQItem" EntitySet="RemoteRFQItems" />
+            <End Role="RemoteRFQItemsInfo" EntitySet="RemoteRFQItemsInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQRevisions_RFQMaster" Association="VSCMModel.FK_RFQRevisions_RFQMaster">
+            <End Role="RemoteRFQMaster" EntitySet="RemoteRFQMasters" />
+            <End Role="RemoteRFQRevision" EntitySet="RemoteRFQRevisions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQStatus_RFQRevisions" Association="VSCMModel.FK_RFQStatus_RFQRevisions">
+            <End Role="RemoteRFQRevision" EntitySet="RemoteRFQRevisions" />
+            <End Role="RemoteRFQStatu" EntitySet="RemoteRFQStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQVendorTerms_RFQRevisions" Association="VSCMModel.FK_RFQVendorTerms_RFQRevisions">
+            <End Role="RemoteRFQRevision" EntitySet="RemoteRFQRevisions" />
+            <End Role="RemoteRFQVendorTerm" EntitySet="RemoteRFQVendorTerms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQVendorTerms_VendorRFQTerms" Association="VSCMModel.FK_RFQVendorTerms_VendorRFQTerms">
+            <End Role="RemoteVendorRFQTerm" EntitySet="RemoteVendorRFQTerms" />
+            <End Role="RemoteRFQVendorTerm" EntitySet="RemoteRFQVendorTerms" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VendorReg__Docum__345EC57D" Association="VSCMModel.FK__VendorReg__Docum__345EC57D">
+            <End Role="RemoteVendorRegisterDocumenetMaster" EntitySet="RemoteVendorRegisterDocumenetMasters" />
+            <End Role="RemoteVendorRegisterDocumentDetail" EntitySet="RemoteVendorRegisterDocumentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VendorReg__Docum__336AA144" Association="VSCMModel.FK__VendorReg__Docum__336AA144">
+            <End Role="RemoteVendorRegisterMaster" EntitySet="RemoteVendorRegisterMasters" />
+            <End Role="RemoteVendorRegisterDocumentDetail" EntitySet="RemoteVendorRegisterDocumentDetails" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="RemoteBankDetailsForVendor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BankDetails" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BankerName" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="IFSCCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="AccountHolderName" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="LocationOrBranch" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AccNo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VendorId" Type="Int32" />
+          <NavigationProperty Name="RemoteVendorRegisterMaster" Relationship="VSCMModel.FK__BankDetai__Vendo__308E3499" FromRole="RemoteBankDetailsForVendor" ToRole="RemoteVendorRegisterMaster" />
+        </EntityType>
+        <EntityType Name="RemoteCurrencyHistory">
+          <Key>
+            <PropertyRef Name="CurrencyHistoryId" />
+          </Key>
+          <Property Name="CurrencyHistoryId" Type="Int32" Nullable="false" />
+          <Property Name="CurrencyId" Type="Byte" Nullable="false" />
+          <Property Name="CurrencyValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="EffectiveFrom" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EffectiveTo" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="editedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="EditedDate" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="RemoteCurrencyMaster" Relationship="VSCMModel.FK_RemoteCurrencyHistory_RemoteCurrencyMaster" FromRole="RemoteCurrencyHistory" ToRole="RemoteCurrencyMaster" />
+        </EntityType>
+        <EntityType Name="RemoteCurrencyMaster">
+          <Key>
+            <PropertyRef Name="CurrencyId" />
+          </Key>
+          <Property Name="CurrencyId" Type="Byte" Nullable="false" />
+          <Property Name="CurrencyName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CurrencyCode" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="updateddate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DeletedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="DeletedDate" Type="DateTime" Precision="0" />
+          <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RemoteCurrencyHistories" Relationship="VSCMModel.FK_RemoteCurrencyHistory_RemoteCurrencyMaster" FromRole="RemoteCurrencyMaster" ToRole="RemoteCurrencyHistory" />
+        </EntityType>
+        <EntityType Name="RemoteNatureOfBusinessMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NatureOfBusinessType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="SubmittedOn" Type="DateTime" Precision="0" />
+          <Property Name="Status" Type="Boolean" />
+          <NavigationProperty Name="RemoteVendorRegisterMasters" Relationship="VSCMModel.FK__VendorReg__Payme__2DB1C7EE" FromRole="RemoteNatureOfBusinessMaster" ToRole="RemoteVendorRegisterMaster" />
+        </EntityType>
         <EntityType Name="RemoteRFQCommunication">
           <Key>
             <PropertyRef Name="RfqCCid" />
@@ -397,19 +816,19 @@
           <Property Name="RfqCCid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RfqItemsId" Type="Int32" />
           <Property Name="RfqRevisionId" Type="Int32" Nullable="false" />
-          <Property Name="RemarksFrom" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="RemarksFrom" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
           <Property Name="RemarksTo" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
           <Property Name="SendEmail" Type="Boolean" />
           <Property Name="SetReminder" Type="Boolean" />
           <Property Name="ReminderDate" Type="DateTime" Precision="0" />
           <Property Name="RemarksDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
           <Property Name="SyncDate" Type="DateTime" Precision="0" />
           <Property Name="SyncStatus" Type="Boolean" />
-          <NavigationProperty Name="RemoteRFQItem" Relationship="Self.FK_RFQCommunications_RFQItems" FromRole="RemoteRFQCommunications" ToRole="RemoteRFQItems" />
-          <NavigationProperty Name="RemoteRFQRevision" Relationship="Self.FK_RFQCommunications_RFQRevisions" FromRole="RemoteRFQCommunications" ToRole="RemoteRFQRevisions" />
-          <NavigationProperty Name="RemoteRFQReminderTrackings" Relationship="Self.FK_RFQReminderTracking_RFQCommunications" FromRole="RemoteRFQCommunications" ToRole="RemoteRFQReminderTracking" />
+          <NavigationProperty Name="RemoteRFQItem" Relationship="VSCMModel.FK_RFQCommunications_RFQItems" FromRole="RemoteRFQCommunication" ToRole="RemoteRFQItem" />
+          <NavigationProperty Name="RemoteRFQRevision" Relationship="VSCMModel.FK_RFQCommunications_RFQRevisions" FromRole="RemoteRFQCommunication" ToRole="RemoteRFQRevision" />
+          <NavigationProperty Name="RemoteRFQReminderTrackings" Relationship="VSCMModel.FK_RFQReminderTracking_RFQCommunications" FromRole="RemoteRFQCommunication" ToRole="RemoteRFQReminderTracking" />
         </EntityType>
         <EntityType Name="RemoteRFQDocument">
           <Key>
@@ -418,10 +837,10 @@
           <Property Name="RfqDocId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="rfqRevisionId" Type="Int32" Nullable="false" />
           <Property Name="rfqItemsid" Type="Int32" />
-          <Property Name="DocumentName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocumentName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="DocumentType" Type="Int32" Nullable="false" />
-          <Property Name="Path" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UploadedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Path" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="UploadedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
           <Property Name="uploadedDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Status" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="StatusDate" Type="DateTime" Precision="0" />
@@ -429,27 +848,40 @@
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
           <Property Name="SyncDate" Type="DateTime" Precision="0" />
           <Property Name="SyncStatus" Type="Boolean" />
-          <NavigationProperty Name="RemoteRFQItem" Relationship="Self.FK_RFQDocuments_RFQItems" FromRole="RemoteRFQDocuments" ToRole="RemoteRFQItems" />
-          <NavigationProperty Name="RemoteRFQRevision" Relationship="Self.FK_RFQDocuments_RFQRevisions" FromRole="RemoteRFQDocuments" ToRole="RemoteRFQRevisions" />
+          <NavigationProperty Name="RemoteRFQItem" Relationship="VSCMModel.FK_RFQDocuments_RFQItems" FromRole="RemoteRFQDocument" ToRole="RemoteRFQItem" />
+          <NavigationProperty Name="RemoteRFQRevision" Relationship="VSCMModel.FK_RFQDocuments_RFQRevisions" FromRole="RemoteRFQDocument" ToRole="RemoteRFQRevision" />
         </EntityType>
         <EntityType Name="RemoteRFQItem">
           <Key>
             <PropertyRef Name="RFQItemsId" />
           </Key>
-          <Property Name="RFQItemsId" Type="Int32" Nullable="false" />
+          <Property Name="RFQItemsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RFQRevisionId" Type="Int32" Nullable="false" />
           <Property Name="MPRItemDetailsid" Type="Int32" Nullable="false" />
+          <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ItemDescription" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <Property Name="QuotationQty" Type="Double" Nullable="false" />
           <Property Name="VendorModelNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MfgPartNo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MfgModelNo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="HSNCode" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="CustomDuty" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="FreightPercentage" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="FreightAmount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PFPercentage" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="PFAmount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IGSTPercentage" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="CGSTPercentage" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="SGSTPercentage" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="taxInclusiveOfDiscount" Type="Boolean" />
           <Property Name="RequestRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
           <Property Name="SyncDate" Type="DateTime" Precision="0" />
           <Property Name="SyncStatus" Type="Boolean" />
-          <NavigationProperty Name="RemoteRFQCommunications" Relationship="Self.FK_RFQCommunications_RFQItems" FromRole="RemoteRFQItems" ToRole="RemoteRFQCommunications" />
-          <NavigationProperty Name="RemoteRFQDocuments" Relationship="Self.FK_RFQDocuments_RFQItems" FromRole="RemoteRFQItems" ToRole="RemoteRFQDocuments" />
-          <NavigationProperty Name="RemoteRFQRevision" Relationship="Self.FK_RFQItems_RFQRevisions" FromRole="RemoteRFQItems" ToRole="RemoteRFQRevisions" />
-          <NavigationProperty Name="RemoteRFQItemsInfoes" Relationship="Self.FK_RFQItemsInfo_RFQItems" FromRole="RemoteRFQItems" ToRole="RemoteRFQItemsInfo" />
+          <NavigationProperty Name="RemoteRFQCommunications" Relationship="VSCMModel.FK_RFQCommunications_RFQItems" FromRole="RemoteRFQItem" ToRole="RemoteRFQCommunication" />
+          <NavigationProperty Name="RemoteRFQDocuments" Relationship="VSCMModel.FK_RFQDocuments_RFQItems" FromRole="RemoteRFQItem" ToRole="RemoteRFQDocument" />
+          <NavigationProperty Name="RemoteRFQRevision" Relationship="VSCMModel.FK_RFQItems_RFQRevisions" FromRole="RemoteRFQItem" ToRole="RemoteRFQRevision" />
+          <NavigationProperty Name="RemoteRFQItemsInfoes" Relationship="VSCMModel.FK_RFQItemsInfo_RFQItems" FromRole="RemoteRFQItem" ToRole="RemoteRFQItemsInfo" />
         </EntityType>
         <EntityType Name="RemoteRFQItemsInfo">
           <Key>
@@ -459,18 +891,17 @@
           <Property Name="RFQItemsId" Type="Int32" Nullable="false" />
           <Property Name="Qty" Type="Double" Nullable="false" />
           <Property Name="UOM" Type="Int32" Nullable="false" />
-          <Property Name="UnitPrice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="DiscountPercentage" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="Discount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="DiscountPercentage" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Discount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="CurrencyId" Type="Int32" Nullable="false" />
-          <Property Name="CurrencyValue" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CurrencyValue" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="DeliveryDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
           <Property Name="SyncDate" Type="DateTime" Precision="0" />
           <Property Name="SyncStatus" Type="Boolean" />
-          <NavigationProperty Name="RemoteRFQItem" Relationship="Self.FK_RFQItemsInfo_RFQItems" FromRole="RemoteRFQItemsInfo" ToRole="RemoteRFQItems" />
-          <Property Name="GSTPercentage" Type="Decimal" Precision="5" Scale="2" />
+          <NavigationProperty Name="RemoteRFQItem" Relationship="VSCMModel.FK_RFQItemsInfo_RFQItems" FromRole="RemoteRFQItemsInfo" ToRole="RemoteRFQItem" />
         </EntityType>
         <EntityType Name="RemoteRFQMaster">
           <Key>
@@ -478,15 +909,15 @@
           </Key>
           <Property Name="RfqMasterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="MPRRevisionId" Type="Int32" />
-          <Property Name="RFQNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RFQNo" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="RFQUniqueNo" Type="Int32" />
           <Property Name="VendorId" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
           <Property Name="SyncDate" Type="DateTime" Precision="0" />
           <Property Name="SyncStatus" Type="Boolean" />
-          <NavigationProperty Name="RemoteRFQRevisions" Relationship="Self.FK_RFQRevisions_RFQMaster" FromRole="RemoteRFQMasters" ToRole="RemoteRFQRevisions" />
+          <NavigationProperty Name="RemoteRFQRevisions" Relationship="VSCMModel.FK_RFQRevisions_RFQMaster" FromRole="RemoteRFQMaster" ToRole="RemoteRFQRevision" />
         </EntityType>
         <EntityType Name="RemoteRFQReminderTracking">
           <Key>
@@ -494,12 +925,12 @@
           </Key>
           <Property Name="Reminderid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="rfqccid" Type="Int32" Nullable="false" />
-          <Property Name="ReminderTo" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="ReminderTo" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
           <Property Name="MailsSentOn" Type="DateTime" Precision="0" />
           <Property Name="Acknowledgementon" Type="DateTime" Precision="0" />
           <Property Name="AcknowledgementRemarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RemoteRFQCommunication" Relationship="Self.FK_RFQReminderTracking_RFQCommunications" FromRole="RemoteRFQReminderTracking" ToRole="RemoteRFQCommunications" />
+          <NavigationProperty Name="RemoteRFQCommunication" Relationship="VSCMModel.FK_RFQReminderTracking_RFQCommunications" FromRole="RemoteRFQReminderTracking" ToRole="RemoteRFQCommunication" />
         </EntityType>
         <EntityType Name="RemoteRFQRevision">
           <Key>
@@ -526,12 +957,12 @@
           <Property Name="DeleteFlag" Type="Boolean" />
           <Property Name="SyncDate" Type="DateTime" Precision="0" />
           <Property Name="SyncStatus" Type="Boolean" />
-          <NavigationProperty Name="RemoteRFQCommunications" Relationship="Self.FK_RFQCommunications_RFQRevisions" FromRole="RemoteRFQRevisions" ToRole="RemoteRFQCommunications" />
-          <NavigationProperty Name="RemoteRFQDocuments" Relationship="Self.FK_RFQDocuments_RFQRevisions" FromRole="RemoteRFQRevisions" ToRole="RemoteRFQDocuments" />
-          <NavigationProperty Name="RemoteRFQItems" Relationship="Self.FK_RFQItems_RFQRevisions" FromRole="RemoteRFQRevisions" ToRole="RemoteRFQItems" />
-          <NavigationProperty Name="RemoteRFQMaster" Relationship="Self.FK_RFQRevisions_RFQMaster" FromRole="RemoteRFQRevisions" ToRole="RemoteRFQMasters" />
-          <NavigationProperty Name="RemoteRFQStatus" Relationship="Self.FK_RFQStatus_RFQRevisions" FromRole="RemoteRFQRevisions" ToRole="RemoteRFQStatus" />
-          <NavigationProperty Name="RemoteRFQVendorTerms" Relationship="Self.FK_RFQVendorTerms_RFQRevisions" FromRole="RemoteRFQRevisions" ToRole="RemoteRFQVendorTerms" />
+          <NavigationProperty Name="RemoteRFQCommunications" Relationship="VSCMModel.FK_RFQCommunications_RFQRevisions" FromRole="RemoteRFQRevision" ToRole="RemoteRFQCommunication" />
+          <NavigationProperty Name="RemoteRFQDocuments" Relationship="VSCMModel.FK_RFQDocuments_RFQRevisions" FromRole="RemoteRFQRevision" ToRole="RemoteRFQDocument" />
+          <NavigationProperty Name="RemoteRFQItems" Relationship="VSCMModel.FK_RFQItems_RFQRevisions" FromRole="RemoteRFQRevision" ToRole="RemoteRFQItem" />
+          <NavigationProperty Name="RemoteRFQMaster" Relationship="VSCMModel.FK_RFQRevisions_RFQMaster" FromRole="RemoteRFQRevision" ToRole="RemoteRFQMaster" />
+          <NavigationProperty Name="RemoteRFQStatus" Relationship="VSCMModel.FK_RFQStatus_RFQRevisions" FromRole="RemoteRFQRevision" ToRole="RemoteRFQStatu" />
+          <NavigationProperty Name="RemoteRFQVendorTerms" Relationship="VSCMModel.FK_RFQVendorTerms_RFQRevisions" FromRole="RemoteRFQRevision" ToRole="RemoteRFQVendorTerm" />
         </EntityType>
         <EntityType Name="RemoteRFQStatu">
           <Key>
@@ -544,7 +975,28 @@
           <Property Name="updatedby" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
           <Property Name="updatedDate" Type="DateTime" Precision="0" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RemoteRFQRevision" Relationship="Self.FK_RFQStatus_RFQRevisions" FromRole="RemoteRFQStatus" ToRole="RemoteRFQRevisions" />
+          <NavigationProperty Name="RemoteRFQRevision" Relationship="VSCMModel.FK_RFQStatus_RFQRevisions" FromRole="RemoteRFQStatu" ToRole="RemoteRFQRevision" />
+        </EntityType>
+        <EntityType Name="RemoteRfqTerm">
+          <Key>
+            <PropertyRef Name="VRfqTermsid" />
+          </Key>
+          <Property Name="VRfqTermsid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RfqRevisionId" Type="Int32" Nullable="false" />
+          <Property Name="termsid" Type="Int32" Nullable="false" />
+          <Property Name="TermGroup" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Terms" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="VendorResponse" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DeletedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="DeletedDate" Type="DateTime" Precision="0" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="0" />
+          <Property Name="SyncStatus" Type="Boolean" Nullable="false" />
+          <Property Name="SyncDate" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="RemoteRFQVendorTerm">
           <Key>
@@ -553,19 +1005,48 @@
           <Property Name="RFQTermsid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RFQversionId" Type="Int32" Nullable="false" />
           <Property Name="VendorTermsid" Type="Int32" Nullable="false" />
-          <Property Name="updatedBY" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="updatedBY" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
           <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RemoteRFQRevision" Relationship="Self.FK_RFQVendorTerms_RFQRevisions" FromRole="RemoteRFQVendorTerms" ToRole="RemoteRFQRevisions" />
-          <NavigationProperty Name="RemoteVendorRFQTerm" Relationship="Self.FK_RFQVendorTerms_VendorRFQTerms" FromRole="RemoteRFQVendorTerms" ToRole="RemoteVendorRFQTerms" />
+          <NavigationProperty Name="RemoteRFQRevision" Relationship="VSCMModel.FK_RFQVendorTerms_RFQRevisions" FromRole="RemoteRFQVendorTerm" ToRole="RemoteRFQRevision" />
+          <NavigationProperty Name="RemoteVendorRFQTerm" Relationship="VSCMModel.FK_RFQVendorTerms_VendorRFQTerms" FromRole="RemoteRFQVendorTerm" ToRole="RemoteVendorRFQTerm" />
+        </EntityType>
+        <EntityType Name="RemoteShipmentModeMaster">
+          <Key>
+            <PropertyRef Name="ShipmentModeid" />
+          </Key>
+          <Property Name="ShipmentModeid" Type="Int32" Nullable="false" />
+          <Property Name="Mode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedBy" Type="String" Nullable="false" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="updatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DeleteFlag" Type="Boolean" Nullable="false" />
+          <Property Name="DeletedBY" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+          <Property Name="DeletedDate" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="RemoteStateMaster">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StateName" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="RemoteUnitMaster">
+          <Key>
+            <PropertyRef Name="UnitID" />
+          </Key>
+          <Property Name="UnitID" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UnitName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DeleteFlag" Type="Boolean" />
         </EntityType>
         <EntityType Name="RemoteVendorMaster">
           <Key>
             <PropertyRef Name="Vendorid" />
           </Key>
           <Property Name="Vendorid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="VendorCode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="VendorName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VendorCode" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VendorName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="OldVendorCode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Street" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -581,6 +1062,56 @@
           <Property Name="AutoAssignmentofRFQ" Type="Boolean" Nullable="false" />
           <Property Name="Deleteflag" Type="Boolean" />
         </EntityType>
+        <EntityType Name="RemoteVendorRegisterDocumenetMaster">
+          <Key>
+            <PropertyRef Name="DocumentationTypeId" />
+          </Key>
+          <Property Name="DocumentationTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Documentype" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IsNewRegister" Type="Boolean" />
+          <NavigationProperty Name="RemoteVendorRegisterDocumentDetails" Relationship="VSCMModel.FK__VendorReg__Docum__345EC57D" FromRole="RemoteVendorRegisterDocumenetMaster" ToRole="RemoteVendorRegisterDocumentDetail" />
+        </EntityType>
+        <EntityType Name="RemoteVendorRegisterDocumentDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VendorId" Type="Int32" />
+          <Property Name="PhysicalPath" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="UploadedOn" Type="DateTime" Precision="0" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="DocumentationTypeId" Type="Int32" />
+          <NavigationProperty Name="RemoteVendorRegisterDocumenetMaster" Relationship="VSCMModel.FK__VendorReg__Docum__345EC57D" FromRole="RemoteVendorRegisterDocumentDetail" ToRole="RemoteVendorRegisterDocumenetMaster" />
+          <NavigationProperty Name="RemoteVendorRegisterMaster" Relationship="VSCMModel.FK__VendorReg__Docum__336AA144" FromRole="RemoteVendorRegisterDocumentDetail" ToRole="RemoteVendorRegisterMaster" />
+        </EntityType>
+        <EntityType Name="RemoteVendorRegisterMaster">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Onetimevendor" Type="Boolean" />
+          <Property Name="EvaluationRequired" Type="Boolean" />
+          <Property Name="VendorNoInSAP" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="RequestedOn" Type="DateTime" Precision="0" />
+          <Property Name="VendorName" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PostalCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="LocalBranchOffice" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneAndExtn" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Fax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ContactPerson" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="GSTNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NatureofBusiness" Type="Int32" />
+          <Property Name="PANNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CINNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TanNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentTerms" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RemoteBankDetailsForVendors" Relationship="VSCMModel.FK__BankDetai__Vendo__308E3499" FromRole="RemoteVendorRegisterMaster" ToRole="RemoteBankDetailsForVendor" />
+          <NavigationProperty Name="RemoteNatureOfBusinessMaster" Relationship="VSCMModel.FK__VendorReg__Payme__2DB1C7EE" FromRole="RemoteVendorRegisterMaster" ToRole="RemoteNatureOfBusinessMaster" />
+          <NavigationProperty Name="RemoteVendorRegisterDocumentDetails" Relationship="VSCMModel.FK__VendorReg__Docum__336AA144" FromRole="RemoteVendorRegisterMaster" ToRole="RemoteVendorRegisterDocumentDetail" />
+        </EntityType>
         <EntityType Name="RemoteVendorRFQTerm">
           <Key>
             <PropertyRef Name="VendorTermsid" />
@@ -591,47 +1122,99 @@
           <Property Name="Terms" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Indexno" Type="Int32" />
           <Property Name="deleteFlag" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="RemoteRFQVendorTerms" Relationship="Self.FK_RFQVendorTerms_VendorRFQTerms" FromRole="RemoteVendorRFQTerms" ToRole="RemoteRFQVendorTerms" />
+          <NavigationProperty Name="RemoteRFQVendorTerms" Relationship="VSCMModel.FK_RFQVendorTerms_VendorRFQTerms" FromRole="RemoteVendorRFQTerm" ToRole="RemoteRFQVendorTerm" />
         </EntityType>
         <EntityType Name="RemoteVendorUserMaster">
           <Key>
             <PropertyRef Name="Vuserid" />
           </Key>
-          <Property Name="Vuserid" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Vuserid" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="VendorId" Type="Int32" Nullable="false" />
-          <Property Name="pwd" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pwd" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <Property Name="SuperUser" Type="Boolean" Nullable="false" />
         </EntityType>
-        <Association Name="FK_RFQCommunications_RFQItems">
-          <End Role="RemoteRFQItems" Type="Self.RemoteRFQItem" Multiplicity="0..1" />
-          <End Role="RemoteRFQCommunications" Type="Self.RemoteRFQCommunication" Multiplicity="*" />
+        <EntityType Name="RFQPendingQuotation">
+          <Key>
+            <PropertyRef Name="RfqMasterId" />
+            <PropertyRef Name="rfqRevisionId" />
+            <PropertyRef Name="RFQNo" />
+            <PropertyRef Name="CreatedDate" />
+            <PropertyRef Name="RFQValidDate" />
+            <PropertyRef Name="RevisionNo" />
+          </Key>
+          <Property Name="RfqMasterId" Type="Int32" Nullable="false" />
+          <Property Name="rfqRevisionId" Type="Int32" Nullable="false" />
+          <Property Name="RFQNo" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RFQValidDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RevisionNo" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__BankDetai__Vendo__308E3499">
+          <End Type="VSCMModel.RemoteVendorRegisterMaster" Role="RemoteVendorRegisterMaster" Multiplicity="0..1" />
+          <End Type="VSCMModel.RemoteBankDetailsForVendor" Role="RemoteBankDetailsForVendor" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQItems">
+            <Principal Role="RemoteVendorRegisterMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RemoteBankDetailsForVendor">
+              <PropertyRef Name="VendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RemoteCurrencyHistory_RemoteCurrencyMaster">
+          <End Type="VSCMModel.RemoteCurrencyMaster" Role="RemoteCurrencyMaster" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteCurrencyHistory" Role="RemoteCurrencyHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteCurrencyMaster">
+              <PropertyRef Name="CurrencyId" />
+            </Principal>
+            <Dependent Role="RemoteCurrencyHistory">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VendorReg__Payme__2DB1C7EE">
+          <End Type="VSCMModel.RemoteNatureOfBusinessMaster" Role="RemoteNatureOfBusinessMaster" Multiplicity="0..1" />
+          <End Type="VSCMModel.RemoteVendorRegisterMaster" Role="RemoteVendorRegisterMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteNatureOfBusinessMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RemoteVendorRegisterMaster">
+              <PropertyRef Name="NatureofBusiness" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RFQCommunications_RFQItems">
+          <End Type="VSCMModel.RemoteRFQItem" Role="RemoteRFQItem" Multiplicity="0..1" />
+          <End Type="VSCMModel.RemoteRFQCommunication" Role="RemoteRFQCommunication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteRFQItem">
               <PropertyRef Name="RFQItemsId" />
             </Principal>
-            <Dependent Role="RemoteRFQCommunications">
+            <Dependent Role="RemoteRFQCommunication">
               <PropertyRef Name="RfqItemsId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQCommunications_RFQRevisions">
-          <End Role="RemoteRFQRevisions" Type="Self.RemoteRFQRevision" Multiplicity="1" />
-          <End Role="RemoteRFQCommunications" Type="Self.RemoteRFQCommunication" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQRevision" Role="RemoteRFQRevision" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQCommunication" Role="RemoteRFQCommunication" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQRevisions">
+            <Principal Role="RemoteRFQRevision">
               <PropertyRef Name="rfqRevisionId" />
             </Principal>
-            <Dependent Role="RemoteRFQCommunications">
+            <Dependent Role="RemoteRFQCommunication">
               <PropertyRef Name="RfqRevisionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQReminderTracking_RFQCommunications">
-          <End Role="RemoteRFQCommunications" Type="Self.RemoteRFQCommunication" Multiplicity="1" />
-          <End Role="RemoteRFQReminderTracking" Type="Self.RemoteRFQReminderTracking" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQCommunication" Role="RemoteRFQCommunication" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQReminderTracking" Role="RemoteRFQReminderTracking" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQCommunications">
+            <Principal Role="RemoteRFQCommunication">
               <PropertyRef Name="RfqCCid" />
             </Principal>
             <Dependent Role="RemoteRFQReminderTracking">
@@ -640,46 +1223,46 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQDocuments_RFQItems">
-          <End Role="RemoteRFQItems" Type="Self.RemoteRFQItem" Multiplicity="0..1" />
-          <End Role="RemoteRFQDocuments" Type="Self.RemoteRFQDocument" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQItem" Role="RemoteRFQItem" Multiplicity="0..1" />
+          <End Type="VSCMModel.RemoteRFQDocument" Role="RemoteRFQDocument" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQItems">
+            <Principal Role="RemoteRFQItem">
               <PropertyRef Name="RFQItemsId" />
             </Principal>
-            <Dependent Role="RemoteRFQDocuments">
+            <Dependent Role="RemoteRFQDocument">
               <PropertyRef Name="rfqItemsid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQDocuments_RFQRevisions">
-          <End Role="RemoteRFQRevisions" Type="Self.RemoteRFQRevision" Multiplicity="1" />
-          <End Role="RemoteRFQDocuments" Type="Self.RemoteRFQDocument" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQRevision" Role="RemoteRFQRevision" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQDocument" Role="RemoteRFQDocument" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQRevisions">
+            <Principal Role="RemoteRFQRevision">
               <PropertyRef Name="rfqRevisionId" />
             </Principal>
-            <Dependent Role="RemoteRFQDocuments">
+            <Dependent Role="RemoteRFQDocument">
               <PropertyRef Name="rfqRevisionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQItems_RFQRevisions">
-          <End Role="RemoteRFQRevisions" Type="Self.RemoteRFQRevision" Multiplicity="1" />
-          <End Role="RemoteRFQItems" Type="Self.RemoteRFQItem" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQRevision" Role="RemoteRFQRevision" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQItem" Role="RemoteRFQItem" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQRevisions">
+            <Principal Role="RemoteRFQRevision">
               <PropertyRef Name="rfqRevisionId" />
             </Principal>
-            <Dependent Role="RemoteRFQItems">
+            <Dependent Role="RemoteRFQItem">
               <PropertyRef Name="RFQRevisionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQItemsInfo_RFQItems">
-          <End Role="RemoteRFQItems" Type="Self.RemoteRFQItem" Multiplicity="1" />
-          <End Role="RemoteRFQItemsInfo" Type="Self.RemoteRFQItemsInfo" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQItem" Role="RemoteRFQItem" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQItemsInfo" Role="RemoteRFQItemsInfo" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQItems">
+            <Principal Role="RemoteRFQItem">
               <PropertyRef Name="RFQItemsId" />
             </Principal>
             <Dependent Role="RemoteRFQItemsInfo">
@@ -688,317 +1271,462 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQRevisions_RFQMaster">
-          <End Role="RemoteRFQMasters" Type="Self.RemoteRFQMaster" Multiplicity="1" />
-          <End Role="RemoteRFQRevisions" Type="Self.RemoteRFQRevision" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQMaster" Role="RemoteRFQMaster" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQRevision" Role="RemoteRFQRevision" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQMasters">
+            <Principal Role="RemoteRFQMaster">
               <PropertyRef Name="RfqMasterId" />
             </Principal>
-            <Dependent Role="RemoteRFQRevisions">
+            <Dependent Role="RemoteRFQRevision">
               <PropertyRef Name="rfqMasterId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQStatus_RFQRevisions">
-          <End Role="RemoteRFQRevisions" Type="Self.RemoteRFQRevision" Multiplicity="1" />
-          <End Role="RemoteRFQStatus" Type="Self.RemoteRFQStatu" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQRevision" Role="RemoteRFQRevision" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQStatu" Role="RemoteRFQStatu" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQRevisions">
+            <Principal Role="RemoteRFQRevision">
               <PropertyRef Name="rfqRevisionId" />
             </Principal>
-            <Dependent Role="RemoteRFQStatus">
+            <Dependent Role="RemoteRFQStatu">
               <PropertyRef Name="RfqRevisionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQVendorTerms_RFQRevisions">
-          <End Role="RemoteRFQRevisions" Type="Self.RemoteRFQRevision" Multiplicity="1" />
-          <End Role="RemoteRFQVendorTerms" Type="Self.RemoteRFQVendorTerm" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteRFQRevision" Role="RemoteRFQRevision" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQVendorTerm" Role="RemoteRFQVendorTerm" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteRFQRevisions">
+            <Principal Role="RemoteRFQRevision">
               <PropertyRef Name="rfqRevisionId" />
             </Principal>
-            <Dependent Role="RemoteRFQVendorTerms">
+            <Dependent Role="RemoteRFQVendorTerm">
               <PropertyRef Name="RFQversionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RFQVendorTerms_VendorRFQTerms">
-          <End Role="RemoteVendorRFQTerms" Type="Self.RemoteVendorRFQTerm" Multiplicity="1" />
-          <End Role="RemoteRFQVendorTerms" Type="Self.RemoteRFQVendorTerm" Multiplicity="*" />
+          <End Type="VSCMModel.RemoteVendorRFQTerm" Role="RemoteVendorRFQTerm" Multiplicity="1" />
+          <End Type="VSCMModel.RemoteRFQVendorTerm" Role="RemoteRFQVendorTerm" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RemoteVendorRFQTerms">
+            <Principal Role="RemoteVendorRFQTerm">
               <PropertyRef Name="VendorTermsid" />
             </Principal>
-            <Dependent Role="RemoteRFQVendorTerms">
+            <Dependent Role="RemoteRFQVendorTerm">
               <PropertyRef Name="VendorTermsid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="VSCMEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="RemoteRFQCommunications" EntityType="Self.RemoteRFQCommunication" />
-          <EntitySet Name="RemoteRFQDocuments" EntityType="Self.RemoteRFQDocument" />
-          <EntitySet Name="RemoteRFQItems" EntityType="Self.RemoteRFQItem" />
-          <EntitySet Name="RemoteRFQItemsInfoes" EntityType="Self.RemoteRFQItemsInfo" />
-          <EntitySet Name="RemoteRFQMasters" EntityType="Self.RemoteRFQMaster" />
-          <EntitySet Name="RemoteRFQReminderTrackings" EntityType="Self.RemoteRFQReminderTracking" />
-          <EntitySet Name="RemoteRFQRevisions" EntityType="Self.RemoteRFQRevision" />
-          <EntitySet Name="RemoteRFQStatus" EntityType="Self.RemoteRFQStatu" />
-          <EntitySet Name="RemoteRFQVendorTerms" EntityType="Self.RemoteRFQVendorTerm" />
-          <EntitySet Name="RemoteVendorMasters" EntityType="Self.RemoteVendorMaster" />
-          <EntitySet Name="RemoteVendorRFQTerms" EntityType="Self.RemoteVendorRFQTerm" />
-          <EntitySet Name="RemoteVendorUserMasters" EntityType="Self.RemoteVendorUserMaster" />
-          <AssociationSet Name="FK_RFQCommunications_RFQItems" Association="Self.FK_RFQCommunications_RFQItems">
-            <End Role="RemoteRFQItems" EntitySet="RemoteRFQItems" />
-            <End Role="RemoteRFQCommunications" EntitySet="RemoteRFQCommunications" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQCommunications_RFQRevisions" Association="Self.FK_RFQCommunications_RFQRevisions">
-            <End Role="RemoteRFQRevisions" EntitySet="RemoteRFQRevisions" />
-            <End Role="RemoteRFQCommunications" EntitySet="RemoteRFQCommunications" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQReminderTracking_RFQCommunications" Association="Self.FK_RFQReminderTracking_RFQCommunications">
-            <End Role="RemoteRFQCommunications" EntitySet="RemoteRFQCommunications" />
-            <End Role="RemoteRFQReminderTracking" EntitySet="RemoteRFQReminderTrackings" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQDocuments_RFQItems" Association="Self.FK_RFQDocuments_RFQItems">
-            <End Role="RemoteRFQItems" EntitySet="RemoteRFQItems" />
-            <End Role="RemoteRFQDocuments" EntitySet="RemoteRFQDocuments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQDocuments_RFQRevisions" Association="Self.FK_RFQDocuments_RFQRevisions">
-            <End Role="RemoteRFQRevisions" EntitySet="RemoteRFQRevisions" />
-            <End Role="RemoteRFQDocuments" EntitySet="RemoteRFQDocuments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQItems_RFQRevisions" Association="Self.FK_RFQItems_RFQRevisions">
-            <End Role="RemoteRFQRevisions" EntitySet="RemoteRFQRevisions" />
-            <End Role="RemoteRFQItems" EntitySet="RemoteRFQItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQItemsInfo_RFQItems" Association="Self.FK_RFQItemsInfo_RFQItems">
-            <End Role="RemoteRFQItems" EntitySet="RemoteRFQItems" />
-            <End Role="RemoteRFQItemsInfo" EntitySet="RemoteRFQItemsInfoes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQRevisions_RFQMaster" Association="Self.FK_RFQRevisions_RFQMaster">
-            <End Role="RemoteRFQMasters" EntitySet="RemoteRFQMasters" />
-            <End Role="RemoteRFQRevisions" EntitySet="RemoteRFQRevisions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQStatus_RFQRevisions" Association="Self.FK_RFQStatus_RFQRevisions">
-            <End Role="RemoteRFQRevisions" EntitySet="RemoteRFQRevisions" />
-            <End Role="RemoteRFQStatus" EntitySet="RemoteRFQStatus" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQVendorTerms_RFQRevisions" Association="Self.FK_RFQVendorTerms_RFQRevisions">
-            <End Role="RemoteRFQRevisions" EntitySet="RemoteRFQRevisions" />
-            <End Role="RemoteRFQVendorTerms" EntitySet="RemoteRFQVendorTerms" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RFQVendorTerms_VendorRFQTerms" Association="Self.FK_RFQVendorTerms_VendorRFQTerms">
-            <End Role="RemoteVendorRFQTerms" EntitySet="RemoteVendorRFQTerms" />
-            <End Role="RemoteRFQVendorTerms" EntitySet="RemoteRFQVendorTerms" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        <Association Name="FK__VendorReg__Docum__345EC57D">
+          <End Type="VSCMModel.RemoteVendorRegisterDocumenetMaster" Role="RemoteVendorRegisterDocumenetMaster" Multiplicity="0..1" />
+          <End Type="VSCMModel.RemoteVendorRegisterDocumentDetail" Role="RemoteVendorRegisterDocumentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteVendorRegisterDocumenetMaster">
+              <PropertyRef Name="DocumentationTypeId" />
+            </Principal>
+            <Dependent Role="RemoteVendorRegisterDocumentDetail">
+              <PropertyRef Name="DocumentationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VendorReg__Docum__336AA144">
+          <End Type="VSCMModel.RemoteVendorRegisterMaster" Role="RemoteVendorRegisterMaster" Multiplicity="0..1" />
+          <End Type="VSCMModel.RemoteVendorRegisterDocumentDetail" Role="RemoteVendorRegisterDocumentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RemoteVendorRegisterMaster">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RemoteVendorRegisterDocumentDetail">
+              <PropertyRef Name="VendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="VSCMModelStoreContainer" CdmEntityContainer="VSCMEntities">
+          <EntitySetMapping Name="RemoteBankDetailsForVendors">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteBankDetailsForVendor">
+              <MappingFragment StoreEntitySet="RemoteBankDetailsForVendor">
+                <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+                <ScalarProperty Name="AccNo" ColumnName="AccNo" />
+                <ScalarProperty Name="LocationOrBranch" ColumnName="LocationOrBranch" />
+                <ScalarProperty Name="AccountHolderName" ColumnName="AccountHolderName" />
+                <ScalarProperty Name="IFSCCode" ColumnName="IFSCCode" />
+                <ScalarProperty Name="BankerName" ColumnName="BankerName" />
+                <ScalarProperty Name="BankDetails" ColumnName="BankDetails" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteCurrencyHistories">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteCurrencyHistory">
+              <MappingFragment StoreEntitySet="RemoteCurrencyHistory">
+                <ScalarProperty Name="EditedDate" ColumnName="EditedDate" />
+                <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="EffectiveTo" ColumnName="EffectiveTo" />
+                <ScalarProperty Name="EffectiveFrom" ColumnName="EffectiveFrom" />
+                <ScalarProperty Name="CurrencyValue" ColumnName="CurrencyValue" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+                <ScalarProperty Name="CurrencyHistoryId" ColumnName="CurrencyHistoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteCurrencyMasters">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteCurrencyMaster">
+              <MappingFragment StoreEntitySet="RemoteCurrencyMaster">
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
+                <ScalarProperty Name="updateddate" ColumnName="updateddate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CurrencyCode" ColumnName="CurrencyCode" />
+                <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteNatureOfBusinessMasters">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteNatureOfBusinessMaster">
+              <MappingFragment StoreEntitySet="RemoteNatureOfBusinessMaster">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SubmittedOn" ColumnName="SubmittedOn" />
+                <ScalarProperty Name="NatureOfBusinessType" ColumnName="NatureOfBusinessType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQCommunications">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQCommunication">
               <MappingFragment StoreEntitySet="RemoteRFQCommunications">
-                <ScalarProperty Name="RfqCCid" ColumnName="RfqCCid" />
-                <ScalarProperty Name="RfqItemsId" ColumnName="RfqItemsId" />
-                <ScalarProperty Name="RfqRevisionId" ColumnName="RfqRevisionId" />
-                <ScalarProperty Name="RemarksFrom" ColumnName="RemarksFrom" />
-                <ScalarProperty Name="RemarksTo" ColumnName="RemarksTo" />
-                <ScalarProperty Name="SendEmail" ColumnName="SendEmail" />
-                <ScalarProperty Name="SetReminder" ColumnName="SetReminder" />
-                <ScalarProperty Name="ReminderDate" ColumnName="ReminderDate" />
-                <ScalarProperty Name="RemarksDate" ColumnName="RemarksDate" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
                 <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="RemarksDate" ColumnName="RemarksDate" />
+                <ScalarProperty Name="ReminderDate" ColumnName="ReminderDate" />
+                <ScalarProperty Name="SetReminder" ColumnName="SetReminder" />
+                <ScalarProperty Name="SendEmail" ColumnName="SendEmail" />
+                <ScalarProperty Name="RemarksTo" ColumnName="RemarksTo" />
+                <ScalarProperty Name="RemarksFrom" ColumnName="RemarksFrom" />
+                <ScalarProperty Name="RfqRevisionId" ColumnName="RfqRevisionId" />
+                <ScalarProperty Name="RfqItemsId" ColumnName="RfqItemsId" />
+                <ScalarProperty Name="RfqCCid" ColumnName="RfqCCid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQDocuments">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQDocument">
               <MappingFragment StoreEntitySet="RemoteRFQDocuments">
-                <ScalarProperty Name="RfqDocId" ColumnName="RfqDocId" />
-                <ScalarProperty Name="rfqRevisionId" ColumnName="rfqRevisionId" />
-                <ScalarProperty Name="rfqItemsid" ColumnName="rfqItemsid" />
-                <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
-                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
-                <ScalarProperty Name="Path" ColumnName="Path" />
-                <ScalarProperty Name="UploadedBy" ColumnName="UploadedBy" />
-                <ScalarProperty Name="uploadedDate" ColumnName="uploadedDate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
-                <ScalarProperty Name="StatusBy" ColumnName="StatusBy" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
                 <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="StatusBy" ColumnName="StatusBy" />
+                <ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="uploadedDate" ColumnName="uploadedDate" />
+                <ScalarProperty Name="UploadedBy" ColumnName="UploadedBy" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+                <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
+                <ScalarProperty Name="rfqItemsid" ColumnName="rfqItemsid" />
+                <ScalarProperty Name="rfqRevisionId" ColumnName="rfqRevisionId" />
+                <ScalarProperty Name="RfqDocId" ColumnName="RfqDocId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQItems">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQItem">
               <MappingFragment StoreEntitySet="RemoteRFQItems">
-                <ScalarProperty Name="RFQItemsId" ColumnName="RFQItemsId" />
-                <ScalarProperty Name="RFQRevisionId" ColumnName="RFQRevisionId" />
-                <ScalarProperty Name="MPRItemDetailsid" ColumnName="MPRItemDetailsid" />
-                <ScalarProperty Name="QuotationQty" ColumnName="QuotationQty" />
-                <ScalarProperty Name="VendorModelNo" ColumnName="VendorModelNo" />
-                <ScalarProperty Name="HSNCode" ColumnName="HSNCode" />
-                <ScalarProperty Name="RequestRemarks" ColumnName="RequestRemarks" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
                 <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="RequestRemarks" ColumnName="RequestRemarks" />
+                <ScalarProperty Name="taxInclusiveOfDiscount" ColumnName="taxInclusiveOfDiscount" />
+                <ScalarProperty Name="SGSTPercentage" ColumnName="SGSTPercentage" />
+                <ScalarProperty Name="CGSTPercentage" ColumnName="CGSTPercentage" />
+                <ScalarProperty Name="IGSTPercentage" ColumnName="IGSTPercentage" />
+                <ScalarProperty Name="PFAmount" ColumnName="PFAmount" />
+                <ScalarProperty Name="PFPercentage" ColumnName="PFPercentage" />
+                <ScalarProperty Name="FreightAmount" ColumnName="FreightAmount" />
+                <ScalarProperty Name="FreightPercentage" ColumnName="FreightPercentage" />
+                <ScalarProperty Name="CustomDuty" ColumnName="CustomDuty" />
+                <ScalarProperty Name="HSNCode" ColumnName="HSNCode" />
+                <ScalarProperty Name="MfgModelNo" ColumnName="MfgModelNo" />
+                <ScalarProperty Name="MfgPartNo" ColumnName="MfgPartNo" />
+                <ScalarProperty Name="VendorModelNo" ColumnName="VendorModelNo" />
+                <ScalarProperty Name="QuotationQty" ColumnName="QuotationQty" />
+                <ScalarProperty Name="ItemDescription" ColumnName="ItemDescription" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="MPRItemDetailsid" ColumnName="MPRItemDetailsid" />
+                <ScalarProperty Name="RFQRevisionId" ColumnName="RFQRevisionId" />
+                <ScalarProperty Name="RFQItemsId" ColumnName="RFQItemsId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQItemsInfoes">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQItemsInfo">
               <MappingFragment StoreEntitySet="RemoteRFQItemsInfo">
-                <ScalarProperty Name="GSTPercentage" ColumnName="GSTPercentage" />
-                <ScalarProperty Name="RFQSplitItemId" ColumnName="RFQSplitItemId" />
-                <ScalarProperty Name="RFQItemsId" ColumnName="RFQItemsId" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="UOM" ColumnName="UOM" />
-                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
-                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
-                <ScalarProperty Name="CurrencyValue" ColumnName="CurrencyValue" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
                 <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="CurrencyValue" ColumnName="CurrencyValue" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="UOM" ColumnName="UOM" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="RFQItemsId" ColumnName="RFQItemsId" />
+                <ScalarProperty Name="RFQSplitItemId" ColumnName="RFQSplitItemId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQMasters">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQMaster">
               <MappingFragment StoreEntitySet="RemoteRFQMasters">
-                <ScalarProperty Name="RfqMasterId" ColumnName="RfqMasterId" />
-                <ScalarProperty Name="MPRRevisionId" ColumnName="MPRRevisionId" />
-                <ScalarProperty Name="RFQNo" ColumnName="RFQNo" />
-                <ScalarProperty Name="RFQUniqueNo" ColumnName="RFQUniqueNo" />
-                <ScalarProperty Name="VendorId" ColumnName="VendorId" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
                 <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+                <ScalarProperty Name="RFQUniqueNo" ColumnName="RFQUniqueNo" />
+                <ScalarProperty Name="RFQNo" ColumnName="RFQNo" />
+                <ScalarProperty Name="MPRRevisionId" ColumnName="MPRRevisionId" />
+                <ScalarProperty Name="RfqMasterId" ColumnName="RfqMasterId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQReminderTrackings">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQReminderTracking">
               <MappingFragment StoreEntitySet="RemoteRFQReminderTracking">
-                <ScalarProperty Name="Reminderid" ColumnName="Reminderid" />
-                <ScalarProperty Name="rfqccid" ColumnName="rfqccid" />
-                <ScalarProperty Name="ReminderTo" ColumnName="ReminderTo" />
-                <ScalarProperty Name="MailsSentOn" ColumnName="MailsSentOn" />
-                <ScalarProperty Name="Acknowledgementon" ColumnName="Acknowledgementon" />
-                <ScalarProperty Name="AcknowledgementRemarks" ColumnName="AcknowledgementRemarks" />
                 <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="AcknowledgementRemarks" ColumnName="AcknowledgementRemarks" />
+                <ScalarProperty Name="Acknowledgementon" ColumnName="Acknowledgementon" />
+                <ScalarProperty Name="MailsSentOn" ColumnName="MailsSentOn" />
+                <ScalarProperty Name="ReminderTo" ColumnName="ReminderTo" />
+                <ScalarProperty Name="rfqccid" ColumnName="rfqccid" />
+                <ScalarProperty Name="Reminderid" ColumnName="Reminderid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQRevisions">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQRevision">
               <MappingFragment StoreEntitySet="RemoteRFQRevisions">
-                <ScalarProperty Name="rfqRevisionId" ColumnName="rfqRevisionId" />
-                <ScalarProperty Name="rfqMasterId" ColumnName="rfqMasterId" />
-                <ScalarProperty Name="RevisionNo" ColumnName="RevisionNo" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="RFQValidDate" ColumnName="RFQValidDate" />
-                <ScalarProperty Name="PackingForwarding" ColumnName="PackingForwarding" />
-                <ScalarProperty Name="ExciseDuty" ColumnName="ExciseDuty" />
-                <ScalarProperty Name="SalesTax" ColumnName="SalesTax" />
-                <ScalarProperty Name="Freight" ColumnName="Freight" />
-                <ScalarProperty Name="Insurance" ColumnName="Insurance" />
-                <ScalarProperty Name="CustomsDuty" ColumnName="CustomsDuty" />
-                <ScalarProperty Name="ShipmentModeid" ColumnName="ShipmentModeid" />
-                <ScalarProperty Name="PaymentTermDays" ColumnName="PaymentTermDays" />
-                <ScalarProperty Name="PaymentTermRemarks" ColumnName="PaymentTermRemarks" />
-                <ScalarProperty Name="BankGuarantee" ColumnName="BankGuarantee" />
-                <ScalarProperty Name="DeliveryMinWeeks" ColumnName="DeliveryMinWeeks" />
-                <ScalarProperty Name="DeliveryMaxWeeks" ColumnName="DeliveryMaxWeeks" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
                 <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="DeliveryMaxWeeks" ColumnName="DeliveryMaxWeeks" />
+                <ScalarProperty Name="DeliveryMinWeeks" ColumnName="DeliveryMinWeeks" />
+                <ScalarProperty Name="BankGuarantee" ColumnName="BankGuarantee" />
+                <ScalarProperty Name="PaymentTermRemarks" ColumnName="PaymentTermRemarks" />
+                <ScalarProperty Name="PaymentTermDays" ColumnName="PaymentTermDays" />
+                <ScalarProperty Name="ShipmentModeid" ColumnName="ShipmentModeid" />
+                <ScalarProperty Name="CustomsDuty" ColumnName="CustomsDuty" />
+                <ScalarProperty Name="Insurance" ColumnName="Insurance" />
+                <ScalarProperty Name="Freight" ColumnName="Freight" />
+                <ScalarProperty Name="SalesTax" ColumnName="SalesTax" />
+                <ScalarProperty Name="ExciseDuty" ColumnName="ExciseDuty" />
+                <ScalarProperty Name="PackingForwarding" ColumnName="PackingForwarding" />
+                <ScalarProperty Name="RFQValidDate" ColumnName="RFQValidDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="RevisionNo" ColumnName="RevisionNo" />
+                <ScalarProperty Name="rfqMasterId" ColumnName="rfqMasterId" />
+                <ScalarProperty Name="rfqRevisionId" ColumnName="rfqRevisionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQStatus">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQStatu">
               <MappingFragment StoreEntitySet="RemoteRFQStatus">
-                <ScalarProperty Name="RfqStatusId" ColumnName="RfqStatusId" />
-                <ScalarProperty Name="RfqRevisionId" ColumnName="RfqRevisionId" />
-                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="updatedby" ColumnName="updatedby" />
-                <ScalarProperty Name="updatedDate" ColumnName="updatedDate" />
                 <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="updatedDate" ColumnName="updatedDate" />
+                <ScalarProperty Name="updatedby" ColumnName="updatedby" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="RfqRevisionId" ColumnName="RfqRevisionId" />
+                <ScalarProperty Name="RfqStatusId" ColumnName="RfqStatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteRfqTerms">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteRfqTerm">
+              <MappingFragment StoreEntitySet="RemoteRfqTerms">
+                <ScalarProperty Name="SyncDate" ColumnName="SyncDate" />
+                <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="VendorResponse" ColumnName="VendorResponse" />
+                <ScalarProperty Name="Terms" ColumnName="Terms" />
+                <ScalarProperty Name="TermGroup" ColumnName="TermGroup" />
+                <ScalarProperty Name="termsid" ColumnName="termsid" />
+                <ScalarProperty Name="RfqRevisionId" ColumnName="RfqRevisionId" />
+                <ScalarProperty Name="VRfqTermsid" ColumnName="VRfqTermsid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteRFQVendorTerms">
             <EntityTypeMapping TypeName="VSCMModel.RemoteRFQVendorTerm">
               <MappingFragment StoreEntitySet="RemoteRFQVendorTerms">
-                <ScalarProperty Name="RFQTermsid" ColumnName="RFQTermsid" />
-                <ScalarProperty Name="RFQversionId" ColumnName="RFQversionId" />
-                <ScalarProperty Name="VendorTermsid" ColumnName="VendorTermsid" />
-                <ScalarProperty Name="updatedBY" ColumnName="updatedBY" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
                 <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="updatedBY" ColumnName="updatedBY" />
+                <ScalarProperty Name="VendorTermsid" ColumnName="VendorTermsid" />
+                <ScalarProperty Name="RFQversionId" ColumnName="RFQversionId" />
+                <ScalarProperty Name="RFQTermsid" ColumnName="RFQTermsid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteShipmentModeMasters">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteShipmentModeMaster">
+              <MappingFragment StoreEntitySet="RemoteShipmentModeMaster">
+                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
+                <ScalarProperty Name="DeletedBY" ColumnName="DeletedBY" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="updatedDate" ColumnName="updatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="Mode" ColumnName="Mode" />
+                <ScalarProperty Name="ShipmentModeid" ColumnName="ShipmentModeid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteStateMasters">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteStateMaster">
+              <MappingFragment StoreEntitySet="RemoteStateMaster">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteUnitMasters">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteUnitMaster">
+              <MappingFragment StoreEntitySet="RemoteUnitMaster">
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="UnitName" ColumnName="UnitName" />
+                <ScalarProperty Name="UnitID" ColumnName="UnitID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteVendorMasters">
             <EntityTypeMapping TypeName="VSCMModel.RemoteVendorMaster">
               <MappingFragment StoreEntitySet="RemoteVendorMaster">
-                <ScalarProperty Name="Vendorid" ColumnName="Vendorid" />
-                <ScalarProperty Name="VendorCode" ColumnName="VendorCode" />
-                <ScalarProperty Name="VendorName" ColumnName="VendorName" />
-                <ScalarProperty Name="OldVendorCode" ColumnName="OldVendorCode" />
-                <ScalarProperty Name="Street" ColumnName="Street" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
-                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
-                <ScalarProperty Name="PhoneNo" ColumnName="PhoneNo" />
-                <ScalarProperty Name="FaxNo" ColumnName="FaxNo" />
-                <ScalarProperty Name="AuGr" ColumnName="AuGr" />
-                <ScalarProperty Name="PaymentTermCode" ColumnName="PaymentTermCode" />
-                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
-                <ScalarProperty Name="Emailid" ColumnName="Emailid" />
-                <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
-                <ScalarProperty Name="AutoAssignmentofRFQ" ColumnName="AutoAssignmentofRFQ" />
                 <ScalarProperty Name="Deleteflag" ColumnName="Deleteflag" />
+                <ScalarProperty Name="AutoAssignmentofRFQ" ColumnName="AutoAssignmentofRFQ" />
+                <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
+                <ScalarProperty Name="Emailid" ColumnName="Emailid" />
+                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
+                <ScalarProperty Name="PaymentTermCode" ColumnName="PaymentTermCode" />
+                <ScalarProperty Name="AuGr" ColumnName="AuGr" />
+                <ScalarProperty Name="FaxNo" ColumnName="FaxNo" />
+                <ScalarProperty Name="PhoneNo" ColumnName="PhoneNo" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="OldVendorCode" ColumnName="OldVendorCode" />
+                <ScalarProperty Name="VendorName" ColumnName="VendorName" />
+                <ScalarProperty Name="VendorCode" ColumnName="VendorCode" />
+                <ScalarProperty Name="Vendorid" ColumnName="Vendorid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteVendorRegisterDocumenetMasters">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteVendorRegisterDocumenetMaster">
+              <MappingFragment StoreEntitySet="RemoteVendorRegisterDocumenetMaster">
+                <ScalarProperty Name="IsNewRegister" ColumnName="IsNewRegister" />
+                <ScalarProperty Name="Documentype" ColumnName="Documentype" />
+                <ScalarProperty Name="DocumentationTypeId" ColumnName="DocumentationTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteVendorRegisterDocumentDetails">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteVendorRegisterDocumentDetail">
+              <MappingFragment StoreEntitySet="RemoteVendorRegisterDocumentDetails">
+                <ScalarProperty Name="DocumentationTypeId" ColumnName="DocumentationTypeId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UploadedOn" ColumnName="UploadedOn" />
+                <ScalarProperty Name="PhysicalPath" ColumnName="PhysicalPath" />
+                <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RemoteVendorRegisterMasters">
+            <EntityTypeMapping TypeName="VSCMModel.RemoteVendorRegisterMaster">
+              <MappingFragment StoreEntitySet="RemoteVendorRegisterMaster">
+                <ScalarProperty Name="PaymentTerms" ColumnName="PaymentTerms" />
+                <ScalarProperty Name="TanNo" ColumnName="TanNo" />
+                <ScalarProperty Name="CINNo" ColumnName="CINNo" />
+                <ScalarProperty Name="PANNo" ColumnName="PANNo" />
+                <ScalarProperty Name="NatureofBusiness" ColumnName="NatureofBusiness" />
+                <ScalarProperty Name="GSTNo" ColumnName="GSTNo" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="PhoneAndExtn" ColumnName="PhoneAndExtn" />
+                <ScalarProperty Name="LocalBranchOffice" ColumnName="LocalBranchOffice" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="VendorName" ColumnName="VendorName" />
+                <ScalarProperty Name="RequestedOn" ColumnName="RequestedOn" />
+                <ScalarProperty Name="VendorNoInSAP" ColumnName="VendorNoInSAP" />
+                <ScalarProperty Name="EvaluationRequired" ColumnName="EvaluationRequired" />
+                <ScalarProperty Name="Onetimevendor" ColumnName="Onetimevendor" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteVendorRFQTerms">
             <EntityTypeMapping TypeName="VSCMModel.RemoteVendorRFQTerm">
               <MappingFragment StoreEntitySet="RemoteVendorRFQTerms">
-                <ScalarProperty Name="VendorTermsid" ColumnName="VendorTermsid" />
-                <ScalarProperty Name="TermsCategoryId" ColumnName="TermsCategoryId" />
-                <ScalarProperty Name="VendorID" ColumnName="VendorID" />
-                <ScalarProperty Name="Terms" ColumnName="Terms" />
-                <ScalarProperty Name="Indexno" ColumnName="Indexno" />
                 <ScalarProperty Name="deleteFlag" ColumnName="deleteFlag" />
+                <ScalarProperty Name="Indexno" ColumnName="Indexno" />
+                <ScalarProperty Name="Terms" ColumnName="Terms" />
+                <ScalarProperty Name="VendorID" ColumnName="VendorID" />
+                <ScalarProperty Name="TermsCategoryId" ColumnName="TermsCategoryId" />
+                <ScalarProperty Name="VendorTermsid" ColumnName="VendorTermsid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RemoteVendorUserMasters">
             <EntityTypeMapping TypeName="VSCMModel.RemoteVendorUserMaster">
               <MappingFragment StoreEntitySet="RemoteVendorUserMaster">
-                <ScalarProperty Name="Vuserid" ColumnName="Vuserid" />
-                <ScalarProperty Name="VendorId" ColumnName="VendorId" />
-                <ScalarProperty Name="pwd" ColumnName="pwd" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="SuperUser" ColumnName="SuperUser" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="pwd" ColumnName="pwd" />
+                <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+                <ScalarProperty Name="Vuserid" ColumnName="Vuserid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RFQPendingQuotations">
+            <EntityTypeMapping TypeName="VSCMModel.RFQPendingQuotation">
+              <MappingFragment StoreEntitySet="RFQPendingQuotations">
+                <ScalarProperty Name="RevisionNo" ColumnName="RevisionNo" />
+                <ScalarProperty Name="RFQValidDate" ColumnName="RFQValidDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="RFQNo" ColumnName="RFQNo" />
+                <ScalarProperty Name="rfqRevisionId" ColumnName="rfqRevisionId" />
+                <ScalarProperty Name="RfqMasterId" ColumnName="RfqMasterId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

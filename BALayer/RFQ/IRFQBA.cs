@@ -30,7 +30,7 @@ namespace BALayer.RFQ
         statuscheckmodel DeleteRfqRevisionbyId(int id);
         statuscheckmodel DeleteRfqItemById(int id);
         statuscheckmodel DeleteBulkItemsByItemId(List<int> id);
-        statuscheckmodel InsertDocument(RfqDocumentsModel model);
+        Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model);
         statuscheckmodel CommunicationAdd(RfqCommunicationModel model);
         Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid);
         Task<List<RfqRevisionModel>> GetAllrevisionRFQs();
@@ -40,7 +40,7 @@ namespace BALayer.RFQ
         Task<VendormasterModel> GetvendorById(int id);
         Task<statuscheckmodel> InsertVendorterms(VendorRfqtermModel vendor);
         Task<statuscheckmodel> InsertRfqItemInfo(RfqItemModel model);
-        Task<statuscheckmodel> DeleteRfqIteminfoByid(List<int> id);
+        Task<statuscheckmodel> DeleteRfqIteminfoByid(int id);
         Task<statuscheckmodel> DeleteRfqitemandinfosById(int id);
         Task<statuscheckmodel> UpdateRfqItemInfoById(RfqItemInfoModel model);
         Task<RfqItemModel> GetRfqItemByMPrId(int id);
@@ -84,33 +84,5 @@ namespace BALayer.RFQ
         Task<RfqItemModel> GetItemByItemId(int id);
         Task<List<RFQMasterModel>> GetRfqByVendorId(int vendorid);
         List<RFQListView> getRFQList(rfqFilterParams Rfqfilterparams);
-
-        //pa authorization
-        Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model);
-        Task<PAAuthorizationLimitModel> GetPAAuthorizationLimitById(int deptid);
-        Task<statuscheckmodel> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model);
-        Task<PAAuthorizationEmployeeMappingModel> GetMappingEmployee(PAAuthorizationLimitModel limit);
-        Task<statuscheckmodel> CreatePACreditDaysmaster(PACreditDaysMasterModel model);
-        Task<PACreditDaysMasterModel> GetCreditdaysMasterByID(int creditdaysid);
-        Task<statuscheckmodel> AssignCreditdaysToEmployee(PACreditDaysApproverModel model);
-        Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid);
-        Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid);
-        Task<List<PAAuthorizationLimitModel>> GetPAAuthorizationLimitsByDeptId(int departmentid);
-        Task<statuscheckmodel> RemovePACreditDaysApprover(int ApprovalId);
-        Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId);
-        Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model);
-        Task<List<RfqItemModel>> GetRfqItemsByRevisionId(int revisionid);
-        Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters);
-        Task<List<DepartmentModel>> GetAllDepartments();
-        Task<List<PAAuthorizationLimitModel>> GetSlabsByDepartmentID(int DeptID);
-        Task<List<EmployeModel>> GetAllEmployee();
-        Task<List<PAAuthorizationLimitModel>> GetAllCredits();
-        Task<List<PACreditDaysMasterModel>> GetAllCreditDays();
-        Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes();
-        Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes();
-        Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model);
-        Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID);
-        Task<List<MPRPADetailsModel>> GetAllMPRPAList();
-        Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles();
     }
 }

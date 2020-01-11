@@ -47,7 +47,7 @@ namespace DALayer.RFQ
                     rfqterm.termsid = data.TermId;
                     rfqterm.TermGroup = obj.YILTermsGroups.Where(li => li.TermGroupId == data.TermGroupId).FirstOrDefault<YILTermsGroup>().TermGroup;
                     rfqterm.Terms = data.Terms;
-                    rfqterm.CreatedBy = data.CreatedBy;
+                    rfqterm.CreatedBy = "190455";
                     rfqterm.CreatedDate = DateTime.Now;
                     rfqList.Add(rfqterm);
                 }
@@ -59,9 +59,9 @@ namespace DALayer.RFQ
                 rfqModel.rfqmaster = new RFQMasterModel();
                 rfqModel.rfqmaster.MPRRevisionId = Convert.ToInt32(item.MPRRevisionId);
                 rfqModel.rfqmaster.VendorId = item.VendorId;
-                rfqModel.rfqmaster.CreatedBy = item.CreatedBy;
+                rfqModel.rfqmaster.CreatedBy = "190455";
                 rfqModel.rfqmaster.Created = DateTime.Now;
-                rfqModel.CreatedBy =Convert.ToInt32(item.CreatedBy);
+                rfqModel.CreatedBy = 190455;
                 rfqModel.CreatedDate = DateTime.Now;
                 rfqModel.RfqValidDate = item.RFQValidDate;
                 rfqModel.PackingForwading = item.PackingForwarding;
@@ -88,7 +88,7 @@ namespace DALayer.RFQ
                 mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == item.MPRRevisionId).FirstOrDefault().RequisitionId;
                 mPRStatusTrackDetails.RevisionId =Convert.ToInt32(item.MPRRevisionId);
                 mPRStatusTrackDetails.StatusId = 7;
-                mPRStatusTrackDetails.UpdatedBy =item.CreatedBy;
+                mPRStatusTrackDetails.UpdatedBy = "190455";
                 mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
                this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
             }
@@ -138,7 +138,7 @@ namespace DALayer.RFQ
                 {
                     RFQItem rfqItem = Context.RFQItems.Where(li => li.RFQItemsId == item.RFQItemsId).FirstOrDefault<RFQItem>();
                     rfqItem.Status = "Approved";
-                    rfqItem.StatusUpdatedBy = item.CreatedBy;
+                    rfqItem.StatusUpdatedBy = "190455";
                     rfqItem.StatusUpdateddate = DateTime.Now;
                     Context.SaveChanges();
 
@@ -949,67 +949,52 @@ namespace DALayer.RFQ
             List<RfqItemModel> rfq = new List<RfqItemModel>();
             try
             {
-                return (from x in vscm.RemoteRFQItems
-                        where x.RFQRevisionId == revisionid
-                        select new RfqItemModel
-                        {
-                            HSNCode = x.HSNCode,
-                            QuotationQty = x.QuotationQty,
-                            RFQRevisionId = x.RFQRevisionId,
-                            VendorModelNo = x.VendorModelNo,
-                            RequsetRemarks = x.RequestRemarks,
-                            RFQItemID = x.RFQItemsId,
-                            ItemName = x.ItemName,
-                            ItemDescription = x.ItemDescription
-                        }).ToList();
-
-            }
-
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<RfqItemModel>> GetRfqItemsByRevisionId(int revisionid)
-        {
-            List<RfqItemModel> rfq = new List<RfqItemModel>();
-            try
-            {
-                var itemdata = vscm.RemoteRFQItems.Where(x => x.RFQRevisionId == revisionid).ToList();
-                if (itemdata != null)
+                var data = vscm.RemoteRFQItems.Where(x => x.RFQRevisionId == revisionid && x.DeleteFlag==false).ToList();
+                //rfq = data.Select(x => new RfqItemModel()
+                //{
+                //    RFQItemID=x.RFQItemsId,
+                //    HSNCode=x.HSNCode,
+                //    QuotationQty=x.QuotationQty,
+                //    VendorModelNo=x.VendorModelNo,
+                //    CustomDuty=Convert.ToDecimal( x.CustomDuty),
+                //    RequsetRemarks=x.RequestRemarks
+                //}).ToList();
+                var itemid = data.Select(x => new RfqItemModel()
                 {
-                    rfq = itemdata.Select(x => new RfqItemModel()
+                    RFQItemID = x.RFQItemsId
+                }).FirstOrDefault();
+                var iteminfodata = vscm.RemoteRFQItemsInfoes.ToList();
+
+                foreach (var item in data)
+                {
+                    rfq.Add(new RfqItemModel()
                     {
-                        HSNCode = x.HSNCode,
-                        QuotationQty = x.QuotationQty,
-                        RFQRevisionId = x.RFQRevisionId,
-                        VendorModelNo = x.VendorModelNo,
-                        RFQItemID = x.RFQItemsId,
-                        RequsetRemarks = x.RequestRemarks,
-                        ItemName = x.ItemName,
-                        ItemDescription = x.ItemDescription,
-                    }).ToList();
-                    var data = itemdata.Select(x => new RfqItemModel()
-                    {
-                        RFQRevisionId = x.RFQRevisionId
-                    }).FirstOrDefault();
-                    RfqItemModel model = new RfqItemModel();
-                    var termsdata = vscm.RemoteRfqTerms.Where(x => x.RfqRevisionId == data.RFQRevisionId).ToList();
-                    rfq.ConvertAll(x => new RfqItemModel()
-                    {
-                        rfqterms = termsdata.Select(y => new RFQTermsModel()
+                        RFQItemID = item.RFQItemsId,
+                        HSNCode = item.HSNCode,
+                        QuotationQty = item.QuotationQty,
+                        VendorModelNo = item.VendorModelNo,
+                        CustomDuty = Convert.ToDecimal(item.CustomDuty),
+                        RequsetRemarks = item.RequestRemarks,
+                        ItemName = item.ItemName,
+                        ItemDescription = item.ItemDescription,
+                        iteminfo = iteminfodata.Where(x=>x.RFQItemsId== item.RFQItemsId && x.DeleteFlag == false).Select(x => new RfqItemInfoModel()
                         {
-                            RfqTermsid = y.VRfqTermsid,
-                            Terms = y.Terms,
-                            TermGroup = y.TermGroup,
-                            termsid = y.termsid,
-                            SyncStatus = y.SyncStatus
+                            RFQSplitItemId = x.RFQSplitItemId,
+                            Qty = x.Qty,
+                            UOM = x.UOM,
+                            UnitPrice = x.UnitPrice,
+                            DiscountPercentage = x.DiscountPercentage,
+                            Discount = x.Discount,
+                            CurrencyID = x.CurrencyId,
+                            CurrencyValue = x.CurrencyValue,
+                            Remarks = x.Remarks
                         }).ToList()
-                    }).ToList();
+                    });
 
                 }
-                return rfq;
 
+
+                return rfq;
             }
 
             catch (Exception ex)
@@ -1017,6 +1002,33 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+        //public async Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid)
+        //{
+        //    List<RfqItemModel> rfq = new List<RfqItemModel>();
+        //    try
+        //    {
+        //        return (from x in vscm.RemoteRFQItems
+        //                where x.RFQRevisionId == revisionid
+        //                select new RfqItemModel
+        //                {
+        //                    HSNCode = x.HSNCode,
+        //                    QuotationQty = x.QuotationQty,
+        //                    RFQRevisionId = x.RFQRevisionId,
+        //                    VendorModelNo = x.VendorModelNo,
+        //                    RequsetRemarks = x.RequestRemarks,
+        //                    RFQItemID = x.RFQItemsId,
+        //                    ItemName = x.ItemName,
+        //                    ItemDescription = x.ItemDescription
+        //                }).ToList();
+
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        throw;
+        //    }
+        //}
+
         //public RFQMasterModel getItemsbyRevisionno(string id)
         // {
         //     RFQMasterModel master = new RFQMasterModel();
@@ -1142,52 +1154,33 @@ namespace DALayer.RFQ
             }
         }
 
-        //public statusmodel InsertDocument(RfqDocumentsModel model)
-        //{
-        //    if (true)
-        //    {
-        //        try
-        //        {
-        //            string PhotoPath = Convert.ToString(ConfigurationManager.AppSettings["ImagePath"]);
-        //            RFQDocument newObj = new RFQDocument();
-        //            newObj.DocumentName = model.DocumentName;
-        //            newObj.DocumentType = model.DocumentType;
-        //            newObj.Path = model.Path;
-        //            newObj.UploadedBy = model.UploadedBy;
-        //            newObj.uploadedDate = model.UploadedDate;
-        //            newObj.Status = model.Status;
-        //            newObj.StatusBy = model.StatusBy;
-        //            newObj.StatusDate = model.Statusdate;
-
-        //            if (String.IsNullOrEmpty(newObj.Path))
-        //            {
-
-        //            }
-        //            else
-        //            {
-        //               // string startingFilePath = PhotoPath;
-
-        //                string FilePath = SaveImage(newObj.Path, startingFilePath, newObj.DocumentName);
-
-        //                FileInfo fInfo = new FileInfo(FilePath);
-
-        //                newObj.Content = fInfo.Name;
-        //            }
-
-
-
-        //            return Request.CreateResponse(HttpStatusCode.Created, newArticle);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
-        //    }
-        //}
+        public async Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+                try
+                {
+                    //string PhotoPath = Convert.ToString(ConfigurationManager.AppSettings["ImagePath"]);
+                    RemoteRFQDocument newObj = new RemoteRFQDocument();
+                    newObj.DocumentName = model.DocumentName;
+                    newObj.DocumentType = model.DocumentType;
+                    newObj.Path = model.Path;
+                    newObj.UploadedBy = model.UploadedBy;
+                    newObj.uploadedDate = model.UploadedDate;
+                    newObj.Status = model.Status;
+                    newObj.StatusBy = model.StatusBy;
+                    newObj.StatusDate = model.Statusdate;
+                    vscm.RemoteRFQDocuments.Add(newObj);
+                    vscm.SaveChanges();
+                    status.Sid = newObj.RfqDocId;
+                    return status;
+                    //return Request.CreateResponse(HttpStatusCode.Created, newArticle);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            
+        }
         private string SaveImage(string base64, string FilePath, string ImageName)
         {
             //Get the file type to save in
@@ -1345,10 +1338,10 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-        public statuscheckmodel InsertDocument(RfqDocumentsModel model)
-        {
-            throw new NotImplementedException();
-        }
+        //public statuscheckmodel InsertDocument(RfqDocumentsModel model)
+        //{
+        //    throw new NotImplementedException();
+        //}
         public async Task<RfqItemModel> GetItemsByItemId(int id)
         {
             RfqItemModel model = new RfqItemModel();
@@ -1386,96 +1379,57 @@ namespace DALayer.RFQ
                 model.QuotationQty = items.QuotationQty;
                 model.VendorModelNo = items.VendorModelNo;
                 model.RequsetRemarks = items.RequestRemarks;
-                model.CGSTPercentage = Convert.ToDecimal(items.CGSTPercentage);
-                model.IGSTPercentage = Convert.ToDecimal(items.IGSTPercentage);
-                model.SGSTPercentage = Convert.ToDecimal(items.SGSTPercentage);
-                model.CustomDuty = Convert.ToDecimal(items.CustomDuty);
-                model.PFPercentage = Convert.ToDecimal(items.PFPercentage);
-                model.PFAmount = Convert.ToDecimal(items.PFAmount);
-                model.FreightAmount = Convert.ToDecimal(items.FreightAmount);
-                model.FreightPercentage = Convert.ToDecimal(items.FreightPercentage);
-
-
+                model.CGSTPercentage = items.CGSTPercentage;
+                model.IGSTPercentage = items.IGSTPercentage;
+                model.SGSTPercentage = items.SGSTPercentage;
+                model.CustomDuty = items.CustomDuty;
+                model.FreightAmount = items.FreightAmount;
+                model.FreightPercentage = items.FreightPercentage;
+                //var data= obj.RFQItemsInfoes.Where(x => x.RFQItemsId == items.RFQItemsId).Select(x => new RfqItemInfoModel()
+                // {
+                //     UnitPrice = x.UnitPrice
+                // });
                 var price = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == items.RFQItemsId).FirstOrDefault();
-                model.ItemUnitPrice = (price.UnitPrice) * (Convert.ToDecimal(price.Qty));
-
-                decimal Discountpercentage = price.DiscountPercentage;
-                decimal Discount = price.Discount;
-                if (Discountpercentage != 0)
+                model.ItemUnitPrice = price.UnitPrice;
+                Nullable<decimal> Discountpercentage = price.DiscountPercentage;
+                Nullable<decimal> Discount = price.Discount;
+                if (items.CustomDuty != 0 && items.CustomDuty != null)
                 {
-                    model.DiscountAmount = (model.ItemUnitPrice * Discountpercentage) / 100;
-                }
-                else
-                {
-                    model.DiscountAmount = Discount;
-                }
-                if (model.CustomDuty != 0)
-                {
-                    model.CustomDutyAmount = Convert.ToDecimal((model.ItemUnitPrice * items.CustomDuty) / 100);
+                    model.CustomDutyAmount = (model.ItemUnitPrice * items.CustomDuty) / 100;
                     if (items.taxInclusiveOfDiscount == false)
                     {
-                        if (Discount != 0)
+                        model.NetAmount = model.ItemUnitPrice + model.CustomDutyAmount;
+                        if (Discountpercentage != 0 || Discount != 0)
                         {
-                            model.DiscountAmount = Discount;
-                            model.NetAmount = model.ItemUnitPrice - Discount;
-                            model.TotalAmount = model.NetAmount + model.CustomDutyAmount;
-                            if (model.PFAmount != 0)
+                            if (Discount != 0 && Discount != null)
                             {
-                                model.FinalNetAmount = model.TotalAmount + model.PFAmount;
+                                model.DiscountAmount = Discount;
+                                model.NetAmount = model.NetAmount - model.DiscountAmount;
+                                model.FinalNetAmount = model.NetAmount;
                             }
                             else
                             {
-                                model.FinalNetAmount = model.TotalAmount;
+                                model.Discountpercentage = Discountpercentage;
+                                model.DiscountAmount = (model.NetAmount) * (Discountpercentage / 100);
+                                model.FinalNetAmount = (model.NetAmount) - (model.DiscountAmount);
                             }
                         }
-                        else
-                        {
-                            model.Discountpercentage = Discountpercentage;
-                            model.DiscountAmount = (model.ItemUnitPrice) * (Discountpercentage / 100);
-                            model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
-                            if (model.PFPercentage != 0)
-                            {
-                                model.PFAmount = (model.NetAmount) * (model.PFPercentage) / 100;
-                                model.FinalNetAmount = model.NetAmount + model.CustomDuty + model.PFAmount;
-                            }
-                            else
-                            {
-                                model.FinalNetAmount = model.NetAmount + model.CustomDuty;
-                            }
-                        }
-
                     }
                     else
                     {
-                        if (Discountpercentage != 0 || Discount != 0)
+                        if (Discountpercentage != 0 || Discount != 0 || Discountpercentage != null)
                         {
-                            if (Discount != 0)
+                            if (Discount != 0 && Discount != null)
                             {
                                 model.DiscountAmount = Discount;
                                 model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
-                                model.TotalAmount = model.NetAmount + model.CustomDutyAmount;
-                                if (model.PFAmount != 0)
-                                {
-                                    model.FinalNetAmount = model.TotalAmount + model.CustomDutyAmount + model.PFAmount;
-                                }
-                                else
-                                {
-                                    model.FinalNetAmount = model.TotalAmount + model.CustomDutyAmount;
-                                }
+                                model.NetAmount = model.ItemUnitPrice + model.CustomDutyAmount;
                             }
                             else
                             {
                                 model.DiscountAmount = (model.ItemUnitPrice) * (Discountpercentage / 100);
                                 model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
-                                if (model.PFPercentage != 0)
-                                {
-                                    model.PFAmount = (model.ItemUnitPrice) * (model.PFPercentage) / 100;
-                                    model.TotalAmount = model.NetAmount + model.CustomDuty + model.PFAmount;
-                                }
-                                else
-                                {
-                                    model.FinalNetAmount = model.NetAmount + model.CustomDuty;
-                                }
+                                model.NetAmount = model.ItemUnitPrice + model.CustomDutyAmount;
                             }
                         }
                     }
@@ -1484,118 +1438,59 @@ namespace DALayer.RFQ
                 {
                     if (items.taxInclusiveOfDiscount == false || items.taxInclusiveOfDiscount == null)
                     {
-                        if (model.DiscountAmount != 0 || model.PFAmount != 0 || model.FreightAmount != 0)
+                        if (Discountpercentage != 0 || Discount != 0)
                         {
-                            //model.DiscountAmount = Discount;
-                            model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
-                            if (model.FreightAmount != 0 || model.FreightPercentage != 0)
+                            if (Discountpercentage != 0 || Discount != 0 || Discountpercentage != null)
                             {
-                                model.TotalAmount = (model.FreightPercentage * model.NetAmount) / 100 + model.FreightAmount + model.NetAmount;
-                                model.SGSTAmount = (model.TotalAmount * model.SGSTPercentage) / 100;
-                                model.CGSTAmount = (model.TotalAmount * model.CGSTPercentage) / 100;
-                                model.IGSTAmount = (model.TotalAmount * model.IGSTPercentage) / 100;
-                                model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
-                                if (model.PFAmount != 0 || model.PFPercentage != 0)
+                                if (Discount != 0 && Discount != null)
                                 {
-                                    model.PFAmount = (model.PFPercentage * model.TotalAmount) / 100 + model.PFAmount + model.TotalAmount;
-                                    model.FinalNetAmount = model.TotalAmount + model.TotalTaxAmount + model.PFAmount + (model.PFPercentage * model.TotalAmount) / 100;
+                                    model.DiscountAmount = Discount;
+                                    model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
+                                    model.SGSTAmount = (model.NetAmount * items.SGSTPercentage) / 100;
+                                    model.CGSTAmount = (model.NetAmount * items.CGSTPercentage) / 100;
+                                    model.IGSTAmount = (model.NetAmount * items.IGSTPercentage) / 100;
+                                    model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
+                                    model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
                                 }
                                 else
                                 {
-                                    model.FinalNetAmount = model.TotalAmount + model.TotalTaxAmount;
-                                }
-                            }
-                            else
-                            {
-                                model.SGSTAmount = (model.NetAmount * model.SGSTPercentage) / 100;
-                                model.CGSTAmount = (model.NetAmount * model.CGSTPercentage) / 100;
-                                model.IGSTAmount = (model.NetAmount * model.IGSTPercentage) / 100;
-                                model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
-                                if (model.PFAmount != 0)
-                                {
-                                    model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount + model.PFAmount;
-                                }
-                                else
-                                {
+                                    model.DiscountAmount = (model.NetAmount * Discountpercentage) / 100;
+                                    model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
+                                    model.SGSTAmount = (model.NetAmount * items.SGSTPercentage) / 100;
+                                    model.CGSTAmount = (model.NetAmount * items.CGSTPercentage) / 100;
+                                    model.IGSTAmount = (model.NetAmount * items.IGSTPercentage) / 100;
+                                    model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
                                     model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
                                 }
                             }
                         }
-                        //else
-                        //{
-                        //    model.DiscountAmount = (model.ItemUnitPrice * Discountpercentage) / 100;
-                        //    model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
-                        //    model.SGSTAmount = (model.NetAmount * model.SGSTPercentage) / 100;
-                        //    model.CGSTAmount = (model.NetAmount * model.CGSTPercentage) / 100;
-                        //    model.IGSTAmount = (model.NetAmount * model.IGSTPercentage) / 100;
-                        //    model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
-                        //    if (model.PFPercentage != 0)
-                        //    {
-                        //        model.PFAmount = (model.NetAmount * model.PFPercentage) / 100;
-                        //        model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount + model.PFAmount;
-                        //    }
-                        //    else
-                        //    {
-                        //        model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
-                        //    }
-                        //}
+
+
                     }
                     else
                     {
-                        if (model.DiscountAmount != 0 || model.PFAmount != 0 || model.FreightAmount != 0)
+                        if (Discountpercentage != 0 || Discount != 0 || Discountpercentage != null)
                         {
-                            //model.NetAmount = model.ItemUnitPrice - model.DiscountAmount;
-                            if (model.FreightAmount != 0 || model.FreightPercentage != 0)
+                            if (Discount != 0 && Discount != null)
                             {
-                                model.TotalAmount = (model.FreightPercentage * model.ItemUnitPrice) / 100 + model.FreightAmount + model.ItemUnitPrice;
-                                model.NetAmount = (model.ItemUnitPrice) - (model.DiscountAmount);
-                                model.SGSTAmount = (model.TotalAmount * model.SGSTPercentage) / 100;
-                                model.CGSTAmount = (model.TotalAmount * model.CGSTPercentage) / 100;
-                                model.IGSTAmount = (model.TotalAmount * model.IGSTPercentage) / 100;
+                                model.DiscountAmount = Discount;
+                                model.NetAmount = model.ItemUnitPrice - model.DiscountAmount;
+                                model.SGSTAmount = (model.NetAmount * items.SGSTPercentage) / 100;
+                                model.CGSTAmount = (model.NetAmount * items.CGSTPercentage) / 100;
+                                model.IGSTAmount = (model.NetAmount * items.IGSTPercentage) / 100;
                                 model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
-                                if (model.PFAmount != 0 || model.PFPercentage != 0)
-                                {
-                                    model.PFAmount = (model.PFPercentage * model.TotalAmount) / 100 + model.PFAmount;
-                                    model.FinalNetAmount = model.TotalAmount + model.TotalTaxAmount + model.PFAmount - model.DiscountAmount;
-                                }
-                                else
-                                {
-                                    model.FinalNetAmount = model.TotalAmount + model.TotalTaxAmount - model.DiscountAmount;
-                                }
+                                model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
                             }
                             else
                             {
-                                model.SGSTAmount = (model.ItemUnitPrice * model.SGSTPercentage) / 100;
-                                model.CGSTAmount = (model.ItemUnitPrice * model.CGSTPercentage) / 100;
-                                model.IGSTAmount = (model.ItemUnitPrice * model.IGSTPercentage) / 100;
+                                model.DiscountAmount = (model.ItemUnitPrice * Discountpercentage) / 100;
+                                model.NetAmount = model.ItemUnitPrice - model.DiscountAmount;
+                                model.SGSTAmount = (model.ItemUnitPrice * items.SGSTPercentage) / 100;
+                                model.CGSTAmount = (model.ItemUnitPrice * items.CGSTPercentage) / 100;
+                                model.IGSTAmount = (model.ItemUnitPrice * items.IGSTPercentage) / 100;
                                 model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
-                                if (model.PFAmount != 0)
-                                {
-                                    model.FinalNetAmount = model.ItemUnitPrice + model.TotalTaxAmount + model.PFAmount - model.DiscountAmount;
-                                }
-                                else
-                                {
-                                    model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount - model.DiscountAmount;
-                                }
+                                model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
                             }
-                            //else
-                            //{
-                            //    model.DiscountAmount = (model.ItemUnitPrice * Discountpercentage) / 100;
-                            //    model.SGSTAmount = (model.ItemUnitPrice * model.SGSTPercentage) / 100;
-                            //    model.CGSTAmount = (model.ItemUnitPrice * model.CGSTPercentage) / 100;
-                            //    model.IGSTAmount = (model.ItemUnitPrice * model.IGSTPercentage) / 100;
-                            //    model.TotalTaxAmount = model.SGSTAmount + model.CGSTAmount + model.IGSTAmount;
-                            //    model.NetAmount = model.ItemUnitPrice - model.DiscountAmount;
-                            //    if (model.PFPercentage != 0)
-                            //    {
-                            //        model.PFAmount = (model.ItemUnitPrice * model.PFPercentage) / 100;
-                            //        model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount + model.PFAmount;
-                            //    }
-                            //    else
-                            //    {
-                            //        model.FinalNetAmount = model.NetAmount + model.TotalTaxAmount;
-                            //    }
-                            //}
                         }
                     }
                 }
@@ -1694,31 +1589,32 @@ namespace DALayer.RFQ
             statuscheckmodel status = new statuscheckmodel();
             try
             {
+                var rfqRemoteitem = vscm.RemoteRFQItems.Where(x => x.RFQItemsId == model.RFQItemID).FirstOrDefault();
                 //for remoteserver
                 if (model != null)
                 {
                     vscm.Database.Connection.Open();
-                    var Remotedata = new RemoteRFQItem();
-                    var rfqRemoteitem = from x in vscm.RemoteRFQItems where x.RFQItemsId == model.RFQItemID select x;
-                    Remotedata.HSNCode = model.HSNCode;
-                    Remotedata.QuotationQty = model.QuotationQty;
-                    Remotedata.VendorModelNo = model.VendorModelNo;
-                    Remotedata.IGSTPercentage = model.IGSTPercentage;
-                    Remotedata.SGSTPercentage = model.SGSTPercentage;
-                    Remotedata.CGSTPercentage = model.CGSTPercentage;
-                    Remotedata.PFAmount = model.PFAmount;
-                    Remotedata.PFPercentage = model.PFPercentage;
-                    Remotedata.FreightAmount = model.FreightAmount;
-                    Remotedata.CustomDuty = model.CustomDuty;
-                    Remotedata.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
-                    vscm.RemoteRFQItems.Add(Remotedata);
+                    rfqRemoteitem.HSNCode = model.HSNCode;
+                    rfqRemoteitem.VendorModelNo = model.VendorModelNo;
+                    rfqRemoteitem.IGSTPercentage = model.IGSTPercentage;
+                    rfqRemoteitem.SGSTPercentage = model.SGSTPercentage;
+                    rfqRemoteitem.CGSTPercentage = model.CGSTPercentage;
+                    rfqRemoteitem.MfgPartNo = model.MfgPartNo;
+                    rfqRemoteitem.MfgModelNo = model.MfgModelNo;
+                    rfqRemoteitem.PFPercentage = model.PFPercentage;
+                    rfqRemoteitem.PFAmount = model.PFAmount;
+                    rfqRemoteitem.FreightPercentage = model.FreightPercentage;
+                    rfqRemoteitem.FreightAmount = model.FreightAmount;
+                    rfqRemoteitem.CustomDuty = model.CustomDuty;
+                    rfqRemoteitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+                    
                     vscm.SaveChanges();
                     foreach (var item in model.iteminfo)
                     {
                         var remoteinfo = new RemoteRFQItemsInfo()
                         {
                             RFQItemsId = item.RFQItemsId,
-                            Qty = item.Qunatity,
+                            Qty = item.Qty,
                             UOM = item.UOM,
                             UnitPrice = item.UnitPrice,
                             DiscountPercentage = item.DiscountPercentage,
@@ -1730,26 +1626,42 @@ namespace DALayer.RFQ
                             //GSTPercentage = item.GSTPercentage,
                             SyncDate = System.DateTime.Now
                         };
-                        Remotedata.RemoteRFQItemsInfoes.Add(remoteinfo);
-                        obj.SaveChanges();
+                        vscm.RemoteRFQItemsInfoes.Add(remoteinfo);
+                        vscm.SaveChanges();
                     }
                 }
                 vscm.Database.Connection.Close();
                 ///for local datbase
+                ///
+                obj.Database.Connection.Open();
+                var rfqitem = obj.RFQItems.Where(x => x.RFQItemsId == model.RFQItemID).FirstOrDefault();
                 var data = new RFQItem();
                 obj.Database.Connection.Open();
-                var rfqitem = from x in obj.RFQItems where x.RFQItemsId == model.RFQItemID select x;
-                data.HSNCode = model.HSNCode;
-                data.QuotationQty = model.QuotationQty;
-                data.VendorModelNo = model.VendorModelNo;
-                obj.RFQItems.Add(data);
+                rfqitem.HSNCode = model.HSNCode;
+                rfqitem.VendorModelNo = model.VendorModelNo;
+                rfqitem.IGSTPercentage = model.IGSTPercentage;
+                rfqitem.SGSTPercentage = model.SGSTPercentage;
+                rfqitem.CGSTPercentage = model.CGSTPercentage;
+                rfqitem.MfgPartNo = model.MfgPartNo;
+                rfqitem.MfgModelNo = model.MfgModelNo;
+                rfqitem.PFPercentage = model.PFPercentage;
+                rfqitem.PFAmount = model.PFAmount;
+                rfqitem.FreightPercentage = model.FreightPercentage;
+                rfqitem.FreightAmount = model.FreightAmount;
+                rfqitem.CustomDuty = model.CustomDuty;
+                rfqitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+                //rfqitem
+                //rfqitem.HSNCode = model.HSNCode;
+                //rfqitem.QuotationQty = model.QuotationQty;
+                //rfqitem.VendorModelNo = model.VendorModelNo;
+                //obj.RFQItems.Add(data);
                 obj.SaveChanges();
                 foreach (var item in model.iteminfo)
                 {
                     var info = new RFQItemsInfo()
                     {
                         RFQItemsId = item.RFQItemsId,
-                        Qty = item.Qunatity,
+                        Qty = item.Qty,
                         UOM = item.UOM,
                         UnitPrice = item.UnitPrice,
                         DiscountPercentage = item.DiscountPercentage,
@@ -1763,7 +1675,7 @@ namespace DALayer.RFQ
                     obj.SaveChanges();
                 }
                 obj.Database.Connection.Close();
-
+                //GetItemsByRevisionId(rfqRemoteitem.RFQRevisionId);
                 return status;
             }
             catch (Exception ex)
@@ -1771,26 +1683,36 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-        public async Task<statuscheckmodel> DeleteRfqIteminfoByid(List<int> id)
+        public async Task<statuscheckmodel> DeleteRfqIteminfoByid(int id)
         {
             statuscheckmodel status = new statuscheckmodel();
             try
             {
                 vscm.Database.Connection.Open();
-                var Remotedata = vscm.RemoteRFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
+                //var Remotedata = vscm.RemoteRFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
+                var Remotedata = vscm.RemoteRFQItemsInfoes.Where(x=>x.RFQSplitItemId==id && x.DeleteFlag==false).FirstOrDefault();
                 if (Remotedata != null)
                 {
                     Remotedata.DeleteFlag = true;
                     vscm.SaveChanges();
                 }
+                else
+                {
+                    return status;
+                }
                 vscm.Database.Connection.Close();
 
                 obj.Database.Connection.Open();
-                var Localdata = obj.RFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
+                //var Localdata = obj.RFQItemsInfoes.Where(x => id.Contains(x.RFQSplitItemId) && x.DeleteFlag == false).FirstOrDefault();
+                var Localdata = obj.RFQItemsInfoes.Where(x => x.RFQSplitItemId==id && x.DeleteFlag == false).FirstOrDefault();
                 if (Localdata != null)
                 {
                     Localdata.DeleteFlag = true;
                     obj.SaveChanges();
+                }
+                else
+                {
+                    return status;
                 }
                 status.Sid = Localdata.RFQItemsId;
                 return status;
@@ -1864,7 +1786,7 @@ namespace DALayer.RFQ
                 var remoteitem = vscm.RemoteRFQItemsInfoes.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
                 remoteitem.Discount = model.Discount;
                 remoteitem.DiscountPercentage = model.DiscountPercentage;
-                remoteitem.Qty = model.Qunatity;
+                remoteitem.Qty = model.Qty;
                 remoteitem.UnitPrice = model.UnitPrice;
                 remoteitem.UOM = model.UOM;
                 remoteitem.CurrencyValue = model.CurrencyValue;
@@ -1881,7 +1803,7 @@ namespace DALayer.RFQ
                 var localitem = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
                 localitem.Discount = model.Discount;
                 localitem.DiscountPercentage = model.DiscountPercentage;
-                localitem.Qty = model.Qunatity;
+                localitem.Qty = model.Qty;
                 localitem.UnitPrice = model.UnitPrice;
                 localitem.UOM = model.UOM;
                 localitem.CurrencyValue = model.CurrencyValue;
@@ -2027,7 +1949,7 @@ namespace DALayer.RFQ
                 remoteiteminfo.UnitPrice = model.UnitPrice;
                 remoteiteminfo.RFQItemsId = model.RFQItemsId;
                 remoteiteminfo.DiscountPercentage = model.DiscountPercentage;
-                remoteiteminfo.Qty = model.Qunatity;
+                remoteiteminfo.Qty = model.Qty;
                 remoteiteminfo.DeliveryDate = model.DeliveryDate;
                 remoteiteminfo.CurrencyValue = model.CurrencyValue;
                 remoteiteminfo.CurrencyId = model.CurrencyID;
@@ -2046,7 +1968,7 @@ namespace DALayer.RFQ
                 localiteminfo.RFQItemsId = model.RFQItemsId;
                 localiteminfo.Remarks = model.Remarks;
                 localiteminfo.DiscountPercentage = model.DiscountPercentage;
-                localiteminfo.Qty = model.Qunatity;
+                localiteminfo.Qty = model.Qty;
                 localiteminfo.DeliveryDate = model.DeliveryDate;
                 localiteminfo.CurrencyValue = model.CurrencyValue;
                 localiteminfo.CurrencyId = model.CurrencyID;
@@ -2078,7 +2000,7 @@ namespace DALayer.RFQ
                         remoteiteminfo.RFQItemsId = item.RFQItemsId;
                         //remoteiteminfo.GSTPercentage = item.GSTPercentage;
                         remoteiteminfo.DiscountPercentage = item.DiscountPercentage;
-                        remoteiteminfo.Qty = item.Qunatity;
+                        remoteiteminfo.Qty = item.Qty;
                         remoteiteminfo.DeliveryDate = item.DeliveryDate;
                         remoteiteminfo.CurrencyValue = item.CurrencyValue;
                         remoteiteminfo.CurrencyId = item.CurrencyID;
@@ -2100,7 +2022,7 @@ namespace DALayer.RFQ
                         localiteminfo.RFQItemsId = item.RFQItemsId;
                         //localiteminfo.GSTPercentage = item.GSTPercentage;
                         localiteminfo.DiscountPercentage = item.DiscountPercentage;
-                        localiteminfo.Qty = item.Qunatity;
+                        localiteminfo.Qty = item.Qty;
                         localiteminfo.DeliveryDate = item.DeliveryDate;
                         localiteminfo.CurrencyValue = item.CurrencyValue;
                         localiteminfo.CurrencyId = item.CurrencyID;
@@ -2168,7 +2090,7 @@ namespace DALayer.RFQ
                 var unitmaster = obj.UnitMasters.Where(x => x.DeleteFlag == false).ToList();
                 model = unitmaster.Select(x => new UnitMasterModel()
                 {
-                    UnitID = x.UnitId,
+                    UnitID = x.UnitID,
                     UnitName = x.UnitName,
                     //Isdeleted=x.DeleteFlag
                 }).ToList();
@@ -2397,7 +2319,7 @@ namespace DALayer.RFQ
             try
             {
                 obj.Database.Connection.Open();
-                var data = obj.CurrencyMasters.Where(x => x.CurrencyId == model.CurrenyId && x.DeleteFlag == false).FirstOrDefault();
+                var data = obj.CurrencyMasters.Where(x => x.CurrencyId == model.CurrencyId && x.DeleteFlag == false).FirstOrDefault();
                 if (model != null)
                 {
                     data.CurrencyName = model.CurrencyName;
@@ -2535,7 +2457,7 @@ namespace DALayer.RFQ
                 {
                     CurrencyCode = x.CurrencyCode,
                     CurrencyName = x.CurrencyName,
-                    CurrenyId = x.CurrencyId,
+                    CurrencyId = x.CurrencyId,
                     UpdatedBy = x.UpdatedBy,
                     updateddate = x.updateddate,
                     DeletedBy = x.DeletedBy,
@@ -3406,848 +3328,6 @@ namespace DALayer.RFQ
             }
 			return mprRevisionDetails;
 		}
-
-        public async Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                var data = new PAAuthorizationLimit();
-                if (model != null)
-                {
-                    data.DeptId = model.DeptId;
-                    data.AuthorizationType = model.AuthorizationType;
-                    data.MinPAValue = model.MinPAValue;
-                    data.MaxPAValue = model.MaxPAValue;
-                    data.CreatedBy = model.CreatedBy;
-                    data.CreatedDate = System.DateTime.Now;
-                    data.DeletedBY = model.DeletedBY;
-                    data.DeletedDate = model.DeletedDate;
-                }
-                obj.PAAuthorizationLimits.Add(data);
-                obj.SaveChanges();
-                int id = data.Authid;
-                status.Sid = id;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> BulkInsertPAAuthorizationLimits(List<PAAuthorizationLimitModel> model)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                var data = new PAAuthorizationLimit();
-                foreach (var item in model)
-                {
-                    data.AuthorizationType = item.AuthorizationType;
-                    data.DeptId = item.DeptId;
-                    data.MinPAValue = item.MinPAValue;
-                    data.MaxPAValue = item.MaxPAValue;
-                    data.CreatedBy = item.CreatedBy;
-                    data.CreatedDate = item.CreatedDate;
-                    obj.PAAuthorizationLimits.Add(data);
-                    obj.SaveChanges();
-                }
-                int id = data.Authid;
-                status.Sid = id;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<PAAuthorizationLimitModel> GetPAAuthorizationLimitById(int deptid)
-        {
-            PAAuthorizationLimitModel model = new PAAuthorizationLimitModel();
-            try
-            {
-                var data = obj.PAAuthorizationLimits.Where(x => x.Authid == deptid && x.DeleteFlag == false).FirstOrDefault();
-                model.DeptId = data.DeptId;
-                model.MaxPAValue = data.MaxPAValue;
-                model.MinPAValue = data.MinPAValue;
-                model.AuthorizationType = data.AuthorizationType;
-                model.DeletedBY = data.DeletedBY;
-                model.DeletedDate = data.DeletedDate;
-                model.CreatedBy = data.CreatedBy;
-                model.CreatedDate = data.CreatedDate;
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                var mapping = new PAAuthorizationEmployeeMapping();
-                if (model != null)
-                {
-                    mapping.Authid = model.Authid;
-                    mapping.FunctionalRoleId = model.FunctionalRoleId;
-                    mapping.CreatedBY = model.CreatedBY;
-                    mapping.CreatedDate = System.DateTime.Now;
-                    mapping.Employeeid = model.Employeeid;
-                    mapping.LessBudget = model.LessBudget;
-                    mapping.MoreBudget = model.MoreBudget;
-                    mapping.DeletedBy = model.DeletedBy;
-                    mapping.DeletedDate = model.DeletedDate;
-                }
-                obj.PAAuthorizationEmployeeMappings.Add(mapping);
-                obj.SaveChanges();
-                int mapid = mapping.PAmapid;
-                status.Sid = mapid;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<PAAuthorizationEmployeeMappingModel> GetMappingEmployee(PAAuthorizationLimitModel limit)
-        {
-            PAAuthorizationEmployeeMappingModel model = new PAAuthorizationEmployeeMappingModel();
-            try
-            {
-                var authdata = obj.PAAuthorizationLimits.Where(x => x.Authid == limit.Authid && x.MinPAValue >= limit.MinPAValue && x.MaxPAValue <= limit.MaxPAValue).FirstOrDefault();
-                var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == authdata.Authid && x.DeleteFlag == false).FirstOrDefault();
-                var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).FirstOrDefault();
-                model.Employeeid = mappingdata.Employeeid;
-                model.Employeename = employeedata.Name;
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> CreatePACreditDaysmaster(PACreditDaysMasterModel model)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            var credit = new PACreditDaysMaster();
-            try
-            {
-                if (model != null)
-                {
-                    credit.MinDays = model.MinDays;
-                    credit.MaxDays = model.MaxDays;
-                    credit.DeletedBy = model.DeletedBy;
-                    credit.DeletedDate = model.DeletedDate;
-                    credit.CreatedBy = model.CreatedBy;
-                    credit.CreatedDate = System.DateTime.Now;
-                }
-                obj.PACreditDaysMasters.Add(credit);
-                obj.SaveChanges();
-                int creditid = credit.CreditDaysid;
-                status.Sid = creditid;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<PACreditDaysMasterModel> GetCreditdaysMasterByID(int creditdaysid)
-        {
-            PACreditDaysMasterModel model = new PACreditDaysMasterModel();
-            try
-            {
-                var creditdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditdaysid).FirstOrDefault();
-                if (creditdata != null)
-                {
-                    model.CreditDaysid = creditdata.CreditDaysid;
-                    model.MinDays = creditdata.MinDays;
-                    model.MaxDays = creditdata.MaxDays;
-                    model.CreatedBy = creditdata.CreatedBy;
-                    model.CreatedDate = creditdata.CreatedDate;
-                    model.DeletedBy = creditdata.DeletedBy;
-                    model.DeletedDate = creditdata.DeletedDate;
-                }
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> AssignCreditdaysToEmployee(PACreditDaysApproverModel model)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                ////var data = obj.PAAuthorizationLimits.Where(x => x.Authid == model.AuthId).FirstOrDefault();
-                var creditapprover = new PACreditDaysApprover();
-                creditapprover.AuthId = model.AuthId;
-                creditapprover.EmployeeNo = model.EmployeeNo;
-                creditapprover.CreditdaysId = Convert.ToByte(model.CreditdaysId);
-                creditapprover.Createdby = model.Createdby;
-                creditapprover.CreatedDate = System.DateTime.Now;
-                creditapprover.DeletedBy = model.DeletedBy;
-                creditapprover.DeletedDate = model.DeletedDate;
-                obj.PACreditDaysApprovers.Add(creditapprover);
-                obj.SaveChanges();
-                int approvalid = creditapprover.CRApprovalId;
-                status.Sid = approvalid;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                var removedata = obj.PAAuthorizationLimits.Where(x => x.Authid == authid && x.DeleteFlag == false).FirstOrDefault();
-                if (removedata != null)
-                {
-                    removedata.DeleteFlag = true;
-                    obj.SaveChanges();
-                }
-                var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == removedata.Authid && x.DeleteFlag == false).ToList();
-                if (mappingdata != null)
-                {
-                    foreach (var item in mappingdata)
-                    {
-                        item.DeleteFlag = true;
-                        obj.SaveChanges();
-                    }
-                }
-                int id = removedata.Authid;
-                status.Sid = id;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                var creditdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditid && x.DeleteFlag == false).FirstOrDefault();
-                if (creditdata != null)
-                {
-                    creditdata.DeleteFlag = true;
-                    obj.SaveChanges();
-                }
-                int id = creditdata.CreditDaysid;
-                status.Sid = id;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<PAAuthorizationLimitModel>> GetPAAuthorizationLimitsByDeptId(int departmentid)
-        {
-            List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
-            try
-            {
-                model = obj.PAAuthorizationLimits.Where(x => x.DeptId == departmentid && x.DeleteFlag == false).Select(x => new PAAuthorizationLimitModel
-                {
-                    MinPAValue = x.MinPAValue,
-                    MaxPAValue = x.MaxPAValue
-                }).ToList();
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> RemovePACreditDaysApprover(int ApprovalId)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                var data = obj.PACreditDaysApprovers.Where(x => x.CRApprovalId == ApprovalId).FirstOrDefault();
-                if (data != null)
-                {
-                    data.DeleteFlag = true;
-                    obj.SaveChanges();
-                }
-                status.Sid = data.AuthId;
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId)
-        {
-            PACreditDaysApproverModel model = new PACreditDaysApproverModel();
-            try
-            {
-                var data = obj.PACreditDaysApprovers.Where(x => x.CRApprovalId == ApprovalId).FirstOrDefault();
-                if (data != null)
-                {
-                    model.AuthId = data.AuthId;
-                    model.EmployeeNo = data.EmployeeNo;
-                    model.CreditdaysId = data.CreditdaysId;
-                    model.Createdby = data.Createdby;
-                    model.CreatedDate = data.CreatedDate;
-                    model.DeletedBy = data.DeletedBy;
-                    model.DeletedDate = data.DeletedDate;
-                    model.CRApprovalId = data.CRApprovalId;
-                }
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model)
-        {
-            List<EmployeModel> employee = new List<EmployeModel>();
-            model.PAValue = model.UnitPrice;
-            if (model.PAValue > model.TargetSpend)
-            {
-                model.Budgetvalue = false;
-            }
-            else
-            {
-                model.Budgetvalue = true;
-            }
-            try
-            {
-                if (model != null)
-                {
-                    //var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue >= model.PAValue && x.MaxPAValue <= model.PAValue).FirstOrDefault();
-                    var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue.CompareTo(model.PAValue) <= 0 && x.MaxPAValue.CompareTo(model.PAValue) >= 0).FirstOrDefault();
-                    if (padata != null)
-                    {
-                        //string.Equals(padata.AuthorizationType,"pa", StringComparison.CurrentCultureIgnoreCase);
-                        //padata.AuthorizationType.Contains( StringComparison.CurrentCultureIgnoreCase);
-                        if (padata.AuthorizationType.ToLower().Equals("pa"))
-                        {
-                            var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == padata.Authid).FirstOrDefault();
-                            if (mappingdata != null)
-                            {
-                                var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).ToList();
-                                employee = employeedata.Select(x => new EmployeModel()
-                                {
-                                    EmployeeNo = x.EmployeeNo,
-                                    Name = x.Name
-                                }).ToList();
-                            }
-                        }
-                        else
-                        {
-                            var creditdata = obj.PACreditDaysApprovers.Where(x => x.AuthId == padata.Authid).FirstOrDefault();
-                            var employeedata = obj.Employees.Where(x => x.EmployeeNo == creditdata.EmployeeNo).ToList();
-                            if (creditdata != null)
-                            {
-                                var creditmasterdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditdata.CreditdaysId).FirstOrDefault();
-                            }
-                            employee = employeedata.Select(x => new EmployeModel()
-                            {
-                                EmployeeNo = x.EmployeeNo,
-                                Name = x.Name
-                            }).ToList();
-                        }
-                    }
-                    else
-                    {
-                        return employee;
-                    }
-                }
-                return employee;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        //public async Task<EmployeeModel> GetEmployeeMappingsList(List<PAConfigurationModel> model)
-        //{
-        //    EmployeeModel employee = new EmployeeModel();
-        //    model.PAValue = model.UnitPrice;
-        //    try
-        //    {
-        //        if (model != null)
-        //        {
-        //            //var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue >= model.PAValue && x.MaxPAValue <= model.PAValue).FirstOrDefault();
-        //            var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue.CompareTo(model.PAValue) <= 0 && x.MaxPAValue.CompareTo(model.PAValue) >= 0 && x.DeptId == model.DeptId).FirstOrDefault();
-        //            if (padata != null)
-        //            {
-        //                var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == padata.Authid && x.LessBudget == true).FirstOrDefault();
-        //                if (mappingdata != null)
-        //                {
-        //                    var res = obj.PACreditDaysApprovers.ToList();
-        //                    var creditapprovaldata = obj.PACreditDaysApprovers.Where(x => x.AuthId == padata.Authid && x.EmployeeNo == mappingdata.Employeeid).FirstOrDefault();
-        //                    if (creditapprovaldata != null)
-        //                    {
-        //                        var creditmasterdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditapprovaldata.CreditdaysId).FirstOrDefault();
-        //                    }
-        //                    var employeedata = obj.Employees.Where(x => x.EmployeeNo == creditapprovaldata.EmployeeNo).ToList();
-        //                    foreach (var item in employeedata)
-        //                    {
-        //                        employee.EmployeeNo = item.EmployeeNo;
-        //                        employee.Name = item.Name;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        return employee;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
-        public async Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters)
-        {
-            List<LoadItemsByID> view = new List<LoadItemsByID>();
-            try
-            {
-                if (masters.VendorId != 0)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.VendorId == masters.VendorId).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.RevisionId != 0)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.MPRRevisionId == masters.RevisionId).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.RFQNo != null)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.RFQNo == masters.RFQNo).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.DocumentNumber != null)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.DocumentNo == masters.DocumentNumber).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.BuyerGroupId != 0)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.BuyerGroupId == masters.BuyerGroupId).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.SaleOrderNo != null)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.SaleOrderNo == masters.SaleOrderNo).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.DeptID != 0)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.DepartmentId == masters.DeptID).OrderBy(x => x.VendorName).ToList();
-                }
-                return view;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<RfqRevisionModel> GetLocalRfqDetailsById(int revisionId)
-        {
-            RfqRevisionModel revision = new RfqRevisionModel();
-            try
-            {
-                var localrevision = obj.RFQRevisions.Where(x => x.rfqRevisionId == revisionId && x.DeleteFlag == false).Include(x => x.RFQMaster).Include(x => x.RFQItems).FirstOrDefault();
-                if (localrevision != null)
-                {
-                    revision.RfqMasterId = localrevision.rfqMasterId;
-                    revision.RfqRevisionNo = localrevision.RevisionNo;
-                    revision.CreatedBy = localrevision.CreatedBy;
-                    revision.CreatedDate = localrevision.CreatedDate;
-                    revision.PackingForwading = localrevision.PackingForwarding;
-                    revision.salesTax = localrevision.SalesTax;
-                    revision.Insurance = localrevision.Insurance;
-                    revision.CustomsDuty = localrevision.CustomsDuty;
-                    revision.PaymentTermDays = localrevision.PaymentTermDays;
-                    revision.PaymentTermRemarks = localrevision.PaymentTermRemarks;
-                    revision.BankGuarantee = localrevision.BankGuarantee;
-                    revision.DeliveryMaxWeeks = localrevision.DeliveryMaxWeeks;
-                    revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
-
-
-                    var rfqmasters = obj.RFQMasters.Where(x => x.RfqMasterId == localrevision.rfqMasterId).ToList();
-                    var masters = new RFQMasterModel();
-                    var vendors = new VendormasterModel();
-                    if (rfqmasters != null)
-                    {
-                        foreach (var item in rfqmasters)
-                        {
-                            masters.RfqMasterId = item.RfqMasterId;
-                            masters.RfqNo = item.RFQNo;
-                            masters.RfqUniqueNo = item.RFQUniqueNo;
-                            masters.VendorId = item.VendorId;
-                            var vendormasters = obj.VendorMasters.Where(x => x.Vendorid == masters.VendorId).FirstOrDefault();
-                            masters.Vendor = new VendormasterModel()
-                            {
-                                ContactNo = vendormasters.ContactNo,
-                                VendorCode = vendormasters.VendorCode,
-                                VendorName = vendormasters.VendorName,
-                                Emailid = vendormasters.Emailid,
-                                Street = vendormasters.Street,
-                            };
-                            masters.MPRRevisionId = (int)item.MPRRevisionId;
-                            masters.CreatedBy = item.CreatedBy;
-                        }
-                    }
-                    revision.rfqmaster = masters;
-                    var vendordata = obj.VendorMasters.Where(x => x.Vendorid == masters.VendorId).FirstOrDefault();
-                    if (vendordata != null)
-                    {
-                        revision.VendorName = vendordata.VendorName;
-                    }
-
-                    var rfqitemss = obj.RFQItems.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId).ToList();
-                    if (rfqitemss != null)
-                    {
-                        foreach (var item in rfqitemss)
-                        {
-                            RfqItemModel rfqitems = new RfqItemModel();
-                            rfqitems.HSNCode = item.HSNCode;
-                            rfqitems.MRPItemsDetailsID = item.MPRItemDetailsid;
-                            rfqitems.QuotationQty = item.QuotationQty;
-                            rfqitems.RFQRevisionId = item.RFQRevisionId;
-                            rfqitems.RFQItemID = item.RFQItemsId;
-                            revision.rfqitem.Add(rfqitems);
-                        }
-                    }
-                }
-                var rfqterms = obj.RFQTerms.Where(x => x.RFQrevisionId == revisionId).ToList();
-
-                RFQTermsModel terms = new RFQTermsModel();
-                foreach (var item in rfqterms)
-                {
-                    terms.termsid = item.termsid;
-                    terms.RfqTermsid = item.RfqTermsid;
-                    terms.Remarks = item.Remarks;
-                    terms.VendorResponse = item.VendorResponse;
-                    revision.RFQTerms.Add(terms);
-                }
-                return revision;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<DepartmentModel>> GetAllDepartments()
-        {
-            List<DepartmentModel> model = new List<DepartmentModel>();
-            try
-            {
-                var departments = obj.Departments.ToList();
-                foreach (var item in departments)
-                {
-                    model.Add(new DepartmentModel()
-                    {
-                        DepartmentID = item.DepartmentId,
-                        DepartmentName = item.DepartmentName
-                    });
-                }
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<PAAuthorizationLimitModel>> GetSlabsByDepartmentID(int DeptID)
-        {
-            List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
-            try
-            {
-                var data = obj.PAAuthorizationLimits.Where(x => x.DeptId == DeptID && x.DeleteFlag == false).ToList();
-                if (data != null)
-                {
-                    model = data.Select(x => new PAAuthorizationLimitModel()
-                    {
-                        MaxPAValue = x.MaxPAValue,
-                        MinPAValue = x.MinPAValue,
-                        Authid = x.Authid
-                    }).ToList();
-                }
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<EmployeModel>> GetAllEmployee()
-        {
-            List<EmployeModel> model = new List<EmployeModel>();
-            try
-            {
-                var data = obj.Employees.ToList();
-                if (data != null)
-                {
-                    model = data.Select(x => new EmployeModel()
-                    {
-                        EmployeeNo = x.EmployeeNo,
-                        Name = x.Name
-                    }).ToList();
-                }
-                return model;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-        public async Task<List<PAAuthorizationLimitModel>> GetAllCredits()
-        {
-            List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
-            try
-            {
-                var data = obj.PAAuthorizationLimits.Where(x => x.AuthorizationType == "cr").ToList();
-                //var mappingdata = obj.PAAuthorizationEmployeeMappings.ToList();
-                foreach (var item in data)
-                {
-                    model.Add(new PAAuthorizationLimitModel()
-                    {
-                        Authid = item.Authid,
-                        MinPAValue = item.MinPAValue,
-                        MaxPAValue = item.MaxPAValue,
-                        //PAAuthorizationEmployeeMappings=mappingdata.Where(x=>x.Authid== item.Authid).Select(x=>new PAAuthorizationEmployeeMappingModel()
-                        //{
-                        //    Employeeid=x.Employeeid,
-                        //    AuthLevel=x.AuthLevel
-                        //}).ToList()
-                    });
-                }
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<PACreditDaysMasterModel>> GetAllCreditDays()
-        {
-            List<PACreditDaysMasterModel> model = new List<PACreditDaysMasterModel>();
-            try
-            {
-                var credit = obj.PACreditDaysMasters.ToList();
-                if (credit != null)
-                {
-                    model = credit.Select(x => new PACreditDaysMasterModel()
-                    {
-                        CreditDaysid = x.CreditDaysid,
-                        MinDays = x.MinDays,
-                        MaxDays = x.MaxDays
-                    }).ToList();
-                }
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes()
-        {
-            List<MPRPAPurchaseModesModel> model = new List<MPRPAPurchaseModesModel>();
-            try
-            {
-                var data = obj.MPRPAPurchaseModes.Where(x => x.BoolInUse == true).ToList();
-                model = data.Select(x => new MPRPAPurchaseModesModel()
-                {
-                    PurchaseModeId = x.PurchaseModeId,
-                    PurchaseMode = x.PurchaseMode,
-                    XOrder = x.XOrder
-                }).ToList();
-
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes()
-        {
-            List<MPRPAPurchaseTypesModel> model = new List<MPRPAPurchaseTypesModel>();
-            try
-            {
-                var data = obj.MPRPAPurchaseTypes.Where(x => x.BoolInUse == true).ToList();
-                model = data.Select(x => new MPRPAPurchaseTypesModel()
-                {
-                    PurchaseTypeId = x.PurchaseTypeId,
-                    PurchaseType = x.PurchaseType,
-                    XOrder = x.XOrder
-                }).ToList();
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model)
-        {
-            statuscheckmodel status = new statuscheckmodel();
-            try
-            {
-                var authorization = new MPRPADetail();
-                if (model != null)
-                {
-                    authorization.PurchaseTypeId = model.PurchaseTypeId;
-                    authorization.PurchaseModeId = model.PurchaseModeId;
-                    authorization.RequestedOn = System.DateTime.Now;
-                    authorization.RequestedBy = model.RequestedBy;
-                    authorization.DepartmentID = model.DepartmentID;
-                    authorization.BuyerGroupId = model.BuyerGroupId;
-                    authorization.ProjectCode = model.ProjectCode;
-                    authorization.ProjectName = model.ProjectName;
-                    authorization.PackagingForwarding = model.PackagingForwarding;
-                    authorization.Taxes = model.Taxes;
-                    authorization.Freight = model.Freight;
-                    authorization.Insurance = model.Insurance;
-                    authorization.DeliveryCondition = model.DeliveryCondition;
-                    authorization.ShipmentMode = model.ShipmentMode;
-                    authorization.PaymentTerms = model.PaymentTerms;
-                    authorization.CreditDays = model.CreditDays;
-                    authorization.Warranty = model.Warranty;
-                    authorization.BankGuarantee = model.BankGuarantee;
-                    authorization.LDPenaltyTerms = model.LDPenaltyTerms;
-                    authorization.SpecialInstructions = model.SpecialInstructions;
-                    authorization.FactorsForImports = model.FactorsForImports;
-                    authorization.SpecialRemarks = model.SpecialRemarks;
-                    authorization.SuppliersReference = model.SuppliersReference;
-                    obj.MPRPADetails.Add(authorization);
-                    obj.SaveChanges();
-                    status.Sid = authorization.PAId;
-                }
-                return status;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID)
-        {
-            MPRPADetailsModel model = new MPRPADetailsModel();
-            try
-            {
-                var data = obj.MPRPADetails.Where(x => x.PAId == PID).FirstOrDefault();
-                if (data != null)
-                {
-                    model.PurchaseTypeId = data.PurchaseTypeId;
-                    var purchasetype = obj.MPRPAPurchaseTypes.Where(x => x.PurchaseTypeId == model.PurchaseTypeId).FirstOrDefault();
-                    model.purchasetypes.PurchaseType = purchasetype.PurchaseType;
-                    model.PurchaseModeId = data.PurchaseModeId;
-                    var purchasemode = obj.MPRPAPurchaseModes.Where(x => x.PurchaseModeId == model.PurchaseModeId).FirstOrDefault();
-                    model.purchasemodes.PurchaseMode = purchasemode.PurchaseMode;
-                    model.RequestedOn = data.RequestedOn;
-                    model.RequestedBy = data.RequestedBy;
-                    model.DepartmentID = data.DepartmentID;
-                    var department = obj.MPRDepartments.Where(x => x.DepartmentId == model.DepartmentID).FirstOrDefault();
-                    model.department.Department = department.Department;
-                    model.BuyerGroupId = data.BuyerGroupId;
-                    var buyergroup = obj.MPRBuyerGroups.Where(x => x.BuyerGroupId == model.BuyerGroupId).FirstOrDefault();
-                    model.buyergroup.BuyerGroup = buyergroup.BuyerGroup;
-                    model.ProjectCode = data.ProjectCode;
-                    model.ProjectName = data.ProjectName;
-                    model.PackagingForwarding = data.PackagingForwarding;
-                    model.Taxes = data.Taxes;
-                    model.Freight = data.Freight;
-                    model.Insurance = data.Insurance;
-                    model.DeliveryCondition = data.DeliveryCondition;
-                    model.ShipmentMode = data.ShipmentMode;
-                    model.PaymentTerms = data.PaymentTerms;
-                    model.CreditDays = data.CreditDays;
-                    model.Warranty = data.Warranty;
-                    model.BankGuarantee = data.BankGuarantee;
-                    model.LDPenaltyTerms = data.LDPenaltyTerms;
-                    model.SpecialInstructions = data.SpecialInstructions;
-                    model.FactorsForImports = data.FactorsForImports;
-                    model.SpecialRemarks = data.SpecialRemarks;
-                    model.SuppliersReference = data.SuppliersReference;
-                    var statusdata = obj.LoadItemsByIDs.Where(x => x.Status == "Approved" && x.paid == PID).ToList();
-                    model.Item = statusdata.Select(x => new RfqItemModel()
-                    {
-                        ItemDescription = x.ItemDescription,
-                        UnitPrice = Convert.ToDecimal(x.UnitPrice),
-                        QuotationQty = x.QuotationQty,
-                        DocumentyNo = x.DocumentNo,
-                        SaleOrderNo = x.SaleOrderNo,
-                        TargetSpend = Convert.ToDecimal(x.TargetSpend),
-                        PaymentTermCode = x.PaymentTermCode,
-                        VendorName = x.VendorName
-                    }).ToList();
-                    return model;
-                }
-                else
-                {
-                    return model;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<MPRPADetailsModel>> GetAllMPRPAList()
-        {
-            List<MPRPADetailsModel> model = new List<MPRPADetailsModel>();
-            try
-            {
-                var data = obj.MPRPADetails.ToList();
-                if (data != null)
-                {
-                    model = data.Select(c => new MPRPADetailsModel()
-                    {
-                        PAId = c.PAId,
-                        RequestedBy = c.RequestedBy,
-                        RequestedOn = c.RequestedOn
-                    }).ToList();
-                    return model;
-                }
-                else
-                {
-                    return model;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        public async Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles()
-        {
-            List<PAFunctionalRolesModel> model = new List<PAFunctionalRolesModel>();
-            try
-            {
-                var roles = obj.PAFunctionalRoles.OrderBy(x => x.XOrder).ToList();
-                if (roles != null)
-                {
-                    model = roles.Select(x => new PAFunctionalRolesModel()
-                    {
-                        FunctionalRoleId = x.FunctionalRoleId,
-                        FunctionalRole = x.FunctionalRole,
-                        XOrder = x.XOrder
-                    }).ToList();
-                }
-                else
-                {
-                    return model;
-                }
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
 
     }
 }
