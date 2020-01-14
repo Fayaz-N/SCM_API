@@ -110,9 +110,13 @@ namespace BALayer.RFQ
             throw new NotImplementedException();
         }
 
-        public statuscheckmodel InsertDocument(RfqDocumentsModel model)
+        public async Task< statuscheckmodel> InsertDocument(RfqDocumentsModel model)
         {
-            return _rfqDataAcess.InsertDocument(model);
+            return await _rfqDataAcess.InsertDocument(model);
+        }
+       public async Task<statuscheckmodel> RemovePurchaseApprover(EmployeemappingtopurchaseModel model)
+        {
+            return await _rfqDataAcess.RemovePurchaseApprover(model);
         }
 
         public async Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model)
@@ -431,9 +435,9 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.GetPAAuthorizationLimitsByDeptId(departmentid);
         }
 
-        public async Task<statuscheckmodel> RemovePACreditDaysApprover(int ApprovalId)
+        public async Task<statuscheckmodel> RemovePACreditDaysApprover(EmployeemappingtocreditModel model)
         {
-            return await _rfqDataAcess.RemovePACreditDaysApprover(ApprovalId);
+            return await _rfqDataAcess.RemovePACreditDaysApprover(model);
         }
 
         public async Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId)
@@ -441,7 +445,7 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.GetPACreditDaysApproverById(ApprovalId);
         }
 
-        public async Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model)
+        public async Task<EmployeModel> GetEmployeeMappings(PAConfigurationModel model)
         {
             return await _rfqDataAcess.GetEmployeeMappings(model);
         }
@@ -451,9 +455,9 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.GetRfqItemsByRevisionId(revisionid);
         }
 
-        public async Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters)
+        public  List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters)
         {
-            return await _rfqDataAcess.GetItemsByMasterIDs(masters);
+            return _rfqDataAcess.GetItemsByMasterIDs(masters);
         }
 
         public async Task<List<DepartmentModel>> GetAllDepartments()
@@ -509,6 +513,26 @@ namespace BALayer.RFQ
         public async Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles()
         {
             return await _rfqDataAcess.GetAllPAFunctionalRoles();
+        }
+
+        public async Task<List<EmployeemappingtocreditModel>> GetCreditSlabsandemployees()
+        {
+            return await _rfqDataAcess.GetCreditSlabsandemployees();
+        }
+
+        public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployees()
+        {
+            return await _rfqDataAcess.GetPurchaseSlabsandMappedemployees();
+        }
+
+        public async Task<List<ProjectManagerModel>> LoadAllProjectManagers()
+        {
+            return await _rfqDataAcess.LoadAllProjectManagers();
+        }
+
+        public async Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid)
+        {
+            return await _rfqDataAcess.LoadVendorByMprDetailsId(MPRItemDetailsid);
         }
     }
 }

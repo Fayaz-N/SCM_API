@@ -14,5 +14,9 @@ namespace SCMModels.RFQModels
         public int DeptId { get; set; }
         public int TargetSpend { get; set; }
         public int  UnitPrice { get; set; }
+        public bool LessBudget { get; set; }
+        public bool MoreBudget { get; set; }
+        public string PaymentTermCode { get; set; }
+        public List<int> MPRItemDetailsid { get; set; }
     }
 }

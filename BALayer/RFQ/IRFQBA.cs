@@ -31,7 +31,8 @@ namespace BALayer.RFQ
         statuscheckmodel DeleteRfqRevisionbyId(int id);
         statuscheckmodel DeleteRfqItemById(int id);
         statuscheckmodel DeleteBulkItemsByItemId(List<int> id);
-        statuscheckmodel InsertDocument(RfqDocumentsModel model);
+        Task<statuscheckmodel> RemovePurchaseApprover(EmployeemappingtopurchaseModel model);
+        Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model);
         statuscheckmodel CommunicationAdd(RfqCommunicationModel model);
         Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid);
         Task<List<RfqRevisionModel>> GetAllrevisionRFQs();
@@ -97,11 +98,11 @@ namespace BALayer.RFQ
         Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid);
         Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid);
         Task<List<PAAuthorizationLimitModel>> GetPAAuthorizationLimitsByDeptId(int departmentid);
-        Task<statuscheckmodel> RemovePACreditDaysApprover(int ApprovalId);
+        Task<statuscheckmodel> RemovePACreditDaysApprover(EmployeemappingtocreditModel model);
         Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId);
-        Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model);
+        Task<EmployeModel> GetEmployeeMappings(PAConfigurationModel model);
         Task<List<RfqItemModel>> GetRfqItemsByRevisionId(int revisionid);
-        Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters);
+        List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters);
         Task<List<DepartmentModel>> GetAllDepartments();
         Task<List<PAAuthorizationLimitModel>> GetSlabsByDepartmentID(int DeptID);
         Task<List<EmployeModel>> GetAllEmployee();
@@ -113,5 +114,9 @@ namespace BALayer.RFQ
         Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID);
         Task<List<MPRPADetailsModel>> GetAllMPRPAList();
         Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles();
+        Task<List<EmployeemappingtocreditModel>> GetCreditSlabsandemployees();
+        Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployees();
+        Task<List<ProjectManagerModel>> LoadAllProjectManagers();
+        Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid);
     }
 }

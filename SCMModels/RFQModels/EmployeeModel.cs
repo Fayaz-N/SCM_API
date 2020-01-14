@@ -11,6 +11,23 @@ namespace SCMModels.RFQModels
         public string EmployeeNo { get; set; }
         public string Name { get; set; }
         public string EMail { get; set; }
+        public string BuyerGroupManager { get; set; }
+        public string BuyerGroupNo { get; set; }
+        public string ProjectManager { get; set; }
+        public string ProjectMangerNo { get; set; }
         public Nullable<byte> DeptID { get; set; }
+        public List<PurchaseCreditApproversModel> Approvers { get; set; }
+    }
+    public class PurchaseCreditApproversModel
+    {
+        public string ApproverName { get; set; }
+        public string AuthorizationType { get; set; }
+        public string Role { get; set; }
+        public string EmployeeNo { get; set; }
+    }
+    public class ProjectManagerModel
+    {
+        public string EmployeeNo { get; set; }
+        public string Name { get; set; }
     }
 }

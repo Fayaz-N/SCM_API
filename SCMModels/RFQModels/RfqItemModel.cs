@@ -30,6 +30,9 @@ namespace SCMModels.RFQModels
         public string SaleOrderNo { get; set; }
         public decimal UnitPrice { get; set; }
         public string PaymentTermCode { get; set; }
+        public string DocumentNo { get; set; }
+        public int RFQItemsId { get; set; }
+        public Nullable<byte> DepartmentId { get; set; }
         public Nullable<decimal> CustomDuty { get; set; }
         public Nullable<decimal> CustomDutyAmount { get; set; }
         public Nullable<decimal> FreightPercentage { get; set; }

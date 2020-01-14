@@ -156,10 +156,10 @@ namespace SCMAPI.Controllers
 
         [Route("InsertDocument")]
         [ResponseType(typeof(statuscheckmodel))]
-        public IHttpActionResult InsertDocument(RfqDocumentsModel model)
+        public async Task<IHttpActionResult> InsertDocument(RfqDocumentsModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
-            status = _rfqBusenessAcess.InsertDocument(model);
+            status = await _rfqBusenessAcess.InsertDocument(model);
             return Ok(status);
         }
         [Route("CommunicationAdd")]
@@ -551,12 +551,13 @@ namespace SCMAPI.Controllers
             model = await _rfqBusenessAcess.GetPAAuthorizationLimitsByDeptId(departmentid);
             return Ok(model);
         }
+        [HttpPost]
         [Route("RemovePACreditDaysApprover")]
         [ResponseType(typeof(statuscheckmodel))]
-        public async Task<IHttpActionResult> RemovePACreditDaysApprover(int ApprovalId)
+        public async Task<IHttpActionResult> RemovePACreditDaysApprover(EmployeemappingtocreditModel model)
         {
-            statuscheckmodel model = new statuscheckmodel();
-            model = await _rfqBusenessAcess.RemovePACreditDaysApprover(ApprovalId);
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.RemovePACreditDaysApprover(model);
             return Ok(model);
         }
         [Route("GetPACreditDaysApproverById")]
@@ -570,10 +571,10 @@ namespace SCMAPI.Controllers
 
         [HttpPost]
         [Route("GetEmployeeMappings")]
-        [ResponseType(typeof(List<EmployeModel>))]
+        [ResponseType(typeof(EmployeModel))]
         public async Task<IHttpActionResult> GetEmployeeMappings(PAConfigurationModel model)
         {
-            List<EmployeModel> employee = new List<EmployeModel>();
+            EmployeModel employee = new EmployeModel();
             employee = await _rfqBusenessAcess.GetEmployeeMappings(model);
             return Ok(employee);
         }
@@ -585,15 +586,22 @@ namespace SCMAPI.Controllers
             model = await _rfqBusenessAcess.GetRfqItemsByRevisionId(revisionid);
             return Ok(model);
         }
+        //[HttpPost]
+        //[Route("GetItemsByMasterIDs")]
+        //[ResponseType(typeof(List<LoadItemsByID>))]
+        //public async Task<IHttpActionResult> GetItemsByMasterIDs(PADetailsModel masters)
+        //{
+
+        //    List<LoadItemsByID> model = new List<LoadItemsByID>();
+        //    model = await _rfqBusenessAcess.GetItemsByMasterIDs(masters);
+        //    return Ok(model);
+        //}
         [HttpPost]
         [Route("GetItemsByMasterIDs")]
         [ResponseType(typeof(List<LoadItemsByID>))]
-        public async Task<IHttpActionResult> GetItemsByMasterIDs(PADetailsModel masters)
+        public IHttpActionResult GetItemsByMasterIDs(PADetailsModel masters)
         {
-
-            List<LoadItemsByID> model = new List<LoadItemsByID>();
-            model = await _rfqBusenessAcess.GetItemsByMasterIDs(masters);
-            return Ok(model);
+            return Ok(this._rfqBusenessAcess.GetItemsByMasterIDs(masters));
         }
         [HttpGet]
         [Route("GetAllDepartments")]
@@ -692,6 +700,60 @@ namespace SCMAPI.Controllers
         {
             List<PAFunctionalRolesModel> model = new List<PAFunctionalRolesModel>();
             model = await _rfqBusenessAcess.GetAllPAFunctionalRoles();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetCreditSlabsandemployees")]
+        [ResponseType(typeof(List<EmployeemappingtocreditModel>))]
+        public async Task<IHttpActionResult> GetCreditSlabsandemployees()
+        {
+            List<EmployeemappingtocreditModel> model = new List<EmployeemappingtocreditModel>();
+            model = await _rfqBusenessAcess.GetCreditSlabsandemployees();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetPurchaseSlabsandMappedemployees")]
+        [ResponseType(typeof(List<EmployeemappingtopurchaseModel>))]
+        public async Task<IHttpActionResult> GetPurchaseSlabsandMappedemployees()
+        {
+            List<EmployeemappingtopurchaseModel> model = new List<EmployeemappingtopurchaseModel>();
+            model = await _rfqBusenessAcess.GetPurchaseSlabsandMappedemployees();
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("RemovePurchaseApprover")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> RemovePurchaseApprover(EmployeemappingtopurchaseModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.RemovePurchaseApprover(model);
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllProjectManagers")]
+        [ResponseType(typeof(List<ProjectManagerModel>))]
+        public async Task<IHttpActionResult> GetAllProjectManagers()
+        {
+            List<ProjectManagerModel> model = new List<ProjectManagerModel>();
+            model = await _rfqBusenessAcess.LoadAllProjectManagers();
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("LoadVendorByMprDetailsId")]
+        [ResponseType(typeof(List<VendormasterModel>))]
+        public async Task<IHttpActionResult> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid)
+        {
+            List<VendormasterModel> model = new List<VendormasterModel>();
+            model = await _rfqBusenessAcess.LoadVendorByMprDetailsId(MPRItemDetailsid);
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("GetAllMasterCurrency")]
+        [ResponseType(typeof(List<CurrencyMasterModel>))]
+        public async Task<IHttpActionResult> GetAllMasterCurrency()
+        {
+            List<CurrencyMasterModel> model = new List<CurrencyMasterModel>();
+            model = await _rfqBusenessAcess.GetAllMasterCurrency();
             return Ok(model);
         }
     }

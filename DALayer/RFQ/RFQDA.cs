@@ -949,20 +949,41 @@ namespace DALayer.RFQ
             List<RfqItemModel> rfq = new List<RfqItemModel>();
             try
             {
-                return (from x in vscm.RemoteRFQItems
-                        where x.RFQRevisionId == revisionid
-                        select new RfqItemModel
-                        {
-                            HSNCode = x.HSNCode,
-                            QuotationQty = x.QuotationQty,
-                            RFQRevisionId = x.RFQRevisionId,
-                            VendorModelNo = x.VendorModelNo,
-                            RequsetRemarks = x.RequestRemarks,
-                            RFQItemID = x.RFQItemsId,
-                            ItemName = x.ItemName,
-                            ItemDescription = x.ItemDescription
-                        }).ToList();
+                var data = obj.RFQItems.Where(x => x.RFQRevisionId == revisionid).ToList();
+                var itemid = data.Select(x => new RfqItemModel()
+                {
+                    RFQItemID = x.RFQItemsId
+                }).FirstOrDefault();
+                var iteminfodata = obj.RFQItemsInfoes.ToList();
 
+                foreach (var item in data)
+                {
+                    rfq.Add(new RfqItemModel()
+                    {
+                        RFQItemID = item.RFQItemsId,
+                        HSNCode = item.HSNCode,
+                        QuotationQty = item.QuotationQty,
+                        VendorModelNo = item.VendorModelNo,
+                        CustomDuty = Convert.ToDecimal(item.CustomDuty),
+                        RequsetRemarks = item.RequestRemarks,
+                        iteminfo = iteminfodata.Where(x => x.RFQItemsId == itemid.RFQItemID).Select(x => new RfqItemInfoModel()
+                        {
+                            RFQSplitItemId = x.RFQSplitItemId,
+                            Qunatity = x.Qty,
+                            UOM = x.UOM,
+                            UnitPrice = x.UnitPrice,
+                            DiscountPercentage = x.DiscountPercentage,
+                            Discount = x.Discount,
+                            CurrencyID = x.CurrencyId,
+                            CurrencyValue = x.CurrencyValue,
+                            Remarks = x.Remarks
+                        }).ToList()
+                    });
+
+                }
+
+
+                return rfq;
             }
 
             catch (Exception ex)
@@ -970,6 +991,33 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+
+        //public async Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid)
+        //{
+        //    List<RfqItemModel> rfq = new List<RfqItemModel>();
+        //    try
+        //    {
+        //        return (from x in vscm.RemoteRFQItems
+        //                where x.RFQRevisionId == revisionid
+        //                select new RfqItemModel
+        //                {
+        //                    HSNCode = x.HSNCode,
+        //                    QuotationQty = x.QuotationQty,
+        //                    RFQRevisionId = x.RFQRevisionId,
+        //                    VendorModelNo = x.VendorModelNo,
+        //                    RequsetRemarks = x.RequestRemarks,
+        //                    RFQItemID = x.RFQItemsId,
+        //                    ItemName = x.ItemName,
+        //                    ItemDescription = x.ItemDescription
+        //                }).ToList();
+
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        throw;
+        //    }
+        //}
         public async Task<List<RfqItemModel>> GetRfqItemsByRevisionId(int revisionid)
         {
             List<RfqItemModel> rfq = new List<RfqItemModel>();
@@ -1141,53 +1189,49 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-
-        //public statusmodel InsertDocument(RfqDocumentsModel model)
-        //{
-        //    if (true)
-        //    {
-        //        try
-        //        {
-        //            string PhotoPath = Convert.ToString(ConfigurationManager.AppSettings["ImagePath"]);
-        //            RFQDocument newObj = new RFQDocument();
-        //            newObj.DocumentName = model.DocumentName;
-        //            newObj.DocumentType = model.DocumentType;
-        //            newObj.Path = model.Path;
-        //            newObj.UploadedBy = model.UploadedBy;
-        //            newObj.uploadedDate = model.UploadedDate;
-        //            newObj.Status = model.Status;
-        //            newObj.StatusBy = model.StatusBy;
-        //            newObj.StatusDate = model.Statusdate;
-
-        //            if (String.IsNullOrEmpty(newObj.Path))
-        //            {
-
-        //            }
-        //            else
-        //            {
-        //               // string startingFilePath = PhotoPath;
-
-        //                string FilePath = SaveImage(newObj.Path, startingFilePath, newObj.DocumentName);
-
-        //                FileInfo fInfo = new FileInfo(FilePath);
-
-        //                newObj.Content = fInfo.Name;
-        //            }
+        public async Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                RemoteRFQDocument remote = new RemoteRFQDocument();
+                vscm.Database.Connection.Open();
+                remote.DocumentName = model.DocumentName;
+                remote.DocumentType = model.DocumentType;
+                remote.Path = model.Path;
+                remote.UploadedBy = model.UploadedBy;
+                remote.uploadedDate = model.UploadedDate;
+                remote.Status = model.Status;
+                remote.StatusBy = model.StatusBy;
+                remote.StatusDate = model.Statusdate;
+                vscm.RemoteRFQDocuments.Add(remote);
+                vscm.SaveChanges();
+                status.Sid = remote.RfqDocId;
+                vscm.Database.Connection.Close();
 
 
+                obj.Database.Connection.Open();
+                RFQDocument newObj = new RFQDocument();
+                newObj.RfqDocId = status.Sid;
+                newObj.DocumentName = model.DocumentName;
+                newObj.DocumentType = model.DocumentType;
+                newObj.Path = model.Path;
+                newObj.UploadedBy = model.UploadedBy;
+                newObj.UploadedDate = model.UploadedDate;
+                newObj.Status = model.Status;
+                newObj.StatusBy = model.StatusBy;
+                newObj.StatusDate = model.Statusdate;
+                obj.RFQDocuments.Add(newObj);
+                obj.SaveChanges();
+                obj.Database.Connection.Close();
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
-        //            return Request.CreateResponse(HttpStatusCode.Created, newArticle);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return Request.CreateResponse(HttpStatusCode.InternalServerError, ex);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
-        //    }
-        //}
+        }
         private string SaveImage(string base64, string FilePath, string ImageName)
         {
             //Get the file type to save in
@@ -1345,10 +1389,7 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-        public statuscheckmodel InsertDocument(RfqDocumentsModel model)
-        {
-            throw new NotImplementedException();
-        }
+
         public async Task<RfqItemModel> GetItemsByItemId(int id)
         {
             RfqItemModel model = new RfqItemModel();
@@ -2034,7 +2075,6 @@ namespace DALayer.RFQ
             }
             return revision;
         }
-
         public bool updateRfqDocStatus(List<RFQDocument> rfqDocs)
         {
             using (var Context = new YSCMEntities()) //ok
@@ -3709,18 +3749,37 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-        public async Task<statuscheckmodel> RemovePACreditDaysApprover(int ApprovalId)
+        public async Task<statuscheckmodel> RemovePACreditDaysApprover(EmployeemappingtocreditModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                var data = obj.PACreditDaysApprovers.Where(x => x.CRApprovalId == ApprovalId).FirstOrDefault();
+                var data = obj.PACreditDaysApprovers.Where(x => x.CRApprovalId == model.CRApprovalId).FirstOrDefault();
                 if (data != null)
                 {
                     data.DeleteFlag = true;
                     obj.SaveChanges();
                 }
                 status.Sid = data.AuthId;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> RemovePurchaseApprover(EmployeemappingtopurchaseModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.PAAuthorizationEmployeeMappings.Where(x => x.PAmapid == model.PAmapid).FirstOrDefault();
+                if (data != null)
+                {
+                    data.DeleteFlag = true;
+                    obj.SaveChanges();
+                }
+                status.Sid = data.Authid;
                 return status;
             }
             catch (Exception ex)
@@ -3752,61 +3811,107 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-        public async Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model)
+        //public async Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model)
+        //{
+        //    List<EmployeModel> employee = new List<EmployeModel>();
+        //    model.PAValue = model.UnitPrice;
+        //    if (model.PAValue > model.TargetSpend)
+        //    {
+        //        model.Budgetvalue = false;
+        //    }
+        //    else
+        //    {
+        //        model.Budgetvalue = true;
+        //    }
+        //    try
+        //    {
+        //        if (model != null)
+        //        {
+        //            //var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue >= model.PAValue && x.MaxPAValue <= model.PAValue).FirstOrDefault();
+        //            var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue.CompareTo(model.PAValue) <= 0 && x.MaxPAValue.CompareTo(model.PAValue) >= 0 && x.DeptId==model.DeptId).FirstOrDefault();
+        //            if (padata != null)
+        //            {
+        //                //string.Equals(padata.AuthorizationType,"pa", StringComparison.CurrentCultureIgnoreCase);
+        //                //padata.AuthorizationType.Contains( StringComparison.CurrentCultureIgnoreCase);
+        //                if (padata.AuthorizationType.ToLower().Equals("pa"))
+        //                {
+        //                    var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == padata.Authid).FirstOrDefault();
+        //                    if (mappingdata != null)
+        //                    {
+        //                        var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).ToList();
+        //                        employee = employeedata.Select(x => new EmployeModel()
+        //                        {
+        //                            EmployeeNo = x.EmployeeNo,
+        //                            Name = x.Name
+        //                        }).ToList();
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    var creditdata = obj.PACreditDaysApprovers.Where(x => x.AuthId == padata.Authid).FirstOrDefault();
+        //                    var employeedata = obj.Employees.Where(x => x.EmployeeNo == creditdata.EmployeeNo).ToList();
+        //                    if (creditdata != null)
+        //                    {
+        //                        var creditmasterdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditdata.CreditdaysId).FirstOrDefault();
+        //                    }
+        //                    employee = employeedata.Select(x => new EmployeModel()
+        //                    {
+        //                        EmployeeNo = x.EmployeeNo,
+        //                        Name = x.Name
+        //                    }).ToList();
+        //                }
+        //            }
+        //            else
+        //            {
+        //                return employee;
+        //            }
+
+        //        }
+        //        return employee;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw;
+        //    }
+        //}
+        public async Task<EmployeModel> GetEmployeeMappings(PAConfigurationModel model)
         {
-            List<EmployeModel> employee = new List<EmployeModel>();
+            EmployeModel employee = new EmployeModel();
             model.PAValue = model.UnitPrice;
             if (model.PAValue > model.TargetSpend)
             {
-                model.Budgetvalue = false;
+                model.LessBudget = false;
+                model.MoreBudget = true;
             }
             else
             {
-                model.Budgetvalue = true;
+                model.MoreBudget = false;
+                model.LessBudget = true;
             }
+            string Termscode = model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2);
             try
             {
-                if (model != null)
+                var BuyerManagers = obj.LoadBuyerManagers.Where(x => model.MPRItemDetailsid.Contains(x.Itemdetailsid) && x.BoolValidRevision == true).FirstOrDefault();
+                if (BuyerManagers != null)
                 {
-                    //var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue >= model.PAValue && x.MaxPAValue <= model.PAValue).FirstOrDefault();
-                    var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue.CompareTo(model.PAValue) <= 0 && x.MaxPAValue.CompareTo(model.PAValue) >= 0).FirstOrDefault();
-                    if (padata != null)
-                    {
-                        //string.Equals(padata.AuthorizationType,"pa", StringComparison.CurrentCultureIgnoreCase);
-                        //padata.AuthorizationType.Contains( StringComparison.CurrentCultureIgnoreCase);
-                        if (padata.AuthorizationType.ToLower().Equals("pa"))
-                        {
-                            var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == padata.Authid).FirstOrDefault();
-                            if (mappingdata != null)
-                            {
-                                var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).ToList();
-                                employee = employeedata.Select(x => new EmployeModel()
-                                {
-                                    EmployeeNo = x.EmployeeNo,
-                                    Name = x.Name
-                                }).ToList();
-                            }
-                        }
-                        else
-                        {
-                            var creditdata = obj.PACreditDaysApprovers.Where(x => x.AuthId == padata.Authid).FirstOrDefault();
-                            var employeedata = obj.Employees.Where(x => x.EmployeeNo == creditdata.EmployeeNo).ToList();
-                            if (creditdata != null)
-                            {
-                                var creditmasterdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditdata.CreditdaysId).FirstOrDefault();
-                            }
-                            employee = employeedata.Select(x => new EmployeModel()
-                            {
-                                EmployeeNo = x.EmployeeNo,
-                                Name = x.Name
-                            }).ToList();
-                        }
-                    }
-                    else
-                    {
-                        return employee;
-                    }
+                    employee.BuyerGroupManager = BuyerManagers.EmployeeName;
+                    employee.BuyerGroupNo = BuyerManagers.EmpNo;
                 }
+                var projectmanagers = obj.LoadProjectManagers.Where(x => model.MPRItemDetailsid.Contains(x.Itemdetailsid) && x.BoolValidRevision == true).FirstOrDefault();
+                if (projectmanagers != null)
+                {
+                    employee.ProjectManager = projectmanagers.EmployeeName;
+                    employee.ProjectMangerNo = projectmanagers.EmpNo;
+                }
+                var PAandCRmapping = obj.PAandCRMappings.Where(x => x.DepartmentId == model.DeptId && x.minpavalue.CompareTo(model.PAValue) <= 0 && x.maxpavalue.CompareTo(model.PAValue) >= 0 && x.morebudget == model.MoreBudget && x.lessbudget == model.LessBudget).ToList();
+                employee.Approvers = PAandCRmapping.Select(x => new PurchaseCreditApproversModel()
+                {
+                    ApproverName = x.Name,
+                    AuthorizationType = x.AuthorizationType,
+                    Role = x.role,
+                    EmployeeNo = x.EmployeeNo
+                }).ToList();
+
                 return employee;
             }
             catch (Exception ex)
@@ -3851,40 +3956,33 @@ namespace DALayer.RFQ
         //        throw;
         //    }
         //}
-        public async Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters)
+        public List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters)
         {
-            List<LoadItemsByID> view = new List<LoadItemsByID>();
+            //List<LoadItemsByID> view = new List<LoadItemsByID>();
             try
             {
-                if (masters.VendorId != 0)
+                using (YSCMEntities yscm = new YSCMEntities())
                 {
-                    view = obj.LoadItemsByIDs.Where(x => x.VendorId == masters.VendorId).OrderBy(x => x.VendorName).ToList();
+                    var sqlquery = "";
+                    sqlquery = "select * from LoadItemsByID where Status='Approved'";
+                    if (masters.VendorId != 0)
+                        sqlquery += " and VendorId='" + masters.VendorId + "'";
+                    if (masters.RevisionId != 0)
+                        sqlquery += " and MPRRevisionId='" + masters.RevisionId + "'";
+                    if (masters.RFQNo != null)
+                        sqlquery += " and RFQNo='" + masters.RFQNo + "'";
+                    if (masters.DocumentNumber != null)
+                        sqlquery += " and DocumentNo='" + masters.DocumentNumber + "'";
+                    if (masters.BuyerGroupId != 0)
+                        sqlquery += " and BuyerGroupId='" + masters.BuyerGroupId + "'";
+                    if (masters.SaleOrderNo != null)
+                        sqlquery += " and SaleOrderNo='" + masters.SaleOrderNo + "'";
+                    if (masters.DeptID != 0)
+                        sqlquery += " and DepartmentId='" + masters.DeptID + "'";
+
+                    return yscm.Database.SqlQuery<LoadItemsByID>(sqlquery).ToList();
                 }
-                else if (masters.RevisionId != 0)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.MPRRevisionId == masters.RevisionId).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.RFQNo != null)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.RFQNo == masters.RFQNo).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.DocumentNumber != null)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.DocumentNo == masters.DocumentNumber).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.BuyerGroupId != 0)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.BuyerGroupId == masters.BuyerGroupId).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.SaleOrderNo != null)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.SaleOrderNo == masters.SaleOrderNo).OrderBy(x => x.VendorName).ToList();
-                }
-                else if (masters.DeptID != 0)
-                {
-                    view = obj.LoadItemsByIDs.Where(x => x.DepartmentId == masters.DeptID).OrderBy(x => x.VendorName).ToList();
-                }
-                return view;
+
             }
             catch (Exception ex)
             {
@@ -4048,7 +4146,8 @@ namespace DALayer.RFQ
             List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
             try
             {
-                var data = obj.PAAuthorizationLimits.Where(x => x.AuthorizationType == "cr").ToList();
+                //padata.AuthorizationType.ToLower().Equals("pa")
+                var data = obj.PAAuthorizationLimits.Where(x => x.AuthorizationType.ToLower() == "cr").ToList();
                 //var mappingdata = obj.PAAuthorizationEmployeeMappings.ToList();
                 foreach (var item in data)
                 {
@@ -4166,6 +4265,16 @@ namespace DALayer.RFQ
                     obj.MPRPADetails.Add(authorization);
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
+                    foreach (var item in model.Item)
+                    {
+                        var data = obj.RFQItems.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
+                        foreach (var items in data)
+                        {
+                            items.paid = status.Sid;
+                            obj.SaveChanges();
+                        }
+                    }
+
                 }
                 return status;
             }
@@ -4219,11 +4328,12 @@ namespace DALayer.RFQ
                         ItemDescription = x.ItemDescription,
                         UnitPrice = Convert.ToDecimal(x.UnitPrice),
                         QuotationQty = x.QuotationQty,
-                        DocumentyNo = x.DocumentNo,
+                        DocumentNo = x.DocumentNo,
                         SaleOrderNo = x.SaleOrderNo,
                         TargetSpend = Convert.ToDecimal(x.TargetSpend),
                         PaymentTermCode = x.PaymentTermCode,
-                        VendorName = x.VendorName
+                        VendorName = x.VendorName,
+                        DepartmentId = x.DepartmentId
                     }).ToList();
                     return model;
                 }
@@ -4289,7 +4399,115 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+        public async Task<List<EmployeemappingtocreditModel>> GetCreditSlabsandemployees()
+        {
+            List<EmployeemappingtocreditModel> model = new List<EmployeemappingtocreditModel>();
+            try
+            {
+                var data = obj.Employeemappingtocredits.OrderByDescending(x => x.CreditdaysId).ToList();
+                if (data != null)
+                {
+                    model = data.Select(x => new EmployeemappingtocreditModel()
+                    {
+                        Authid = x.Authid,
+                        AuthorizationType = x.AuthorizationType,
+                        CreditdaysId = x.CreditdaysId,
+                        DeptId = x.DeptId,
+                        EmployeeNo = x.EmployeeNo,
+                        Name = x.Name,
+                        MinDays = x.MinDays,
+                        MaxDays = x.MaxDays,
+                        MinPAValue = x.MinPAValue,
+                        MaxPAValue = x.MaxPAValue,
+                        CRApprovalId = x.CRApprovalId
+                    }).ToList();
+                }
+                else
+                {
+                    return model;
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployees()
+        {
+            List<EmployeemappingtopurchaseModel> model = new List<EmployeemappingtopurchaseModel>();
+            try
+            {
+                var data = obj.Employeemappingtopurchases.OrderBy(x => x.Authid).ToList();
+                if (data != null)
+                {
+                    model = data.Select(x => new EmployeemappingtopurchaseModel()
+                    {
+                        Authid = x.Authid,
+                        AuthorizationType = x.AuthorizationType,
+                        MaxPAValue = x.MaxPAValue,
+                        MinPAValue = x.MinPAValue,
+                        Employeeid = x.Employeeid,
+                        LessBudget = x.LessBudget,
+                        MoreBudget = x.MoreBudget,
+                        Name = x.Name,
+                        FunctionalRoleId = x.FunctionalRoleId,
+                        PAmapid = x.PAmapid
+                    }).ToList();
+                    return model;
+                }
+                else
+                {
+                    return model;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<ProjectManagerModel>> LoadAllProjectManagers()
+        {
+            List<ProjectManagerModel> model = new List<ProjectManagerModel>();
+            try
+            {
+                var data = obj.MPRRevisions.Where(x => x.BoolValidRevision == true).Select(x => x.ProjectManager).Distinct().ToList();
+                if (data != null)
+                {
+                    var vmodel = obj.Employees.Where(x => data.Contains(x.EmployeeNo)).ToList();
+                    model = vmodel.Select(x => new ProjectManagerModel()
+                    {
+                        EmployeeNo = x.EmployeeNo,
+                        Name = x.Name
+                    }).ToList();
+                }
+                return model;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
+        public async Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid)
+        {
+            List<VendormasterModel> model = new List<VendormasterModel>();
+            try
+            {
+                var data = obj.LoadItemsByIDs.Where(x => MPRItemDetailsid.Contains(x.MPRItemDetailsid)).ToList();
+                model = data.Select(x => new VendormasterModel()
+                {
+                    VendorName = x.VendorName,
+                    Vendorid = x.VendorId
+                }).ToList();
+                return model;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
 
