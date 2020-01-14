@@ -110,9 +110,9 @@ namespace BALayer.RFQ
             throw new NotImplementedException();
         }
 
-        public async Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model)
+        public statuscheckmodel InsertDocument(RfqDocumentsModel model)
         {
-            return await _rfqDataAcess.InsertDocument(model);
+            return _rfqDataAcess.InsertDocument(model);
         }
 
         public async Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model)
@@ -149,8 +149,11 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.GetRfqDetailsById(revisionId);
         }
-
-        public async Task<VendormasterModel> GetvendorById(int id)
+        public bool updateRfqDocStatus(List<RFQDocument> rfqDocs)
+        {
+            return  _rfqDataAcess.updateRfqDocStatus(rfqDocs);
+        }
+            public async Task<VendormasterModel> GetvendorById(int id)
         {
             return await _rfqDataAcess.GetvendorById(id);
         }
@@ -165,7 +168,7 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.InsertRfqItemInfo(model);
         }
 
-        public async Task<statuscheckmodel> DeleteRfqIteminfoByid(int id)
+        public async Task<statuscheckmodel> DeleteRfqIteminfoByid(List<int> id)
         {
             return await _rfqDataAcess.DeleteRfqIteminfoByid(id);
         }
@@ -278,7 +281,7 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.GetAllMPRBuyerGroups();
         }
-         public async Task<List<MPRApproversViewModel>> GetAllMPRApprovers()
+        public async Task<List<MPRApproversViewModel>> GetAllMPRApprovers()
         {
             return await _rfqDataAcess.GetAllMPRApprovers();
         }
@@ -373,9 +376,139 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.UpdateRFQTerms(model);
         }
-       public List<RFQListView> getRFQList(rfqFilterParams Rfqfilterparams)
+        public List<RFQListView> getRFQList(rfqFilterParams Rfqfilterparams)
         {
-            return  _rfqDataAcess.getRFQList(Rfqfilterparams);
+            return _rfqDataAcess.getRFQList(Rfqfilterparams);
+        }
+        //pa authorization
+        public async Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
+        {
+            return await _rfqDataAcess.InsertPAAuthorizationLimits(model);
+        }
+
+        public async Task<PAAuthorizationLimitModel> GetPAAuthorizationLimitById(int deptid)
+        {
+            return await _rfqDataAcess.GetPAAuthorizationLimitById(deptid);
+        }
+
+        public async Task<statuscheckmodel> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model)
+        {
+            return await _rfqDataAcess.CreatePAAuthirizationEmployeeMapping(model);
+        }
+
+        public async Task<PAAuthorizationEmployeeMappingModel> GetMappingEmployee(PAAuthorizationLimitModel limit)
+        {
+            return await _rfqDataAcess.GetMappingEmployee(limit);
+        }
+
+        public async Task<statuscheckmodel> CreatePACreditDaysmaster(PACreditDaysMasterModel model)
+        {
+            return await _rfqDataAcess.CreatePACreditDaysmaster(model);
+        }
+
+        public async Task<PACreditDaysMasterModel> GetCreditdaysMasterByID(int creditdaysid)
+        {
+            return await _rfqDataAcess.GetCreditdaysMasterByID(creditdaysid);
+        }
+
+        public async Task<statuscheckmodel> AssignCreditdaysToEmployee(PACreditDaysApproverModel model)
+        {
+            return await _rfqDataAcess.AssignCreditdaysToEmployee(model);
+        }
+
+        public async Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid)
+        {
+            return await _rfqDataAcess.RemovePAAuthorizationLimitsByID(authid);
+        }
+
+        public async Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid)
+        {
+            return await _rfqDataAcess.RemovePACreditDaysMaster(creditid);
+        }
+
+        public async Task<List<PAAuthorizationLimitModel>> GetPAAuthorizationLimitsByDeptId(int departmentid)
+        {
+            return await _rfqDataAcess.GetPAAuthorizationLimitsByDeptId(departmentid);
+        }
+
+        public async Task<statuscheckmodel> RemovePACreditDaysApprover(int ApprovalId)
+        {
+            return await _rfqDataAcess.RemovePACreditDaysApprover(ApprovalId);
+        }
+
+        public async Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId)
+        {
+            return await _rfqDataAcess.GetPACreditDaysApproverById(ApprovalId);
+        }
+
+        public async Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model)
+        {
+            return await _rfqDataAcess.GetEmployeeMappings(model);
+        }
+
+        public async Task<List<RfqItemModel>> GetRfqItemsByRevisionId(int revisionid)
+        {
+            return await _rfqDataAcess.GetRfqItemsByRevisionId(revisionid);
+        }
+
+        public async Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters)
+        {
+            return await _rfqDataAcess.GetItemsByMasterIDs(masters);
+        }
+
+        public async Task<List<DepartmentModel>> GetAllDepartments()
+        {
+            return await _rfqDataAcess.GetAllDepartments();
+        }
+
+        public async Task<List<PAAuthorizationLimitModel>> GetSlabsByDepartmentID(int DeptID)
+        {
+            return await _rfqDataAcess.GetSlabsByDepartmentID(DeptID);
+        }
+
+        public async Task<List<EmployeModel>> GetAllEmployee()
+        {
+            return await _rfqDataAcess.GetAllEmployee();
+        }
+
+        public async Task<List<PAAuthorizationLimitModel>> GetAllCredits()
+        {
+            return await _rfqDataAcess.GetAllCredits();
+        }
+
+        public async Task<List<PACreditDaysMasterModel>> GetAllCreditDays()
+        {
+            return await _rfqDataAcess.GetAllCreditDays();
+        }
+
+        public async Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes()
+        {
+            return await _rfqDataAcess.GetAllMprPAPurchaseModes();
+        }
+
+        public async Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes()
+        {
+            return await _rfqDataAcess.GetAllMprPAPurchaseTypes();
+        }
+
+        public async Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model)
+        {
+            return await _rfqDataAcess.InsertPurchaseAuthorization(model);
+        }
+
+        public async Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID)
+        {
+            return await _rfqDataAcess.GetMPRPADeatilsByPAID(PID);
+        }
+
+        public async Task<List<MPRPADetailsModel>> GetAllMPRPAList()
+        {
+            return await _rfqDataAcess.GetAllMPRPAList();
+        }
+
+        public async Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles()
+        {
+            return await _rfqDataAcess.GetAllPAFunctionalRoles();
         }
     }
 }

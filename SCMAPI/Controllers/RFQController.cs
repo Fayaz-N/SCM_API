@@ -196,6 +196,12 @@ namespace SCMAPI.Controllers
             revision = await _rfqBusenessAcess.GetRfqDetailsById(RevisionId);
             return Ok(revision);
         }
+        [HttpPost]
+        [Route("updateRfqDocStatus")]
+        public IHttpActionResult updateRfqDocStatus([FromBody] List<RFQDocument> rfqdocs)
+        {
+            return Ok(_rfqBusenessAcess.updateRfqDocStatus(rfqdocs));
+        }
 
 
 

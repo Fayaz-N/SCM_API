@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCMModels.SCMModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace SCMModels.RFQModels
         {
             communication = new List<RfqCommunicationModel>();
             iteminfo = new List<RfqItemInfoModel>();
-            documents = new List<RfqDocumentsModel>();
+            RFQDocuments = new List<RfqDocumentsModel>();
             rfqterms = new List<RFQTermsModel>();
         }
         public int RFQItemID { get; set; }
@@ -38,6 +39,8 @@ namespace SCMModels.RFQModels
         public Nullable<decimal> TotalTaxAmount { get; set; }
         public Nullable<decimal> IGSTPercentage { get; set; }
         public Nullable<decimal> CGSTPercentage { get; set; }
+        public string MfgPartNo { get; set; }
+        public string MfgModelNo { get; set; }
         public Nullable<decimal> SGSTPercentage { get; set; }
         public Nullable<decimal> ItemUnitPrice { get; set; }
         public Nullable<decimal> IGSTAmount { get; set; }
@@ -55,7 +58,7 @@ namespace SCMModels.RFQModels
         public List<RFQTermsModel> rfqterms { get; set; }
         public List<RfqItemInfoModel> iteminfo { get; set; }
         public List<RfqCommunicationModel> communication { get; set; }
-        public List<RfqDocumentsModel> documents { get; set; }
+        public List<RfqDocumentsModel> RFQDocuments { get; set; }
         public MPRPADetailsModel mprpa { get; set; }
 
     }

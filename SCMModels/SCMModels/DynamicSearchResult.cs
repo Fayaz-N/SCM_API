@@ -39,8 +39,8 @@ namespace SCMModels
         public string ListType { get; set; }
         public string DocumentNo { get; set; }
         public string DocumentDescription { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
         public string Status { get; set; }
         public string PreparedBy { get; set; }
         public string CheckedBy { get; set; }
@@ -52,7 +52,7 @@ namespace SCMModels
         public string DepartmentId { get; set; }
         public string GEPSApprovalId { get; set; }
         public string BuyerGroupId { get; set; }
-      
+
     }
     public class rfqFilterParams
     {
@@ -76,6 +76,6 @@ namespace SCMModels
         public Nullable<short> OrgDepartmentId { get; set; }
         public Nullable<System.DateTime> DOL { get; set; }
         public Nullable<int> RoleId { get; set; }
-    }
+}
 
 }

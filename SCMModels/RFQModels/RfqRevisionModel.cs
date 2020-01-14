@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCMModels.SCMModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace SCMModels.RFQModels
             RFQStatus = new List<RFQStatusModel>();
             rfqvendor = new List<RfqVendorTermModel>();
             RFQTerms = new List<RFQTermsModel>();
+            mprIncharges = new List<MPRIncharge>();
         }
         public int RfqRevisionId { get; set; }
         public int RfqMasterId { get; set; }
@@ -40,5 +42,6 @@ namespace SCMModels.RFQModels
         public List<RFQStatusModel> RFQStatus { get; set; }
         public List<RfqVendorTermModel> rfqvendor { get; set; }
         public List<RFQTermsModel> RFQTerms { get; set; }
+        public List<MPRIncharge> mprIncharges { get; set; }
     }
 }
