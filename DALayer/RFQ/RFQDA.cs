@@ -63,7 +63,7 @@ namespace DALayer.RFQ
                 rfqModel.rfqmaster.Created = DateTime.Now;
                 rfqModel.CreatedBy = Convert.ToInt32(item.CreatedBy);
                 rfqModel.CreatedDate = DateTime.Now;
-                rfqModel.RfqValidDate = item.RFQValidDate;
+                rfqModel.RfqValidDate =Convert.ToDateTime(item.RFQValidDate);
                 rfqModel.PackingForwading = item.PackingForwarding;
                 rfqModel.ExciseDuty = item.ExciseDuty;
                 rfqModel.salesTax = item.SalesTax;
@@ -77,10 +77,10 @@ namespace DALayer.RFQ
                 rfqModel.DeliveryMinWeeks = item.DeliveryMinWeeks;
                 rfqModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
                 RfqItemModel rfqitem = new RfqItemModel();
-                rfqitem.MRPItemsDetailsID = item.MPRItemDetailsid;
+                rfqitem.MRPItemsDetailsID =Convert.ToInt32(item.MPRItemDetailsid);
                 rfqitem.ItemName = item.ItemName;
                 rfqitem.ItemDescription = item.ItemDescription;
-                rfqitem.QuotationQty = item.QuotationQty;
+                rfqitem.QuotationQty =Convert.ToDouble(item.QuotationQty);
                 rfqModel.rfqitem.Add(rfqitem);
                 rfqModel.RFQTerms = rfqList;
                 CreateRfQ(rfqModel);
