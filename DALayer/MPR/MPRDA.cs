@@ -624,7 +624,7 @@ namespace DALayer.MPR
                         if (mprStatus.status == "Approved")
                             updateMprstatusTrack(mPRStatusTrackDetails);
                     }
-                    //this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
+                    this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
                 }
 
             }

@@ -53,8 +53,12 @@ namespace DALayer.RFQ
                 }
 
             }
-            foreach (RFQQuoteView item in RFQQuoteViewList)
+            List<RFQQuoteView> mainList = RFQQuoteViewList.GroupBy(p => p.VendorId)
+                           .Select(grp => grp.First())
+                           .ToList();
+            foreach (RFQQuoteView item in mainList)
             {
+
                 RfqRevisionModel rfqModel = new RfqRevisionModel();
                 rfqModel.rfqmaster = new RFQMasterModel();
                 rfqModel.rfqmaster.MPRRevisionId = Convert.ToInt32(item.MPRRevisionId);
@@ -63,7 +67,7 @@ namespace DALayer.RFQ
                 rfqModel.rfqmaster.Created = DateTime.Now;
                 rfqModel.CreatedBy = Convert.ToInt32(item.CreatedBy);
                 rfqModel.CreatedDate = DateTime.Now;
-                rfqModel.RfqValidDate =Convert.ToDateTime(item.RFQValidDate);
+                rfqModel.RfqValidDate = Convert.ToDateTime(item.RFQValidDate);
                 rfqModel.PackingForwading = item.PackingForwarding;
                 rfqModel.ExciseDuty = item.ExciseDuty;
                 rfqModel.salesTax = item.SalesTax;
@@ -76,12 +80,17 @@ namespace DALayer.RFQ
                 rfqModel.BankGuarantee = item.BankGuarantee;
                 rfqModel.DeliveryMinWeeks = item.DeliveryMinWeeks;
                 rfqModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
-                RfqItemModel rfqitem = new RfqItemModel();
-                rfqitem.MRPItemsDetailsID =Convert.ToInt32(item.MPRItemDetailsid);
-                rfqitem.ItemName = item.ItemName;
-                rfqitem.ItemDescription = item.ItemDescription;
-                rfqitem.QuotationQty =Convert.ToDouble(item.QuotationQty);
-                rfqModel.rfqitem.Add(rfqitem);
+
+                var itemList = RFQQuoteViewList.Where(li => li.VendorId == item.VendorId).ToList();
+                foreach (RFQQuoteView sitem in itemList)
+                {
+                    RfqItemModel rfqitem = new RfqItemModel();
+                    rfqitem.MRPItemsDetailsID = Convert.ToInt32(sitem.MPRItemDetailsid);
+                    rfqitem.ItemName = sitem.ItemName;
+                    rfqitem.ItemDescription = sitem.ItemDescription;
+                    rfqitem.QuotationQty = Convert.ToDouble(sitem.QuotationQty);
+                    rfqModel.rfqitem.Add(rfqitem);
+                }
                 rfqModel.RFQTerms = rfqList;
                 CreateRfQ(rfqModel);
                 MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
@@ -156,13 +165,21 @@ namespace DALayer.RFQ
                 if (model != null)
                 {
 
-                    vscm.Database.Connection.Open();
+                    //vscm.Database.Connection.Open();
                     if (model.rfqmaster.RfqMasterId == 0)
                     {
-                        //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
-                        rfqremote.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
+                        Int64 sequenceNo = Convert.ToInt64(vscm.RemoteRFQMasters.Max(li => li.RFQUniqueNo));
+                        if (sequenceNo == null || sequenceNo == 0)
+                            sequenceNo = 1;
+                        else
+                        {
+                            sequenceNo = sequenceNo + 1;
+                        }
+                        var value = obj.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+                        rfqremote.RFQNo = "RFQ/" + DateTime.Now.ToString("MMyy") + "/"+ value;
+                        rfqremote.RFQUniqueNo = Convert.ToInt32(sequenceNo);
                         rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
-                        rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        //rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                         rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
                         rfqremote.CreatedDate = model.rfqmaster.Created;
                         rfqremote.VendorId = model.rfqmaster.VendorId;
@@ -255,18 +272,26 @@ namespace DALayer.RFQ
                 int masterid = rfqremote.RfqMasterId;
                 int remoterevisionid = (from x in vscm.RemoteRFQRevisions orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
                 int Ritemid = (from x in vscm.RemoteRFQItems orderby x.RFQItemsId descending select x.RFQItemsId).First();
-                vscm.Database.Connection.Close();
+                //vscm.Database.Connection.Close();
                 if (model != null)
                 {
-                    obj.Database.Connection.Open();
+                    //obj.Database.Connection.Open();
                     var rfqlocal = new RFQMaster();
                     if (model.rfqmaster.RfqMasterId == 0)
                     {
-                        //string unique = obj.RFQMasters.Select(x => x.RFQNo).FirstOrDefault();
-                        rfqlocal.RFQNo = "rfq/" + DateTime.Now.ToString("MMyy") + "/";
+                        Int64 sequenceNo = Convert.ToInt64(obj.RFQMasters.Max(li => li.RFQUniqueNo));
+                        if (sequenceNo == null || sequenceNo == 0)
+                            sequenceNo = 1;
+                        else
+                        {
+                            sequenceNo = sequenceNo + 1;
+                        }
+                        var value = obj.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+                        rfqlocal.RFQNo = "RFQ/" + DateTime.Now.ToString("MMyy") + "/"+value;
+                        rfqlocal.RFQUniqueNo =Convert.ToInt32(sequenceNo);
                         rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
                         rfqlocal.RfqMasterId = masterid;
-                        rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                       // rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                         rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
                         rfqlocal.CreatedDate = model.rfqmaster.Created;
                         rfqlocal.VendorId = model.rfqmaster.VendorId;
@@ -335,22 +360,30 @@ namespace DALayer.RFQ
 
 
                     int revisionid = revision.rfqRevisionId;
-
-                    foreach (var data in model.rfqitem)
+                    var rfqitems= vscm.RemoteRFQItems.Where(li => li.RFQRevisionId == remoterevisionid).ToList();
+                    foreach (var data in rfqitems)
                     {
-                        var rfitems = new RFQItem()
+                        try
                         {
-                            RFQItemsId = Ritemid,
-                            RFQRevisionId = remoterevisionid,
-                            MPRItemDetailsid = data.MRPItemsDetailsID,
-                            QuotationQty = data.QuotationQty,
-                            VendorModelNo = data.VendorModelNo,
-                            HSNCode = data.HSNCode,
-                            RequestRemarks = data.RequsetRemarks,
-                            DeleteFlag = false
-                        };
-                        revision.RFQItems.Add(rfitems);
-                        obj.SaveChanges();
+                            var rfitems = new RFQItem()
+                            {
+                                RFQItemsId = data.RFQItemsId,
+                                RFQRevisionId = remoterevisionid,
+                                MPRItemDetailsid = data.MPRItemDetailsid,
+                                QuotationQty = data.QuotationQty,
+                                VendorModelNo = data.VendorModelNo,
+                                HSNCode = data.HSNCode,
+                                RequestRemarks = data.RequestRemarks,
+                                DeleteFlag = false
+                            };
+                            revision.RFQItems.Add(rfitems);
+                            obj.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw;
+                        }
                     }
                     status.Sid = rfqlocal.RfqMasterId;
                     foreach (RFQTermsModel terms in model.RFQTerms)
@@ -949,12 +982,12 @@ namespace DALayer.RFQ
             List<RfqItemModel> rfq = new List<RfqItemModel>();
             try
             {
-                var data = obj.RFQItems.Where(x => x.RFQRevisionId == revisionid).ToList();
+                var data = vscm.RemoteRFQItems.Where(x => x.RFQRevisionId == revisionid).ToList();
                 var itemid = data.Select(x => new RfqItemModel()
                 {
                     RFQItemID = x.RFQItemsId
                 }).FirstOrDefault();
-                var iteminfodata = obj.RFQItemsInfoes.ToList();
+                var iteminfodata = vscm.RemoteRFQItemsInfoes.ToList();
 
                 foreach (var item in data)
                 {
@@ -966,7 +999,7 @@ namespace DALayer.RFQ
                         VendorModelNo = item.VendorModelNo,
                         CustomDuty = Convert.ToDecimal(item.CustomDuty),
                         RequsetRemarks = item.RequestRemarks,
-                        iteminfo = iteminfodata.Where(x => x.RFQItemsId == itemid.RFQItemID).Select(x => new RfqItemInfoModel()
+                        iteminfo = iteminfodata.Where(x => x.RFQItemsId == item.RFQItemsId && x.DeleteFlag==false).Select(x => new RfqItemInfoModel()
                         {
                             RFQSplitItemId = x.RFQSplitItemId,
                             Qunatity = x.Qty,
@@ -1740,18 +1773,21 @@ namespace DALayer.RFQ
                 {
                     vscm.Database.Connection.Open();
                     var Remotedata = new RemoteRFQItem();
-                    var rfqRemoteitem = from x in vscm.RemoteRFQItems where x.RFQItemsId == model.RFQItemID select x;
-                    Remotedata.HSNCode = model.HSNCode;
-                    Remotedata.QuotationQty = model.QuotationQty;
-                    Remotedata.VendorModelNo = model.VendorModelNo;
-                    Remotedata.IGSTPercentage = model.IGSTPercentage;
-                    Remotedata.SGSTPercentage = model.SGSTPercentage;
-                    Remotedata.CGSTPercentage = model.CGSTPercentage;
-                    Remotedata.PFAmount = model.PFAmount;
-                    Remotedata.PFPercentage = model.PFPercentage;
-                    Remotedata.FreightAmount = model.FreightAmount;
-                    Remotedata.CustomDuty = model.CustomDuty;
-                    Remotedata.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+                    var rfqRemoteitem = vscm.RemoteRFQItems.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
+                    rfqRemoteitem.HSNCode = model.HSNCode;
+                    rfqRemoteitem.QuotationQty = model.QuotationQty;
+                    rfqRemoteitem.VendorModelNo = model.VendorModelNo;
+                    rfqRemoteitem.IGSTPercentage = model.IGSTPercentage;
+                    rfqRemoteitem.SGSTPercentage = model.SGSTPercentage;
+                    rfqRemoteitem.CGSTPercentage = model.CGSTPercentage;
+                    rfqRemoteitem.MfgModelNo = model.MfgModelNo;
+                    rfqRemoteitem.MfgPartNo = model.MfgPartNo;
+                    rfqRemoteitem.PFAmount = model.PFAmount;
+                    rfqRemoteitem.PFPercentage = model.PFPercentage;
+                    rfqRemoteitem.FreightAmount = model.FreightAmount;
+                    rfqRemoteitem.CustomDuty = model.CustomDuty;
+                    rfqRemoteitem.taxInclusiveOfDiscount = model.taxInclusiveOfDiscount;
+
                     vscm.RemoteRFQItems.Add(Remotedata);
                     vscm.SaveChanges();
                     foreach (var item in model.iteminfo)
@@ -1771,18 +1807,20 @@ namespace DALayer.RFQ
                             //GSTPercentage = item.GSTPercentage,
                             SyncDate = System.DateTime.Now
                         };
-                        Remotedata.RemoteRFQItemsInfoes.Add(remoteinfo);
-                        obj.SaveChanges();
+                        vscm.RemoteRFQItemsInfoes.Add(remoteinfo);
+                        vscm.SaveChanges();
                     }
                 }
-                vscm.Database.Connection.Close();
+                //vscm.Database.Connection.Close();
                 ///for local datbase
                 var data = new RFQItem();
-                obj.Database.Connection.Open();
-                var rfqitem = from x in obj.RFQItems where x.RFQItemsId == model.RFQItemID select x;
-                data.HSNCode = model.HSNCode;
-                data.QuotationQty = model.QuotationQty;
-                data.VendorModelNo = model.VendorModelNo;
+                //obj.Database.Connection.Open();
+                var rfqitem = obj.RFQItems.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
+                rfqitem.HSNCode = model.HSNCode;
+                rfqitem.QuotationQty = model.QuotationQty;
+                rfqitem.VendorModelNo = model.VendorModelNo;
+                rfqitem.MfgModelNo = model.MfgModelNo;
+                rfqitem.MfgPartNo = model.MfgPartNo;
                 obj.RFQItems.Add(data);
                 obj.SaveChanges();
                 foreach (var item in model.iteminfo)
@@ -1800,7 +1838,7 @@ namespace DALayer.RFQ
                         Remarks = item.Remarks,
                         DeliveryDate = item.DeliveryDate
                     };
-                    data.RFQItemsInfoes.Add(info);
+                    obj.RFQItemsInfoes.Add(info);
                     obj.SaveChanges();
                 }
                 obj.Database.Connection.Close();
@@ -3908,8 +3946,9 @@ namespace DALayer.RFQ
                 {
                     ApproverName = x.Name,
                     AuthorizationType = x.AuthorizationType,
-                    Role = x.role,
-                    EmployeeNo = x.EmployeeNo
+                    RoleName = x.role,
+                    EmployeeNo = x.EmployeeNo,
+                    RoleId=x.FunctionalRoleId
                 }).ToList();
 
                 return employee;
@@ -4274,8 +4313,26 @@ namespace DALayer.RFQ
                             obj.SaveChanges();
                         }
                     }
+                        foreach (var item in model.ApproversList)
+                        {
+                            var Approveritem = new MPRPAApprover()
+                            {
+                                PAId = status.Sid,
+                                ApproverLevel = 1,
+                                RoleName = item.RoleId,
+                                Approver = item.EmployeeNo,
+                                ApproversRemarks = item.ApproversRemarks,
+                                ApprovalStatus = "submitted",
+                                ApprovedOn = System.DateTime.Now
+                            };
+                            obj.MPRPAApprovers.Add(Approveritem);
+                            obj.SaveChanges();
+                        }
+                    }
+                    else{
 
-                }
+                    }
+                
                 return status;
             }
             catch (Exception ex)
@@ -4333,7 +4390,18 @@ namespace DALayer.RFQ
                         TargetSpend = Convert.ToDecimal(x.TargetSpend),
                         PaymentTermCode = x.PaymentTermCode,
                         VendorName = x.VendorName,
-                        DepartmentId = x.DepartmentId
+                        DepartmentId = x.DepartmentId,
+                        MRPItemsDetailsID = x.MPRItemDetailsid,
+                    }).ToList();
+                    var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
+                    model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
+                    {
+                        ApproverName = x.Name,
+                        RoleName = x.RoleName,
+                        ApproversRemarks = x.ApproversRemarks,
+                        ApprovalStatus = x.ApprovalStatus,
+                        EmployeeNo = x.Approver,
+                        ApprovedOn = x.ApprovedOn
                     }).ToList();
                     return model;
                 }
@@ -4347,6 +4415,8 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+
+
         public async Task<List<MPRPADetailsModel>> GetAllMPRPAList()
         {
             List<MPRPADetailsModel> model = new List<MPRPADetailsModel>();
@@ -4494,8 +4564,10 @@ namespace DALayer.RFQ
             List<VendormasterModel> model = new List<VendormasterModel>();
             try
             {
-                var data = obj.LoadItemsByIDs.Where(x => MPRItemDetailsid.Contains(x.MPRItemDetailsid)).ToList();
-                model = data.Select(x => new VendormasterModel()
+                //var data = obj.LoadItemsByIDs.Where(x => MPRItemDetailsid.Contains(x.MPRItemDetailsid)).ToList();
+                var vendor = (from xx in obj.LoadItemsByIDs select xx).Where(y => MPRItemDetailsid.Contains(y.MPRItemDetailsid)).GroupBy(n => new { n.VendorId, n.VendorName }).Select(x => x.FirstOrDefault()).ToList();
+                //var data = obj.LoadItemsByIDs.Distinct().Where(x => MPRItemDetailsid.Contains(x.MPRItemDetailsid)).Distinct().ToList();
+                model = vendor.Select(x => new VendormasterModel()
                 {
                     VendorName = x.VendorName,
                     Vendorid = x.VendorId
@@ -4508,6 +4580,85 @@ namespace DALayer.RFQ
                 throw;
             }
         }
+        public async Task<List<MPRPAApproversModel>> GetAllApproversList()
+        {
+            List<MPRPAApproversModel> model = new List<MPRPAApproversModel>();
+            try
+            {
+                var data = obj.MPRPAApprovers.ToList();
+                if (data != null)
+                {
+                    model = data.Select(x => new MPRPAApproversModel()
+                    {
+                        PAId = x.PAId,
+                        ApproverLevel = x.ApproverLevel,
+                        RoleName = x.RoleName,
+                        ApproverName = x.Approver,
+                        ApproversRemarks = x.ApproversRemarks,
+                        ApprovalStatus = x.ApprovalStatus,
+                        ApprovedOn = x.ApprovedOn
+                    }).ToList();
+                    return model;
+                }
+                else
+                {
+                    return model;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
+        {
+            List<GetmprApproverdeatil> details = new List<GetmprApproverdeatil>();
+            try
+            {
+                var sqlquery = "";
+                sqlquery = "select * from GetmprApproverdeatils where Approver='" + model.CreatedBy + "'";
+                if (model.Paid != 0)
+                    sqlquery += " and  PAId='" + model.Paid + "'";
+                if (model.Status != null)
+                    sqlquery += " and ApprovalStatus='" + model.Status + "'";
+                if (model.FromDate != null && model.ToDate != null)
+                    sqlquery += " where RequestedOn between ='" + model.FromDate + "' and '" + model.ToDate + "'";
+
+                details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
+                return details;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId).FirstOrDefault();
+                if (approverdata != null)
+                {
+                    approverdata.ApproversRemarks = model.ApproversRemarks;
+                    approverdata.ApprovalStatus = model.ApprovalStatus;
+                    approverdata.ApprovedOn = System.DateTime.Now;
+                    obj.SaveChanges();
+                    return status;
+                }
+                else
+                {
+                    return status;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }
 
