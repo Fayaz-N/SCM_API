@@ -118,5 +118,8 @@ namespace BALayer.RFQ
         Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployees();
         Task<List<ProjectManagerModel>> LoadAllProjectManagers();
         Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid);
+        Task<List<MPRPAApproversModel>> GetAllApproversList();
+        Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model);
+        Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model);
     }
 }

@@ -16,6 +16,7 @@ namespace SCMModels.RFQModels
             department = new MPRDepartmentModel();
             buyergroup = new MPRBuyerGroupModel();
             Item = new List<RfqItemModel>();
+            ApproversList = new List<MPRPAApproversModel>();
         }
         public int PAId { get; set; }
         public string RequestedBy { get; set; }
@@ -48,5 +49,6 @@ namespace SCMModels.RFQModels
         public MPRBuyerGroupModel buyergroup { get; set; }
         public MPRDepartmentModel department { get; set; }
         public List<RfqItemModel> Item { get; set; }
+        public List<MPRPAApproversModel> ApproversList { get; set; }
     }
 }

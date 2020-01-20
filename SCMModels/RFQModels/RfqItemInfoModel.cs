@@ -10,6 +10,8 @@ namespace SCMModels.RFQModels
     {
         public int RFQSplitItemId { get; set; }
         public int RFQItemsId { get; set; }
+        public double StartQty{ get; set; }
+        public double EndQty { get; set; }
         public double Qunatity { get; set; }
         public int UOM { get; set; }
         public decimal UnitPrice { get; set; }

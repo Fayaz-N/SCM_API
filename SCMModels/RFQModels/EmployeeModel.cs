@@ -22,8 +22,9 @@ namespace SCMModels.RFQModels
     {
         public string ApproverName { get; set; }
         public string AuthorizationType { get; set; }
-        public string Role { get; set; }
+        public string RoleName { get; set; }
         public string EmployeeNo { get; set; }
+        public string RoleId { get; set; }
     }
     public class ProjectManagerModel
     {

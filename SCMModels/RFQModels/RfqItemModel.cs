@@ -15,10 +15,12 @@ namespace SCMModels.RFQModels
             iteminfo = new List<RfqItemInfoModel>();
             RFQDocuments = new List<RfqDocumentsModel>();
             rfqterms = new List<RFQTermsModel>();
+            mappingrfq = new List<RFQMPRMappingModel>();
         }
         public int RFQItemID { get; set; }
         public int RFQRevisionId { get; set; }
         public int MRPItemsDetailsID { get; set; }
+        public string ItemId { get; set; }
         public double QuotationQty { get; set; }
         public string ItemName { get; set; }
         public string ItemDescription { get; set; }
@@ -62,6 +64,7 @@ namespace SCMModels.RFQModels
         public List<RfqItemInfoModel> iteminfo { get; set; }
         public List<RfqCommunicationModel> communication { get; set; }
         public List<RfqDocumentsModel> RFQDocuments { get; set; }
+        public List<RFQMPRMappingModel> mappingrfq { get; set; }
         public MPRPADetailsModel mprpa { get; set; }
 
     }
@@ -75,6 +78,7 @@ namespace SCMModels.RFQModels
         public int BuyerGroupId { get; set; }
         public string SaleOrderNo { get; set; }
         public int DeptID { get; set; }
+        public string EmployeeNo { get; set; }
     }
 
 }

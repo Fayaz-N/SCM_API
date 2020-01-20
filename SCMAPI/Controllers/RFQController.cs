@@ -384,7 +384,7 @@ namespace SCMAPI.Controllers
             model = await _rfqBusenessAcess.GetMPRDepartmentById(id);
             return Ok(model);
         }
-        [Route("GetAllMPRDepartments")]
+        [Route("GetAllMPRDispatchLocations")]
         [ResponseType(typeof(List<MPRDispatchLocationModel>))]
         public async Task<IHttpActionResult> GetAllMPRDispatchLocations()
         {
@@ -754,6 +754,33 @@ namespace SCMAPI.Controllers
         {
             List<CurrencyMasterModel> model = new List<CurrencyMasterModel>();
             model = await _rfqBusenessAcess.GetAllMasterCurrency();
+            return Ok(model);
+        }
+        [HttpGet]
+        [Route("GetAllApproversList")]
+        [ResponseType(typeof(List<MPRPAApproversModel>))]
+        public async Task<IHttpActionResult> GetAllApproversList()
+        {
+            List<MPRPAApproversModel> model = new List<MPRPAApproversModel>();
+            model = await _rfqBusenessAcess.GetAllApproversList();
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("GetMprApproverDetailsBySearch")]
+        [ResponseType(typeof(List<GetmprApproverdeatil>))]
+        public async Task<IHttpActionResult> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
+        {
+            List<GetmprApproverdeatil> details = new List<GetmprApproverdeatil>();
+            details = await _rfqBusenessAcess.GetMprApproverDetailsBySearch(model);
+            return Ok(details);
+        }
+        [HttpPost]
+        [Route("UpdateMprpaApproverStatus")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> UpdateMprpaApproverStatus(MPRPAApproversModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.UpdateMprpaApproverStatus(model);
             return Ok(model);
         }
     }

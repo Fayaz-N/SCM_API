@@ -534,5 +534,20 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.LoadVendorByMprDetailsId(MPRItemDetailsid);
         }
+
+        public async Task<List<MPRPAApproversModel>> GetAllApproversList()
+        {
+            return await _rfqDataAcess.GetAllApproversList();
+        }
+
+        public async Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
+        {
+            return await _rfqDataAcess.GetMprApproverDetailsBySearch(model);
+        }
+
+        public async Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model)
+        {
+            return await _rfqDataAcess.UpdateMprpaApproverStatus(model);
+        }
     }
 }
