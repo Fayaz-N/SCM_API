@@ -13,8 +13,10 @@ namespace SCMModels.RFQModels
         public string EMail { get; set; }
         public string BuyerGroupManager { get; set; }
         public string BuyerGroupNo { get; set; }
+        public string BGRole { get; set; }
         public string ProjectManager { get; set; }
         public string ProjectMangerNo { get; set; }
+        public string PMRole { get; set; }
         public Nullable<byte> DeptID { get; set; }
         public List<PurchaseCreditApproversModel> Approvers { get; set; }
     }
