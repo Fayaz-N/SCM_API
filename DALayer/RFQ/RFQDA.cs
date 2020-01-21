@@ -3934,12 +3934,14 @@ namespace DALayer.RFQ
                 {
                     employee.BuyerGroupManager = BuyerManagers.EmployeeName;
                     employee.BuyerGroupNo = BuyerManagers.EmpNo;
+                    employee.BGRole = BuyerManagers.Role;
                 }
                 var projectmanagers = obj.LoadProjectManagers.Where(x => model.MPRItemDetailsid.Contains(x.Itemdetailsid) && x.BoolValidRevision == true).FirstOrDefault();
                 if (projectmanagers != null)
                 {
                     employee.ProjectManager = projectmanagers.EmployeeName;
                     employee.ProjectMangerNo = projectmanagers.EmpNo;
+                    employee.PMRole = projectmanagers.Role;
                 }
                 var PAandCRmapping = obj.PAandCRMappings.Where(x => x.DepartmentId == model.DeptId && x.minpavalue.CompareTo(model.PAValue) <= 0 && x.maxpavalue.CompareTo(model.PAValue) >= 0 && x.morebudget == model.MoreBudget && x.lessbudget == model.LessBudget).ToList();
                 employee.Approvers = PAandCRmapping.Select(x => new PurchaseCreditApproversModel()
@@ -4018,6 +4020,10 @@ namespace DALayer.RFQ
                         sqlquery += " and SaleOrderNo='" + masters.SaleOrderNo + "'";
                     if (masters.DeptID != 0)
                         sqlquery += " and DepartmentId='" + masters.DeptID + "'";
+                    if (masters.EmployeeNo != null)
+                        sqlquery += " and DepartmentId='" + masters.EmployeeNo + "'";
+                    if (masters.EmployeeNo != null)
+                        sqlquery += " and ProjectManager='" + masters.EmployeeNo + "'";
 
                     return yscm.Database.SqlQuery<LoadItemsByID>(sqlquery).ToList();
                 }
@@ -4520,6 +4526,7 @@ namespace DALayer.RFQ
                         Employeeid = x.Employeeid,
                         LessBudget = x.LessBudget,
                         MoreBudget = x.MoreBudget,
+                        DepartmentName = x.Department,
                         Name = x.Name,
                         FunctionalRoleId = x.FunctionalRoleId,
                         PAmapid = x.PAmapid
