@@ -45,6 +45,7 @@ namespace SCMModels
         public string PreparedBy { get; set; }
         public string CheckedBy { get; set; }
         public string ApprovedBy { get; set; }
+        public string SecOrThirdApprover { get; set; }
 
         public string IssuePurposeId { get; set; }
         public string JobCode { get; set; }

@@ -368,6 +368,16 @@ namespace DALayer.MPR
                             updateMprstatusTrack(mPRStatusTrackDetails);
                         }
                         mprRevisionDetails.ApprovedBy = mpr.ApprovedBy;
+                        if (mprRevisionDetails.PurchaseTypeId == 1)//for single vendor we are updating second and third approvers from mprdepartment table
+                        {
+                            mprRevisionDetails.SecondApprover = DB.MPRDepartments.Where(li => li.DepartmentId == mprRevisionDetails.DepartmentId).FirstOrDefault().SecondApprover;
+                            mprRevisionDetails.ThirdApprover = DB.MPRDepartments.Where(li => li.DepartmentId == mprRevisionDetails.DepartmentId).FirstOrDefault().ThirdApprover;
+                        }
+                        else
+                        {
+                            mprRevisionDetails.SecondApprover = null;
+                            mprRevisionDetails.ThirdApprover = null;
+                        }
                         DB.SaveChanges();
 
                     }
@@ -524,9 +534,11 @@ namespace DALayer.MPR
                     query = "Select  RevisionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
                 if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
-                    query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
+                    query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "' or RevisionId in ( select RevisionId from  MPRIncharges where incharge=" + mprfilterparams.PreparedBy + ")";
                 if (mprfilterparams.ListType == "MPRPendingList")
                     query += " and CheckedBy ='-'";
+                if (mprfilterparams.ListType == "MPRSingleVendorList")
+                    query += " and PurchaseTypeId =1 and  CheckStatus='Approved' and ApprovalStatus='Approved' and(SecondApprover = '" + mprfilterparams.SecOrThirdApprover + "' and SecondApproversStatus = 'Pending') or (ThirdApprover = '" + mprfilterparams.SecOrThirdApprover + "' and ThirdApproverStatus = 'Pending' and SecondApproversStatus='Approved')";
                 if (!string.IsNullOrEmpty(mprfilterparams.DocumentNo))
                     query += " and DocumentNo='" + mprfilterparams.DocumentNo + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.DocumentDescription))
@@ -644,6 +656,8 @@ namespace DALayer.MPR
                         if (mprStatus.status == "Approved")
                             updateMprstatusTrack(mPRStatusTrackDetails);
                     }
+                        Context.SaveChanges();
+                   
                     this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
                 }
 
