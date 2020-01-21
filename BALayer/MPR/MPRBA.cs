@@ -68,7 +68,7 @@ namespace BALayer.MPR
 		{
 			return this._mprDataAcess.getMPRRevisionDetails(RevisionId);
 		}
-		public List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams)
+        public DataTable getMPRList(mprFilterParams mprfilterparams)
 		{
 			return this._mprDataAcess.getMPRList(mprfilterparams);
 		}

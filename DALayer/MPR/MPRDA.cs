@@ -399,9 +399,18 @@ namespace DALayer.MPR
         {
             using (YSCMEntities Context = new YSCMEntities())
             {
-                vendor.AutoAssignmentofRFQ = true;
-                vendor.Deleteflag = true;
-                Context.VendorMasters.Add(vendor);
+                if (vendor.Vendorid == 0 || vendor.Vendorid == null)
+                {
+                    vendor.AutoAssignmentofRFQ = true;
+                    vendor.Deleteflag = true;
+                    Context.VendorMasters.Add(vendor);
+                }
+                else
+                {
+                    VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == vendor.Vendorid).FirstOrDefault();
+
+                    vendormaster.Emailid = vendor.Emailid;
+                }
                 Context.SaveChanges();
                 return vendor.Vendorid;
             }
@@ -501,14 +510,18 @@ namespace DALayer.MPR
 
         }
 
-        public List<MPRRevisionDetail> getMPRList(mprFilterParams mprfilterparams)
+        public DataTable getMPRList(mprFilterParams mprfilterparams)
         {
+            DataTable table = new DataTable();
             using (YSCMEntities Context = new YSCMEntities())
             {
                 var query = default(string);
                 //var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
                 //var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");
-                query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+                    query = "Select  RevisionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                else
+                    query = "Select  RevisionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
                 if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
                     query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
@@ -544,8 +557,15 @@ namespace DALayer.MPR
                 //else
                 //	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).OrderBy(li => li.PreparedOn).ToList();
                 //mprRevisionDetails.ForEach(a => a.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == a.RequisitionId).FirstOrDefault());
-                return Context.Database.SqlQuery<MPRRevisionDetail>(query).ToList();
+                var cmd = Context.Database.Connection.CreateCommand();
+                cmd.CommandText = query;
+
+                cmd.Connection.Open();
+                table.Load(cmd.ExecuteReader());
+                cmd.Connection.Close();
+                //return Context.Database.SqlQuery<DataTable>(query);
             }
+            return table;
 
         }
 
