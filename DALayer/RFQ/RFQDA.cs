@@ -1,4 +1,5 @@
-﻿using DALayer.MPR;
+﻿using DALayer.Emails;
+using DALayer.MPR;
 using SCMModels;
 using SCMModels.MPRMasterModels;
 using SCMModels.RemoteModel;
@@ -20,10 +21,14 @@ namespace DALayer.RFQ
     public class RFQDA : IRFQDA
     {
         private IMPRDA MPRDA = default(IMPRDA);
-        public RFQDA(IMPRDA MPRDA)
+        private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
+        public RFQDA(IMPRDA MPRDA, IEmailTemplateDA EmailTemplateDA)
         {
             this.MPRDA = MPRDA;
+            this.emailTemplateDA = EmailTemplateDA;
         }
+        
+        
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
 
@@ -100,6 +105,7 @@ namespace DALayer.RFQ
                 mPRStatusTrackDetails.UpdatedBy = item.CreatedBy;
                 mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
                 this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
+                this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId);
             }
             return true;
 
@@ -4020,8 +4026,8 @@ namespace DALayer.RFQ
                         sqlquery += " and SaleOrderNo='" + masters.SaleOrderNo + "'";
                     if (masters.DeptID != 0)
                         sqlquery += " and DepartmentId='" + masters.DeptID + "'";
-                    if (masters.EmployeeNo != null)
-                        sqlquery += " and DepartmentId='" + masters.EmployeeNo + "'";
+                    //if (masters.EmployeeNo != null)
+                    //    sqlquery += " and DepartmentId='" + masters.EmployeeNo + "'";
                     if (masters.EmployeeNo != null)
                         sqlquery += " and ProjectManager='" + masters.EmployeeNo + "'";
 

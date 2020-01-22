@@ -316,7 +316,7 @@ namespace DALayer.MPR
                                         }
                                         DB.SaveChanges();
                                     }
-                                    this.emailTemplateDA.prepareEmailTemplate("", mprRevisionDetails.RevisionId, mprRevisionDetails.PreparedBy, trackItem.MailTo, item.Remarks);
+                                    this.emailTemplateDA.prepareMPREmailTemplate("", mprRevisionDetails.RevisionId, mprRevisionDetails.PreparedBy, trackItem.MailTo, item.Remarks);
                                 }
                             }
 
@@ -658,7 +658,7 @@ namespace DALayer.MPR
                     }
                         Context.SaveChanges();
                    
-                    this.emailTemplateDA.prepareEmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
+                    this.emailTemplateDA.prepareMPREmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
                 }
 
             }
