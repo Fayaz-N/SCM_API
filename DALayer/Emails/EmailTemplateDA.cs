@@ -33,7 +33,7 @@ namespace DALayer.Emails
                         emlSndngList.Subject = "Comments From " + frmEmail.Name;
                         //emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
                         emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToEmailId).FirstOrDefault<Employee>()).EMail;
-                        if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                        if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                             this.sensEmail(emlSndngList);
                     }
                     else
@@ -44,11 +44,11 @@ namespace DALayer.Emails
                             emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.PreparedBy).FirstOrDefault<Employee>()).EMail;
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
                         }
                         if (typeOfUser == "Checker")
@@ -58,13 +58,13 @@ namespace DALayer.Emails
                             emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.PreparedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
                             if (mprrevisionDetails.CheckStatus == "Approved")
                             {
                                 emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus;
                                 emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
-                                if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                                if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                     this.sensEmail(emlSndngList);
                             }
                         }
@@ -77,7 +77,7 @@ namespace DALayer.Emails
                                 this.sensEmail(emlSndngList);
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
                             if (mprrevisionDetails.ApprovalStatus == "Approved")
                             {
@@ -92,24 +92,24 @@ namespace DALayer.Emails
                             emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.PreparedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
 
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
 
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
 
                             if (mprrevisionDetails.ApprovalStatus == "Approved")
                             {
                                 emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus + " ; " + "Second Approval Status: " + mprrevisionDetails.SecondApproversStatus;
                                 emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ThirdApprover).FirstOrDefault<Employee>()).EMail;
-                                if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                                if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                     this.sensEmail(emlSndngList);
                             }
                         }
@@ -118,23 +118,23 @@ namespace DALayer.Emails
                             emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.PreparedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
 
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
 
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
 
 
                             emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus + " ; " + "Approver Status: " + mprrevisionDetails.ApprovalStatus + " ; " + "Second Approval Status: " + mprrevisionDetails.SecondApproversStatus;
                             emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.SecondApprover).FirstOrDefault<Employee>()).EMail;
-                            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                            if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                 this.sensEmail(emlSndngList);
 
                         }
@@ -163,8 +163,9 @@ namespace DALayer.Emails
                     emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>()).EMail;
                     //emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
                     emlSndngList.ToEmailId = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
-                    if (!string.IsNullOrEmpty(emlSndngList.ToEmailId))
+                    if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                         this.sensEmail(emlSndngList);
+
                 }
             }
             catch (Exception ex)

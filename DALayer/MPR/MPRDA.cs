@@ -591,12 +591,12 @@ namespace DALayer.MPR
             return DB.Employees.ToList();
         }
 
-        public List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId)
+        public List<MPRRevisionDetails_woItems> getMPRRevisionList(int RequisitionId)
         {
             DB.Configuration.ProxyCreationEnabled = false;
-            List<MPRRevisionDetail> mprRevisionDetails;
-            mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.RequisitionId == RequisitionId).ToList();
-            foreach (MPRRevisionDetail item in mprRevisionDetails)
+            List<MPRRevisionDetails_woItems> mprRevisionDetails;
+            mprRevisionDetails = DB.MPRRevisionDetails_woItems.Where(li => li.RequisitionId == RequisitionId).ToList();
+            foreach (MPRRevisionDetails_woItems item in mprRevisionDetails)
             {
                 item.MPRStatusTrackDetails = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == RequisitionId).ToList();
             }

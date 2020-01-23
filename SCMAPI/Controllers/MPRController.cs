@@ -167,8 +167,8 @@ namespace SCMAPI.Controllers
                     }
 
                     GC.Collect();
-                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + "Jan" + "\\" + ToValidFileName(postedFile.FileName));
-                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + "Jan");
+                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + ToValidFileName(postedFile.FileName));
+                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM"));
                     var path = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
                     if (!Directory.Exists(serverPath))
                         Directory.CreateDirectory(serverPath);
@@ -181,7 +181,7 @@ namespace SCMAPI.Controllers
                     GC.Collect();
                 }
             }
-            return Ok(parsedFileName);
+            return Ok(serverPath+parsedFileName);
 
         }
 

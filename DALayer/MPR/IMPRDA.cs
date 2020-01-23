@@ -27,7 +27,7 @@ namespace DALayer.MPR
         DataTable getMPRList(mprFilterParams mprfilterparams);
         int getMPRPendingListCnt(string preparedBy);
         List<Employee> getEmployeeList();
-        List<MPRRevisionDetail> getMPRRevisionList(int RequisitionId);
+        List<MPRRevisionDetails_woItems> getMPRRevisionList(int RequisitionId);
         MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
         List<SCMStatu> getStatusList();
         List<UserPermission> getAccessList(int RoleId);

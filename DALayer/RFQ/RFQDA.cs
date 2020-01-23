@@ -316,7 +316,7 @@ namespace DALayer.RFQ
                         obj.SaveChanges();
                     }
 
-                    RFQRevision revision = new RFQRevision();
+                    RFQRevisions_N revision = new RFQRevisions_N();
                     if (model.RfqRevisionId == 0)
                     {
                         revision.rfqRevisionId = remoterevisionid;
@@ -340,7 +340,7 @@ namespace DALayer.RFQ
                         //    StatusId = Convert.ToInt32(Enum.GetName(typeof(RFQStatusType), RFQStatusType.requested))
                         //});
 
-                        obj.RFQRevisions.Add(revision);
+                        obj.RFQRevisions_N.Add(revision);
                         obj.SaveChanges();
                     }
                     else
@@ -360,7 +360,7 @@ namespace DALayer.RFQ
                         revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
                         revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
 
-                        obj.RFQRevisions.Add(revision);
+                        obj.RFQRevisions_N.Add(revision);
                         obj.SaveChanges();
                     }
 
@@ -371,7 +371,7 @@ namespace DALayer.RFQ
                     {
                         try
                         {
-                            var rfitems = new RFQItem()
+                            var rfitems = new RFQItems_N()
                             {
                                 RFQItemsId = data.RFQItemsId,
                                 RFQRevisionId = remoterevisionid,
@@ -382,7 +382,7 @@ namespace DALayer.RFQ
                                 RequestRemarks = data.RequestRemarks,
                                 DeleteFlag = false
                             };
-                            revision.RFQItems.Add(rfitems);
+                            revision.RFQItems_N.Add(rfitems);
                             obj.SaveChanges();
                         }
                         catch (Exception ex)
@@ -473,7 +473,7 @@ namespace DALayer.RFQ
             List<RFQMasterModel> master = new List<RFQMasterModel>();
             try
             {
-                var result = obj.RFQMasters.Where(x => x.DeleteFlag == false).Include(x => x.RFQRevisions).ToList();
+                var result = obj.RFQMasters.Where(x => x.DeleteFlag == false).Include(x => x.RFQRevisions_N).ToList();
                 if (result != null)
                 {
                     foreach (var item in result)
@@ -486,7 +486,7 @@ namespace DALayer.RFQ
                             RfqUniqueNo = x.RFQUniqueNo,
                             Created = x.CreatedDate,
                             CreatedBy = x.CreatedBy,
-                            Revision = x.RFQRevisions.Where(y => y.rfqMasterId == x.RfqMasterId).Select(y => new RfqRevisionModel()
+                            Revision = x.RFQRevisions_N.Where(y => y.rfqMasterId == x.RfqMasterId).Select(y => new RfqRevisionModel()
                             {
                                 RfqRevisionId = y.rfqRevisionId,
                                 RfqValidDate = y.RFQValidDate,
@@ -677,7 +677,7 @@ namespace DALayer.RFQ
             RFQItem rfqitem = new RFQItem();
             try
             {
-                rfq = obj.RFQMasters.Where(x => x.RfqMasterId == masterID).Include(x => x.RFQRevisions).SingleOrDefault<RFQMaster>();
+                rfq = obj.RFQMasters.Where(x => x.RfqMasterId == masterID).Include(x => x.RFQRevisions_N).SingleOrDefault<RFQMaster>();
                 //rfq.RFQRevisions = obj.RFQRevisions.Where(x => x.rfqMasterId == id).Include(x=>x.RFQItems).ToList<RFQRevision>();
                 if (rfq != null)
                 {
@@ -688,7 +688,7 @@ namespace DALayer.RFQ
                     model.CreatedBy = rfq.CreatedBy;
 
 
-                    foreach (var item in rfq.RFQRevisions)
+                    foreach (var item in rfq.RFQRevisions_N)
                     {
                         RfqRevisionModel RfqRevisionModel = new RfqRevisionModel();
                         RfqRevisionModel.RfqMasterId = item.rfqMasterId;
@@ -754,7 +754,7 @@ namespace DALayer.RFQ
         public statuscheckmodel DeleteRfqById(int rfqmasterid)
         {
             statuscheckmodel status = new statuscheckmodel();
-            var domainentity = obj.Set<RFQMaster>().Where(x => x.RfqMasterId == rfqmasterid && x.DeleteFlag == false).Include(x => x.RFQRevisions).SingleOrDefault();
+            var domainentity = obj.Set<RFQMaster>().Where(x => x.RfqMasterId == rfqmasterid && x.DeleteFlag == false).Include(x => x.RFQRevisions_N).SingleOrDefault();
 
             if (domainentity != null)
             {
@@ -855,7 +855,7 @@ namespace DALayer.RFQ
                 }
                 vscm.Database.Connection.Close();
                 obj.Database.Connection.Open();
-                var result = obj.RFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevisionId).Include(x => x.RFQMaster).FirstOrDefault<RFQRevision>();
+                var result = obj.RFQRevisions_N.Where(x => x.rfqRevisionId == model.RfqRevisionId).Include(x => x.RFQMaster).FirstOrDefault<RFQRevisions_N>();
                 if (result != null)
                 {
                     RFQRevision revision = new RFQRevision();
@@ -889,7 +889,7 @@ namespace DALayer.RFQ
         public async Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
-            var result = obj.RFQRevisions.Where(x => x.rfqMasterId == model.RfqMasterId).Include(x => x.RFQMaster).ToList<RFQRevision>();
+            var result = obj.RFQRevisions_N.Where(x => x.rfqMasterId == model.RfqMasterId).Include(x => x.RFQMaster).ToList<RFQRevisions_N>();
             try
             {
 
@@ -1109,7 +1109,7 @@ namespace DALayer.RFQ
         //     RFQMasterModel master = new RFQMasterModel();
         //     try
         //     {
-        //         var masters = obj.RFQMasters.Where(x => x.RFQNo == id && x.DeleteFlag == false).Include(x => x.RFQRevisions).Select(x => x).SingleOrDefault();
+        //         var masters = obj.RFQMasters.Where(x => x.RFQNo == id && x.DeleteFlag == false).Include(x => x.RFQRevisions_N).Select(x => x).SingleOrDefault();
         //         if (masters!=null)
         //         {
 
@@ -1178,7 +1178,7 @@ namespace DALayer.RFQ
             statuscheckmodel staus = new statuscheckmodel();
             try
             {
-                var data = obj.RFQRevisions.Where(x => x.rfqRevisionId == id && x.DeleteFlag == false).Select(x => x).SingleOrDefault();
+                var data = obj.RFQRevisions_N.Where(x => x.rfqRevisionId == id && x.DeleteFlag == false).Select(x => x).SingleOrDefault();
                 if (data != null)
                 {
                     data.DeleteFlag = true;
@@ -1330,8 +1330,8 @@ namespace DALayer.RFQ
         public statuscheckmodel CommunicationAdd(RfqCommunicationModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
-            var revision = obj.RFQRevisions.Where(x => x.rfqRevisionId == model.RfqRevision.RfqRevisionId && x.DeleteFlag == false).Include(x => x.RFQItems).SingleOrDefault();
-            var item = revision.RFQItems.Where(x => x.RFQItemsId == model.RfqItem.RFQItemID && x.DeleteFlag == false).Select(x => x);
+            var revision = obj.RFQRevisions_N.Where(x => x.rfqRevisionId == model.RfqRevision.RfqRevisionId && x.DeleteFlag == false).Include(x => x.RFQItems_N).SingleOrDefault();
+            var item = revision.RFQItems_N.Where(x => x.RFQItemsId == model.RfqItem.RFQItemID && x.DeleteFlag == false).Select(x => x);
             // var result=from x in obj.MPRRevisions where x.RevisionId==model.re
             if (item != null)
             {
@@ -2023,7 +2023,7 @@ namespace DALayer.RFQ
             RfqRevisionModel revision = new RfqRevisionModel();
             try
             {
-                var localrevision = obj.RFQRevisions.Where(x => x.rfqRevisionId == revisionId && x.DeleteFlag == false).Include(x => x.RFQMaster).Include(x => x.RFQItems).FirstOrDefault();
+                var localrevision = obj.RFQRevisions_N.Where(x => x.rfqRevisionId == revisionId && x.DeleteFlag == false).Include(x => x.RFQMaster).Include(x => x.RFQItems_N).FirstOrDefault();
                 if (localrevision != null)
                 {
                     revision.RfqMasterId = localrevision.rfqMasterId;
@@ -2058,7 +2058,7 @@ namespace DALayer.RFQ
                     }
                     revision.mprIncharges = obj.MPRIncharges.Where(li => li.RevisionId == masters.MPRRevisionId).ToList();
                     revision.rfqmaster = masters;
-                    var rfqitemss = obj.RFQItems.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId).ToList();
+                    var rfqitemss = obj.RFQItems_N.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId).ToList();
                     foreach (var item in rfqitemss)
                     {
                         //revision.rfqitem= localrevision.RFQItems.Select(x => new RfqItemModel()
@@ -4045,7 +4045,7 @@ namespace DALayer.RFQ
             RfqRevisionModel revision = new RfqRevisionModel();
             try
             {
-                var localrevision = obj.RFQRevisions.Where(x => x.rfqRevisionId == revisionId && x.DeleteFlag == false).Include(x => x.RFQMaster).Include(x => x.RFQItems).FirstOrDefault();
+                var localrevision = obj.RFQRevisions_N.Where(x => x.rfqRevisionId == revisionId && x.DeleteFlag == false).Include(x => x.RFQMaster).Include(x => x.RFQItems_N).FirstOrDefault();
                 if (localrevision != null)
                 {
                     revision.RfqMasterId = localrevision.rfqMasterId;
