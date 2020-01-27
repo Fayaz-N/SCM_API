@@ -15,7 +15,7 @@ namespace DALayer.RFQ
     {
         List<RFQQuoteView> getRFQItems(int RevisionId);
         bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
-        DataTable getRFQCompareItems(int RevisionId);
+        DataSet getRFQCompareItems(int RevisionId);
         bool rfqStatusUpdate(List<RFQQuoteView> RFQQuoteViewList);
 
         //rfq module
@@ -36,6 +36,7 @@ namespace DALayer.RFQ
         statuscheckmodel DeleteBulkItemsByItemId(List<int> id);
         Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model);
         statuscheckmodel CommunicationAdd(RfqCommunicationModel model);
+        string UpdateVendorCommunication(RfqCommunicationModel model);
         Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid);
         Task<List<RfqRevisionModel>> GetAllrevisionRFQs();
         Task<RfqItemModel> GetItemsByItemId(int id);

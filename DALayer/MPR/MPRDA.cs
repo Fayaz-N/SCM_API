@@ -351,6 +351,7 @@ namespace DALayer.MPR
                         mprRevisionDetails.NoOfSetsOfQAP = mpr.NoOfSetsOfQAP;
                         mprRevisionDetails.InspectionRequired = mpr.InspectionRequired;
                         mprRevisionDetails.InspectionComments = mpr.InspectionComments;
+                        mprRevisionDetails.InspectionRemarks = mpr.InspectionRemarks;
                         mprRevisionDetails.NoOfSetsOfTestCertificates = mpr.NoOfSetsOfTestCertificates;
                         mprRevisionDetails.ProcurementSourceId = mpr.ProcurementSourceId;
                         mprRevisionDetails.CustomsDutyId = mpr.CustomsDutyId;

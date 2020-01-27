@@ -18,6 +18,7 @@ namespace SCMModels.RFQModels
         public decimal MinPAValue { get; set; }
         public string AuthorizationType { get; set; }
         public int DeptId { get; set; }
+        public string DepartmentName { get; set; }
         public int PAmapid { get; set; }
     }
 }

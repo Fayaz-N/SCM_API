@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Web;
 using System.Web.Http;
+using System.Configuration;
 
 namespace SCMAPI.Controllers
 {
@@ -152,6 +153,7 @@ namespace SCMAPI.Controllers
         [HttpPost]
         public IHttpActionResult UploadFile()
         {
+            var ipaddress = ConfigurationManager.AppSettings["API_IpAddress"];
             var httpRequest = HttpContext.Current.Request;
             var serverPath = HttpContext.Current.Server.MapPath("~/SCMDocs");
             string parsedFileName = "";
@@ -181,7 +183,7 @@ namespace SCMAPI.Controllers
                     GC.Collect();
                 }
             }
-            return Ok(serverPath+parsedFileName);
+            return Ok(parsedFileName);
 
         }
 

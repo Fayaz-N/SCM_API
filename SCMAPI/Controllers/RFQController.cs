@@ -170,6 +170,12 @@ namespace SCMAPI.Controllers
             status = _rfqBusenessAcess.CommunicationAdd(model);
             return Ok(status);
         }
+        [Route("UpdateVendorCommunication")]
+        [ResponseType(typeof(string))]
+        public IHttpActionResult UpdateVendorCommunication(RfqCommunicationModel model)
+        {
+            return Ok(_rfqBusenessAcess.UpdateVendorCommunication(model));
+        }
 
         [Route("GetItemsByItemId")]
         [ResponseType(typeof(RfqItemModel))]

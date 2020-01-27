@@ -16,6 +16,8 @@ namespace SCMModels.RFQModels
             rfqvendor = new List<RfqVendorTermModel>();
             RFQTerms = new List<RFQTermsModel>();
             mprIncharges = new List<MPRIncharge>();
+            rfqCommunications = new List<RFQCommunication>();
+
         }
         public int RfqRevisionId { get; set; }
         public int RfqMasterId { get; set; }
@@ -46,5 +48,6 @@ namespace SCMModels.RFQModels
         public List<RfqVendorTermModel> rfqvendor { get; set; }
         public List<RFQTermsModel> RFQTerms { get; set; }
         public List<MPRIncharge> mprIncharges { get; set; }
+        public List<RFQCommunication> rfqCommunications { get; set; }
     }
 }

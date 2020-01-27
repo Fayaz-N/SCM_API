@@ -28,7 +28,7 @@ namespace BALayer.RFQ
             return this._rfqDataAcess.updateVendorQuotes(RFQQuoteViewList, termsList);
 
         }
-        public DataTable getRFQCompareItems(int RevisionId)
+        public DataSet getRFQCompareItems(int RevisionId)
         {
             return this._rfqDataAcess.getRFQCompareItems(RevisionId);
 
@@ -43,6 +43,10 @@ namespace BALayer.RFQ
         public statuscheckmodel CommunicationAdd(RfqCommunicationModel model)
         {
             return _rfqDataAcess.CommunicationAdd(model);
+        }
+        public string UpdateVendorCommunication(RfqCommunicationModel model)
+        {
+            return _rfqDataAcess.UpdateVendorCommunication(model);
         }
 
         public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
