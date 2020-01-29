@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Web;
 using System.Web.Http;
 using System.Configuration;
+using SCMModels.RFQModels;
 
 namespace SCMAPI.Controllers
 {
@@ -57,7 +58,7 @@ namespace SCMAPI.Controllers
         }
         [HttpPost]
         [Route("addNewVendor")]
-        public IHttpActionResult addNewVendor([FromBody] VendorMaster vendor)
+        public IHttpActionResult addNewVendor([FromBody] VendormasterModel vendor)
         {
             return Ok(this._mprBusenessAcess.addNewVendor(vendor));
         }

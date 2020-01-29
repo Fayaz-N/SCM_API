@@ -1,5 +1,7 @@
 ﻿using DALayer.Emails;
 using SCMModels;
+using SCMModels.RemoteModel;
+using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
@@ -358,15 +360,20 @@ namespace DALayer.MPR
                         mprRevisionDetails.ProjectDutyApplicableId = mpr.ProjectDutyApplicableId;
                         mprRevisionDetails.Remarks = mpr.Remarks;
                         mprRevisionDetails.CheckedBy = mpr.CheckedBy;
+                        int cnt = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == mpr.RequisitionId && li.StatusId == 1).Count();//checking mpr generated already or not 
                         if (!string.IsNullOrEmpty(mpr.CheckedBy))
                         {
-                            MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
-                            mPRStatusTrackDetails.RequisitionId = mpr.RequisitionId;
-                            mPRStatusTrackDetails.RevisionId = mpr.RevisionId;
-                            mPRStatusTrackDetails.StatusId = 1;
-                            mPRStatusTrackDetails.UpdatedBy = mpr.PreparedBy;
-                            mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
-                            updateMprstatusTrack(mPRStatusTrackDetails);
+                            if (cnt == 0)
+                            {
+                                MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
+                                mPRStatusTrackDetails.RequisitionId = mpr.RequisitionId;
+                                mPRStatusTrackDetails.RevisionId = mpr.RevisionId;
+                                mPRStatusTrackDetails.StatusId = 1;
+                                mPRStatusTrackDetails.UpdatedBy = mpr.PreparedBy;
+                                mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
+                                updateMprstatusTrack(mPRStatusTrackDetails);
+                                this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mpr.RevisionId, mpr.PreparedBy, mpr.CheckedBy, "");
+                            }
                         }
                         mprRevisionDetails.ApprovedBy = mpr.ApprovedBy;
                         if (mprRevisionDetails.PurchaseTypeId == 1)//for single vendor we are updating second and third approvers from mprdepartment table
@@ -380,7 +387,7 @@ namespace DALayer.MPR
                             mprRevisionDetails.ThirdApprover = null;
                         }
                         DB.SaveChanges();
-
+                        
                     }
 
                     if (mprRevisionDetails != null)
@@ -406,26 +413,148 @@ namespace DALayer.MPR
             }
             return mprRevisionDetails;
         }
-        public int addNewVendor(VendorMaster vendor)
+        //public int addNewVendor(VendorMaster vendor)
+        //{
+        //    using (YSCMEntities Context = new YSCMEntities())
+        //    {
+        //        if (vendor.Vendorid == 0 || vendor.Vendorid == null)
+        //        {
+        //            vendor.AutoAssignmentofRFQ = true;
+        //            vendor.Deleteflag = true;
+        //            Context.VendorMasters.Add(vendor);
+        //        }
+        //        else
+        //        {
+        //            VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == vendor.Vendorid).FirstOrDefault();
+
+        //            vendormaster.Emailid = vendor.Emailid;
+        //        }
+        //        Context.SaveChanges();
+        //        return vendor.Vendorid;
+        //    }
+        //}
+        public int addNewVendor(VendormasterModel model)
         {
+            int vendorid = model.Vendorid;
+            VSCMEntities vscm = new VSCMEntities();
+            RemoteVendorMaster vendor = new RemoteVendorMaster();
+            if (model.Vendorid == 0 || model.Vendorid == null)
+            {
+                vendor.AutoAssignmentofRFQ = true;
+                vendor.Deleteflag = true;
+                vendor.VendorCode = model.VendorCode;
+                vendor.VendorName = model.VendorName;
+                vendor.OldVendorCode = model.OldVendorCode;
+                vendor.Street = model.Street;
+                vendor.City = model.City;
+                //vendor.RegionCode = model.RegionCode;
+                vendor.PostalCode = model.PostalCode;
+                vendor.PhoneNo = model.ContactNo;
+                vendor.FaxNo = null;
+                vendor.AuGr = null;
+                vendor.PaymentTermCode = null;
+                vendor.Blocked = null;
+                vendor.AutoAssignmentofRFQ = true;
+                vendor.Emailid = model.Emailid;
+                vscm.RemoteVendorMasters.Add(vendor);
+                vscm.SaveChanges();
+                vendorid = vendor.Vendorid;
+            }
+            else
+            {
+                var vendordata = vscm.RemoteVendorMasters.Where(x => x.Vendorid == model.Vendorid).FirstOrDefault();
+                vendordata.VendorCode = vendordata.VendorCode;
+                vendordata.VendorName = vendordata.VendorName;
+                vendordata.OldVendorCode = vendordata.OldVendorCode;
+                vendordata.Street = vendordata.Street;
+                vendordata.City = vendordata.City;
+                //vendordata.RegionCode = model.RegionCode;
+                vendordata.PostalCode = vendordata.PostalCode;
+                vendordata.PhoneNo = model.ContactNo;
+                vendordata.FaxNo = null;
+                vendordata.AuGr = null;
+                vendordata.PaymentTermCode = null;
+                vendordata.Blocked = null;
+                vendordata.AutoAssignmentofRFQ = vendordata.AutoAssignmentofRFQ;
+                vendordata.Emailid = model.Emailid;
+                vscm.SaveChanges();
+                vendorid = vendordata.Vendorid;
+            }
+
+            RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == model.Emailid).FirstOrDefault();
+            //need to implement vUniqueId value
+            if (vendorUsermaster == null)
+            {
+                RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
+                vendorUsermasters.Vuserid = model.Emailid;
+                vendorUsermasters.pwd = "Yil@123";
+                vendorUsermasters.VendorId = vendorid;
+                vendorUsermasters.Active = true;
+                vendorUsermasters.SuperUser = true;
+                vscm.RemoteVendorUserMasters.Add(vendorUsermasters);
+                vscm.SaveChanges();
+            }
+            //else
+            //{
+            //    vendorUsermaster.Vuserid = model.Emailid;
+            //    //vendorUsermaster.pwd = "Yil@123";
+            //    //vendorUsermaster.VendorId = vendorid;
+            //    vscm.SaveChanges();
+
+            //}
             using (YSCMEntities Context = new YSCMEntities())
             {
-                if (vendor.Vendorid == 0 || vendor.Vendorid == null)
+                VendorMaster localvendor = new VendorMaster();
+                if (model.Vendorid == 0 || model.Vendorid == null)
                 {
-                    vendor.AutoAssignmentofRFQ = true;
-                    vendor.Deleteflag = true;
-                    Context.VendorMasters.Add(vendor);
+                    localvendor.Vendorid = vendorid;
+                    localvendor.AutoAssignmentofRFQ = true;
+                    localvendor.Deleteflag = true;
+                    localvendor.VendorCode = model.VendorCode;
+                    localvendor.VendorName = model.VendorName;
+                    localvendor.OldVendorCode = model.OldVendorCode;
+                    localvendor.Street = model.Street;
+                    localvendor.City = model.City;
+                    //localvendor.RegionCode = model.RegionCode;
+                    localvendor.PostalCode = model.PostalCode;
+                    localvendor.PhoneNo = model.ContactNo;
+                    //localvendor.FaxNo = model.FaxNo;
+                    //localvendor.AuGr = model.AuGr;
+                    //localvendor.PaymentTermCode = model.PaymentTermCode;
+                    //localvendor.Blocked = model.Blocked;
+                    localvendor.Emailid = model.Emailid;
+                    localvendor.AutoAssignmentofRFQ = true;
+                    localvendor.Deleteflag = true;
+
+                    Context.VendorMasters.Add(localvendor);
+                    Context.SaveChanges();
+                    vendorid = localvendor.Vendorid;
                 }
                 else
                 {
-                    VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == vendor.Vendorid).FirstOrDefault();
+                    VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == model.Vendorid).FirstOrDefault();
+                    vendormaster.VendorCode = vendormaster.VendorCode;
+                    vendormaster.VendorName = vendormaster.VendorName;
+                    vendormaster.OldVendorCode = vendormaster.OldVendorCode;
+                    vendormaster.Street = vendormaster.Street;
+                    vendormaster.City = vendormaster.City;
+                    //vendormaster.RegionCode = model.RegionCode;
+                    vendormaster.PostalCode = vendormaster.PostalCode;
+                    vendormaster.PhoneNo = model.ContactNo;
+                    //vendormaster.FaxNo = model.FaxNo;
+                    //vendormaster.AuGr = model.AuGr;
+                    //vendormaster.PaymentTermCode = model.PaymentTermCode;
+                    //vendormaster.Blocked = model.Blocked;
+                    vendormaster.Emailid = model.Emailid;
+                    vendormaster.AutoAssignmentofRFQ = true;
+                    Context.SaveChanges();
+                    vendorid = vendormaster.Vendorid;
 
-                    vendormaster.Emailid = vendor.Emailid;
                 }
-                Context.SaveChanges();
-                return vendor.Vendorid;
+                return vendorid;
             }
         }
+
         public bool deleteMPRDocument(MPRDocument mprDocument)
         {
             using (YSCMEntities Context = new YSCMEntities())
@@ -479,7 +608,7 @@ namespace DALayer.MPR
             mprRevisionDetails = DB.MPRRevisions.Include(x => x.MPRDetail).Include(x => x.MPRDepartment).Include(x => x.MPRProcurementSource)
                  .Include(x => x.MPRCustomsDuty).Include(x => x.MPRProjectDutyApplicable).Include(x => x.MPRBuyerGroup).Include(x => x.MPRItemInfoes)
                  .Include(x => x.MPRDocuments).Include(x => x.MPRDocumentations).Include(x => x.MPRVendorDetails).Include(x => x.MPRIncharges).Include(x => x.MPRCommunications).Where(li => li.RevisionId == RevisionId).FirstOrDefault<MPRRevision>();
-
+            mprRevisionDetails.MPRItemInfoes = mprRevisionDetails.MPRItemInfoes.OrderBy(li => li.Itemid).ToList();
             //if (mprRevisionDetails != null)
             //{
             //	mprRevisionDetails.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == mprRevisionDetails.RequisitionId).FirstOrDefault<MPRDetail>();
@@ -530,9 +659,9 @@ namespace DALayer.MPR
                 //var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
                 //var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");
                 if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-                    query = "Select  RevisionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select  RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 else
-                    query = "Select  RevisionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select  RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
                 if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
                     query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "' or RevisionId in ( select RevisionId from  MPRIncharges where incharge=" + mprfilterparams.PreparedBy + ")";
@@ -657,8 +786,8 @@ namespace DALayer.MPR
                         if (mprStatus.status == "Approved")
                             updateMprstatusTrack(mPRStatusTrackDetails);
                     }
-                        Context.SaveChanges();
-                   
+                    Context.SaveChanges();
+
                     this.emailTemplateDA.prepareMPREmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
                 }
 

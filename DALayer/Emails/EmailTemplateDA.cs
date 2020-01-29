@@ -49,13 +49,13 @@ namespace DALayer.Emails
                                 if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
                                     this.sensEmail(emlSndngList);
                             }
-                            emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus;
-                            if (mprrevisionDetails.ApprovedBy != "-" && mprrevisionDetails.ApprovedBy != "")
-                            {
-                                emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
-                                if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
-                                    this.sensEmail(emlSndngList);
-                            }
+                            //emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Checker Status: " + mprrevisionDetails.CheckStatus;
+                            //if (mprrevisionDetails.ApprovedBy != "-" && mprrevisionDetails.ApprovedBy != "")
+                            //{
+                            //    emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
+                            //    if (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL")
+                            //        this.sensEmail(emlSndngList);
+                            //}
                         }
                         if (typeOfUser == "Checker")
                         {

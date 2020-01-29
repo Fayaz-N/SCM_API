@@ -20,11 +20,12 @@ namespace SCMModels.RFQModels
         public Nullable<bool> SendEmail { get; set; }
         public Nullable<bool> SetReminder { get; set; }
         public Nullable<System.DateTime> ReminderDate { get; set; }
-        public System.DateTime RemarksDate { get; set; }
+        public DateTime RemarksDate { get; set; }
         public string Remarks { get; set; }
         public bool DeleteFlag { get; set; }
         public RfqItemModel RfqItem { get; set; }
         public RfqRevisionModel RfqRevision { get; set; }
         public List<RfqRemainderTrackingModel> Rfqtracking { get; set; }
+
     }
 }

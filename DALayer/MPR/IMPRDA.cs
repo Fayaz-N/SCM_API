@@ -1,4 +1,5 @@
 ﻿using SCMModels;
+using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace DALayer.MPR
         bool addDataToDBMasters(DynamicSearchResult Result);
         bool updateDataToDBMasters(DynamicSearchResult Result);
         MPRRevision updateMPR(MPRRevision mpr);
-        int addNewVendor(VendorMaster vendor);
+        int addNewVendor(VendormasterModel vendor);
 
         DataTable GetListItems(DynamicSearchResult Result);
         bool deleteMPRDocument(MPRDocument mprDocument);

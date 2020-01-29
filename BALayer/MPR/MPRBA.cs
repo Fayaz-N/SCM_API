@@ -1,5 +1,6 @@
 ﻿using DALayer.MPR;
 using SCMModels;
+using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace BALayer.MPR
 			return this._mprDataAcess.updateMPR(mpr);
 
 		}
-        public int  addNewVendor(VendorMaster vendor)
+        public int  addNewVendor(VendormasterModel vendor)
         {
             return this._mprDataAcess.addNewVendor(vendor);
         }
