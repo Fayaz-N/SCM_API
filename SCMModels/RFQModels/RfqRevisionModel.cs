@@ -42,6 +42,7 @@ namespace SCMModels.RFQModels
         public Nullable<int> DeliveryMinWeeks { get; set; }
         public Nullable<int> DeliveryMaxWeeks { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
+        public bool ActiveRevision { get; set; }
         public RFQMasterModel rfqmaster { get; set; }
         public List<RfqItemModel> rfqitem { get; set; }
         public List<RFQStatusModel> RFQStatus { get; set; }

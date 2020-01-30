@@ -176,6 +176,12 @@ namespace SCMAPI.Controllers
         {
             return Ok(_rfqBusenessAcess.UpdateVendorCommunication(model));
         }
+        [HttpPost]
+        [Route("addNewRfqRevision")]       
+        public IHttpActionResult addNewRfqRevision([FromBody] int revisionId)
+        {
+            return Ok(_rfqBusenessAcess.addNewRfqRevision(revisionId));
+        }
 
         [Route("GetItemsByItemId")]
         [ResponseType(typeof(RfqItemModel))]
@@ -747,7 +753,7 @@ namespace SCMAPI.Controllers
         [HttpPost]
         [Route("LoadVendorByMprDetailsId")]
         [ResponseType(typeof(List<VendormasterModel>))]
-        public async Task<IHttpActionResult> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid)
+        public async Task<IHttpActionResult> LoadVendorByMprDetailsId(List<int?> MPRItemDetailsid)
         {
             List<VendormasterModel> model = new List<VendormasterModel>();
             model = await _rfqBusenessAcess.LoadVendorByMprDetailsId(MPRItemDetailsid);
