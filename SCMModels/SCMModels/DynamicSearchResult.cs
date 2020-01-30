@@ -61,7 +61,7 @@ namespace SCMModels
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
         public string RFQNo { get; set; }
-        public string VendorName { get; set; }
+        public string venderid { get; set; }
         public string DocumentNo { get; set; }
     }
     public class DataModel
