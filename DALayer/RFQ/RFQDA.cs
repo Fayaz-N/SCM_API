@@ -3538,7 +3538,7 @@ namespace DALayer.RFQ
             List<MPRDepartmentModel> model = new List<MPRDepartmentModel>();
             try
             {
-                var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments where  BoolInUse=1");
+                var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments where  BoolInUse=1 order by Department");
                 model = data.Select(x => new MPRDepartmentModel()
                 {
                     DepartmentId = x.DepartmentId,
@@ -4354,7 +4354,7 @@ namespace DALayer.RFQ
                     employee.ProjectMangerNo = projectmanagers.EmpNo;
                     employee.PMRole = projectmanagers.Role;
                 }
-                var PAandCRmapping = obj.PAandCRMappings.Where(x => x.DepartmentId == model.DeptId && x.minpavalue.CompareTo(model.PAValue) <= 0 && x.maxpavalue.CompareTo(model.PAValue) >= 0 && x.morebudget == model.MoreBudget && x.lessbudget == model.LessBudget).ToList();
+                var PAandCRmapping = obj.PAandCRMappings.Where(x => x.DepartmentId == model.DeptId && x.minpavalue.CompareTo(model.PAValue) <= 0 && x.maxpavalue.CompareTo(model.PAValue) >= 0 && x.morebudget == model.MoreBudget && x.lessbudget == model.LessBudget).OrderBy(x=>x.roleorder).ToList();
                 employee.Approvers = PAandCRmapping.Select(x => new PurchaseCreditApproversModel()
                 {
                     ApproverName = x.Name,

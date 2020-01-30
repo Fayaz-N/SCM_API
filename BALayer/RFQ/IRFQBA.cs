@@ -35,6 +35,7 @@ namespace BALayer.RFQ
         Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model);
         statuscheckmodel CommunicationAdd(RfqCommunicationModel model);
         string UpdateVendorCommunication(RfqCommunicationModel model);
+        int addNewRfqRevision(int rfqrevisionid);
         Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid);
         Task<List<RfqRevisionModel>> GetAllrevisionRFQs();
         Task<RfqItemModel> GetItemsByItemId(int id);
@@ -118,7 +119,7 @@ namespace BALayer.RFQ
         Task<List<EmployeemappingtocreditModel>> GetCreditSlabsandemployees();
         Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployees();
         Task<List<ProjectManagerModel>> LoadAllProjectManagers();
-        Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid);
+        Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int?> MPRItemDetailsid);
         Task<List<MPRPAApproversModel>> GetAllApproversList();
         Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model);
         Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model);

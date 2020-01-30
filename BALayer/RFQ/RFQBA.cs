@@ -48,6 +48,11 @@ namespace BALayer.RFQ
         {
             return _rfqDataAcess.UpdateVendorCommunication(model);
         }
+        public int addNewRfqRevision(int rfqrevisionId)
+        {
+            return _rfqDataAcess.addNewRfqRevision(rfqrevisionId);
+
+        }
 
         public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
         {
@@ -114,11 +119,11 @@ namespace BALayer.RFQ
             throw new NotImplementedException();
         }
 
-        public async Task< statuscheckmodel> InsertDocument(RfqDocumentsModel model)
+        public async Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model)
         {
             return await _rfqDataAcess.InsertDocument(model);
         }
-       public async Task<statuscheckmodel> RemovePurchaseApprover(EmployeemappingtopurchaseModel model)
+        public async Task<statuscheckmodel> RemovePurchaseApprover(EmployeemappingtopurchaseModel model)
         {
             return await _rfqDataAcess.RemovePurchaseApprover(model);
         }
@@ -159,9 +164,9 @@ namespace BALayer.RFQ
         }
         public bool updateRfqDocStatus(List<RFQDocument> rfqDocs)
         {
-            return  _rfqDataAcess.updateRfqDocStatus(rfqDocs);
+            return _rfqDataAcess.updateRfqDocStatus(rfqDocs);
         }
-            public async Task<VendormasterModel> GetvendorById(int id)
+        public async Task<VendormasterModel> GetvendorById(int id)
         {
             return await _rfqDataAcess.GetvendorById(id);
         }
@@ -459,7 +464,7 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.GetRfqItemsByRevisionId(revisionid);
         }
 
-        public  List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters)
+        public List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters)
         {
             return _rfqDataAcess.GetItemsByMasterIDs(masters);
         }
@@ -534,7 +539,7 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.LoadAllProjectManagers();
         }
 
-        public async Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int> MPRItemDetailsid)
+        public async Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int?> MPRItemDetailsid)
         {
             return await _rfqDataAcess.LoadVendorByMprDetailsId(MPRItemDetailsid);
         }
