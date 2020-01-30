@@ -34,6 +34,7 @@ namespace SCMModels.RFQModels
         public string PaymentTermCode { get; set; }
         public string DocumentNo { get; set; }
         public int RFQItemsId { get; set; }
+        public string Department { get; set; }
         public Nullable<byte> DepartmentId { get; set; }
         public Nullable<decimal> CustomDuty { get; set; }
         public Nullable<decimal> CustomDutyAmount { get; set; }

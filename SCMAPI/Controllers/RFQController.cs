@@ -795,5 +795,14 @@ namespace SCMAPI.Controllers
             status = await _rfqBusenessAcess.UpdateMprpaApproverStatus(model);
             return Ok(model);
         }
+        [HttpPost]
+        [Route("getrfqtermsbyrevisionid")]
+        [ResponseType(typeof(List<DisplayRfqTermsByRevisionId>))]
+        public async Task<IHttpActionResult> getrfqtermsbyrevisionid(List<int> RevisionId)
+        {
+            List<DisplayRfqTermsByRevisionId> details = new List<DisplayRfqTermsByRevisionId>();
+            details = await _rfqBusenessAcess.getrfqtermsbyrevisionid(RevisionId);
+            return Ok(details);
+        }
     }
 }

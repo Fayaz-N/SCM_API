@@ -17,6 +17,9 @@ namespace SCMModels.RFQModels
             buyergroup = new MPRBuyerGroupModel();
             Item = new List<RfqItemModel>();
             ApproversList = new List<MPRPAApproversModel>();
+            RfqTerms = new List<RFQTermsModel>();
+            ItemInfo = new List<RfqItemInfoModel>();
+            TermId = new List<int>();
         }
         public int PAId { get; set; }
         public string RequestedBy { get; set; }
@@ -44,11 +47,14 @@ namespace SCMModels.RFQModels
         public string FactorsForImports { get; set; }
         public string SpecialRemarks { get; set; }
         public string SuppliersReference { get; set; }
+        public List<int> TermId { get; set; }
         public MPRPAPurchaseModesModel purchasemodes { get; set; }
         public MPRPAPurchaseTypesModel purchasetypes { get; set; }
         public MPRBuyerGroupModel buyergroup { get; set; }
         public MPRDepartmentModel department { get; set; }
         public List<RfqItemModel> Item { get; set; }
         public List<MPRPAApproversModel> ApproversList { get; set; }
+        public List<RFQTermsModel> RfqTerms { get; set; }
+        public List<RfqItemInfoModel> ItemInfo { get; set; }
     }
 }

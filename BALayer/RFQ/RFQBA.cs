@@ -558,5 +558,10 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.UpdateMprpaApproverStatus(model);
         }
+
+        public async Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId)
+        {
+            return await _rfqDataAcess.getrfqtermsbyrevisionid(RevisionId);
+        }
     }
 }

@@ -4721,14 +4721,34 @@ namespace DALayer.RFQ
                     obj.MPRPADetails.Add(authorization);
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
+
+                    // var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
                     foreach (var item in model.Item)
                     {
-                        var data = obj.RFQItems.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
-                        foreach (var items in data)
+                        var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
+                        foreach (var items in itemdata)
                         {
-                            items.paid = status.Sid;
+                            //items.Paid = status.Sid;
+                            //obj.SaveChanges();
+                            PAItem paitem = new PAItem()
+                            {
+                                PAID = status.Sid,
+                                RfqSplitItemId = items.RFQSplitItemId
+                            };
+                            obj.PAItems.Add(paitem);
                             obj.SaveChanges();
                         }
+                    }
+                    //var rfqterms = obj.RFQTerms.Where(x => model.TermId.Contains(x.termsid)).ToList();
+                    foreach (var item in model.TermId)
+                    {
+                        var paterms = new PATerm()
+                        {
+                            PAID = status.Sid,
+                            RfqTermId = item,
+                        };
+                        obj.PATerms.Add(paterms);
+                        obj.SaveChanges();
                     }
                     foreach (var item in model.ApproversList)
                     {
@@ -4744,6 +4764,16 @@ namespace DALayer.RFQ
                         };
                         obj.MPRPAApprovers.Add(Approveritem);
                         obj.SaveChanges();
+                        //var Approveritem1 = new MPRPAApprover()
+                        //{
+                        //    PAId = status.Sid,
+                        //    ApproverLevel = 1,
+                        //    RoleName = item.RoleId,
+                        //    Approver = item.EmployeeNo,
+                        //    ApproversRemarks = item.ApproversRemarks,
+                        //    ApprovalStatus = "submitted",
+                        //    ApprovedOn = System.DateTime.Now
+                        //};
                     }
                 }
                 else
@@ -4805,11 +4835,12 @@ namespace DALayer.RFQ
                         QuotationQty = x.QuotationQty,
                         DocumentNo = x.DocumentNo,
                         SaleOrderNo = x.SaleOrderNo,
+                        Department = x.Department,
                         TargetSpend = Convert.ToDecimal(x.TargetSpend),
                         PaymentTermCode = x.PaymentTermCode,
                         VendorName = x.VendorName,
                         DepartmentId = x.DepartmentId,
-                        MRPItemsDetailsID = x.MPRItemDetailsid,
+                        MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
                     }).ToList();
                     var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
@@ -5122,6 +5153,19 @@ namespace DALayer.RFQ
             // throw new NotImplementedException();
         }
 
+        public async Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId)
+        {
+            List<DisplayRfqTermsByRevisionId> revision = new List<DisplayRfqTermsByRevisionId>();
+            try
+            {
+                revision = obj.DisplayRfqTermsByRevisionIds.Where(x => RevisionId.Contains(x.RFQrevisionId)).ToList();
+                return revision;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 
 

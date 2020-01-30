@@ -13,12 +13,19 @@ namespace SCMModels.RFQModels
         public string VendorName { get; set; }
         public string Emailid { get; set; }
         public string ContactNo { get; set; }
-        public bool IsDeleted { get; set; }
         public string OldVendorCode { get; set; }
         public string Street { get; set; }
+        public string FaxNo { get; set; }
+        public string AuGr { get; set; }
+        public string RegionCode { get; set; }
+        public string PaymentTermCode { get; set; }
+        public string Blocked { get; set; }
+        public string PhoneNo { get; set; }
         public string City { get; set; }
-        public Nullable<byte> RegionCode { get; set; }
         public string PostalCode { get; set; }
+        public Nullable<bool> Deleteflag { get; set; }
+        public bool AutoAssignmentofRFQ { get; set; }
+        public string VendorInternalRefNo { get; set; }
         public IList<RFQMasterModel> masters { get; set; }
     }
 }

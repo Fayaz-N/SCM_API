@@ -127,5 +127,6 @@ namespace DALayer.RFQ
         Task<List<MPRPAApproversModel>> GetAllApproversList();
         Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model);
         Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model);
+        Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId);
     }
 }
