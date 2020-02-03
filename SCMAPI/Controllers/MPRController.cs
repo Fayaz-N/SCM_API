@@ -10,6 +10,10 @@ using System.Web;
 using System.Web.Http;
 using System.Configuration;
 using SCMModels.RFQModels;
+using System.Data.OleDb;
+using System.Data;
+using System.Globalization;
+using System.Linq;
 
 namespace SCMAPI.Controllers
 {
@@ -206,5 +210,91 @@ namespace SCMAPI.Controllers
             }
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
+
+        [HttpPost]
+        [Route("uploadExcel")]
+        public IHttpActionResult uploadExcel()
+        {
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                if (httpRequest.Files.Count > 0)
+                {
+                    var filePath = "";
+                    //  filePath = "C://Users//464_0095//Desktop//New folder//Testing//testingfordoc.xlsx";
+                    var postedFile = httpRequest.Files[0];
+                    filePath = ConfigurationManager.AppSettings["AttachedDocPath"] + "\\" + postedFile.FileName;
+
+                    if (!Directory.Exists(filePath))
+                        Directory.CreateDirectory(filePath);
+                    filePath = Path.Combine(filePath, postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+
+                    DataTable dtexcel = new DataTable();
+
+                    bool hasHeaders = false;
+                    string HDR = hasHeaders ? "Yes" : "No";
+                    string strConn;
+                    if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
+                        strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
+                    else
+                        strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
+
+                    OleDbConnection conn = new OleDbConnection(strConn);
+                    conn.Open();
+                    DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+
+                    DataRow schemaRow = schemaTable.Rows[0];
+                    string sheet = schemaRow["TABLE_NAME"].ToString();
+                    if (!sheet.EndsWith("_"))
+                    {
+                        string query = "SELECT  * FROM [Sheet1$]";
+                        OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
+                        dtexcel.Locale = CultureInfo.CurrentCulture;
+                        daexcel.Fill(dtexcel);
+                    }
+
+                    conn.Close();
+                    int iSucceRows = 0;
+                    YSCMEntities entities = new YSCMEntities();
+                    foreach (DataRow row in dtexcel.Rows)
+                    {
+                        string unitname = row["UnitId"].ToString();
+                        var data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
+                        entities.MPRItemInfoes.Add(new MPRItemInfo
+                        {
+                            //CompanyCode = row["Company Code"].ToString(),
+                            ItemDescription = row["ItemDescription"].ToString(),
+                            RevisionId = 3330,
+                            Quantity = Convert.ToInt32(row["Quantity"]),
+                            SOLineItemNo = row["SOLineItemNo"].ToString(),
+                            TargetSpend = Convert.ToInt32(row["TargetSpend"]),
+                            MfgPartNo = row["MfgPartNo"].ToString(),
+                            MfgModelNo = row["MfgModelNo"].ToString(),
+                            ReferenceDocNo = row["ReferenceDocNo"].ToString(),
+                            UnitId = data.UnitId,
+                            Itemid = row["Itemid"].ToString(),
+
+
+                        });
+                        iSucceRows++;
+
+
+                    }
+
+                    entities.SaveChanges();
+                    int succRecs = iSucceRows;
+                }
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+
     }
+
 }
