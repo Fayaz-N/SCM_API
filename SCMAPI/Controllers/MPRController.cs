@@ -217,9 +217,11 @@ namespace SCMAPI.Controllers
         {
             try
             {
+                var revisionId="";
                 var httpRequest = HttpContext.Current.Request;
                 if (httpRequest.Files.Count > 0)
                 {
+                     revisionId = httpRequest.Files.AllKeys[0];
                     var filePath = "";
                     //  filePath = "C://Users//464_0095//Desktop//New folder//Testing//testingfordoc.xlsx";
                     var postedFile = httpRequest.Files[0];
@@ -265,7 +267,7 @@ namespace SCMAPI.Controllers
                         {
                             //CompanyCode = row["Company Code"].ToString(),
                             ItemDescription = row["ItemDescription"].ToString(),
-                            RevisionId = 3330,
+                            RevisionId =Convert.ToInt32(revisionId),
                             Quantity = Convert.ToInt32(row["Quantity"]),
                             SOLineItemNo = row["SOLineItemNo"].ToString(),
                             TargetSpend = Convert.ToInt32(row["TargetSpend"]),
@@ -285,7 +287,7 @@ namespace SCMAPI.Controllers
                     entities.SaveChanges();
                     int succRecs = iSucceRows;
                 }
-                return Ok();
+                return Ok(true);
 
             }
             catch (Exception e)
