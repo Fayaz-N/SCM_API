@@ -804,5 +804,23 @@ namespace SCMAPI.Controllers
             details = await _rfqBusenessAcess.getrfqtermsbyrevisionid(RevisionId);
             return Ok(details);
         }
+        [HttpGet]
+        [Route("GetPurchaseSlabsandMappedemployeesByDeptId/{deptid}")]
+        [ResponseType(typeof(List<EmployeemappingtopurchaseModel>))]
+        public async Task<IHttpActionResult> GetPurchaseSlabsandMappedemployeesByDeptId(int deptid)
+        {
+            List<EmployeemappingtopurchaseModel> model = new List<EmployeemappingtopurchaseModel>();
+            model = await _rfqBusenessAcess.GetPurchaseSlabsandMappedemployeesByDeptId(deptid);
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("InsertPaitems")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> InsertPaitems(ItemsViewModel paitem)
+        {
+            statuscheckmodel model = new statuscheckmodel();
+            model = await _rfqBusenessAcess.InsertPaitems(paitem);
+            return Ok(model);
+        }
     }
 }

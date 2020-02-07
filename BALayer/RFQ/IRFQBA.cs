@@ -124,6 +124,8 @@ namespace BALayer.RFQ
         Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model);
         Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model);
         Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId);
+        Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId(int deptid);
+        Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem);
 
     }
 }
