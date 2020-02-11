@@ -5055,7 +5055,11 @@ namespace DALayer.RFQ
                         MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
                         RFQRevisionId=x.rfqRevisionId,
                         paid=x.PAID,
-                        paitemid=x.PAItemID
+                        paitemid=x.PAItemID,
+                        POItemNo = x.POItemNo,
+                        PONO = x.PONO,
+                        Remarks = x.Remarks,
+                        PODate = x.PODate.ToString()
                     }).ToList();
                     var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
