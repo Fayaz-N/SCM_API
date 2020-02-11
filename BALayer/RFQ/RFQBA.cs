@@ -54,7 +54,7 @@ namespace BALayer.RFQ
 
         }
 
-        public async Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model)
+        public async Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model)
         {
             return await _rfqDataAcess.CreateRfQ(model);
         }
@@ -176,16 +176,19 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.InsertVendorterms(vendor);
         }
 
-        public async Task<statuscheckmodel> InsertRfqItemInfo(RfqItemModel model)
+        public async Task<RfqRevisionModel> InsertRfqItemInfo(RFQItemsInfo_N model)
         {
             return await _rfqDataAcess.InsertRfqItemInfo(model);
         }
 
-        public async Task<statuscheckmodel> DeleteRfqIteminfoByid(List<int> id)
+        public async Task<statuscheckmodel> DeleteRfqIteminfoByid(int id)
         {
             return await _rfqDataAcess.DeleteRfqIteminfoByid(id);
         }
-
+        public async Task<statuscheckmodel> DeleteRfqItemByid(int id)
+        {
+            return await _rfqDataAcess.DeleteRfqItemByid(id);
+        }
         public async Task<statuscheckmodel> DeleteRfqitemandinfosById(int id)
         {
             return await _rfqDataAcess.DeleteRfqitemandinfosById(id);
