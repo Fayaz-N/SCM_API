@@ -387,7 +387,7 @@ namespace DALayer.MPR
                             mprRevisionDetails.ThirdApprover = null;
                         }
                         DB.SaveChanges();
-                        
+
                     }
 
                     if (mprRevisionDetails != null)
@@ -395,6 +395,200 @@ namespace DALayer.MPR
                         mprRevisionDetails = getMPRRevisionDetails(mprRevisionDetails.RevisionId);
                     }
                     return mprRevisionDetails;
+                }
+                catch (DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                                ve.PropertyName, ve.ErrorMessage);
+                        }
+                    }
+                    throw;
+                }
+            }
+            return mprRevisionDetails;
+        }
+        public MPRRevision copyMprRevision(MPRRevision mpr)
+        {
+            MPRRevision mprRevisionDetails = new MPRRevision();
+            if (mpr != null)
+            {
+                try
+                {
+                    int revisionId = mpr.RevisionId;
+                    int requisitinId = mpr.RequisitionId;
+                    DB.Configuration.ProxyCreationEnabled = false;
+
+                    List<MPRRevision> MPRRevisionResult = new List<MPRRevision>();
+                    Int64 sequenceNo = Convert.ToInt64(DB.MPRDetails.Max(li => li.MPRSeqNo));
+                    if (sequenceNo == null || sequenceNo == 0)
+                        sequenceNo = 1;
+                    else
+                    {
+                        sequenceNo = sequenceNo + 1;
+                    }
+                    var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+                    MPRDetail MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == requisitinId).FirstOrDefault<MPRDetail>();
+                    mprRevisionDetails.MPRDetail = new MPRDetail();
+                    mprRevisionDetails.MPRDetail.DocumentNo = "MPR/" + DateTime.Now.ToString("MMyy") + "/" + value;
+                    mprRevisionDetails.MPRDetail.MPRSeqNo = sequenceNo;
+                    mprRevisionDetails.MPRDetail.SubmittedBy = mpr.PreparedBy;
+                    mprRevisionDetails.MPRDetail.SubmittedDate = DateTime.Now;
+                    mprRevisionDetails.MPRDetail.DocumentDescription = MPRDetail.DocumentDescription;
+                    mprRevisionDetails.RevisionNo = 0;
+                    mprRevisionDetails.BoolValidRevision = true;
+                    mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
+                    DB.MPRRevisions.Add(mprRevisionDetails);
+                    DB.SaveChanges();
+                    mpr = DB.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault();
+
+
+
+                    mprRevisionDetails.IssuePurposeId = mpr.IssuePurposeId;
+                    mprRevisionDetails.DepartmentId = mpr.DepartmentId;
+                    mprRevisionDetails.ProjectManager = mpr.ProjectManager;
+                    mprRevisionDetails.JobName = mpr.JobName;
+                    mprRevisionDetails.JobCode = mpr.JobCode;
+                    mprRevisionDetails.GEPSApprovalId = mpr.GEPSApprovalId;
+                    mprRevisionDetails.SaleOrderNo = mpr.SaleOrderNo;
+                    mprRevisionDetails.ClientName = mpr.ClientName;
+                    mprRevisionDetails.PlantLocation = mpr.PlantLocation;
+                    mprRevisionDetails.BuyerGroupId = mpr.BuyerGroupId;
+
+                    mprRevisionDetails.TargetedSpendRemarks = mpr.TargetedSpendRemarks;
+                    mprRevisionDetails.PurchaseTypeId = mpr.PurchaseTypeId;
+                    mprRevisionDetails.PreferredVendorTypeId = mpr.PreferredVendorTypeId;
+                    mprRevisionDetails.JustificationForSinglePreferredVendor = mpr.JustificationForSinglePreferredVendor;
+                    mprRevisionDetails.DeliveryRequiredBy = mpr.DeliveryRequiredBy;
+                    mprRevisionDetails.DispatchLocation = mpr.DispatchLocation;
+                    mprRevisionDetails.ScopeId = mpr.ScopeId;
+                    mprRevisionDetails.TrainingRequired = mpr.TrainingRequired;
+                    mprRevisionDetails.TrainingManWeeks = mpr.TrainingManWeeks;
+                    mprRevisionDetails.TrainingRemarks = mpr.TrainingRemarks;
+                    mprRevisionDetails.BoolDocumentationApplicable = mpr.BoolDocumentationApplicable;
+
+                    mprRevisionDetails.GuaranteePeriod = mpr.GuaranteePeriod;
+                    mprRevisionDetails.NoOfSetsOfQAP = mpr.NoOfSetsOfQAP;
+                    mprRevisionDetails.InspectionRequired = mpr.InspectionRequired;
+                    mprRevisionDetails.InspectionComments = mpr.InspectionComments;
+                    mprRevisionDetails.InspectionRemarks = mpr.InspectionRemarks;
+                    mprRevisionDetails.NoOfSetsOfTestCertificates = mpr.NoOfSetsOfTestCertificates;
+                    mprRevisionDetails.ProcurementSourceId = mpr.ProcurementSourceId;
+                    mprRevisionDetails.CustomsDutyId = mpr.CustomsDutyId;
+                    mprRevisionDetails.ProjectDutyApplicableId = mpr.ProjectDutyApplicableId;
+                    mprRevisionDetails.Remarks = mpr.Remarks;
+                    mprRevisionDetails.CheckedBy = mpr.CheckedBy;
+                   
+                    DB.SaveChanges();
+                    List<MPRItemInfo> MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == revisionId).ToList();
+                    if (MPRItemInfoes.Count > 0)
+                    {
+
+                        foreach (MPRItemInfo mPRItemInfo in MPRItemInfoes)
+                        {
+                            MPRItemInfo item = new MPRItemInfo();
+                            item.Itemid = mPRItemInfo.Itemid;
+                            item.RevisionId = mprRevisionDetails.RevisionId;
+                            item.ItemDescription = mPRItemInfo.ItemDescription;
+                            item.Quantity = mPRItemInfo.Quantity;
+                            item.UnitId = mPRItemInfo.UnitId;
+                            item.SOLineItemNo = mPRItemInfo.SOLineItemNo;
+                            item.ReferenceDocNo = mPRItemInfo.ReferenceDocNo;
+                            item.MfgModelNo = mPRItemInfo.MfgModelNo;
+                            item.MfgPartNo = mPRItemInfo.MfgPartNo;
+                            item.TargetSpend = mPRItemInfo.TargetSpend;
+                            DB.MPRItemInfoes.Add(item);
+                            DB.SaveChanges();
+                        }
+
+                    }
+                    List<MPRDocument> mprdocuments = DB.MPRDocuments.Where(li => li.RevisionId == revisionId).ToList();
+                    if (mprdocuments.Count > 0)
+                    {
+                        foreach (MPRDocument mprdoc in mprdocuments)
+                        {
+                            MPRDocument item = new MPRDocument();
+                            item.RevisionId = mprRevisionDetails.RevisionId;
+                            item.ItemDetailsId = mprdoc.ItemDetailsId;
+                            item.DocumentName = mprdoc.DocumentName;
+                            item.Path = mprdoc.Path;
+                            item.UploadedBy = mpr.PreparedBy; ;
+                            item.UplaodedDate = DateTime.Now;
+                            item.DocumentTypeid = mprdoc.DocumentTypeid;
+                            item.Deleteflag = mprdoc.Deleteflag;
+                            DB.MPRDocuments.Add(item);
+                            DB.SaveChanges();
+                        }
+
+
+                    }
+                    List<MPRVendorDetail> MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == revisionId).ToList();
+
+                    if (MPRVendorDetails.Count > 0)
+                    {
+
+                        foreach (MPRVendorDetail MPRVendorDetail in MPRVendorDetails)
+                        {
+                            MPRVendorDetail item = new MPRVendorDetail();
+                            item.RevisionId = mprRevisionDetails.RevisionId;
+                            item.Vendorid = MPRVendorDetail.Vendorid;
+                            item.UpdatedBy = mpr.PreparedBy;
+                            item.UpdatedDate = DateTime.Now;
+                            DB.MPRVendorDetails.Add(item);
+                            DB.SaveChanges();
+                        }
+
+                    }
+                    List<MPRDocumentation> MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == revisionId).ToList();
+
+                    if (MPRDocumentations.Count > 0)
+                    {
+                        foreach (MPRDocumentation mprdocment in MPRDocumentations)
+                        {
+                            MPRDocumentation item = new MPRDocumentation();
+                            item.RevisionId = mprRevisionDetails.RevisionId;
+                            item.DocumentationDescriptionId = mprdocment.DocumentationDescriptionId;
+                            item.NoOfSetsApproval = mprdocment.NoOfSetsApproval;
+                            item.NoOfSetsFinal = mprdocment.NoOfSetsFinal;
+                            DB.MPRDocumentations.Add(item);
+                            DB.SaveChanges();
+                        }
+
+                    }
+                    List<MPRIncharge> MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == revisionId).ToList();
+
+                    if (MPRIncharges.Count > 0)
+                    {
+                        foreach (MPRIncharge mprincharge in MPRIncharges)
+                        {
+                            MPRIncharge item = new MPRIncharge();
+                            item.RequisitionId = mpr.RequisitionId;
+                            item.RevisionId = mpr.RevisionId;
+                            item.Incharge = mprincharge.Incharge;
+                            item.CanClearTechnically = mprincharge.CanClearTechnically;
+                            item.CanClearCommercially = mprincharge.CanClearCommercially;
+                            item.CanReceiveMailNotification = mprincharge.CanReceiveMailNotification;
+                            item.UpdatedBy = mpr.PreparedBy;
+                            item.UpdatedDate = DateTime.Now;
+                            item.DeleteFlag = false;
+
+                            DB.MPRIncharges.Add(item);
+                            DB.SaveChanges();
+                        }
+
+                    }
+
+
+
+                    if (mprRevisionDetails != null)
+                    {
+                        mprRevisionDetails = getMPRRevisionDetails(mprRevisionDetails.RevisionId);
+                    }
                 }
                 catch (DbEntityValidationException e)
                 {

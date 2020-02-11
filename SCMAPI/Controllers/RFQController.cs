@@ -61,12 +61,10 @@ namespace SCMAPI.Controllers
         //}
 
         [Route("CreateRfq")]
-        [ResponseType(typeof(statuscheckmodel))]
+        [HttpPost]
         public async Task<IHttpActionResult> CreateRfq(RfqRevisionModel model)
         {
-            statuscheckmodel status = new statuscheckmodel();
-            status = await _rfqBusenessAcess.CreateRfQ(model);
-            return Ok(status);
+            return Ok(await _rfqBusenessAcess.CreateRfQ(model));
         }
         [Route("getallrfqlist")]
         [ResponseType(typeof(List<RFQMasterModel>))]
@@ -177,7 +175,7 @@ namespace SCMAPI.Controllers
             return Ok(_rfqBusenessAcess.UpdateVendorCommunication(model));
         }
         [HttpPost]
-        [Route("addNewRfqRevision")]       
+        [Route("addNewRfqRevision")]
         public IHttpActionResult addNewRfqRevision([FromBody] int revisionId)
         {
             return Ok(_rfqBusenessAcess.addNewRfqRevision(revisionId));
@@ -243,23 +241,26 @@ namespace SCMAPI.Controllers
             return Ok(status);
         }
         [Route("InsertRfqItemInfo")]
-        [ResponseType(typeof(statuscheckmodel))]
-        public async Task<IHttpActionResult> InsertRfqItemInfo(RfqItemModel model)
+        [ResponseType(typeof(RfqRevisionModel))]
+        public async Task<IHttpActionResult> InsertRfqItemInfo(RFQItemsInfo_N model)
         {
-            statuscheckmodel status = new statuscheckmodel();
-            status = await _rfqBusenessAcess.InsertRfqItemInfo(model);
-            return Ok(status);
+
+            return Ok(await _rfqBusenessAcess.InsertRfqItemInfo(model));
         }
 
-        [Route("DeleteRfqIteminfoByid")]
-        [ResponseType(typeof(statuscheckmodel))]
-        public async Task<IHttpActionResult> DeleteRfqIteminfoByid(List<int> id)
+        [HttpGet]
+        [Route("DeleteRfqIteminfoByid/{RFQSplitId}")]
+        public async Task<IHttpActionResult> DeleteRfqIteminfoByid(int RFQSplitId)
         {
-            statuscheckmodel status = new statuscheckmodel();
-            status = await _rfqBusenessAcess.DeleteRfqIteminfoByid(id);
-            return Ok(status);
+            return Ok(await _rfqBusenessAcess.DeleteRfqIteminfoByid(RFQSplitId));
         }
 
+
+        [Route("DeleteRfqItemByid/{RFQItemId}")]
+        public async Task<IHttpActionResult> DeleteRfqItemByid(int RFQItemId)
+        {
+            return Ok(await _rfqBusenessAcess.DeleteRfqItemByid(RFQItemId));
+        }
         [Route("DeleteRfqitemandinfosById/{id}")]
         [ResponseType(typeof(statuscheckmodel))]
         public async Task<IHttpActionResult> DeleteRfqitemandinfosById(int id)
@@ -759,7 +760,7 @@ namespace SCMAPI.Controllers
             model = await _rfqBusenessAcess.LoadVendorByMprDetailsId(MPRItemDetailsid);
             return Ok(model);
         }
-        [HttpPost]
+        [HttpGet]
         [Route("GetAllMasterCurrency")]
         [ResponseType(typeof(List<CurrencyMasterModel>))]
         public async Task<IHttpActionResult> GetAllMasterCurrency()

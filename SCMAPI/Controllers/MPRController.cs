@@ -60,6 +60,13 @@ namespace SCMAPI.Controllers
         {
             return Ok(this._mprBusenessAcess.updateMPR(mpr));
         }
+
+        [HttpPost]
+        [Route("copyMprRevision")]
+        public IHttpActionResult copyMprRevision([FromBody] MPRRevision mpr)
+        {
+            return Ok(this._mprBusenessAcess.copyMprRevision(mpr));
+        }
         [HttpPost]
         [Route("addNewVendor")]
         public IHttpActionResult addNewVendor([FromBody] VendormasterModel vendor)
@@ -134,6 +141,7 @@ namespace SCMAPI.Controllers
             return Ok(this._mprBusenessAcess.statusUpdate(mprStatus));
         }
         [HttpGet]
+        
         [Route("getStatusList")]
         public IHttpActionResult getStatusList()
         {
@@ -158,10 +166,10 @@ namespace SCMAPI.Controllers
         [HttpPost]
         public IHttpActionResult UploadFile()
         {
-            var ipaddress = ConfigurationManager.AppSettings["API_IpAddress"];
             var httpRequest = HttpContext.Current.Request;
             var serverPath = HttpContext.Current.Server.MapPath("~/SCMDocs");
             string parsedFileName = "";
+            var revisionId = httpRequest.Files.AllKeys[0];
             if (httpRequest.Files.Count > 0)
             {
                 foreach (string file in httpRequest.Files)
@@ -174,8 +182,8 @@ namespace SCMAPI.Controllers
                     }
 
                     GC.Collect();
-                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + ToValidFileName(postedFile.FileName));
-                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM"));
+                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + revisionId + "\\" + ToValidFileName(postedFile.FileName));
+                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + revisionId;
                     var path = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
                     if (!Directory.Exists(serverPath))
                         Directory.CreateDirectory(serverPath);
@@ -191,45 +199,25 @@ namespace SCMAPI.Controllers
             return Ok(parsedFileName);
 
         }
-
-        private static string ToValidFileName(string fileName)
-        {
-            fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_");
-            return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
-        }
-
-        public static string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("No network adapters with an IPv4 address in the system!");
-        }
-
         [HttpPost]
         [Route("uploadExcel")]
         public IHttpActionResult uploadExcel()
         {
             try
             {
-                var revisionId="";
+                var revisionId = "";
                 var httpRequest = HttpContext.Current.Request;
+                var serverPath = HttpContext.Current.Server.MapPath("~/SCMDocs");
+                string parsedFileName = "";
                 if (httpRequest.Files.Count > 0)
                 {
-                     revisionId = httpRequest.Files.AllKeys[0];
-                    var filePath = "";
-                    //  filePath = "C://Users//464_0095//Desktop//New folder//Testing//testingfordoc.xlsx";
+                    revisionId = httpRequest.Files.AllKeys[0];
                     var postedFile = httpRequest.Files[0];
-                    filePath = ConfigurationManager.AppSettings["AttachedDocPath"] + "\\" + postedFile.FileName;
-
-                    if (!Directory.Exists(filePath))
-                        Directory.CreateDirectory(filePath);
-                    filePath = Path.Combine(filePath, postedFile.FileName);
+                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + revisionId + "\\" + ToValidFileName(postedFile.FileName));
+                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + revisionId;
+                    var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
+                    if (!Directory.Exists(serverPath))
+                        Directory.CreateDirectory(serverPath);
                     postedFile.SaveAs(filePath);
 
                     DataTable dtexcel = new DataTable();
@@ -267,7 +255,7 @@ namespace SCMAPI.Controllers
                         {
                             //CompanyCode = row["Company Code"].ToString(),
                             ItemDescription = row["ItemDescription"].ToString(),
-                            RevisionId =Convert.ToInt32(revisionId),
+                            RevisionId = Convert.ToInt32(revisionId),
                             Quantity = Convert.ToInt32(row["Quantity"]),
                             SOLineItemNo = row["SOLineItemNo"].ToString(),
                             TargetSpend = Convert.ToInt32(row["TargetSpend"]),
@@ -287,7 +275,7 @@ namespace SCMAPI.Controllers
                     entities.SaveChanges();
                     int succRecs = iSucceRows;
                 }
-                return Ok(true);
+                return Ok(parsedFileName);
 
             }
             catch (Exception e)
@@ -296,6 +284,11 @@ namespace SCMAPI.Controllers
             }
         }
 
+        private static string ToValidFileName(string fileName)
+        {
+            fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_");
+            return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
+        }
 
     }
 

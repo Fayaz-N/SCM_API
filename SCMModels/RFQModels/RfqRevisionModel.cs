@@ -23,8 +23,8 @@ namespace SCMModels.RFQModels
         public int RfqMasterId { get; set; }
         public int RfqRevisionNo { get; set; }
         public string RFQType { get; set; }
-        public DateTime QuoteValidFrom { get; set; }
-        public DateTime QuoteValidTo { get; set; }
+        public Nullable<System.DateTime> QuoteValidFrom { get; set; }
+        public Nullable<System.DateTime> QuoteValidTo { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime RfqValidDate { get; set; }

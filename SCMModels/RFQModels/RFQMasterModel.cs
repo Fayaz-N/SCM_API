@@ -13,7 +13,7 @@ namespace SCMModels.RFQModels
             this.Revision = new List<RfqRevisionModel>();
         }
         public int RfqMasterId { get; set; }
-        public string RfqNo { get; set; }
+        public string RFQNo { get; set; }
         public Nullable<int> RfqUniqueNo { get; set; }
         public int MPRRevisionId { get; set; }
         public int VendorId { get; set; }
