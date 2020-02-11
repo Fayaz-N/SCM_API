@@ -4220,7 +4220,7 @@ namespace DALayer.RFQ
             {
                 var mapping = new PAAuthorizationEmployeeMapping();
                 if (model != null)
-                {
+                {   
                     mapping.Authid = model.Authid;
                     mapping.FunctionalRoleId = model.FunctionalRoleId;
                     mapping.CreatedBY = model.CreatedBY;
@@ -4924,9 +4924,10 @@ namespace DALayer.RFQ
                     status.Sid = authorization.PAId;
 
                     // var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
-                    foreach (var item in model.Item)
+                    foreach (var item in model.Item.GroupBy(n=>n.RFQItemsId).Select(x=>x.FirstOrDefault()))
                     {
                         var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
+                        //var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).FirstOrDefault();
                         foreach (var items in itemdata)
                         {
                             //items.Paid = status.Sid;
@@ -4939,6 +4940,16 @@ namespace DALayer.RFQ
                             obj.PAItems.Add(paitem);
                             obj.SaveChanges();
                         }
+
+
+                        //PAItem paitem = new PAItem()
+                        //    {
+                        //        PAID = status.Sid,
+                        //        RfqSplitItemId = itemdata.RFQSplitItemId
+                        //    };
+                        //    obj.PAItems.Add(paitem);
+                        //    obj.SaveChanges();
+                        
                     }
                     //var rfqterms = obj.RFQTerms.Where(x => model.TermId.Contains(x.termsid)).ToList();
                     foreach (var item in model.TermId)
@@ -5028,7 +5039,7 @@ namespace DALayer.RFQ
                     model.FactorsForImports = data.FactorsForImports;
                     model.SpecialRemarks = data.SpecialRemarks;
                     model.SuppliersReference = data.SuppliersReference;
-                    var statusdata = obj.LoadItemsByIDs.Where(x => x.Status == "Approved" && x.paid == PID).ToList();
+                    var statusdata = obj.LoadItemsByPAIDs.Where(x => x.Status == "Approved" && x.PAID == PID).ToList();
                     model.Item = statusdata.Select(x => new RfqItemModel()
                     {
                         ItemDescription = x.ItemDescription,
@@ -5042,6 +5053,13 @@ namespace DALayer.RFQ
                         VendorName = x.VendorName,
                         DepartmentId = x.DepartmentId,
                         MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
+                        RFQRevisionId=x.rfqRevisionId,
+                        paid=x.PAID,
+                        paitemid=x.PAItemID,
+                        POItemNo = x.POItemNo,
+                        PONO = x.PONO,
+                        Remarks = x.Remarks,
+                        PODate = x.PODate.ToString()
                     }).ToList();
                     var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
@@ -5273,8 +5291,8 @@ namespace DALayer.RFQ
                     sqlquery += " and  PAId='" + model.Paid + "'";
                 if (model.Status != null)
                     sqlquery += " and ApprovalStatus='" + model.Status + "'";
-                if (model.FromDate != null && model.ToDate != null)
-                    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
+                //if (model.FromDate != null && model.ToDate != null)
+                //    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 
                 details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
                 return details;
@@ -5361,6 +5379,59 @@ namespace DALayer.RFQ
             {
                 revision = obj.DisplayRfqTermsByRevisionIds.Where(x => RevisionId.Contains(x.RFQrevisionId)).ToList();
                 return revision;
+            }   
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId( int deptid)
+        {
+            List<EmployeemappingtopurchaseModel> model = new List<EmployeemappingtopurchaseModel>();
+            try
+            {
+                var data = obj.Employeemappingtopurchases.Where(x=>x.DeptId==deptid).ToList();
+                if (data != null)
+                {
+                    model = data.Select(x => new EmployeemappingtopurchaseModel()
+                    {
+                        Authid = x.Authid,
+                        AuthorizationType = x.AuthorizationType,
+                        MaxPAValue = x.MaxPAValue,
+                        MinPAValue = x.MinPAValue,
+                        Employeeid = x.Employeeid,
+                        LessBudget = x.LessBudget,
+                        MoreBudget = x.MoreBudget,
+                        DepartmentName = x.Department,
+                        Name = x.Name,
+                        FunctionalRoleId = x.FunctionalRoleId,
+                        PAmapid = x.PAmapid
+                    }).ToList();
+                    return model;
+                }
+                else
+                {
+                    return model;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.PAItems.Where(x => x.PAItemID == paitem.paitemid).FirstOrDefault();
+                data.PONO = paitem.PONO;
+                data.POItemNo = paitem.POItemNo;
+                data.PODate = System.DateTime.Now;
+                data.Remarks = paitem.Remarks;
+                obj.SaveChanges();
+
+                return status;
             }
             catch (Exception ex)
             {

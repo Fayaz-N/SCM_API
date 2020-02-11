@@ -60,6 +60,12 @@ namespace SCMModels.RFQModels
         public Nullable<decimal> FinalNetAmount { get; set; }
         public string RequestRemarks { get; set; }
         public bool IsDeleted { get; set; }
+        public int paid { get; set; }
+        public int paitemid { get; set; }
+        public string PONO { get; set; }
+        public string POItemNo { get; set; }
+        public string PODate { get; set; }
+        public string Remarks { get; set; }
         public RfqRevisionModel RFQRevision { get; set; }
         public List<RFQTermsModel> rfqterms { get; set; }
         public List<RfqItemInfoModel> iteminfo { get; set; }
@@ -81,5 +87,13 @@ namespace SCMModels.RFQModels
         public int DeptID { get; set; }
         public string EmployeeNo { get; set; }
     }
-
+    public class ItemsViewModel
+    {
+        public string POItemNo { get; set; }
+        public DateTime PODate { get; set; }
+        public string PONO { get; set; }
+        public string Remarks { get; set; }
+        public int paid { get; set; }
+        public int paitemid { get; set; }
+    }
 }

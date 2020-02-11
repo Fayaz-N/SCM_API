@@ -566,5 +566,15 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.getrfqtermsbyrevisionid(RevisionId);
         }
+
+        public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId(int deptid)
+        {
+            return await _rfqDataAcess.GetPurchaseSlabsandMappedemployeesByDeptId(deptid);
+        }
+
+        public async Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem)
+        {
+            return await _rfqDataAcess.InsertPaitems(paitem);
+        }
     }
 }
