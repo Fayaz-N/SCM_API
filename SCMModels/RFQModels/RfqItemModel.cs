@@ -58,7 +58,7 @@ namespace SCMModels.RFQModels
         public Nullable<decimal> NetAmount { get; set; }
         public Nullable<decimal> TotalAmount { get; set; }
         public Nullable<decimal> FinalNetAmount { get; set; }
-        public string RequsetRemarks { get; set; }
+        public string RequestRemarks { get; set; }
         public bool IsDeleted { get; set; }
         public int paid { get; set; }
         public int paitemid { get; set; }

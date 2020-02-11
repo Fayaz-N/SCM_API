@@ -43,10 +43,11 @@ namespace DALayer.Login
         //    return loginFlag;
         //}
 
-        [WebMethod(enableSession: true)]
+
         public EmployeeModel ValidateLoginCredentials(DynamicSearchResult Result)
         {
             //var session = HttpContext.Current.Session;
+            DB.Configuration.ProxyCreationEnabled = false;
             EmployeeModel employee = new EmployeeModel();
             string[] UserCredentials = Result.columnValues.Split(',');
             string Id = UserCredentials[0].ToString();
@@ -78,6 +79,8 @@ namespace DALayer.Login
                     employee.Name = data.Name;
                     employee.EMail = data.EMail;
                     employee.OrgDepartmentId = data.OrgDepartmentId;
+                    if (data.OrgDepartmentId != null)
+                        employee.OrgDepartmentName = DB.OrgDepartments.Where(li => li.OrgDepartmentId == data.OrgDepartmentId).FirstOrDefault().OrgDepartment1;
                     employee.DOL = data.DOL;
                     employee.RoleId = data.RoleId;
                 }

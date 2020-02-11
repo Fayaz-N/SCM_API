@@ -21,7 +21,7 @@ namespace DALayer.RFQ
         //rfq module
 
         Task<RFQMasterModel> GetRFQById(int masterID);
-        Task<statuscheckmodel> CreateRfQ(RfqRevisionModel model);
+        Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model);
         //Task<List<RfqRevisionModel>> GetAllRFQs();
         Task<List<RFQMasterModel>> getallrfqlist();
         Task<RfqRevisionModel> GetRfqDetailsById(int revisionId);
@@ -45,8 +45,9 @@ namespace DALayer.RFQ
         Task<statuscheckmodel> CreateNewRfq(RFQMasterModel model);
         Task<VendormasterModel> GetvendorById(int id);
         Task<statuscheckmodel> InsertVendorterms(VendorRfqtermModel vendor);
-        Task<statuscheckmodel> InsertRfqItemInfo(RfqItemModel model);
-        Task<statuscheckmodel> DeleteRfqIteminfoByid(List<int> id);
+        Task<RfqRevisionModel> InsertRfqItemInfo(RFQItemsInfo_N model);
+        Task<statuscheckmodel> DeleteRfqIteminfoByid(int id);
+        Task<statuscheckmodel> DeleteRfqItemByid(int id);
         Task<statuscheckmodel> DeleteRfqitemandinfosById(int id);
         Task<statuscheckmodel> UpdateRfqItemInfoById(RfqItemInfoModel model);
         Task<RfqItemModel> GetRfqItemByMPrId(int id);
