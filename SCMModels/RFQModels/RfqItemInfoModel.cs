@@ -18,7 +18,7 @@ namespace SCMModels.RFQModels
         public decimal DiscountPercentage { get; set; }
         public decimal Discount { get; set; }
         public Nullable<decimal> DiscountAmount { get; set; }
-        public int CurrencyID { get; set; }
+        public int CurrencyId { get; set; }
         public decimal CurrencyValue { get; set; }
         public string Remarks { get; set; }
         public DateTime DeliveryDate { get; set; }

@@ -180,14 +180,16 @@ namespace DALayer.RFQ
             try
             {
                 //server data
-                var rfqremote = new RemoteRFQMaster();
+
                 int revisionid = 0;
+                var rfqremote = new RemoteRFQMaster();
                 if (model != null)
                 {
 
                     //vscm.Database.Connection.Open();
                     if (model.rfqmaster.RfqMasterId == 0)
                     {
+
                         Int64 sequenceNo = Convert.ToInt64(vscm.RemoteRFQMasters.Max(li => li.RFQUniqueNo));
                         if (sequenceNo == null || sequenceNo == 0)
                             sequenceNo = 1;
@@ -203,15 +205,19 @@ namespace DALayer.RFQ
                         rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
                         rfqremote.CreatedDate = DateTime.Now;
                         rfqremote.VendorId = model.rfqmaster.VendorId;
+                        rfqremote.VendorVisiblity = model.rfqmaster.VendorVisibility;
                         vscm.RemoteRFQMasters.Add(rfqremote);
                         vscm.SaveChanges();
                     }
                     else
                     {
-                        rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        rfqremote = vscm.RemoteRFQMasters.Where(li => li.RfqMasterId == model.RfqMasterId).FirstOrDefault();
+                        //rfqremote.RfqMasterId = model.rfqmaster.RfqMasterId;
+                        //rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                         //rfqdomain.RfqMasterId = model.RfqMasterId;
-                        rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        //rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
                         rfqremote.VendorId = model.rfqmaster.VendorId;
+                        rfqremote.VendorVisiblity = model.rfqmaster.VendorVisibility;
                         rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
                         rfqremote.CreatedDate = DateTime.Now;
                         try
@@ -268,7 +274,8 @@ namespace DALayer.RFQ
                     }
                     else
                     {
-                        revision.rfqRevisionId = model.RfqRevisionId;
+                        revision = vscm.RemoteRFQRevisions_N.Where(li => li.rfqRevisionId == model.RfqRevisionId).FirstOrDefault();
+                        //revision.rfqRevisionId = model.RfqRevisionId;
                         revision.RevisionNo = model.RfqRevisionNo;
                         revision.CreatedBy = model.CreatedBy;
                         revision.CreatedDate = model.CreatedDate;
@@ -304,7 +311,7 @@ namespace DALayer.RFQ
 
                     foreach (var data in model.rfqitem)
                     {
-                        var rfqItemdata = vscm.RemoteRFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId).FirstOrDefault();
+                        var rfqItemdata = vscm.RemoteRFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId && li.DeleteFlag==false).FirstOrDefault();
 
                         if (rfqItemdata == null)
                         {
@@ -391,9 +398,10 @@ namespace DALayer.RFQ
                 if (model != null)
                 {
                     //obj.Database.Connection.Open();
-                    var rfqlocal = new RFQMaster();
+
                     if (model.rfqmaster.RfqMasterId == 0)
                     {
+                        var rfqlocal = new RFQMaster();
                         Int64 sequenceNo = Convert.ToInt64(obj.RFQMasters.Max(li => li.RFQUniqueNo));
                         if (sequenceNo == null || sequenceNo == 0)
                             sequenceNo = 1;
@@ -410,6 +418,7 @@ namespace DALayer.RFQ
                         rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
                         rfqlocal.CreatedDate = DateTime.Now;
                         rfqlocal.VendorId = model.rfqmaster.VendorId;
+                        rfqlocal.VendorVisibility = model.rfqmaster.VendorVisibility;
                         try
                         {
                             obj.RFQMasters.Add(rfqlocal);
@@ -423,18 +432,20 @@ namespace DALayer.RFQ
                     }
                     else
                     {
-                        rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
-                        rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        var rfqlocal = obj.RFQMasters.Where(li => li.RfqMasterId == masterid).FirstOrDefault();
+                        //rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        //rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
                         //rfqdomain.RfqMasterId = model.RfqMasterId;
                         rfqlocal.VendorId = model.rfqmaster.VendorId;
+                        rfqlocal.VendorVisibility = model.rfqmaster.VendorVisibility;
                         rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
-                        rfqlocal.CreatedDate = model.rfqmaster.Created;
+                        rfqlocal.CreatedDate = rfqlocal.CreatedDate;
                         try
                         {
                             // obj.RFQMasters.Add(rfqlocal);
                             obj.SaveChanges();
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
 
                             throw;
@@ -483,7 +494,8 @@ namespace DALayer.RFQ
                     }
                     else
                     {
-                        revision.rfqRevisionId = model.RfqRevisionId;
+                        revision = obj.RFQRevisions_N.Where(li => li.rfqRevisionId == model.RfqRevisionId).FirstOrDefault();
+                       // revision.rfqRevisionId = model.RfqRevisionId;
                         revision.RevisionNo = model.RfqRevisionNo;
                         revision.RFQType = model.RFQType;
                         revision.QuoteValidfrom = model.QuoteValidFrom;
@@ -516,19 +528,22 @@ namespace DALayer.RFQ
 
 
                     revisionid = revision.rfqRevisionId;
-                    var rfqitems = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == remoterevisionid).ToList();
+                    var rfqitems = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == remoterevisionid && li.DeleteFlag==false).ToList();
                     foreach (var data in rfqitems)
                     {
                         try
                         {
 
-                            var rfqitemLocal = obj.RFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId).FirstOrDefault();
+
+                           
+                           var  rfqitemLocal = obj.RFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId).FirstOrDefault();
+
                             if (rfqitemLocal == null)
                             {
 
                                 try
                                 {
-                                    var rfitems = new RFQItems_N()
+                                     rfqitemLocal = new RFQItems_N()
                                     {
                                         RFQItemsId = data.RFQItemsId,
                                         RFQRevisionId = remoterevisionid,
@@ -549,7 +564,7 @@ namespace DALayer.RFQ
                                         RequestRemarks = data.RequestRemarks,
                                         DeleteFlag = false
                                     };
-                                    obj.RFQItems_N.Add(rfitems);
+                                    obj.RFQItems_N.Add(rfqitemLocal);
                                     obj.SaveChanges();
                                 }
                                 catch (Exception ex)
@@ -563,7 +578,9 @@ namespace DALayer.RFQ
                             {
                                 try
                                 {
-                                    rfqitemLocal.RFQItemsId = data.RFQItemsId;
+                                    
+                                    //rfqitemLocal.RFQItemsId = data.RFQItemsId;
+                                    
                                     rfqitemLocal.RFQRevisionId = remoterevisionid;
                                     rfqitemLocal.ItemId = data.ItemId;
                                     rfqitemLocal.MPRItemDetailsid = data.MPRItemDetailsid;
@@ -580,7 +597,7 @@ namespace DALayer.RFQ
                                     rfqitemLocal.MfgModelNo = data.MfgModelNo;
                                     rfqitemLocal.MfgPartNo = data.MfgPartNo;
                                     rfqitemLocal.RequestRemarks = data.RequestRemarks;
-                                    ;
+                                    
                                     obj.SaveChanges();
                                 }
                                 catch (Exception ex)
@@ -1493,7 +1510,7 @@ namespace DALayer.RFQ
                             UnitPrice = x.UnitPrice,
                             DiscountPercentage = x.DiscountPercentage,
                             Discount = x.Discount,
-                            CurrencyID = x.CurrencyId,
+                            CurrencyId = x.CurrencyId,
                             CurrencyValue = x.CurrencyValue,
                             Remarks = x.Remarks
                         }).ToList()
@@ -2475,7 +2492,7 @@ namespace DALayer.RFQ
                 remoteitem.UnitPrice = model.UnitPrice;
                 remoteitem.UOM = model.UOM;
                 remoteitem.CurrencyValue = model.CurrencyValue;
-                remoteitem.CurrencyId = model.CurrencyID;
+                remoteitem.CurrencyId = model.CurrencyId;
                 remoteitem.Remarks = model.Remarks;
                 remoteitem.DeliveryDate = model.DeliveryDate;
 
@@ -2492,7 +2509,7 @@ namespace DALayer.RFQ
                 localitem.UnitPrice = model.UnitPrice;
                 localitem.UOM = model.UOM;
                 localitem.CurrencyValue = model.CurrencyValue;
-                localitem.CurrencyId = model.CurrencyID;
+                localitem.CurrencyId = model.CurrencyId;
                 localitem.Remarks = model.Remarks;
                 localitem.DeliveryDate = model.DeliveryDate;
                 obj.RFQItemsInfoes.Add(localitem);
@@ -2527,7 +2544,7 @@ namespace DALayer.RFQ
                     iteminfo.DiscountPercentage = item.DiscountPercentage;
                     iteminfo.Discount = item.Discount;
                     iteminfo.DeliveryDate = item.DeliveryDate;
-                    iteminfo.CurrencyID = item.CurrencyId;
+                    iteminfo.CurrencyId = item.CurrencyId;
                     iteminfo.CurrencyValue = item.CurrencyValue;
                     itemmodel.iteminfo.Add(iteminfo);
                 }
@@ -2576,8 +2593,10 @@ namespace DALayer.RFQ
                         masters.RFQNo = item.RFQNo;
                         masters.RfqUniqueNo = item.RFQUniqueNo;
                         masters.VendorId = item.VendorId;
+                        masters.VendorVisibility = item.VendorVisibility;
                         var vendorMaster = obj.VendorMasters.FirstOrDefault(li => li.Vendorid == item.VendorId);
                         masters.Vendor = new VendormasterModel();
+                        masters.Vendor.Vendorid = vendorMaster.Vendorid;
                         masters.Vendor.VendorName = vendorMaster.VendorName;
                         masters.Vendor.Emailid = vendorMaster.Emailid;
                         if (item.MPRRevisionId != null)
@@ -2626,6 +2645,7 @@ namespace DALayer.RFQ
                         rfqitems.MfgModelNo = item.MfgModelNo;
                         rfqitems.MfgPartNo = item.MfgPartNo;
                         rfqitems.RequestRemarks = item.RequestRemarks;
+                        if(item.ItemId!=null)
                         rfqitems.ItemName = obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == item.ItemId).Materialdescription;
                         if (mprItem.Itemid != null)
                         {
@@ -2648,7 +2668,7 @@ namespace DALayer.RFQ
                                     UnitPrice = rfqInfo.UnitPrice,
                                     DiscountPercentage = rfqInfo.DiscountPercentage,
                                     Discount = rfqInfo.Discount,
-                                    CurrencyID = rfqInfo.CurrencyId,
+                                    CurrencyId = rfqInfo.CurrencyId,
                                     CurrencyValue = rfqInfo.CurrencyValue,
                                     Remarks = rfqInfo.Remarks,
                                     DeliveryDate = rfqInfo.DeliveryDate,
@@ -2745,7 +2765,7 @@ namespace DALayer.RFQ
                 remoteiteminfo.Qty = model.Qty;
                 remoteiteminfo.DeliveryDate = model.DeliveryDate;
                 remoteiteminfo.CurrencyValue = model.CurrencyValue;
-                remoteiteminfo.CurrencyId = model.CurrencyID;
+                remoteiteminfo.CurrencyId = model.CurrencyId;
                 remoteiteminfo.Remarks = model.Remarks;
 
                 vscm.RemoteRFQItemsInfo_N.Add(remoteiteminfo);
@@ -2764,7 +2784,7 @@ namespace DALayer.RFQ
                 localiteminfo.Qty = model.Qty;
                 localiteminfo.DeliveryDate = model.DeliveryDate;
                 localiteminfo.CurrencyValue = model.CurrencyValue;
-                localiteminfo.CurrencyId = model.CurrencyID;
+                localiteminfo.CurrencyId = model.CurrencyId;
                 obj.RFQItemsInfoes.Add(localiteminfo);
                 obj.SaveChanges();
                 int localsplitid = localiteminfo.RFQSplitItemId;
@@ -2796,7 +2816,7 @@ namespace DALayer.RFQ
                         remoteiteminfo.Qty = item.Qty;
                         remoteiteminfo.DeliveryDate = item.DeliveryDate;
                         remoteiteminfo.CurrencyValue = item.CurrencyValue;
-                        remoteiteminfo.CurrencyId = item.CurrencyID;
+                        remoteiteminfo.CurrencyId = item.CurrencyId;
                         vscm.RemoteRFQItemsInfo_N.Add(remoteiteminfo);
                         vscm.SaveChanges();
                     }
@@ -2818,7 +2838,7 @@ namespace DALayer.RFQ
                         localiteminfo.Qty = item.Qty;
                         localiteminfo.DeliveryDate = item.DeliveryDate;
                         localiteminfo.CurrencyValue = item.CurrencyValue;
-                        localiteminfo.CurrencyId = item.CurrencyID;
+                        localiteminfo.CurrencyId = item.CurrencyId;
                         obj.RFQItemsInfoes.Add(localiteminfo);
                         obj.SaveChanges();
                     }
@@ -4220,7 +4240,7 @@ namespace DALayer.RFQ
             {
                 var mapping = new PAAuthorizationEmployeeMapping();
                 if (model != null)
-                {   
+                {
                     mapping.Authid = model.Authid;
                     mapping.FunctionalRoleId = model.FunctionalRoleId;
                     mapping.CreatedBY = model.CreatedBY;
@@ -4924,7 +4944,7 @@ namespace DALayer.RFQ
                     status.Sid = authorization.PAId;
 
                     // var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
-                    foreach (var item in model.Item.GroupBy(n=>n.RFQItemsId).Select(x=>x.FirstOrDefault()))
+                    foreach (var item in model.Item.GroupBy(n => n.RFQItemsId).Select(x => x.FirstOrDefault()))
                     {
                         var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
                         //var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).FirstOrDefault();
@@ -4949,7 +4969,7 @@ namespace DALayer.RFQ
                         //    };
                         //    obj.PAItems.Add(paitem);
                         //    obj.SaveChanges();
-                        
+
                     }
                     //var rfqterms = obj.RFQTerms.Where(x => model.TermId.Contains(x.termsid)).ToList();
                     foreach (var item in model.TermId)
@@ -5053,9 +5073,9 @@ namespace DALayer.RFQ
                         VendorName = x.VendorName,
                         DepartmentId = x.DepartmentId,
                         MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
-                        RFQRevisionId=x.rfqRevisionId,
-                        paid=x.PAID,
-                        paitemid=x.PAItemID,
+                        RFQRevisionId = x.rfqRevisionId,
+                        paid = x.PAID,
+                        paitemid = x.PAItemID,
                         POItemNo = x.POItemNo,
                         PONO = x.PONO,
                         Remarks = x.Remarks,
@@ -5379,18 +5399,18 @@ namespace DALayer.RFQ
             {
                 revision = obj.DisplayRfqTermsByRevisionIds.Where(x => RevisionId.Contains(x.RFQrevisionId)).ToList();
                 return revision;
-            }   
+            }
             catch (Exception ex)
             {
                 throw;
             }
         }
-        public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId( int deptid)
+        public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId(int deptid)
         {
             List<EmployeemappingtopurchaseModel> model = new List<EmployeemappingtopurchaseModel>();
             try
             {
-                var data = obj.Employeemappingtopurchases.Where(x=>x.DeptId==deptid).ToList();
+                var data = obj.Employeemappingtopurchases.Where(x => x.DeptId == deptid).ToList();
                 if (data != null)
                 {
                     model = data.Select(x => new EmployeemappingtopurchaseModel()

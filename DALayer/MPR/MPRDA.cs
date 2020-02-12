@@ -483,7 +483,7 @@ namespace DALayer.MPR
                     mprRevisionDetails.ProjectDutyApplicableId = mpr.ProjectDutyApplicableId;
                     mprRevisionDetails.Remarks = mpr.Remarks;
                     mprRevisionDetails.CheckedBy = mpr.CheckedBy;
-                   
+
                     DB.SaveChanges();
                     List<MPRItemInfo> MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == revisionId).ToList();
                     if (MPRItemInfoes.Count > 0)
@@ -801,7 +801,7 @@ namespace DALayer.MPR
 
             mprRevisionDetails = DB.MPRRevisions.Include(x => x.MPRDetail).Include(x => x.MPRDepartment).Include(x => x.MPRProcurementSource)
                  .Include(x => x.MPRCustomsDuty).Include(x => x.MPRProjectDutyApplicable).Include(x => x.MPRBuyerGroup).Include(x => x.MPRItemInfoes)
-                 .Include(x => x.MPRDocuments).Include(x => x.MPRDocumentations).Include(x => x.MPRVendorDetails).Include(x => x.MPRIncharges).Include(x => x.MPRCommunications).Where(li => li.RevisionId == RevisionId).FirstOrDefault<MPRRevision>();
+                 .Include(x => x.MPRDocuments).Include(x => x.MPRDocumentations).Include(x => x.MPRVendorDetails).Include(x => x.MPRIncharges).Include(x => x.MPRCommunications).Include(x => x.MPR_Assignment).Where(li => li.RevisionId == RevisionId).FirstOrDefault<MPRRevision>();
             mprRevisionDetails.MPRItemInfoes = mprRevisionDetails.MPRItemInfoes.OrderBy(li => li.Itemid).ToList();
             //if (mprRevisionDetails != null)
             //{
@@ -944,8 +944,34 @@ namespace DALayer.MPR
                     mprrevision = Context.MPRRevisions.Find(mprStatus.RevisionId);
                     if (mprStatus.typeOfuser == "Acknowledge")
                     {
-                        mPRStatusTrackDetails.StatusId = 4;
-                        updateMprstatusTrack(mPRStatusTrackDetails);
+                        if (mprStatus.MPRAssignments.Count > 0)
+                        {
+                            mPRStatusTrackDetails.StatusId = 4;
+                            updateMprstatusTrack(mPRStatusTrackDetails);
+                            foreach (MPR_Assignment item in mprStatus.MPRAssignments)
+                            {
+                                var MPR_Assignment = Context.MPR_Assignment.Where(li => li.Employeeno == item.Employeeno).FirstOrDefault();
+                                if (MPR_Assignment == null)
+                                {
+                                    Context.MPR_Assignment.Add(item);
+                                    Context.SaveChanges();
+                                }
+                                else
+                                {
+                                    MPR_Assignment.Employeeno = item.Employeeno;
+                                    Context.SaveChanges();
+                                }
+                                this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, item.Employeeno, "mprAssign", mprStatus.RevisionId);
+                            }
+                        }
+                        if (mprStatus.BuyerGroupId != null)
+                        {
+                            mprrevision.BuyerGroupId = mprStatus.BuyerGroupId;
+                            Context.SaveChanges();
+                            string toEmailId = Context.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprStatus.BuyerGroupId).FirstOrDefault().BuyerManager;
+                            this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, toEmailId,"BuyerChange", mprStatus.RevisionId);
+                        }
+
                     }
                     else
                     {

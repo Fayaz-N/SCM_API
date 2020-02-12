@@ -17,6 +17,7 @@ namespace SCMModels.RFQModels
         public Nullable<int> RfqUniqueNo { get; set; }
         public int MPRRevisionId { get; set; }
         public int VendorId { get; set; }
+        public Nullable<bool> VendorVisibility { get; set; }
         public string CreatedBy { get; set; }
         public DateTime Created { get; set; }
         public VendormasterModel Vendor { get; set; }

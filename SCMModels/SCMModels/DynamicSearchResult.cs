@@ -33,6 +33,8 @@ namespace SCMModels
         public int RequisitionId { get; set; }
         public string PreparedBy { get; set; }
 
+        public Nullable<byte> BuyerGroupId { get; set; }
+        public List<MPR_Assignment> MPRAssignments { get; set; }
     }
     public class mprFilterParams
     {
@@ -75,8 +77,10 @@ namespace SCMModels
         public string Name { get; set; }
         public string EMail { get; set; }
         public Nullable<short> OrgDepartmentId { get; set; }
+        public string OrgDepartmentName { get; set; }
         public Nullable<System.DateTime> DOL { get; set; }
         public Nullable<int> RoleId { get; set; }
+        public string accessToken { get; set; }
 }
 
 }

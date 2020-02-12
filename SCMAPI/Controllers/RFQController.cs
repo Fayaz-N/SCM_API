@@ -255,7 +255,7 @@ namespace SCMAPI.Controllers
             return Ok(await _rfqBusenessAcess.DeleteRfqIteminfoByid(RFQSplitId));
         }
 
-
+        [HttpGet]
         [Route("DeleteRfqItemByid/{RFQItemId}")]
         public async Task<IHttpActionResult> DeleteRfqItemByid(int RFQItemId)
         {

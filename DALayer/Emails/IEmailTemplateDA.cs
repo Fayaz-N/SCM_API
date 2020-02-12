@@ -10,6 +10,7 @@ namespace DALayer.Emails
 	{
 		bool prepareMPREmailTemplate(string typeOfuser,int revisionId, string FrmEmailId, string ToEmailId, string Remarks);
         bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId);
+        bool prepareMPRStatusEmail(string FrmEmailId, string ToEmailId, string type, int revisionid);
 
     }
 }

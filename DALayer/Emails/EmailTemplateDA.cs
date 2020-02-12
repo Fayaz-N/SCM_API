@@ -191,6 +191,44 @@ namespace DALayer.Emails
             }
             return true;
         }
+        public bool prepareMPRStatusEmail(string FrmEmailId, string ToEmailId,string type,int revisionid)
+        {
+            try
+            {
+                using (var db = new YSCMEntities()) //ok
+                {
+                    var ipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
+                    ipaddress = ipaddress + "SCM/MPRForm/" + revisionid + "";
+                    MPRRevisionDetail mprrevisionDetails = db.MPRRevisionDetails.Where(li => li.RevisionId == revisionid).FirstOrDefault<MPRRevisionDetail>();
+                    EmailSend emlSndngList = new EmailSend();
+                    string bodyTxt = "";
+                    if (type == "mprAssign")
+                    {
+                        emlSndngList.Subject = "MPR Assigned";
+                        bodyTxt= "MPR No:"+ mprrevisionDetails.DocumentNo+ " is assigned to you";
+                    }
+                    else
+                    {
+                        emlSndngList.Subject = "Buyer Group Changed";
+                        bodyTxt = "<b>MPR No: </b>" + mprrevisionDetails.DocumentNo + " buyer group is changed to "+ mprrevisionDetails.BuyerGroupName+"";
+                    }
+                 
+                    emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><span>"+bodyTxt+"</span><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
+                    emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>()).EMail;
+                    //emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
+                    emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToEmailId).FirstOrDefault<Employee>()).EMail;
+                    if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+                        this.sensEmail(emlSndngList);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+        }
+
         public bool sensEmail(EmailSend emlSndngList)
         {
             MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
