@@ -47,6 +47,7 @@ namespace SCMModels.RFQModels
         public string FactorsForImports { get; set; }
         public string SpecialRemarks { get; set; }
         public string SuppliersReference { get; set; }
+        public int VendorId { get; set; }
         public List<int> TermId { get; set; }
         public MPRPAPurchaseModesModel purchasemodes { get; set; }
         public MPRPAPurchaseTypesModel purchasetypes { get; set; }

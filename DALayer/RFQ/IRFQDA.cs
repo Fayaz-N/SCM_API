@@ -131,5 +131,8 @@ namespace DALayer.RFQ
         Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId);
         Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId(int deptid);
         Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem);
+        Task<List<GetMappedSlab>> GetAllMappedSlabs();
+        Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model);
+        Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);
     }
 }
