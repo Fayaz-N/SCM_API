@@ -55,6 +55,7 @@ namespace SCMModels
         public string DepartmentId { get; set; }
         public string GEPSApprovalId { get; set; }
         public string BuyerGroupId { get; set; }
+        public string AssignEmployee { get; set; }
 
     }
     public class rfqFilterParams

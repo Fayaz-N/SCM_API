@@ -263,7 +263,7 @@ namespace SCMAPI.Controllers
                             MfgModelNo = row["MfgModelNo"].ToString(),
                             ReferenceDocNo = row["ReferenceDocNo"].ToString(),
                             UnitId = data.UnitId,
-                            Itemid = row["Itemid"].ToString(),
+                            Itemid = row["YGSMaterialCode"].ToString(),
 
 
                         });

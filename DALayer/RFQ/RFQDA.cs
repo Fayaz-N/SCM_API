@@ -32,14 +32,21 @@ namespace DALayer.RFQ
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
 
-        public List<RFQQuoteView> getRFQItems(int RevisionId)
+        public DataTable getRFQItems(int RevisionId)
         {
+            DataTable table = new DataTable();
             using (YSCMEntities Context = new YSCMEntities())
-            {
-                string query = "select  *  from RFQQuoteView where MPRRevisionId=" + RevisionId + " ORDER BY  RFQQuoteView.ItemId, RFQQuoteView.UnitPrice";
-                return Context.Database.SqlQuery<RFQQuoteView>(query).ToList();
+            {               
+                string query = "select (select count(*) as cnt from RateContract  where  ItemId=RFQQuoteView.ItemId and RateContract.VendorId=RFQQuoteView.VendorId and (MprQuantity  between StartQty and EndQty)  and(GETDATE() between ValidFrom and ValidTo)) as RateContract,*  from RFQQuoteView where MPRRevisionId=" + RevisionId + " ORDER BY  RFQQuoteView.ItemId, RFQQuoteView.UnitPrice";
+                var cmd = Context.Database.Connection.CreateCommand();
+                cmd.CommandText = query;
+
+                cmd.Connection.Open();
+                table.Load(cmd.ExecuteReader());
+                cmd.Connection.Close();
                 //return Context.RFQQuoteViews.Where(li => li.MPRRevisionId == RevisionId).ToList();
             }
+            return table;
         }
         public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList)
         {
@@ -85,13 +92,13 @@ namespace DALayer.RFQ
                 rfqModel.BankGuarantee = item.BankGuarantee;
                 rfqModel.DeliveryMinWeeks = item.DeliveryMinWeeks;
                 rfqModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
-
+                rfqModel.RFQType = "Quote";
                 var itemList = RFQQuoteViewList.Where(li => li.VendorId == item.VendorId).ToList();
                 foreach (RFQQuoteView sitem in itemList)
                 {
                     RfqItemModel rfqitem = new RfqItemModel();
                     rfqitem.MRPItemsDetailsID = Convert.ToInt32(sitem.MPRItemDetailsid);
-                    rfqitem.ItemId = sitem.ItemId;
+                    rfqitem.ItemId = sitem.Itemid;
                     rfqitem.ItemName = sitem.ItemName;
                     rfqitem.ItemDescription = sitem.ItemDescription;
                     rfqitem.QuotationQty = Convert.ToDouble(sitem.QuotationQty);
@@ -311,7 +318,7 @@ namespace DALayer.RFQ
 
                     foreach (var data in model.rfqitem)
                     {
-                        var rfqItemdata = vscm.RemoteRFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId && li.DeleteFlag==false).FirstOrDefault();
+                        var rfqItemdata = vscm.RemoteRFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId && li.DeleteFlag == false).FirstOrDefault();
 
                         if (rfqItemdata == null)
                         {
@@ -392,7 +399,7 @@ namespace DALayer.RFQ
 
                 int masterid = rfqremote.RfqMasterId;
                 string rfeNo = rfqremote.RFQNo;
-                int remoterevisionid = (from x in vscm.RemoteRFQRevisions_N orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
+                //int remoterevisionid = (from x in vscm.RemoteRFQRevisions_N orderby x.rfqRevisionId descending select x.rfqRevisionId).First();
                 int Ritemid = (from x in vscm.RemoteRFQItems_N orderby x.RFQItemsId descending select x.RFQItemsId).First();
                 //vscm.Database.Connection.Close();
                 if (model != null)
@@ -455,7 +462,7 @@ namespace DALayer.RFQ
                     RFQRevisions_N revision = new RFQRevisions_N();
                     if (model.RfqRevisionId == 0)
                     {
-                        revision.rfqRevisionId = remoterevisionid;
+                        revision.rfqRevisionId = revisionid;
                         revision.RFQType = model.RFQType;
                         revision.QuoteValidfrom = model.QuoteValidFrom;
                         revision.QuoteValidTo = model.QuoteValidTo;
@@ -495,7 +502,7 @@ namespace DALayer.RFQ
                     else
                     {
                         revision = obj.RFQRevisions_N.Where(li => li.rfqRevisionId == model.RfqRevisionId).FirstOrDefault();
-                       // revision.rfqRevisionId = model.RfqRevisionId;
+                        // revision.rfqRevisionId = model.RfqRevisionId;
                         revision.RevisionNo = model.RfqRevisionNo;
                         revision.RFQType = model.RFQType;
                         revision.QuoteValidfrom = model.QuoteValidFrom;
@@ -528,25 +535,25 @@ namespace DALayer.RFQ
 
 
                     revisionid = revision.rfqRevisionId;
-                    var rfqitems = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == remoterevisionid && li.DeleteFlag==false).ToList();
+                    var rfqitems = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == revisionid && li.DeleteFlag == false).ToList();
                     foreach (var data in rfqitems)
                     {
                         try
                         {
 
 
-                           
-                           var  rfqitemLocal = obj.RFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId).FirstOrDefault();
+
+                            var rfqitemLocal = obj.RFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId).FirstOrDefault();
 
                             if (rfqitemLocal == null)
                             {
 
                                 try
                                 {
-                                     rfqitemLocal = new RFQItems_N()
+                                    rfqitemLocal = new RFQItems_N()
                                     {
                                         RFQItemsId = data.RFQItemsId,
-                                        RFQRevisionId = remoterevisionid,
+                                        RFQRevisionId = revisionid,
                                         ItemId = data.ItemId,
                                         MPRItemDetailsid = data.MPRItemDetailsid,
                                         QuotationQty = data.QuotationQty,
@@ -578,10 +585,10 @@ namespace DALayer.RFQ
                             {
                                 try
                                 {
-                                    
+
                                     //rfqitemLocal.RFQItemsId = data.RFQItemsId;
-                                    
-                                    rfqitemLocal.RFQRevisionId = remoterevisionid;
+
+                                    rfqitemLocal.RFQRevisionId = revisionid;
                                     rfqitemLocal.ItemId = data.ItemId;
                                     rfqitemLocal.MPRItemDetailsid = data.MPRItemDetailsid;
                                     rfqitemLocal.QuotationQty = data.QuotationQty;
@@ -597,7 +604,7 @@ namespace DALayer.RFQ
                                     rfqitemLocal.MfgModelNo = data.MfgModelNo;
                                     rfqitemLocal.MfgPartNo = data.MfgPartNo;
                                     rfqitemLocal.RequestRemarks = data.RequestRemarks;
-                                    
+
                                     obj.SaveChanges();
                                 }
                                 catch (Exception ex)
@@ -2291,7 +2298,9 @@ namespace DALayer.RFQ
                         DeliveryDate = model.DeliveryDate,
                         ValidFrom = model.ValidFrom,
                         ValidTo = model.ValidTo,
-                        Remarks = model.Remarks
+                        Remarks = model.Remarks,
+                        Status = model.Status,
+
                     };
                     if (rfqRemoteitem == null)
                     {
@@ -2314,6 +2323,7 @@ namespace DALayer.RFQ
                         rfqRemoteitem.ValidFrom = model.ValidFrom;
                         rfqRemoteitem.ValidTo = model.ValidTo;
                         rfqRemoteitem.Remarks = model.Remarks;
+                        rfqRemoteitem.Status = model.Status;
                         vscm.SaveChanges();
                     }
                     var localRfqiteminfo = obj.RFQItemsInfo_N.Where(x => x.RFQSplitItemId == remoteinfo.RFQSplitItemId).FirstOrDefault();
@@ -2334,7 +2344,7 @@ namespace DALayer.RFQ
                             DeliveryDate = model.DeliveryDate,
                             ValidFrom = model.ValidFrom,
                             ValidTo = model.ValidTo,
-
+                            Status = model.Status,
                             Remarks = model.Remarks
                         };
                         obj.RFQItemsInfo_N.Add(localinfo);
@@ -2355,6 +2365,7 @@ namespace DALayer.RFQ
                         localRfqiteminfo.ValidFrom = model.ValidFrom;
                         localRfqiteminfo.ValidTo = model.ValidTo;
                         localRfqiteminfo.Remarks = model.Remarks;
+                        localRfqiteminfo.Status = model.Status;
                         obj.SaveChanges();
                     }
                 }
@@ -2645,8 +2656,8 @@ namespace DALayer.RFQ
                         rfqitems.MfgModelNo = item.MfgModelNo;
                         rfqitems.MfgPartNo = item.MfgPartNo;
                         rfqitems.RequestRemarks = item.RequestRemarks;
-                        if(item.ItemId!=null)
-                        rfqitems.ItemName = obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == item.ItemId).Materialdescription;
+                        if (item.ItemId != null)
+                            rfqitems.ItemName = obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == item.ItemId).Materialdescription;
                         if (mprItem.Itemid != null)
                         {
 
@@ -2674,7 +2685,8 @@ namespace DALayer.RFQ
                                     DeliveryDate = rfqInfo.DeliveryDate,
                                     DeliveryDays = rfqInfo.DeliveryDays,
                                     ValidFrom = rfqInfo.ValidFrom,
-                                    ValidTo = rfqInfo.ValidTo
+                                    ValidTo = rfqInfo.ValidTo,
+                                    Status= rfqInfo.Status
 
                                 };
                                 rfqitems.iteminfo.Add(iteminfo);

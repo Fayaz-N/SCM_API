@@ -19,7 +19,7 @@ namespace BALayer.RFQ
         {
             this._rfqDataAcess = RFQDA;
         }
-        public List<RFQQuoteView> getRFQItems(int RevisionId)
+        public DataTable getRFQItems(int RevisionId)
         {
             return this._rfqDataAcess.getRFQItems(RevisionId);
         }

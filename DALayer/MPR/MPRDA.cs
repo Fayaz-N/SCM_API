@@ -851,11 +851,14 @@ namespace DALayer.MPR
             {
                 var query = default(string);
                 //var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
-                //var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");
+                //var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");A
+                string viewName = "left join  MPR_GetAssignEmployeList mprasgn on mprasgn.MprRevisionId = mpr.RevisionId";
+                if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
+                    viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo="+ mprfilterparams.AssignEmployee+ "";
                 if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-                    query = "Select  RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems mpr "+viewName+" Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 else
-                    query = "Select  RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
                 if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
                     query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "' or RevisionId in ( select RevisionId from  MPRIncharges where incharge=" + mprfilterparams.PreparedBy + ")";
@@ -884,6 +887,7 @@ namespace DALayer.MPR
                     query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
                     query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
+               
 
 
                 //if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
@@ -950,7 +954,7 @@ namespace DALayer.MPR
                             updateMprstatusTrack(mPRStatusTrackDetails);
                             foreach (MPR_Assignment item in mprStatus.MPRAssignments)
                             {
-                                var MPR_Assignment = Context.MPR_Assignment.Where(li => li.Employeeno == item.Employeeno).FirstOrDefault();
+                                var MPR_Assignment = Context.MPR_Assignment.Where(li => li.Employeeno == item.Employeeno && li.MprRevisionId==item.MprRevisionId).FirstOrDefault();
                                 if (MPR_Assignment == null)
                                 {
                                     Context.MPR_Assignment.Add(item);
