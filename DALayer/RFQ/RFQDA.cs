@@ -4951,6 +4951,7 @@ namespace DALayer.RFQ
                     authorization.FactorsForImports = model.FactorsForImports;
                     authorization.SpecialRemarks = model.SpecialRemarks;
                     authorization.SuppliersReference = model.SuppliersReference;
+                    authorization.VendorId = model.VendorId;
                     obj.MPRPADetails.Add(authorization);
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
@@ -5464,6 +5465,68 @@ namespace DALayer.RFQ
                 obj.SaveChanges();
 
                 return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<GetMappedSlab>> GetAllMappedSlabs()
+        {
+            List<GetMappedSlab> slab = new List<GetMappedSlab>();
+            try
+            {
+                slab = obj.GetMappedSlabs.Where(x => x.DeleteFlag == false).OrderByDescending(x => x.Authid).ToList();
+                return slab;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+        public async Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.PAAuthorizationLimits.Where(x => x.Authid == model.Authid).FirstOrDefault();
+                if (data != null)
+                {
+                    data.DeleteFlag = true;
+                    obj.SaveChanges();
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
+        {
+            List<GetMprPaDetailsByFilter> filter = new List<GetMprPaDetailsByFilter>();
+            try
+            {
+                var sqlquery = "";
+                sqlquery = "select * from GetMprPaDetailsByFilters where PAId!=0";
+                if (model.DocumentNumber != null)
+                    sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
+                if (model.DepartmentId != 0)
+                    sqlquery += " and DepartmentId='" + model.DepartmentId + "'";
+                if (model.PONO != null)
+                    sqlquery += " and PONO='" + model.PONO + "'";
+                if (model.POdate != null)
+                    sqlquery += " and PODate='" + model.POdate + "'";
+                if (model.BuyerGroupId != 0)
+                    sqlquery += " and BuyerGroupId='" + model.BuyerGroupId + "'";
+                if (model.VendorId != 0)
+                    sqlquery += " and VendorId='" + model.VendorId + "'";
+                //if (model.FromDate != null && model.ToDate != null)
+                //    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
+
+                filter = obj.Database.SqlQuery<GetMprPaDetailsByFilter>(sqlquery).ToList();
+                return filter;
             }
             catch (Exception ex)
             {

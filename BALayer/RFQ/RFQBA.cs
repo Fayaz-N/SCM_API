@@ -576,5 +576,19 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.InsertPaitems(paitem);
         }
+        public async Task<List<GetMappedSlab>> GetAllMappedSlabs()
+        {
+            return await _rfqDataAcess.GetAllMappedSlabs();
+        }
+
+        public async Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model)
+        {
+            return await _rfqDataAcess.RemoveMappedSlab(model);
+        }
+
+        public async Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
+        {
+            return await _rfqDataAcess.getMprPaDetailsBySearch(model);
+        }
     }
 }

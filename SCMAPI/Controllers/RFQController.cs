@@ -823,5 +823,32 @@ namespace SCMAPI.Controllers
             model = await _rfqBusenessAcess.InsertPaitems(paitem);
             return Ok(model);
         }
+        [HttpGet]
+        [Route("GetAllMappedSlabs")]
+        [ResponseType(typeof(List<GetMappedSlab>))]
+        public async Task<IHttpActionResult> GetAllMappedSlabs()
+        {
+            List<GetMappedSlab> model = new List<GetMappedSlab>();
+            model = await _rfqBusenessAcess.GetAllMappedSlabs();
+            return Ok(model);
+        }
+        [HttpPost]
+        [Route("RemoveMappedSlab")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> RemoveMappedSlab(PAAuthorizationLimitModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _rfqBusenessAcess.RemoveMappedSlab(model);
+            return Ok(status);
+        }
+        [HttpPost]
+        [Route("getMprPaDetailsBySearch")]
+        [ResponseType(typeof(List<GetMprPaDetailsByFilter>))]
+        public async Task<IHttpActionResult> getMprPaDetailsBySearch(PADetailsModel model)
+        {
+            List<GetMprPaDetailsByFilter> filter = new List<GetMprPaDetailsByFilter>();
+            filter = await _rfqBusenessAcess.getMprPaDetailsBySearch(model);
+            return Ok(filter);
+        }
     }
 }

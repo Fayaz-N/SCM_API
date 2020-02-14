@@ -81,11 +81,16 @@ namespace SCMModels.RFQModels
         public int RequisitionIds { get; set; }
         public int RevisionId { get; set; }
         public string DocumentNumber { get; set; }
+        public string DepartmentName { get; set; }
         public string RFQNo { get; set; }
         public int BuyerGroupId { get; set; }
         public string SaleOrderNo { get; set; }
         public int DeptID { get; set; }
         public string EmployeeNo { get; set; }
+        public string POItemNo { get; set; }
+        public Nullable<DateTime> POdate { get; set; }
+        public string PONO { get; set; }
+        public int DepartmentId { get; set; }
     }
     public class ItemsViewModel
     {
