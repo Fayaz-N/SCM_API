@@ -25,6 +25,7 @@ namespace SCMModels.RFQModels
         public Nullable<int> DeliveryDays { get; set; }
         public Nullable<System.DateTime> ValidFrom { get; set; }
         public Nullable<System.DateTime> ValidTo { get; set; }
+        public string Status { get; set; }
         public bool IsDeleted { get; set; }
         public RfqItemModel item { get; set; }
     }

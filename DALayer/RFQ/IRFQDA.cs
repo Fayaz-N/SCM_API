@@ -13,7 +13,7 @@ namespace DALayer.RFQ
 {
     public interface IRFQDA
     {
-        List<RFQQuoteView> getRFQItems(int RevisionId);
+        DataTable getRFQItems(int RevisionId);
         bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList);
         DataSet getRFQCompareItems(int RevisionId);
         bool rfqStatusUpdate(List<RFQQuoteView> RFQQuoteViewList);
@@ -21,7 +21,7 @@ namespace DALayer.RFQ
         //rfq module
 
         Task<RFQMasterModel> GetRFQById(int masterID);
-        Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model);
+        Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model,bool addMPRRfq);
         //Task<List<RfqRevisionModel>> GetAllRFQs();
         Task<List<RFQMasterModel>> getallrfqlist();
         Task<RfqRevisionModel> GetRfqDetailsById(int revisionId);

@@ -19,7 +19,7 @@ namespace BALayer.RFQ
         {
             this._rfqDataAcess = RFQDA;
         }
-        public List<RFQQuoteView> getRFQItems(int RevisionId)
+        public DataTable getRFQItems(int RevisionId)
         {
             return this._rfqDataAcess.getRFQItems(RevisionId);
         }
@@ -54,9 +54,9 @@ namespace BALayer.RFQ
 
         }
 
-        public async Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model)
+        public async Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model,bool addMPRRfq)
         {
-            return await _rfqDataAcess.CreateRfQ(model);
+            return await _rfqDataAcess.CreateRfQ(model, addMPRRfq);
         }
 
         public statuscheckmodel DeleteBulkItemsByItemId(List<int> id)
