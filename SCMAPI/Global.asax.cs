@@ -15,7 +15,8 @@ using BALayer.MPR;
 using DALayer.Emails;
 using DALayer.RFQ;
 using BALayer.RFQ;
-
+using BALayer.PurchaseAuthorization;
+using DALayer.PurchaseAuthorization;
 namespace SCMAPI
 {
 	public class WebApiApplication : System.Web.HttpApplication
@@ -39,7 +40,9 @@ namespace SCMAPI
 			container.Register<IEmailTemplateDA, EmailTemplateDA>();
             container.Register<IConfigAccessInterfaceBA, ConfigAccessRepoBA>();
             container.Register<IConfigAccessInterfaceDA, ConfigAccessRepoDA>();
+            container.Register<IPurchaseAuthorizationDA, PurchaseAuthorizationDA>();
+            container.Register<IPurchaseAuthorizationBA, PurchaseAuthorizationBA>();
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
-		}
+        }
 	}
 }

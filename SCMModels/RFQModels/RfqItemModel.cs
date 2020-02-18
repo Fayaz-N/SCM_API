@@ -101,4 +101,14 @@ namespace SCMModels.RFQModels
         public int paid { get; set; }
         public int paitemid { get; set; }
     }
+    public class EmployeeFilterModel
+    {
+        public int DeptId { get; set; }
+        public string Employeeid { get; set; }
+        public bool LessBudget { get; set; }
+        public bool MoreBudget { get; set; }
+        public int  MinPAValue { get; set; }
+        public int MaxPAValue { get; set; }
+        public int Authid { get; set; }
+    }
 }
