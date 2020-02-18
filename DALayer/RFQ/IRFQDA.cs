@@ -21,7 +21,7 @@ namespace DALayer.RFQ
         //rfq module
 
         Task<RFQMasterModel> GetRFQById(int masterID);
-        Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model);
+        Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model,bool addMPRRfq);
         //Task<List<RfqRevisionModel>> GetAllRFQs();
         Task<List<RFQMasterModel>> getallrfqlist();
         Task<RfqRevisionModel> GetRfqDetailsById(int revisionId);

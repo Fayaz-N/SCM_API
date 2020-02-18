@@ -64,7 +64,7 @@ namespace SCMAPI.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateRfq(RfqRevisionModel model)
         {
-            return Ok(await _rfqBusenessAcess.CreateRfQ(model));
+            return Ok(await _rfqBusenessAcess.CreateRfQ(model,false));
         }
         [Route("getallrfqlist")]
         [ResponseType(typeof(List<RFQMasterModel>))]

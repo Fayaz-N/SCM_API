@@ -169,6 +169,7 @@ namespace DALayer.MPR
                                     item.MfgModelNo = mPRItemInfo.MfgModelNo;
                                     item.MfgPartNo = mPRItemInfo.MfgPartNo;
                                     item.TargetSpend = mPRItemInfo.TargetSpend;
+                                    item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
                                 }
                             }
                             DB.SaveChanges();
@@ -413,7 +414,7 @@ namespace DALayer.MPR
             }
             return mprRevisionDetails;
         }
-        public MPRRevision copyMprRevision(MPRRevision mpr)
+        public MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder)
         {
             MPRRevision mprRevisionDetails = new MPRRevision();
             if (mpr != null)
@@ -445,9 +446,8 @@ namespace DALayer.MPR
                     mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
                     DB.MPRRevisions.Add(mprRevisionDetails);
                     DB.SaveChanges();
-                    mpr = DB.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault();
-
-
+                    if (repeatOrder == false)
+                        mpr = DB.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault();
 
                     mprRevisionDetails.IssuePurposeId = mpr.IssuePurposeId;
                     mprRevisionDetails.DepartmentId = mpr.DepartmentId;
@@ -486,6 +486,8 @@ namespace DALayer.MPR
 
                     DB.SaveChanges();
                     List<MPRItemInfo> MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == revisionId).ToList();
+                    if (repeatOrder == true)
+                        MPRItemInfoes = mpr.MPRItemInfoes.ToList();
                     if (MPRItemInfoes.Count > 0)
                     {
 
@@ -502,6 +504,7 @@ namespace DALayer.MPR
                             item.MfgModelNo = mPRItemInfo.MfgModelNo;
                             item.MfgPartNo = mPRItemInfo.MfgPartNo;
                             item.TargetSpend = mPRItemInfo.TargetSpend;
+                            item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
                             DB.MPRItemInfoes.Add(item);
                             DB.SaveChanges();
                         }
@@ -582,8 +585,6 @@ namespace DALayer.MPR
                         }
 
                     }
-
-
 
                     if (mprRevisionDetails != null)
                     {
@@ -854,9 +855,9 @@ namespace DALayer.MPR
                 //var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");A
                 string viewName = "left join  MPR_GetAssignEmployeList mprasgn on mprasgn.MprRevisionId = mpr.RevisionId";
                 if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
-                    viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo="+ mprfilterparams.AssignEmployee+ "";
+                    viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
                 if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems mpr "+viewName+" Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 else
                     query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
@@ -887,7 +888,7 @@ namespace DALayer.MPR
                     query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
                     query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
-               
+
 
 
                 //if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
@@ -954,7 +955,7 @@ namespace DALayer.MPR
                             updateMprstatusTrack(mPRStatusTrackDetails);
                             foreach (MPR_Assignment item in mprStatus.MPRAssignments)
                             {
-                                var MPR_Assignment = Context.MPR_Assignment.Where(li => li.Employeeno == item.Employeeno && li.MprRevisionId==item.MprRevisionId).FirstOrDefault();
+                                var MPR_Assignment = Context.MPR_Assignment.Where(li => li.Employeeno == item.Employeeno && li.MprRevisionId == item.MprRevisionId).FirstOrDefault();
                                 if (MPR_Assignment == null)
                                 {
                                     Context.MPR_Assignment.Add(item);
@@ -967,14 +968,16 @@ namespace DALayer.MPR
                                 }
                                 this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, item.Employeeno, "mprAssign", mprStatus.RevisionId);
                             }
+
                         }
                         if (mprStatus.BuyerGroupId != null)
                         {
                             mprrevision.BuyerGroupId = mprStatus.BuyerGroupId;
                             Context.SaveChanges();
                             string toEmailId = Context.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprStatus.BuyerGroupId).FirstOrDefault().BuyerManager;
-                            this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, toEmailId,"BuyerChange", mprStatus.RevisionId);
+                            this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, toEmailId, "BuyerChange", mprStatus.RevisionId);
                         }
+                        createMPRRFQRepeatOrder(mprStatus.RevisionId);
 
                     }
                     else
@@ -1030,6 +1033,45 @@ namespace DALayer.MPR
                 }
             }
             return this.getMPRRevisionDetails(mprStatus.RevisionId);
+        }
+
+        public void createMPRRFQRepeatOrder(int revisionid)
+        {
+
+            using (YSCMEntities Context = new YSCMEntities())
+            {
+                List<MPRItemInfo> list = Context.MPRItemInfoes.Where(li => li.RevisionId == revisionid).ToList();
+
+                foreach (MPRItemInfo item in list)
+                {
+                    List<MPRRfqItem> mprItems = Context.MPRRfqItems.Where(li => li.MPRItemDetailsid == item.RepeatOrderRefId).ToList();
+                    foreach (MPRRfqItem mprrfqItem in mprItems)
+                    {
+                        if (mprrfqItem != null)
+                        {
+                            MPRRfqItem mprItem = new MPRRfqItem();
+                            mprItem.MPRRevisionId = revisionid;
+                            mprItem.MPRItemDetailsid = item.Itemdetailsid;
+                            mprItem.RfqItemsid = mprrfqItem.RfqItemsid;
+                            Context.MPRRfqItems.Add(mprItem);
+                            Context.SaveChanges();
+                            MPRRfqItemInfo mprItemInfo = Context.MPRRfqItemInfos.Where(li => li.MPRRFQitemId == mprrfqItem.MPRRFQitemId).FirstOrDefault();
+                            if (mprItemInfo != null)
+                            {
+                                mprItemInfo = new MPRRfqItemInfo();
+                                mprItemInfo.MPRRFQitemId = mprItem.MPRRFQitemId;
+                                mprItemInfo.rfqsplititemid = mprItemInfo.rfqsplititemid;
+                                Context.MPRRfqItemInfos.Add(mprItemInfo);
+                                Context.SaveChanges();
+
+                            }
+                        }
+
+                    }
+
+
+                }
+            }
         }
         public List<SCMStatu> getStatusList()
         {

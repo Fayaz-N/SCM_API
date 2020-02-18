@@ -18,7 +18,7 @@ namespace BALayer.RFQ
         bool rfqStatusUpdate(List<RFQQuoteView> RFQQuoteViewList);
         //rfqmodule
         Task<RFQMasterModel> GetRFQById(int masterID);
-        Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model);
+        Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model,bool addMPRRfq);
         //Task<List<RfqRevisionModel>> GetAllRFQs();
         Task<List<RFQMasterModel>> getallrfqlist();
         Task<RfqRevisionModel> GetRfqDetailsById(int revisionId);

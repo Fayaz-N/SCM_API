@@ -62,10 +62,10 @@ namespace SCMAPI.Controllers
         }
 
         [HttpPost]
-        [Route("copyMprRevision")]
-        public IHttpActionResult copyMprRevision([FromBody] MPRRevision mpr)
+        [Route("copyMprRevision/{repeatOrder}")]
+        public IHttpActionResult copyMprRevision([FromBody] MPRRevision mpr,bool repeatOrder)
         {
-            return Ok(this._mprBusenessAcess.copyMprRevision(mpr));
+            return Ok(this._mprBusenessAcess.copyMprRevision(mpr,repeatOrder));
         }
         [HttpPost]
         [Route("addNewVendor")]
