@@ -27,6 +27,7 @@ namespace SCMModels
     public class MPRStatusUpdate
     {
         public int RevisionId { get; set; }
+        public int StatusId { get; set; }
         public string status { get; set; }
         public string typeOfuser { get; set; }
         public string Remarks { get; set; }
@@ -56,6 +57,7 @@ namespace SCMModels
         public string GEPSApprovalId { get; set; }
         public string BuyerGroupId { get; set; }
         public string AssignEmployee { get; set; }
+        public string MPRStatusId { get; set; }
 
     }
     public class rfqFilterParams

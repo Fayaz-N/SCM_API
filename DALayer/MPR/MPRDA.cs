@@ -140,7 +140,7 @@ namespace DALayer.MPR
                         mprRevisionDetails = mpr;
                         mprRevisionDetails.RevisionNo = 0;
                         mprRevisionDetails.BoolValidRevision = true;
-                        mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
+                        mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus= mprRevisionDetails.OApprovalStatus = mprRevisionDetails.OCheckStatus = mprRevisionDetails.OSecondApproversStatus = mprRevisionDetails.OThirdApproverStatus = "Pending";
                         DB.MPRRevisions.Add(mprRevisionDetails);
                         DB.SaveChanges();
                         requestionId = mprDetails.RequisitionId;
@@ -360,6 +360,22 @@ namespace DALayer.MPR
                         mprRevisionDetails.CustomsDutyId = mpr.CustomsDutyId;
                         mprRevisionDetails.ProjectDutyApplicableId = mpr.ProjectDutyApplicableId;
                         mprRevisionDetails.Remarks = mpr.Remarks;
+                        mprRevisionDetails.MPRForOrdering = true;
+                        mprRevisionDetails.ORemarks = mpr.ORemarks;
+                        mprRevisionDetails.ORequestedBy = mpr.ORequestedBy;
+                        mprRevisionDetails.ORequestedon = DateTime.Now;
+
+                        mprRevisionDetails.OCheckedBy = mpr.OCheckedBy;
+                        mprRevisionDetails.OCheckedOn = DateTime.Now;
+
+                        mprRevisionDetails.OApprovedBy = mpr.OApprovedBy;
+                        mprRevisionDetails.OApprovedOn = DateTime.Now;
+
+                        mprRevisionDetails.OSecondApprover = mpr.OSecondApprover;
+                        mprRevisionDetails.OSecondApprovedOn = DateTime.Now;
+
+                        mprRevisionDetails.OThirdApprover = mpr.OThirdApprover;
+                        mprRevisionDetails.OThirdApproverStatusChangedOn = DateTime.Now;
                         mprRevisionDetails.CheckedBy = mpr.CheckedBy;
                         int cnt = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == mpr.RequisitionId && li.StatusId == 1).Count();//checking mpr generated already or not 
                         if (!string.IsNullOrEmpty(mpr.CheckedBy))
@@ -373,6 +389,7 @@ namespace DALayer.MPR
                                 mPRStatusTrackDetails.UpdatedBy = mpr.PreparedBy;
                                 mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
                                 updateMprstatusTrack(mPRStatusTrackDetails);
+                                mprRevisionDetails.StatusId = 1;
                                 this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mpr.RevisionId, mpr.PreparedBy, mpr.CheckedBy, "");
                             }
                         }
@@ -386,9 +403,26 @@ namespace DALayer.MPR
                         {
                             mprRevisionDetails.SecondApprover = null;
                             mprRevisionDetails.ThirdApprover = null;
+                        }                
+                        if (mpr.IssuePurposeId==2)
+                        {
+                            mprRevisionDetails.MPRForOrdering = true;
+                            mprRevisionDetails.ORequestedBy = mprRevisionDetails.PreparedBy;
+                            mprRevisionDetails.ORequestedon = DateTime.Now;
+
+                            mprRevisionDetails.OCheckedBy = mprRevisionDetails.CheckedBy;
+                            mprRevisionDetails.OCheckedOn = DateTime.Now;
+
+                            mprRevisionDetails.OApprovedBy = mprRevisionDetails.ApprovedBy;
+                            mprRevisionDetails.OApprovedOn =  DateTime.Now;
+
+                            mprRevisionDetails.OSecondApprover = mprRevisionDetails.SecondApprover;
+                            mprRevisionDetails.OSecondApprovedOn = DateTime.Now;
+
+                            mprRevisionDetails.OThirdApprover = mprRevisionDetails.ThirdApprover;
+                            mprRevisionDetails.OThirdApproverStatusChangedOn = DateTime.Now;
                         }
                         DB.SaveChanges();
-
                     }
 
                     if (mprRevisionDetails != null)
@@ -857,9 +891,9 @@ namespace DALayer.MPR
                 if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
                     viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
                 if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 else
-                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
                 if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
                     query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "' or RevisionId in ( select RevisionId from  MPRIncharges where incharge=" + mprfilterparams.PreparedBy + ")";
@@ -888,7 +922,8 @@ namespace DALayer.MPR
                     query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
                     query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
-
+                if (!string.IsNullOrEmpty(mprfilterparams.MPRStatusId))
+                    query += " and MPRStatusId='" + mprfilterparams.MPRStatusId + "'";
 
 
                 //if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
@@ -982,7 +1017,13 @@ namespace DALayer.MPR
                     }
                     else
                     {
-                        if (mprStatus.typeOfuser == "Checker")
+                        if(mprStatus.typeOfuser== "MPRManualStatus")
+                        {
+                            mPRStatusTrackDetails.StatusId = mprStatus.StatusId;
+                            mPRStatusTrackDetails.Remarks = mprStatus.Remarks;
+                            updateMprstatusTrack(mPRStatusTrackDetails);
+                        }
+                        else if (mprStatus.typeOfuser == "Checker")
                         {
                             mprrevision.CheckStatus = mprStatus.status;
                             mprrevision.CheckerRemarks = mprStatus.Remarks;
@@ -1008,7 +1049,33 @@ namespace DALayer.MPR
                             mprrevision.ThirdApproverRemarks = mprStatus.Remarks;
                             mprrevision.ThirdApproverStatusChangedOn = DateTime.Now;
                         }
-
+                        else if (mprStatus.typeOfuser == "OChecker")
+                        {
+                            mprrevision.OCheckStatus = mprStatus.status;
+                            mprrevision.OCheckerRemarks = mprStatus.Remarks;
+                            mprrevision.OCheckedOn = DateTime.Now;
+                            mPRStatusTrackDetails.StatusId = 13;
+                        }
+                        else if (mprStatus.typeOfuser == "OApprover")
+                        {
+                            mprrevision.OApprovalStatus = mprStatus.status;
+                            mprrevision.OApproverRemarks = mprStatus.Remarks;
+                            mprrevision.OApprovedOn = DateTime.Now;
+                            mPRStatusTrackDetails.StatusId = 14;
+                        }
+                        else if (mprStatus.typeOfuser == "OSecondApprover")
+                        {
+                            mprrevision.OSecondApproversStatus = mprStatus.status;
+                            mprrevision.OSecondApproverRemarks = mprStatus.Remarks;
+                            mprrevision.OSecondApprovedOn = DateTime.Now;
+                        }
+                        else if (mprStatus.typeOfuser == "OThirdApprover")
+                        {
+                            mprrevision.OThirdApproverStatus = mprStatus.status;
+                            mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
+                            mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
+                        }
+                        mprrevision.StatusId =Convert.ToByte(mPRStatusTrackDetails.StatusId);
                         Context.SaveChanges();
                         if (mprStatus.status == "Approved")
                             updateMprstatusTrack(mPRStatusTrackDetails);

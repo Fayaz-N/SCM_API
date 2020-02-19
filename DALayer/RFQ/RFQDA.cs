@@ -4207,7 +4207,7 @@ namespace DALayer.RFQ
             {
                 obj.Configuration.ProxyCreationEnabled = false;
                 int vendorId = Convert.ToInt32(rfqfilterparams.venderid);
-                if (!string.IsNullOrEmpty(rfqfilterparams.typeOfFilter))
+                if (rfqfilterparams.typeOfFilter== "true")
                 {
                     mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate).ToList();
                     if (!string.IsNullOrEmpty(rfqfilterparams.RFQNo))
