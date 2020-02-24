@@ -1,5 +1,6 @@
 ﻿using DALayer.Emails;
 using DALayer.MPR;
+using DALayer.PAEmailDA;
 using SCMModels;
 using SCMModels.MPRMasterModels;
 using SCMModels.RemoteModel;
@@ -20,6 +21,11 @@ namespace DALayer.PurchaseAuthorization
 {
    public class PurchaseAuthorizationDA:IPurchaseAuthorizationDA
     {
+        private IPAEmailDA emailDA = default(IPAEmailDA);
+        public PurchaseAuthorizationDA(IPAEmailDA EmailDA)
+        {
+            this.emailDA = EmailDA;
+        }
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
         public async Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
@@ -415,14 +421,14 @@ namespace DALayer.PurchaseAuthorization
             if (model.PAValue > model.TargetSpend)
             {
                 model.LessBudget = false;
-                model.MoreBudget = true;
+                //model.MoreBudget = true;
             }
             else
             {
-                model.MoreBudget = false;
+                //model.MoreBudget = false;
                 model.LessBudget = true;
             }
-            string Termscode = model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2);
+            int Termscode =Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
             try
             {
                 var BuyerManagers = obj.LoadBuyerManagers.Where(x => model.MPRItemDetailsid.Contains(x.Itemdetailsid) && x.BoolValidRevision == true).FirstOrDefault();
@@ -439,7 +445,17 @@ namespace DALayer.PurchaseAuthorization
                     employee.ProjectMangerNo = projectmanagers.EmpNo;
                     employee.PMRole = projectmanagers.Role;
                 }
-                var PAandCRmapping = obj.PAandCRMappings.Where(x => x.DepartmentId == model.DeptId && x.minpavalue.CompareTo(model.PAValue) <= 0 && x.maxpavalue.CompareTo(model.PAValue) >= 0 && x.morebudget == model.MoreBudget && x.lessbudget == model.LessBudget).OrderBy(x => x.roleorder).ToList();
+                
+                var sqlquery = "";
+                sqlquery = "select distinct EmployeeNo,name,* from PAandCRMapping where (departmentid=' " + model.DeptId + "' and '" + model.PAValue + "' between minpavalue and maxpavalue and AuthorizationType='PA'and (LessBudget= case when (" + model.TargetSpend + " -" + model.PAValue + ")>=0 then 1 else 0 end or MOREbUDGET= CASE when (" + model.TargetSpend + " - " + model.PAValue + " <0) then 1 else 0 end)) or ('" + model.PAValue + "' between minpavalue and maxpavalue  and '" + Termscode + "' between MinDays and maxdays and AuthorizationType = 'CR')";
+
+                //PAandCRmapping= obj.PAandCRMappings.Where(x => x.DepartmentId == model.DeptId && x.minpavalue.CompareTo(model.PAValue) <= 0 && x.maxpavalue.CompareTo(model.PAValue) >= 0 && x.lessbudget == model.LessBudget && x.MinDays.CompareTo(Termscode) <= 0 && x.MaxDays.CompareTo(Termscode) >= 0).OrderBy(x => x.roleorder).ToList();
+
+                var PAandCRmapping = obj.Database.SqlQuery<PAandCRMapping>(sqlquery).ToList();
+                //else
+                //{
+                //    PAandCRmapping = obj.PAandCRMappings.Where(x => x.DepartmentId == model.DeptId && x.minpavalue.CompareTo(model.PAValue) <= 0 && x.maxpavalue.CompareTo(model.PAValue) >= 0 && x.morebudget == model.MoreBudget && x.MinDays.CompareTo(Termscode) <= 0 && x.MaxDays.CompareTo(Termscode) >= 0).OrderBy(x => x.roleorder).ToList();
+                //}
                 employee.Approvers = PAandCRmapping.Select(x => new PurchaseCreditApproversModel()
                 {
                     ApproverName = x.Name,
@@ -826,15 +842,6 @@ namespace DALayer.PurchaseAuthorization
                             obj.SaveChanges();
                         }
 
-
-                        //PAItem paitem = new PAItem()
-                        //    {
-                        //        PAID = status.Sid,
-                        //        RfqSplitItemId = itemdata.RFQSplitItemId
-                        //    };
-                        //    obj.PAItems.Add(paitem);
-                        //    obj.SaveChanges();
-
                     }
                     //var rfqterms = obj.RFQTerms.Where(x => model.TermId.Contains(x.termsid)).ToList();
                     foreach (var item in model.TermId)
@@ -847,31 +854,54 @@ namespace DALayer.PurchaseAuthorization
                         obj.PATerms.Add(paterms);
                         obj.SaveChanges();
                     }
+                    var Approveritem = new MPRPAApprover();
                     foreach (var item in model.ApproversList)
                     {
-                        var Approveritem = new MPRPAApprover()
-                        {
-                            PAId = status.Sid,
-                            ApproverLevel = 1,
-                            RoleName = item.RoleId,
-                            Approver = item.EmployeeNo,
-                            ApproversRemarks = item.ApproversRemarks,
-                            ApprovalStatus = "submitted",
-                            ApprovedOn = System.DateTime.Now
-                        };
+
+                        Approveritem.PAId = status.Sid;
+                        Approveritem.ApproverLevel = 1;
+                        Approveritem.RoleName = item.RoleId;
+                        Approveritem.Approver = item.EmployeeNo;
+                        Approveritem.ApproversRemarks = item.ApproversRemarks;
+                        Approveritem.ApprovalStatus = "submitted";
+                        Approveritem.ApprovedOn = System.DateTime.Now;
+                        
                         obj.MPRPAApprovers.Add(Approveritem);
                         obj.SaveChanges();
-                        //var Approveritem1 = new MPRPAApprover()
-                        //{
-                        //    PAId = status.Sid,
-                        //    ApproverLevel = 1,
-                        //    RoleName = item.RoleId,
-                        //    Approver = item.EmployeeNo,
-                        //    ApproversRemarks = item.ApproversRemarks,
-                        //    ApprovalStatus = "submitted",
-                        //    ApprovedOn = System.DateTime.Now
-                        //};
                     }
+                    var buyergroup = new MPRPAApprover()
+                    {
+                        PAId = status.Sid,
+                        Approver=model.ProjectMangerNo,
+                        RoleName=model.BGRole
+                    };
+                    obj.MPRPAApprovers.Add(buyergroup);
+                    obj.SaveChanges();
+                    var projectmanager = new MPRPAApprover()
+                    {
+                        PAId = status.Sid,
+                        Approver = model.BuyerGroupNo,
+                        RoleName = model.PMRole
+                    };
+                    obj.MPRPAApprovers.Add(projectmanager);
+                    obj.SaveChanges();
+                    this.emailDA.PAEmailRequest(status.Sid,model.LoginEmployee);
+                    //foreach (var item in model.ApproversList)
+                    //{
+                    //    var Approveritem = new MPRPAApprover()
+                    //    {
+                    //        PAId = status.Sid,
+                    //        ApproverLevel = 1,
+                    //        RoleName = item.RoleId,
+                    //        Approver = item.EmployeeNo,
+                    //        ApproversRemarks = item.ApproversRemarks,
+                    //        ApprovalStatus = "submitted",
+                    //        ApprovedOn = System.DateTime.Now
+                    //    };
+                    //    obj.MPRPAApprovers.Add(Approveritem);
+                    //    obj.SaveChanges();
+                    //}
+
                 }
                 else
                 {

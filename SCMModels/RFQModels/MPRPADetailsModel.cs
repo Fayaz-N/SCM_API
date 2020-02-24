@@ -49,6 +49,13 @@ namespace SCMModels.RFQModels
         public string SuppliersReference { get; set; }
         public int VendorId { get; set; }
         public List<int> TermId { get; set; }
+        public string BuyerGroupManager { get; set; }
+        public string BuyerGroupNo { get; set; }
+        public string BGRole { get; set; }
+        public string PMRole { get; set; }
+        public string ProjectManager { get; set; }
+        public string ProjectMangerNo { get; set; }
+        public string LoginEmployee { get; set; }
         public MPRPAPurchaseModesModel purchasemodes { get; set; }
         public MPRPAPurchaseTypesModel purchasetypes { get; set; }
         public MPRBuyerGroupModel buyergroup { get; set; }
