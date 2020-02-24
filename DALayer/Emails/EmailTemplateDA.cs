@@ -231,19 +231,22 @@ namespace DALayer.Emails
 
         public bool sensEmail(EmailSend emlSndngList)
         {
-            MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
-            SmtpClient client = new SmtpClient();
-            if (!string.IsNullOrEmpty(emlSndngList.Subject))
-                mailMessage.Subject = emlSndngList.Subject;
-            if (!string.IsNullOrEmpty(emlSndngList.CC))
-                mailMessage.CC.Add(emlSndngList.CC);
-            mailMessage.Body = emlSndngList.Body;
-            mailMessage.IsBodyHtml = true;
-            mailMessage.BodyEncoding = Encoding.UTF8;
-            SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
-            //mailClient.EnableSsl = true;
-            mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            mailClient.Send(mailMessage);
+            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId))
+            {
+                MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
+                SmtpClient client = new SmtpClient();
+                if (!string.IsNullOrEmpty(emlSndngList.Subject))
+                    mailMessage.Subject = emlSndngList.Subject;
+                if (!string.IsNullOrEmpty(emlSndngList.CC))
+                    mailMessage.CC.Add(emlSndngList.CC);
+                mailMessage.Body = emlSndngList.Body;
+                mailMessage.IsBodyHtml = true;
+                mailMessage.BodyEncoding = Encoding.UTF8;
+                SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+                //mailClient.EnableSsl = true;
+                mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                mailClient.Send(mailMessage);
+            }
             return true;
         }
     }

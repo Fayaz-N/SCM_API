@@ -81,7 +81,7 @@ namespace DALayer.MPR
             Result.connectionString = DB.Database.Connection.ConnectionString;
             DataTable dataTable = new DataTable();
             string query = "select * from " + Result.tableName + " where" + " " + Result.searchCondition + "";
-
+            
             SqlConnection con = new SqlConnection(Result.connectionString);
             SqlCommand cmd = new SqlCommand(query, con);
             con.Open();
@@ -477,6 +477,8 @@ namespace DALayer.MPR
                     mprRevisionDetails.MPRDetail.DocumentDescription = MPRDetail.DocumentDescription;
                     mprRevisionDetails.RevisionNo = 0;
                     mprRevisionDetails.BoolValidRevision = true;
+                    mprRevisionDetails.PreparedBy = mpr.PreparedBy;
+                    mprRevisionDetails.PreparedOn = DateTime.Now;
                     mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
                     DB.MPRRevisions.Add(mprRevisionDetails);
                     DB.SaveChanges();
@@ -891,9 +893,9 @@ namespace DALayer.MPR
                 if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
                     viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
                 if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 else
-                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision='true' and PreparedOn <= '" + mprfilterparams.ToDate + "' and PreparedOn >= '" + mprfilterparams.FromDate + "'";
                 //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
                 if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
                     query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "' or RevisionId in ( select RevisionId from  MPRIncharges where incharge=" + mprfilterparams.PreparedBy + ")";
@@ -924,6 +926,8 @@ namespace DALayer.MPR
                     query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
                 if (!string.IsNullOrEmpty(mprfilterparams.MPRStatusId))
                     query += " and MPRStatusId='" + mprfilterparams.MPRStatusId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.PurchaseTypeId))
+                    query += " and PurchaseTypeId='" + mprfilterparams.PurchaseTypeId + "'";
 
 
                 //if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))

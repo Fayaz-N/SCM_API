@@ -63,9 +63,9 @@ namespace SCMAPI.Controllers
 
         [HttpPost]
         [Route("copyMprRevision/{repeatOrder}")]
-        public IHttpActionResult copyMprRevision([FromBody] MPRRevision mpr,bool repeatOrder)
+        public IHttpActionResult copyMprRevision([FromBody] MPRRevision mpr, bool repeatOrder)
         {
-            return Ok(this._mprBusenessAcess.copyMprRevision(mpr,repeatOrder));
+            return Ok(this._mprBusenessAcess.copyMprRevision(mpr, repeatOrder));
         }
         [HttpPost]
         [Route("addNewVendor")]
@@ -141,7 +141,7 @@ namespace SCMAPI.Controllers
             return Ok(this._mprBusenessAcess.statusUpdate(mprStatus));
         }
         [HttpGet]
-        
+
         [Route("getStatusList")]
         public IHttpActionResult getStatusList()
         {
@@ -251,28 +251,42 @@ namespace SCMAPI.Controllers
                     {
                         string unitname = row["UnitId"].ToString();
                         var data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
-                        entities.MPRItemInfoes.Add(new MPRItemInfo
-                        {
-                            //CompanyCode = row["Company Code"].ToString(),
-                            ItemDescription = row["ItemDescription"].ToString(),
-                            RevisionId = Convert.ToInt32(revisionId),
-                            Quantity = Convert.ToInt32(row["Quantity"]),
-                            SOLineItemNo = row["SOLineItemNo"].ToString(),
-                            TargetSpend = Convert.ToInt32(row["TargetSpend"]),
-                            MfgPartNo = row["MfgPartNo"].ToString(),
-                            MfgModelNo = row["MfgModelNo"].ToString(),
-                            ReferenceDocNo = row["ReferenceDocNo"].ToString(),
-                            UnitId = data.UnitId,
-                            Itemid = row["YGSMaterialCode"].ToString(),
+
+                        MPRItemInfo mprIteminfos = new MPRItemInfo();
+                        mprIteminfos.ItemDescription = row["ItemDescription"].ToString();
+                        mprIteminfos.RevisionId = Convert.ToInt32(revisionId);
+                        mprIteminfos.Quantity = Convert.ToInt32(row["Quantity"]);
+                        mprIteminfos.SOLineItemNo = row["SOLineItemNo"].ToString();
+                        mprIteminfos.TargetSpend = Convert.ToInt32(row["TargetSpend"]);
+                        mprIteminfos.MfgPartNo = row["MfgPartNo"].ToString();
+                        mprIteminfos.MfgModelNo = row["MfgModelNo"].ToString();
+                        mprIteminfos.ReferenceDocNo = row["ReferenceDocNo"].ToString();
+                        mprIteminfos.UnitId = data.UnitId;
+                        mprIteminfos.Itemid = row["YGSMaterialCode"].ToString();
+                        // entities.MPRItemInfoes.Add(new MPRItemInfo
+                        //{
+                        //    //CompanyCode = row["Company Code"].ToString(),
+                        //    ItemDescription = row["ItemDescription"].ToString(),
+                        //    RevisionId = Convert.ToInt32(revisionId),
+                        //    Quantity = Convert.ToInt32(row["Quantity"]),
+                        //    SOLineItemNo = row["SOLineItemNo"].ToString(),
+                        //    TargetSpend = Convert.ToInt32(row["TargetSpend"]),
+                        //    MfgPartNo = row["MfgPartNo"].ToString(),
+                        //    MfgModelNo = row["MfgModelNo"].ToString(),
+                        //    ReferenceDocNo = row["ReferenceDocNo"].ToString(),
+                        //    UnitId = data.UnitId,
+                        //    Itemid = row["YGSMaterialCode"].ToString(),
 
 
-                        });
+                        //});
+                        entities.MPRItemInfoes.Add(mprIteminfos);
+                        entities.SaveChanges();
                         iSucceRows++;
 
 
                     }
 
-                    entities.SaveChanges();
+
                     int succRecs = iSucceRows;
                 }
                 return Ok(parsedFileName);

@@ -370,7 +370,7 @@ namespace DALayer.RFQ
 
                         if (rfqItemdata == null)
                         {
-                             rfqItemdata = new RemoteRFQItems_N()
+                            rfqItemdata = new RemoteRFQItems_N()
                             {
                                 RFQRevisionId = revisionid,
                                 ItemId = data.ItemId,
@@ -4203,33 +4203,79 @@ namespace DALayer.RFQ
         public List<RFQListView> getRFQList(rfqFilterParams rfqfilterparams)
         {
             List<RFQListView> mprRevisionDetails;
-            using (var db = new YSCMEntities()) //ok
+            using (var db = new YSCMEntities())
             {
                 obj.Configuration.ProxyCreationEnabled = false;
-                int vendorId = Convert.ToInt32(rfqfilterparams.venderid);
-                if (rfqfilterparams.typeOfFilter== "true")
+                var query = default(string);
+                query = "select * from RFQListView Where ";
+                if (rfqfilterparams.typeOfFilter == "1")
                 {
-                    mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate).ToList();
-                    if (!string.IsNullOrEmpty(rfqfilterparams.RFQNo))
-                        mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate && li.RFQNo == rfqfilterparams.RFQNo).ToList();
-                    if (!string.IsNullOrEmpty(rfqfilterparams.venderid))
-                        mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate && li.VendorId == vendorId).ToList();
-                    if (!string.IsNullOrEmpty(rfqfilterparams.DocumentNo))
-                        mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate && li.DocumentNo == rfqfilterparams.DocumentNo).ToList();
+                    if (!string.IsNullOrEmpty(rfqfilterparams.FromDate))
+                        query += " RFQValidDate>='" + rfqfilterparams.FromDate + "'";
+                    if (!string.IsNullOrEmpty(rfqfilterparams.ToDate))
+                        query += " and RFQValidDate<='" + rfqfilterparams.ToDate +"'";
+                    //query += "RFQValidDate <= '" + rfqfilterparams.ToDate + "' and RFQValidDate >= '" + rfqfilterparams.FromDate + "'";
                 }
-                else
+                if (rfqfilterparams.typeOfFilter == "2")
                 {
-                    mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate).ToList();
-                    if (!string.IsNullOrEmpty(rfqfilterparams.RFQNo))
-                        mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate && li.RFQNo == rfqfilterparams.RFQNo).ToList();
-                    if (!string.IsNullOrEmpty(rfqfilterparams.venderid))
-                        mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate && li.VendorId == vendorId).ToList();
-                    if (!string.IsNullOrEmpty(rfqfilterparams.DocumentNo))
-                        mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate && li.DocumentNo == rfqfilterparams.DocumentNo).ToList();
+                    if (!string.IsNullOrEmpty(rfqfilterparams.FromDate))
+                        query += " CreatedDate>='" + rfqfilterparams.FromDate + "'";
+                    if (!string.IsNullOrEmpty(rfqfilterparams.ToDate))
+                        query += " and CreatedDate<='" + rfqfilterparams.ToDate + "'";
+                    //query += "CreatedDate <= '" + rfqfilterparams.ToDate + "' and CreatedDate >= '" + rfqfilterparams.FromDate + "'";
                 }
+                if (rfqfilterparams.typeOfFilter == "3")
+                {
+                    if (!string.IsNullOrEmpty(rfqfilterparams.FromDate))
+                        query += " QuoteValidTo>='" + rfqfilterparams.FromDate + "'";
+                    if (!string.IsNullOrEmpty(rfqfilterparams.ToDate))
+                        query += " and QuoteValidTo<='" + rfqfilterparams.ToDate + "'";
+                    //query += "QuoteValidTo <= '" + rfqfilterparams.ToDate + "' and QuoteValidfrom >= '" + rfqfilterparams.FromDate + "'";
+                }
+
+                if (!string.IsNullOrEmpty(rfqfilterparams.RFQType) && rfqfilterparams.RFQType!="0")
+                    query += " and RFQType='" + rfqfilterparams.RFQType + "'";
+                if (!string.IsNullOrEmpty(rfqfilterparams.RFQNo))
+                    query += " and RFQNo='" + rfqfilterparams.RFQNo + "'";
+                if (!string.IsNullOrEmpty(rfqfilterparams.venderid))
+                    query += " and VendorId='" + rfqfilterparams.venderid + "'";
+                if (!string.IsNullOrEmpty(rfqfilterparams.DocumentNo))
+                    query += " and DocumentNo='" + rfqfilterparams.DocumentNo + "'";
+                mprRevisionDetails = db.RFQListViews.SqlQuery(query).ToList<RFQListView>();
             }
+
             return mprRevisionDetails;
         }
+        //public List<RFQListView> getRFQList(rfqFilterParams rfqfilterparams)
+        //{
+        //    List<RFQListView> mprRevisionDetails;
+        //    using (var db = new YSCMEntities()) //ok
+        //    {
+        //        obj.Configuration.ProxyCreationEnabled = false;
+        //        int vendorId = Convert.ToInt32(rfqfilterparams.venderid);
+        //        if (rfqfilterparams.typeOfFilter== "true")
+        //        {
+        //            mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate).ToList();
+        //            if (!string.IsNullOrEmpty(rfqfilterparams.RFQNo))
+        //                mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate && li.RFQNo == rfqfilterparams.RFQNo).ToList();
+        //            if (!string.IsNullOrEmpty(rfqfilterparams.venderid))
+        //                mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate && li.VendorId == vendorId).ToList();
+        //            if (!string.IsNullOrEmpty(rfqfilterparams.DocumentNo))
+        //                mprRevisionDetails = obj.RFQListViews.Where(li => li.RFQValidDate <= rfqfilterparams.ToDate && li.RFQValidDate >= rfqfilterparams.FromDate && li.DocumentNo == rfqfilterparams.DocumentNo).ToList();
+        //        }
+        //        else
+        //        {
+        //            mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate).ToList();
+        //            if (!string.IsNullOrEmpty(rfqfilterparams.RFQNo))
+        //                mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate && li.RFQNo == rfqfilterparams.RFQNo).ToList();
+        //            if (!string.IsNullOrEmpty(rfqfilterparams.venderid))
+        //                mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate && li.VendorId == vendorId).ToList();
+        //            if (!string.IsNullOrEmpty(rfqfilterparams.DocumentNo))
+        //                mprRevisionDetails = obj.RFQListViews.Where(li => li.CreatedDate <= rfqfilterparams.ToDate && li.CreatedDate >= rfqfilterparams.FromDate && li.DocumentNo == rfqfilterparams.DocumentNo).ToList();
+        //        }
+        //    }
+        //    return mprRevisionDetails;
+        //}
 
         public async Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
         {
