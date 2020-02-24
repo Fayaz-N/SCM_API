@@ -1301,7 +1301,7 @@ namespace DALayer.PurchaseAuthorization
                 sqlquery = "select * from Employeemappingtopurchase where AuthorizationType='PA' and DeleteFlag=0 ";
                 if (model.DeptId != 0)
                     sqlquery += " and  DeptId='" + model.DeptId + "'";
-                if (model.Employeeid != null)
+                if (model.Employeeid != null && model.Employeeid!="0")
                     sqlquery += " and  Employeeid='" + model.Employeeid + "'";
                 if (model.LessBudget != false)
                     sqlquery += " and  LessBudget='" + model.LessBudget + "'";
