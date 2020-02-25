@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace DALayer.PurchaseAuthorization
 {
-   public class PurchaseAuthorizationDA:IPurchaseAuthorizationDA
+    public class PurchaseAuthorizationDA : IPurchaseAuthorizationDA
     {
         private IPAEmailDA emailDA = default(IPAEmailDA);
         public PurchaseAuthorizationDA(IPAEmailDA EmailDA)
@@ -428,7 +428,7 @@ namespace DALayer.PurchaseAuthorization
                 //model.MoreBudget = false;
                 model.LessBudget = true;
             }
-            int Termscode =Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
+            int Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
             try
             {
                 var BuyerManagers = obj.LoadBuyerManagers.Where(x => model.MPRItemDetailsid.Contains(x.Itemdetailsid) && x.BoolValidRevision == true).FirstOrDefault();
@@ -445,7 +445,7 @@ namespace DALayer.PurchaseAuthorization
                     employee.ProjectMangerNo = projectmanagers.EmpNo;
                     employee.PMRole = projectmanagers.Role;
                 }
-                
+
                 var sqlquery = "";
                 sqlquery = "select distinct EmployeeNo,name,* from PAandCRMapping where (departmentid=' " + model.DeptId + "' and '" + model.PAValue + "' between minpavalue and maxpavalue and AuthorizationType='PA'and (LessBudget= case when (" + model.TargetSpend + " -" + model.PAValue + ")>=0 then 1 else 0 end or MOREbUDGET= CASE when (" + model.TargetSpend + " - " + model.PAValue + " <0) then 1 else 0 end)) or ('" + model.PAValue + "' between minpavalue and maxpavalue  and '" + Termscode + "' between MinDays and maxdays and AuthorizationType = 'CR')";
 
@@ -865,15 +865,19 @@ namespace DALayer.PurchaseAuthorization
                         Approveritem.ApproversRemarks = item.ApproversRemarks;
                         Approveritem.ApprovalStatus = "submitted";
                         Approveritem.ApprovedOn = System.DateTime.Now;
-                        
+
                         obj.MPRPAApprovers.Add(Approveritem);
                         obj.SaveChanges();
                     }
                     var buyergroup = new MPRPAApprover()
                     {
                         PAId = status.Sid,
-                        Approver=model.ProjectMangerNo,
-                        RoleName=model.BGRole
+                        Approver = model.ProjectMangerNo,
+                        RoleName = model.BGRole,
+                        ApprovalStatus = "Submitted",
+                        ApproverLevel = 1,
+                        ApprovedOn = System.DateTime.Now
+
                     };
                     obj.MPRPAApprovers.Add(buyergroup);
                     obj.SaveChanges();
@@ -881,11 +885,14 @@ namespace DALayer.PurchaseAuthorization
                     {
                         PAId = status.Sid,
                         Approver = model.BuyerGroupNo,
-                        RoleName = model.PMRole
+                        RoleName = model.PMRole,
+                        ApprovalStatus = "Submitted",
+                        ApproverLevel = 1,
+                        ApprovedOn = System.DateTime.Now
                     };
                     obj.MPRPAApprovers.Add(projectmanager);
                     obj.SaveChanges();
-                    this.emailDA.PAEmailRequest(status.Sid,model.LoginEmployee);
+                    this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
                     //foreach (var item in model.ApproversList)
                     //{
                     //    var Approveritem = new MPRPAApprover()
@@ -1206,8 +1213,8 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and  PAId='" + model.Paid + "'";
                 if (model.Status != null)
                     sqlquery += " and ApprovalStatus='" + model.Status + "'";
-                //if (model.FromDate != null && model.ToDate != null)
-                //    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
+                if (model.FromDate != null && model.ToDate != null)
+                    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 
                 details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
                 return details;
@@ -1301,7 +1308,7 @@ namespace DALayer.PurchaseAuthorization
                 sqlquery = "select * from Employeemappingtopurchase where AuthorizationType='PA' and DeleteFlag=0 ";
                 if (model.DeptId != 0)
                     sqlquery += " and  DeptId='" + model.DeptId + "'";
-                if (model.Employeeid != null && model.Employeeid!="0")
+                if (model.Employeeid != null && model.Employeeid != "0")
                     sqlquery += " and  Employeeid='" + model.Employeeid + "'";
                 if (model.LessBudget != false)
                     sqlquery += " and  LessBudget='" + model.LessBudget + "'";

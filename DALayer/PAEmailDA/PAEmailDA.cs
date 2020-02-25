@@ -20,34 +20,45 @@ namespace DALayer.PAEmailDA
             ipaddress = ipaddress + "SCM/mprpa/" + paid + "";
             EmailSend mails = new EmailSend();
             mails.FrmEmailId = obj.Employees.Where(x => x.EmployeeNo == loginemployee).FirstOrDefault().EMail;
+            mails.CC = "n.senthilkumar@in.yokogawa.com";
             foreach (var item in data)
             {
-               // if (item.RoleName=="PM")
-               // {
-               //     mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-               //     if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-               //         this.sendEmail(mails);
-               // }
-               //else if (item.RoleName == "CPM")
-               // {
-               //     mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-               //     if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-               //         this.sendEmail(mails);
-               // }
+                if (item.RoleName == "PM")
+                {
+                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
+                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
+                        this.sendEmail(mails);
+                }
+                else if (item.RoleName == "CPM")
+                {
+                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
+                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
+                        this.sendEmail(mails);
+                }
                 if (item.RoleName == "DM")
                 {
-                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><table border='1' class='table table-bordered table-sm'></table><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
                     mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
                     mails.Subject = "Purchase Authorization Waiting For Your Approval";
                     if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
                         this.sendEmail(mails);
                 }
-                //else if (item.RoleName == "CMMH")
-                //{
-                //    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-                //    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-                //        this.sendEmail(mails);
-                //}
+                else if (item.RoleName == "CMMH")
+                {
+                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
+                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
+                        this.sendEmail(mails);
+                }
+                else if (item.RoleName == "UH")
+                {
+                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
+                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
+                        this.sendEmail(mails);
+                }
             }
             return true;
         }
