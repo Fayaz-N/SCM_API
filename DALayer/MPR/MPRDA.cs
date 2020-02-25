@@ -80,8 +80,10 @@ namespace DALayer.MPR
         {
             Result.connectionString = DB.Database.Connection.ConnectionString;
             DataTable dataTable = new DataTable();
-            string query = "select * from " + Result.tableName + " where" + " " + Result.searchCondition + "";
-            
+            string query = "";
+            query = "select * from " + Result.tableName + Result.searchCondition + "";
+            if (!string.IsNullOrEmpty(Result.query))
+                query = Result.query;
             SqlConnection con = new SqlConnection(Result.connectionString);
             SqlCommand cmd = new SqlCommand(query, con);
             con.Open();
@@ -140,7 +142,7 @@ namespace DALayer.MPR
                         mprRevisionDetails = mpr;
                         mprRevisionDetails.RevisionNo = 0;
                         mprRevisionDetails.BoolValidRevision = true;
-                        mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus= mprRevisionDetails.OApprovalStatus = mprRevisionDetails.OCheckStatus = mprRevisionDetails.OSecondApproversStatus = mprRevisionDetails.OThirdApproverStatus = "Pending";
+                        mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = mprRevisionDetails.OApprovalStatus = mprRevisionDetails.OCheckStatus = mprRevisionDetails.OSecondApproversStatus = mprRevisionDetails.OThirdApproverStatus = "Pending";
                         DB.MPRRevisions.Add(mprRevisionDetails);
                         DB.SaveChanges();
                         requestionId = mprDetails.RequisitionId;
@@ -403,8 +405,8 @@ namespace DALayer.MPR
                         {
                             mprRevisionDetails.SecondApprover = null;
                             mprRevisionDetails.ThirdApprover = null;
-                        }                
-                        if (mpr.IssuePurposeId==2)
+                        }
+                        if (mpr.IssuePurposeId == 2)
                         {
                             mprRevisionDetails.MPRForOrdering = true;
                             mprRevisionDetails.ORequestedBy = mprRevisionDetails.PreparedBy;
@@ -414,7 +416,7 @@ namespace DALayer.MPR
                             mprRevisionDetails.OCheckedOn = DateTime.Now;
 
                             mprRevisionDetails.OApprovedBy = mprRevisionDetails.ApprovedBy;
-                            mprRevisionDetails.OApprovedOn =  DateTime.Now;
+                            mprRevisionDetails.OApprovedOn = DateTime.Now;
 
                             mprRevisionDetails.OSecondApprover = mprRevisionDetails.SecondApprover;
                             mprRevisionDetails.OSecondApprovedOn = DateTime.Now;
@@ -712,11 +714,24 @@ namespace DALayer.MPR
                 vendorid = vendordata.Vendorid;
             }
 
-            RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == model.Emailid).FirstOrDefault();
+            //RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.VuniqueId == model.VuniqueId).FirstOrDefault();
+            string VuniqueId = "";
             //need to implement vUniqueId value
-            if (vendorUsermaster == null)
+            if (model.VuniqueId == null)
             {
                 RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
+                Int32 sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
+                if (sequenceNo == null || sequenceNo == 0)
+                    sequenceNo = 1;
+                else
+                {
+                    sequenceNo = sequenceNo + 1;
+                }
+                var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+
+                vendorUsermasters.VuniqueId = "C" + value;
+                VuniqueId = vendorUsermasters.VuniqueId;
+                vendorUsermasters.SequenceNo =sequenceNo;
                 vendorUsermasters.Vuserid = model.Emailid;
                 vendorUsermasters.pwd = "Yil@123";
                 vendorUsermasters.VendorId = vendorid;
@@ -725,14 +740,15 @@ namespace DALayer.MPR
                 vscm.RemoteVendorUserMasters.Add(vendorUsermasters);
                 vscm.SaveChanges();
             }
-            //else
-            //{
-            //    vendorUsermaster.Vuserid = model.Emailid;
-            //    //vendorUsermaster.pwd = "Yil@123";
-            //    //vendorUsermaster.VendorId = vendorid;
-            //    vscm.SaveChanges();
+            else
+            {
+                RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.VuniqueId == model.VuniqueId).FirstOrDefault();
+                vendorUsermaster.Vuserid = model.Emailid;
+                //vendorUsermaster.pwd = "Yil@123";
+                //vendorUsermaster.VendorId = vendorid;
+                vscm.SaveChanges();
 
-            //}
+            }
             using (YSCMEntities Context = new YSCMEntities())
             {
                 VendorMaster localvendor = new VendorMaster();
@@ -755,6 +771,8 @@ namespace DALayer.MPR
                     //localvendor.Blocked = model.Blocked;
                     localvendor.Emailid = model.Emailid;
                     localvendor.AutoAssignmentofRFQ = true;
+                    localvendor.VendorInternalRefNo = VuniqueId;
+                    
                     localvendor.Deleteflag = true;
 
                     Context.VendorMasters.Add(localvendor);
@@ -777,6 +795,7 @@ namespace DALayer.MPR
                     //vendormaster.PaymentTermCode = model.PaymentTermCode;
                     //vendormaster.Blocked = model.Blocked;
                     vendormaster.Emailid = model.Emailid;
+                    localvendor.VendorInternalRefNo = VuniqueId;
                     vendormaster.AutoAssignmentofRFQ = true;
                     Context.SaveChanges();
                     vendorid = vendormaster.Vendorid;
@@ -1021,7 +1040,7 @@ namespace DALayer.MPR
                     }
                     else
                     {
-                        if(mprStatus.typeOfuser== "MPRManualStatus")
+                        if (mprStatus.typeOfuser == "MPRManualStatus")
                         {
                             mPRStatusTrackDetails.StatusId = mprStatus.StatusId;
                             mPRStatusTrackDetails.Remarks = mprStatus.Remarks;
@@ -1079,7 +1098,7 @@ namespace DALayer.MPR
                             mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
                             mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
                         }
-                        mprrevision.StatusId =Convert.ToByte(mPRStatusTrackDetails.StatusId);
+                        mprrevision.StatusId = Convert.ToByte(mPRStatusTrackDetails.StatusId);
                         Context.SaveChanges();
                         if (mprStatus.status == "Approved")
                             updateMprstatusTrack(mPRStatusTrackDetails);

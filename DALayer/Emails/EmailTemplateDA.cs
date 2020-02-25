@@ -173,7 +173,7 @@ namespace DALayer.Emails
             {
                 using (var db = new YSCMEntities()) //ok
                 {
-                    var ipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
+                    var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
                     EmailSend emlSndngList = new EmailSend();
                     emlSndngList.Subject = "New RFQ Generated From YOKOGAWA";
                     emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";

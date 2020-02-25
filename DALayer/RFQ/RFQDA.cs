@@ -256,6 +256,8 @@ namespace DALayer.RFQ
                         rfqremote.RFQNo = "RFQ/" + DateTime.Now.ToString("MMyy") + "/" + value;
                         rfqremote.RFQUniqueNo = Convert.ToInt32(sequenceNo);
                         rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        if(model.rfqmaster.MPRRevisionId==0)
+                            rfqremote.MPRRevisionId = null;
                         //rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                         rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
                         rfqremote.CreatedDate = DateTime.Now;
@@ -467,7 +469,9 @@ namespace DALayer.RFQ
                         var value = obj.SP_sequenceNumber(sequenceNo).FirstOrDefault();
                         rfqlocal.RFQNo = rfeNo;
                         rfqlocal.RFQUniqueNo = Convert.ToInt32(sequenceNo);
-                        rfqlocal.MPRRevisionId = null;
+                        rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
+                        if (model.rfqmaster.MPRRevisionId == 0)
+                            rfqlocal.MPRRevisionId = null;
                         rfqlocal.RfqMasterId = masterid;
                         // rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                         rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
