@@ -9,6 +9,7 @@ namespace SCMModels.RFQModels
    public class VendormasterModel
     {
         public int Vendorid { get; set; }
+        public string VuniqueId { get; set; }
         public string VendorCode { get; set; }
         public string VendorName { get; set; }
         public string Emailid { get; set; }
