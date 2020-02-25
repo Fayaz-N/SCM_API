@@ -75,7 +75,7 @@ namespace DALayer.PAEmailDA
             mailMessage.IsBodyHtml = true;
             mailMessage.BodyEncoding = Encoding.UTF8;
             SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
-            //mailClient.EnableSsl = true;
+            mailClient.EnableSsl = true;
             mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             mailClient.Send(mailMessage);
             return true;

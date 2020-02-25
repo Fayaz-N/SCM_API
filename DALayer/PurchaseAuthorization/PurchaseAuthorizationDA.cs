@@ -418,6 +418,7 @@ namespace DALayer.PurchaseAuthorization
         {
             EmployeModel employee = new EmployeModel();
             model.PAValue = model.UnitPrice;
+            int Termscode = 0;
             if (model.PAValue > model.TargetSpend)
             {
                 model.LessBudget = false;
@@ -428,7 +429,15 @@ namespace DALayer.PurchaseAuthorization
                 //model.MoreBudget = false;
                 model.LessBudget = true;
             }
-            int Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
+            if (model.PaymentTermCode!=null)
+            {
+                Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
+            }
+            else
+            {
+                Termscode = 0;
+            }
+            
             try
             {
                 var BuyerManagers = obj.LoadBuyerManagers.Where(x => model.MPRItemDetailsid.Contains(x.Itemdetailsid) && x.BoolValidRevision == true).FirstOrDefault();
@@ -517,7 +526,7 @@ namespace DALayer.PurchaseAuthorization
                 using (YSCMEntities yscm = new YSCMEntities())
                 {
                     var sqlquery = "";
-                    sqlquery = "select * from LoadItemsByID where Status='Approved'";
+                    sqlquery = "select * from LoadItemsByID where itemstatus='Approved'";
                     if (masters.VendorId != 0)
                         sqlquery += " and VendorId='" + masters.VendorId + "'";
                     if (masters.RevisionId != 0)
