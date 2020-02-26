@@ -802,12 +802,13 @@ namespace DALayer.PurchaseAuthorization
             statuscheckmodel status = new statuscheckmodel();
             try
             {
+                var dateAndTime = DateTime.Now;
                 var authorization = new MPRPADetail();
                 if (model != null)
                 {
                     authorization.PurchaseTypeId = model.PurchaseTypeId;
                     authorization.PurchaseModeId = model.PurchaseModeId;
-                    authorization.RequestedOn = System.DateTime.Now;
+                    authorization.RequestedOn = dateAndTime.Date;
                     authorization.RequestedBy = model.RequestedBy;
                     authorization.DepartmentID = model.DepartmentID;
                     authorization.BuyerGroupId = model.BuyerGroupId;
@@ -873,33 +874,33 @@ namespace DALayer.PurchaseAuthorization
                         Approveritem.Approver = item.EmployeeNo;
                         Approveritem.ApproversRemarks = item.ApproversRemarks;
                         Approveritem.ApprovalStatus = "submitted";
-                        Approveritem.ApprovedOn = System.DateTime.Now;
+                        Approveritem.ApprovedOn = dateAndTime.Date;
 
                         obj.MPRPAApprovers.Add(Approveritem);
                         obj.SaveChanges();
                     }
-                    var buyergroup = new MPRPAApprover()
+                    var projectmanger = new MPRPAApprover()
                     {
                         PAId = status.Sid,
                         Approver = model.ProjectMangerNo,
-                        RoleName = model.BGRole,
-                        ApprovalStatus = "Submitted",
-                        ApproverLevel = 1,
-                        ApprovedOn = System.DateTime.Now
-
-                    };
-                    obj.MPRPAApprovers.Add(buyergroup);
-                    obj.SaveChanges();
-                    var projectmanager = new MPRPAApprover()
-                    {
-                        PAId = status.Sid,
-                        Approver = model.BuyerGroupNo,
                         RoleName = model.PMRole,
                         ApprovalStatus = "Submitted",
                         ApproverLevel = 1,
-                        ApprovedOn = System.DateTime.Now
-                    };
-                    obj.MPRPAApprovers.Add(projectmanager);
+                        ApprovedOn = dateAndTime.Date
+
+                };
+                    obj.MPRPAApprovers.Add(projectmanger);
+                    obj.SaveChanges();
+                    var buyergroup = new MPRPAApprover()
+                    {
+                        PAId = status.Sid,
+                        Approver = model.BuyerGroupNo,
+                        RoleName = model.BGRole,
+                        ApprovalStatus = "Submitted",
+                        ApproverLevel = 1,
+                        ApprovedOn = dateAndTime.Date
+                };
+                    obj.MPRPAApprovers.Add(buyergroup);
                     obj.SaveChanges();
                     this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
                     //foreach (var item in model.ApproversList)
@@ -970,7 +971,7 @@ namespace DALayer.PurchaseAuthorization
                     model.FactorsForImports = data.FactorsForImports;
                     model.SpecialRemarks = data.SpecialRemarks;
                     model.SuppliersReference = data.SuppliersReference;
-                    var statusdata = obj.LoadItemsByPAIDs.Where(x => x.Status == "Approved" && x.PAID == PID).ToList();
+                    var statusdata = obj.LoadItemsByPAIDs.Where(x => x.itemstatus == "Approved" && x.PAID == PID).ToList();
                     model.Item = statusdata.Select(x => new RfqItemModel()
                     {
                         ItemDescription = x.ItemDescription,
@@ -992,7 +993,10 @@ namespace DALayer.PurchaseAuthorization
                         Remarks = x.Remarks,
                         PODate = x.PODate.ToString()
                     }).ToList();
-                    var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
+                    var sqlquery = " ";
+                    sqlquery = "select * from GetmprApproverdeatils where PAId = '" + PID + "'";
+                    var approverdata = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
+                    //var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
                     {
                         ApproverName = x.Name,
@@ -1238,13 +1242,14 @@ namespace DALayer.PurchaseAuthorization
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId).FirstOrDefault();
+                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId && x.Approver==model.EmployeeNo).FirstOrDefault();
                 if (approverdata != null)
                 {
                     approverdata.ApproversRemarks = model.ApproversRemarks;
                     approverdata.ApprovalStatus = model.ApprovalStatus;
                     approverdata.ApprovedOn = System.DateTime.Now;
                     obj.SaveChanges();
+                    status.Sid = approverdata.PAId;
                     return status;
                 }
                 else
