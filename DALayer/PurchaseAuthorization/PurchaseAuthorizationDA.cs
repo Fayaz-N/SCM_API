@@ -471,7 +471,8 @@ namespace DALayer.PurchaseAuthorization
                     AuthorizationType = x.AuthorizationType,
                     RoleName = x.role,
                     EmployeeNo = x.EmployeeNo,
-                    RoleId = x.FunctionalRoleId
+                    RoleId = x.FunctionalRoleId,
+                    roleorder = x.roleorder
                 }).ToList();
 
                 return employee;
@@ -994,7 +995,7 @@ namespace DALayer.PurchaseAuthorization
                         PODate = x.PODate.ToString()
                     }).ToList();
                     var sqlquery = " ";
-                    sqlquery = "select * from GetmprApproverdeatils where PAId = '" + PID + "'";
+                    sqlquery = "select * from GetmprApproverdeatils where PAId = '" + PID + "' order by XOrder";
                     var approverdata = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
                     //var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
