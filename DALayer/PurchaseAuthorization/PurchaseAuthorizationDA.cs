@@ -1350,6 +1350,7 @@ namespace DALayer.PurchaseAuthorization
                 data.POItemNo = paitem.POItemNo;
                 data.PODate = System.DateTime.Now;
                 data.Remarks = paitem.Remarks;
+                data.MPRItemDetailsId = paitem.MRPItemsDetailsID;
                 obj.SaveChanges();
 
                 return status;

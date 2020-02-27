@@ -14,8 +14,8 @@ namespace SCMModels.RFQModels
     public class PAApproverDetailsInputModel
     {
         public int Paid { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
+        public Nullable<DateTime> FromDate { get; set; }
+        public Nullable<DateTime> ToDate { get; set; }
         public string Status { get; set; }
         public string CreatedBy { get; set; }
     }

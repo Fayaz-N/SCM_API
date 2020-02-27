@@ -27,6 +27,7 @@ namespace SCMModels.RFQModels
         public string RoleName { get; set; }
         public string EmployeeNo { get; set; }
         public string RoleId { get; set; }
+        public Nullable<byte> roleorder { get; set; }
     }
     public class ProjectManagerModel
     {
