@@ -26,7 +26,6 @@ namespace SCMModels.RFQModels
         public string PostalCode { get; set; }
         public Nullable<bool> Deleteflag { get; set; }
         public bool AutoAssignmentofRFQ { get; set; }
-        public string VendorInternalRefNo { get; set; }
         public IList<RFQMasterModel> masters { get; set; }
     }
 }

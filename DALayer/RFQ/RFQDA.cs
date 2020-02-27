@@ -177,7 +177,7 @@ namespace DALayer.RFQ
             {
 
                 //string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where (Status not like '%Approved%' or Status is null) and MPRRevisionId=" + RevisionId + "";
-                string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQCompareView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQCompareView.MPRRevisionId where  MPRRevisionId=" + RevisionId + " and RFQCompareView.RowNumber=1 and mprdet.RowNumber=1";
+                string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, RFQCompareView.* from RFQCompareView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQCompareView.MPRRevisionId where  MPRRevisionId=" + RevisionId + " and RFQCompareView.RowNumber=1 and mprdet.RowNumber=1";
                 var cmd = Context.Database.Connection.CreateCommand();
                 cmd.CommandText = query;
                 cmd.Connection.Open();
@@ -217,15 +217,24 @@ namespace DALayer.RFQ
         {
             using (YSCMEntities Context = new YSCMEntities())
             {
+                MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
                 foreach (var item in vendorList)
                 {
                     RFQItemsInfo_N rfqItem = Context.RFQItemsInfo_N.Where(li => li.RFQSplitItemId == item.RFQSplitItemId).FirstOrDefault<RFQItemsInfo_N>();
                     rfqItem.Status = "Approved";
+                    rfqItem.Remarks = item.Remarks;
                     rfqItem.StatusUpdatedBy = item.CreatedBy;
                     rfqItem.StatusUpdateddate = DateTime.Now;
                     Context.SaveChanges();
-
+                    //need to add status track    
+                    mPRStatusTrackDetails.RevisionId =Convert.ToInt32(item.MPRRevisionId);
+                    mPRStatusTrackDetails.UpdatedBy = item.CreatedBy;
                 }
+
+                mPRStatusTrackDetails.RequisitionId = Context.MPRRevisions.Where(li => li.RevisionId == mPRStatusTrackDetails.RevisionId).FirstOrDefault().RequisitionId;
+                mPRStatusTrackDetails.StatusId = 17; //RFQ Finalized           
+                mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
+                this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
             }
             return true;
         }
@@ -237,6 +246,7 @@ namespace DALayer.RFQ
                 //server data
 
                 int revisionid = 0;
+                string BuyergroupEmail = null;
                 var rfqremote = new RemoteRFQMaster();
                 if (model != null)
                 {
@@ -256,7 +266,7 @@ namespace DALayer.RFQ
                         rfqremote.RFQNo = "RFQ/" + DateTime.Now.ToString("MMyy") + "/" + value;
                         rfqremote.RFQUniqueNo = Convert.ToInt32(sequenceNo);
                         rfqremote.MPRRevisionId = model.rfqmaster.MPRRevisionId;
-                        if(model.rfqmaster.MPRRevisionId==0)
+                        if (model.rfqmaster.MPRRevisionId == 0)
                             rfqremote.MPRRevisionId = null;
                         //rfqremote.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
                         rfqremote.CreatedBy = model.rfqmaster.CreatedBy;
@@ -313,6 +323,15 @@ namespace DALayer.RFQ
                         revision.BankGuarantee = model.BankGuarantee;
                         revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
                         revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                        if (rfqremote.MPRRevisionId != null)
+                        {
+                            MPRRevision mprrevision = obj.MPRRevisions.Where(li => li.RevisionId == rfqremote.MPRRevisionId).FirstOrDefault();
+                            if (mprrevision != null && mprrevision.BuyerGroupId != null)
+                            {
+                                revision.BuyergroupEmail = obj.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevision.BuyerGroupId).FirstOrDefault().BuyerManager;
+                                BuyergroupEmail = revision.BuyergroupEmail;
+                            }
+                        }
                         //revision.RemoteRFQStatus.Select(x => new Remotedata.RFQStatu()
                         //{
                         //    StatusId = Convert.ToInt32(Enum.GetName(typeof(RFQStatusType), RFQStatusType.requested))
@@ -534,6 +553,7 @@ namespace DALayer.RFQ
                         revision.BankGuarantee = model.BankGuarantee;
                         revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
                         revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+                        revision.BuyergroupEmail = BuyergroupEmail;
                         revision.DeleteFlag = false;
                         //revision.RFQStatus.Select(x => new RFQStatu()
                         //{
@@ -2364,7 +2384,7 @@ namespace DALayer.RFQ
                         ValidFrom = model.ValidFrom,
                         ValidTo = model.ValidTo,
                         Remarks = model.Remarks,
-                        Status = model.Status,
+                        //Status = model.Status,
 
                     };
                     if (rfqRemoteitem == null)
@@ -2388,7 +2408,7 @@ namespace DALayer.RFQ
                         rfqRemoteitem.ValidFrom = model.ValidFrom;
                         rfqRemoteitem.ValidTo = model.ValidTo;
                         rfqRemoteitem.Remarks = model.Remarks;
-                        rfqRemoteitem.Status = model.Status;
+                        //rfqRemoteitem.Status = model.Status;
                         vscm.SaveChanges();
                     }
                     var localRfqiteminfo = obj.RFQItemsInfo_N.Where(x => x.RFQSplitItemId == remoteinfo.RFQSplitItemId).FirstOrDefault();
@@ -2722,7 +2742,10 @@ namespace DALayer.RFQ
                         rfqitems.MfgPartNo = item.MfgPartNo;
                         rfqitems.RequestRemarks = item.RequestRemarks;
                         if (item.ItemId != null)
-                            rfqitems.ItemName = obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == item.ItemId).Materialdescription;
+                        {
+                            if (obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == item.ItemId) != null)
+                                rfqitems.ItemName = obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == item.ItemId).Materialdescription;
+                        }
                         if (mprItem.Itemid != null)
                         {
 
@@ -2801,6 +2824,7 @@ namespace DALayer.RFQ
             }
             catch (Exception ex)
             {
+
 
                 throw;
             }
@@ -3679,7 +3703,7 @@ namespace DALayer.RFQ
                 var data = new GlobalGroupEmployee();
                 data.GlobalGroupId = model.GlobalGroupId;
                 data.EmployeeNo = model.EmployeeNo;
-                data.UpdatedOn = model.UpdatedOn;
+                data.updatedon = model.UpdatedOn;
                 obj.GlobalGroupEmployees.Add(data);
                 obj.SaveChanges();
 
@@ -4217,7 +4241,7 @@ namespace DALayer.RFQ
                     if (!string.IsNullOrEmpty(rfqfilterparams.FromDate))
                         query += " RFQValidDate>='" + rfqfilterparams.FromDate + "'";
                     if (!string.IsNullOrEmpty(rfqfilterparams.ToDate))
-                        query += " and RFQValidDate<='" + rfqfilterparams.ToDate +"'";
+                        query += " and RFQValidDate<='" + rfqfilterparams.ToDate + "'";
                     //query += "RFQValidDate <= '" + rfqfilterparams.ToDate + "' and RFQValidDate >= '" + rfqfilterparams.FromDate + "'";
                 }
                 if (rfqfilterparams.typeOfFilter == "2")
@@ -4237,7 +4261,7 @@ namespace DALayer.RFQ
                     //query += "QuoteValidTo <= '" + rfqfilterparams.ToDate + "' and QuoteValidfrom >= '" + rfqfilterparams.FromDate + "'";
                 }
 
-                if (!string.IsNullOrEmpty(rfqfilterparams.RFQType) && rfqfilterparams.RFQType!="0")
+                if (!string.IsNullOrEmpty(rfqfilterparams.RFQType) && rfqfilterparams.RFQType != "0")
                     query += " and RFQType='" + rfqfilterparams.RFQType + "'";
                 if (!string.IsNullOrEmpty(rfqfilterparams.RFQNo))
                     query += " and RFQNo='" + rfqfilterparams.RFQNo + "'";

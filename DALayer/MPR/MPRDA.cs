@@ -713,42 +713,44 @@ namespace DALayer.MPR
                 vscm.SaveChanges();
                 vendorid = vendordata.Vendorid;
             }
-
-            //RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.VuniqueId == model.VuniqueId).FirstOrDefault();
-            string VuniqueId = "";
-            //need to implement vUniqueId value
-            if (model.VuniqueId == null)
+            List<string> EmailList = model.Emailid.Split(new char[] { ',' }).ToList();
+            foreach (var item in EmailList)
             {
-                RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
-                Int32 sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
-                if (sequenceNo == null || sequenceNo == 0)
-                    sequenceNo = 1;
-                else
+                RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item).FirstOrDefault();
+               
+                //need to implement vUniqueId value
+                if (vendorUsermaster == null)
                 {
-                    sequenceNo = sequenceNo + 1;
+                    RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
+                    Int32 sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
+                    if (sequenceNo == null || sequenceNo == 0)
+                        sequenceNo = 1;
+                    else
+                    {
+                        sequenceNo = sequenceNo + 1;
+                    }
+                    var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+                    vendorUsermasters.VuniqueId = "C" + value;                  
+                    vendorUsermasters.SequenceNo = sequenceNo;
+                    vendorUsermasters.Vuserid = item;
+                    vendorUsermasters.pwd = "Yil@123";
+                    vendorUsermasters.VendorId = vendorid;
+                    vendorUsermasters.Active = true;
+                    vendorUsermasters.SuperUser = true;
+                    vscm.RemoteVendorUserMasters.Add(vendorUsermasters);
+                    vscm.SaveChanges();
                 }
-                var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
 
-                vendorUsermasters.VuniqueId = "C" + value;
-                VuniqueId = vendorUsermasters.VuniqueId;
-                vendorUsermasters.SequenceNo =sequenceNo;
-                vendorUsermasters.Vuserid = model.Emailid;
-                vendorUsermasters.pwd = "Yil@123";
-                vendorUsermasters.VendorId = vendorid;
-                vendorUsermasters.Active = true;
-                vendorUsermasters.SuperUser = true;
-                vscm.RemoteVendorUserMasters.Add(vendorUsermasters);
-                vscm.SaveChanges();
-            }
-            else
-            {
-                RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.VuniqueId == model.VuniqueId).FirstOrDefault();
-                vendorUsermaster.Vuserid = model.Emailid;
-                //vendorUsermaster.pwd = "Yil@123";
-                //vendorUsermaster.VendorId = vendorid;
-                vscm.SaveChanges();
+                //else
+                //{             
+                //    vendorUsermaster.Vuserid = model.Emailid;
+                //    //vendorUsermaster.pwd = "Yil@123";
+                //    //vendorUsermaster.VendorId = vendorid;
+                //    vscm.SaveChanges();
 
+                //}
             }
+           
             using (YSCMEntities Context = new YSCMEntities())
             {
                 VendorMaster localvendor = new VendorMaster();
@@ -771,10 +773,7 @@ namespace DALayer.MPR
                     //localvendor.Blocked = model.Blocked;
                     localvendor.Emailid = model.Emailid;
                     localvendor.AutoAssignmentofRFQ = true;
-                    localvendor.VendorInternalRefNo = VuniqueId;
-                    
                     localvendor.Deleteflag = true;
-
                     Context.VendorMasters.Add(localvendor);
                     Context.SaveChanges();
                     vendorid = localvendor.Vendorid;
@@ -795,11 +794,55 @@ namespace DALayer.MPR
                     //vendormaster.PaymentTermCode = model.PaymentTermCode;
                     //vendormaster.Blocked = model.Blocked;
                     vendormaster.Emailid = model.Emailid;
-                    localvendor.VendorInternalRefNo = VuniqueId;
+
                     vendormaster.AutoAssignmentofRFQ = true;
                     Context.SaveChanges();
                     vendorid = vendormaster.Vendorid;
 
+                }
+                List<RemoteVendorUserMaster> remoteVendorUsermaster = vscm.RemoteVendorUserMasters.ToList();
+                foreach (var item in remoteVendorUsermaster)
+                {
+                    try
+                    {
+
+                        VendorUserMaster venmaster = Context.VendorUserMasters.Where(li => li.Vuserid == item.Vuserid).FirstOrDefault<VendorUserMaster>();
+                        if (venmaster == null)
+                        {
+                            VendorUserMaster vendorUsermasters = new VendorUserMaster();
+                            vendorUsermasters.Vuserid = item.Vuserid;
+                            vendorUsermasters.pwd = "Yil@123";
+                            vendorUsermasters.VendorId = vendorid;
+                            vendorUsermasters.Active = true;
+                            vendorUsermasters.SuperUser = true;
+                            vendorUsermasters.VuniqueId = item.VuniqueId;
+                            vendorUsermasters.SequenceNo = item.SequenceNo;
+                            Context.VendorUserMasters.Add(vendorUsermasters);
+                            Context.SaveChanges();
+                        }
+
+                        //else
+                        //{             
+                        //    vendorUsermaster.Vuserid = model.Emailid;
+                        //    //vendorUsermaster.pwd = "Yil@123";
+                        //    //vendorUsermaster.VendorId = vendorid;
+                        //    vscm.SaveChanges();
+
+                        //}
+                    }
+                    catch (DbEntityValidationException e)
+                    {
+                        foreach (var eve in e.EntityValidationErrors)
+                        {
+                            Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                                eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                            foreach (var ve in eve.ValidationErrors)
+                            {
+                                Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                                    ve.PropertyName, ve.ErrorMessage);
+                            }
+                        }
+                    }
                 }
                 return vendorid;
             }
