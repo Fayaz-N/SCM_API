@@ -590,5 +590,9 @@ namespace BALayer.RFQ
         {
             return await _rfqDataAcess.getMprPaDetailsBySearch(model);
         }
+        public bool PreviouPriceUpdate(MPRItemInfo previousprice)
+        {
+            return _rfqDataAcess.PreviouPriceUpdate(previousprice);
+        }
     }
 }

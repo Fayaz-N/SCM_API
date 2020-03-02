@@ -850,5 +850,12 @@ namespace SCMAPI.Controllers
             filter = await _rfqBusenessAcess.getMprPaDetailsBySearch(model);
             return Ok(filter);
         }
+
+        [HttpPost]
+        [Route("PreviouPriceUpdate")]      
+        public IHttpActionResult PreviouPriceUpdate(MPRItemInfo previousprice)
+        {
+            return Ok(this._rfqBusenessAcess.PreviouPriceUpdate(previousprice));
+        }
     }
 }

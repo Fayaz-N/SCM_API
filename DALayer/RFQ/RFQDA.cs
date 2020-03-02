@@ -71,7 +71,7 @@ namespace DALayer.RFQ
                            .ToList();
             foreach (RFQQuoteView item in mainList)
             {
-                if (item.RateContract >= 1)
+                if (item.RFQType== "Rate Contract" || item.RFQType== "Repeat Order")
                 {
                     MPRRfqItem mprRfq = new MPRRfqItem();
                     mprRfq.MPRRevisionId = item.MPRRevisionId;
@@ -5667,6 +5667,17 @@ namespace DALayer.RFQ
             {
                 throw;
             }
+        }
+
+        public bool PreviouPriceUpdate(MPRItemInfo previousprice)
+        {
+            MPRItemInfo mpritem = obj.MPRItemInfoes.Where(li => li.Itemdetailsid == previousprice.Itemdetailsid).FirstOrDefault();
+            mpritem.PONumber = previousprice.PONumber;
+            mpritem.PODate = previousprice.PODate;
+            mpritem.POPrice = previousprice.POPrice;
+            mpritem.PORemarks = previousprice.PORemarks;
+            obj.SaveChanges();
+            return true;
         }
     }
 

@@ -924,6 +924,10 @@ namespace DALayer.MPR
             //	mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(x => x.MPRReminderTrackings).ToList<MPRCommunication>();
 
             //}
+            foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
+            {
+                item.PAItems = DB.PAItems.Where(li => li.MPRItemDetailsId == item.Itemdetailsid).ToList();
+            }
             foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
             {
                 item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
