@@ -429,7 +429,7 @@ namespace DALayer.PurchaseAuthorization
                 //model.MoreBudget = false;
                 model.LessBudget = true;
             }
-            if (model.PaymentTermCode!=null)
+            if (model.PaymentTermCode != null)
             {
                 Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
             }
@@ -437,7 +437,7 @@ namespace DALayer.PurchaseAuthorization
             {
                 Termscode = 0;
             }
-            
+
             try
             {
                 var BuyerManagers = obj.LoadBuyerManagers.Where(x => model.MPRItemDetailsid.Contains(x.Itemdetailsid) && x.BoolValidRevision == true).FirstOrDefault();
@@ -835,6 +835,23 @@ namespace DALayer.PurchaseAuthorization
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
 
+                    foreach (var item in model.Item)
+                    {
+                        var data = new MPRStatusTrack();
+                        data.StatusId = 11;
+                        int requisitionid = obj.MPRRevisions.Where(x => x.RevisionId == item.MPRRevisionId).FirstOrDefault().RequisitionId;
+                        data.RequisitionId = requisitionid;
+                        data.RevisionId = item.MPRRevisionId;
+                        data.UpdatedDate = dateAndTime.Date;
+                        data.UpdatedBy = model.LoginEmployee;
+                        obj.MPRStatusTracks.Add(data);
+                        obj.SaveChanges();
+
+                        var data1 = new MPRRevision();
+                        data1 = obj.MPRRevisions.Where(x => x.RevisionId == item.MPRRevisionId).FirstOrDefault();
+                        data1.StatusId =Convert.ToByte(data.StatusId);
+                        obj.SaveChanges();
+                    }
                     // var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
                     foreach (var item in model.Item.GroupBy(n => n.RFQItemsId).Select(x => x.FirstOrDefault()))
                     {
@@ -889,7 +906,7 @@ namespace DALayer.PurchaseAuthorization
                         ApproverLevel = 1,
                         ApprovedOn = dateAndTime.Date
 
-                };
+                    };
                     obj.MPRPAApprovers.Add(projectmanger);
                     obj.SaveChanges();
                     var buyergroup = new MPRPAApprover()
@@ -900,10 +917,10 @@ namespace DALayer.PurchaseAuthorization
                         ApprovalStatus = "Submitted",
                         ApproverLevel = 1,
                         ApprovedOn = dateAndTime.Date
-                };
+                    };
                     obj.MPRPAApprovers.Add(buyergroup);
                     obj.SaveChanges();
-                    this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
+                   // this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
                     //foreach (var item in model.ApproversList)
                     //{
                     //    var Approveritem = new MPRPAApprover()
@@ -992,7 +1009,8 @@ namespace DALayer.PurchaseAuthorization
                         POItemNo = x.POItemNo,
                         PONO = x.PONO,
                         Remarks = x.Remarks,
-                        PODate = x.PODate.ToString()
+                        PODate = x.PODate.ToString(),
+                        MPRRevisionId=Convert.ToInt32( x.MPRRevisionId)
                     }).ToList();
                     var sqlquery = " ";
                     sqlquery = "select * from GetmprApproverdeatils where PAId = '" + PID + "' order by XOrder";
@@ -1243,7 +1261,7 @@ namespace DALayer.PurchaseAuthorization
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId && x.Approver==model.EmployeeNo).FirstOrDefault();
+                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId).FirstOrDefault();
                 if (approverdata != null)
                 {
                     approverdata.ApproversRemarks = model.ApproversRemarks;
@@ -1251,6 +1269,7 @@ namespace DALayer.PurchaseAuthorization
                     approverdata.ApprovedOn = System.DateTime.Now;
                     obj.SaveChanges();
                     status.Sid = approverdata.PAId;
+                    UpdatePAStatus(model.PAId,model.mprrevisionid,model.EmployeeNo);
                     return status;
                 }
                 else
@@ -1258,14 +1277,41 @@ namespace DALayer.PurchaseAuthorization
                     return status;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
                 throw;
             }
         }
 
+        public bool UpdatePAStatus(int paid,int mprrevisionid,string employeeno)
+        {
+            List<approverFinalview> approver = new List<approverFinalview>();
+            var sqlquery = "";
+            //sqlquery = "select MAX(PAId) as PAId,COUNT(*) as Approvedstatus from MPRPAApprovers where (ApprovalStatus in ('submitted','pending','Rejected') or ApprovalStatus is null) and PAId='" + paid + "'";
+            //sqlquery = "select ISNULL(PAId,0) as PAId,ISNULL(count(*),0)  as approved,* from MPRPAApprovers where PAId='" + paid + "' and  ApprovalStatus in ('submitted','pending','Rejected') group by PAId  having COUNT(*)>0";
+            sqlquery = "select * from approverFinalview where PAId='" + paid + "' ";
+            approver = obj.Database.SqlQuery<approverFinalview>(sqlquery).ToList();
+            int statusid = 18;
+            if (approver == null || approver.Count == 0)
+            {
+                MPRStatusTrack statustrack = new MPRStatusTrack();
+                statustrack.StatusId = statusid;
+                statustrack.RevisionId = mprrevisionid;
+                int requisitionid = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().RequisitionId;
+                statustrack.RequisitionId = requisitionid;
+                statustrack.UpdatedBy = employeeno;
+                //statustrack.Status = "PA Approved";
+                //obj.MPRStatus.Add(statustrack);
+                obj.SaveChanges();
+                int id = statustrack.StatusId;
+            }
+            else
+            {
 
+            }
+            //approver.approved;
+            return true;
+        }
         public async Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId)
         {
             List<DisplayRfqTermsByRevisionId> revision = new List<DisplayRfqTermsByRevisionId>();
@@ -1340,19 +1386,43 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
-        public async Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem)
+        //public async Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem)
+        //{
+        //    statuscheckmodel status = new statuscheckmodel();
+        //    try
+        //    {
+        //        var data = obj.PAItems.Where(x => x.PAItemID == paitem.paitemid).FirstOrDefault();
+        //        data.PONO = paitem.PONO;
+        //        data.POItemNo = paitem.POItemNo;
+        //        data.PODate = System.DateTime.Now;
+        //        data.Remarks = paitem.Remarks;
+        //        data.MPRItemDetailsId = paitem.MRPItemsDetailsID;
+        //        obj.SaveChanges();
+
+        //        return status;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw;
+        //    }
+        //}
+        public async Task<statuscheckmodel> InsertPaitems(List<ItemsViewModel> paitem)
         {
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                var data = obj.PAItems.Where(x => x.PAItemID == paitem.paitemid).FirstOrDefault();
-                data.PONO = paitem.PONO;
-                data.POItemNo = paitem.POItemNo;
-                data.PODate = System.DateTime.Now;
-                data.Remarks = paitem.Remarks;
-                data.MPRItemDetailsId = paitem.MRPItemsDetailsID;
-                obj.SaveChanges();
-
+                foreach (var itemdata in paitem)
+                {
+                    var paitems = obj.PAItems.Where(x => x.PAItemID == itemdata.paitemid).FirstOrDefault();
+                    if (paitems != null)
+                    {
+                        paitems.PONO = itemdata.PONO;
+                        paitems.POItemNo = itemdata.POItemNo;
+                        paitems.PODate = itemdata.PODate;
+                        paitems.Remarks = itemdata.Remarks;
+                        obj.SaveChanges();
+                    }
+                }
                 return status;
             }
             catch (Exception ex)

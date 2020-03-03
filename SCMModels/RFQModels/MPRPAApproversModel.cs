@@ -21,6 +21,7 @@ namespace SCMModels.RFQModels
         public string ApproversRemarks { get; set; }
         public string ApprovalStatus { get; set; }
         public string RoleId { get; set; }
+        public int mprrevisionid { get; set; }
         public Nullable<System.DateTime> ApprovedOn { get; set; }
         public  MPRPADetailsModel MPRPADetail { get; set; }
     }

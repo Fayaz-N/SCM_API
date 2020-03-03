@@ -336,7 +336,7 @@ namespace SCMAPI.Controllers
         [HttpPost]
         [Route("InsertPaitems")]
         [ResponseType(typeof(statuscheckmodel))]
-        public async Task<IHttpActionResult> InsertPaitems(ItemsViewModel paitem)
+        public async Task<IHttpActionResult> InsertPaitems(List<ItemsViewModel> paitem)
         {
             statuscheckmodel model = new statuscheckmodel();
             model = await _paBusenessAcess.InsertPaitems(paitem);
