@@ -16,6 +16,7 @@ namespace SCMModels.RFQModels
             RFQDocuments = new List<RfqDocumentsModel>();
             rfqterms = new List<RFQTermsModel>();
             mappingrfq = new List<RFQMPRMappingModel>();
+            RfqVendorBOM = new List<RfqVendorBOM>();
         }
         public int RFQItemID { get; set; }
         public int RFQRevisionId { get; set; }
@@ -72,6 +73,7 @@ namespace SCMModels.RFQModels
         public List<RfqCommunicationModel> communication { get; set; }
         public List<RfqDocumentsModel> RFQDocuments { get; set; }
         public List<RFQMPRMappingModel> mappingrfq { get; set; }
+        public List<RfqVendorBOM> RfqVendorBOM { get; set; }
         public MPRPADetailsModel mprpa { get; set; }
 
     }

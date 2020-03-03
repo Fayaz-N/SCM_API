@@ -2065,7 +2065,7 @@ namespace DALayer.RFQ
                 model.FreightPercentage = Convert.ToDecimal(items.FreightPercentage);
 
 
-                var price = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == items.RFQItemsId).FirstOrDefault();
+                var price = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == items.RFQItemsId).FirstOrDefault();
                 model.ItemUnitPrice = (price.UnitPrice) * (Convert.ToDecimal(price.Qty));
 
                 decimal Discountpercentage = price.DiscountPercentage;
@@ -2477,13 +2477,14 @@ namespace DALayer.RFQ
                 vscm.Database.Connection.Close();
 
                 obj.Database.Connection.Open();
-                var Localdata = obj.RFQItemsInfoes.Where(li => li.RFQSplitItemId == id).FirstOrDefault();
+                var Localdata = obj.RFQItemsInfo_N.Where(li => li.RFQSplitItemId == id).FirstOrDefault();
                 if (Localdata != null)
                 {
                     Localdata.DeleteFlag = true;
                     obj.SaveChanges();
+                    status.Sid = Localdata.RFQItemsId;
                 }
-                status.Sid = Localdata.RFQItemsId;
+                
                 return status;
             }
             catch (Exception ex)
@@ -2554,7 +2555,7 @@ namespace DALayer.RFQ
                     Localdata.DeleteFlag = true;
                     obj.SaveChanges();
 
-                    var localitemsdata = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == Remotedata.RFQItemsId && x.DeleteFlag == false).ToList();
+                    var localitemsdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == Remotedata.RFQItemsId && x.DeleteFlag == false).ToList();
                     if (localitemsdata != null)
                     {
                         foreach (var item in localitemsdata)
@@ -2598,7 +2599,7 @@ namespace DALayer.RFQ
                 vscm.Database.Connection.Close();
 
                 obj.Database.Connection.Open();
-                var localitem = obj.RFQItemsInfoes.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
+                var localitem = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == model.RFQItemsId).FirstOrDefault();
                 localitem.Discount = model.Discount;
                 localitem.DiscountPercentage = model.DiscountPercentage;
                 localitem.Qty = model.Qty;
@@ -2608,7 +2609,7 @@ namespace DALayer.RFQ
                 localitem.CurrencyId = model.CurrencyId;
                 localitem.Remarks = model.Remarks;
                 localitem.DeliveryDate = model.DeliveryDate;
-                obj.RFQItemsInfoes.Add(localitem);
+                obj.RFQItemsInfo_N.Add(localitem);
                 obj.SaveChanges();
                 return status;
             }
@@ -2741,6 +2742,7 @@ namespace DALayer.RFQ
                         rfqitems.MfgModelNo = item.MfgModelNo;
                         rfqitems.MfgPartNo = item.MfgPartNo;
                         rfqitems.RequestRemarks = item.RequestRemarks;
+                        rfqitems.RfqVendorBOM = obj.RfqVendorBOMs.Where(li => li.RfqItemsId == rfqitems.RFQItemsId).ToList();
                         if (item.ItemId != null)
                         {
                             if (obj.MaterialMasterYGS.FirstOrDefault(li => li.Material == item.ItemId) != null)
@@ -2875,7 +2877,7 @@ namespace DALayer.RFQ
                 vscm.Database.Connection.Close();
 
                 obj.Database.Connection.Open();
-                var localiteminfo = new RFQItemsInfo();
+                var localiteminfo = new RFQItemsInfo_N();
                 localiteminfo.RFQSplitItemId = Remotesplitid;
                 localiteminfo.UOM = model.UOM;
                 localiteminfo.UnitPrice = model.UnitPrice;
@@ -2886,7 +2888,7 @@ namespace DALayer.RFQ
                 localiteminfo.DeliveryDate = model.DeliveryDate;
                 localiteminfo.CurrencyValue = model.CurrencyValue;
                 localiteminfo.CurrencyId = model.CurrencyId;
-                obj.RFQItemsInfoes.Add(localiteminfo);
+                obj.RFQItemsInfo_N.Add(localiteminfo);
                 obj.SaveChanges();
                 int localsplitid = localiteminfo.RFQSplitItemId;
                 status.Sid = localsplitid;
@@ -2928,7 +2930,7 @@ namespace DALayer.RFQ
                 if (model != null)
                 {
                     obj.Database.Connection.Open();
-                    var localiteminfo = new RFQItemsInfo();
+                    var localiteminfo = new RFQItemsInfo_N();
                     foreach (var item in model)
                     {
                         localiteminfo.UOM = item.UOM;
@@ -2940,7 +2942,7 @@ namespace DALayer.RFQ
                         localiteminfo.DeliveryDate = item.DeliveryDate;
                         localiteminfo.CurrencyValue = item.CurrencyValue;
                         localiteminfo.CurrencyId = item.CurrencyId;
-                        obj.RFQItemsInfoes.Add(localiteminfo);
+                        obj.RFQItemsInfo_N.Add(localiteminfo);
                         obj.SaveChanges();
                     }
                 }
