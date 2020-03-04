@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using SCMModels;
 
 namespace DALayer.Emails
 {
@@ -234,6 +235,47 @@ namespace DALayer.Emails
             return true;
         }
 
+        public bool sendMailtoVendor(sendMailObj mailObj)
+        {
+            try
+            {
+                using (var db = new YSCMEntities()) //ok
+                {
+                    var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+                    EmailSend emlSndngList = new EmailSend();
+                    emlSndngList.Subject = "Message From Yokogawa";
+                    emlSndngList.FrmEmailId = "Developer@in.yokogawa.com";
+                    emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
+                    List<VendorUserMaster> userlist = db.VendorUserMasters.ToList();
+                    foreach (var item in userlist)
+                    {
+                        string mailbody = mailObj.Message;
+                        //emlSndngList.ToEmailId = item.Vuserid;
+                        if (mailObj.IncludeUrl)
+                        {
+                            string url = "The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect: <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br />";
+                            mailbody = mailbody.Replace("The required portal details and the password is given below : <br />", url);
+                        }
+                        if (mailObj.IncludeCredentials)
+                        {
+                            string credentials = "The required portal details and the password is given below : <br /> <br /> <b style='color:#40bfbf;'>User Name:</b> " + item.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + item.pwd + " <br />";
+                            mailbody = mailbody.Replace("The required portal details and the password is given below : <br />", credentials);
+                        }
+
+                        emlSndngList.Body = "<html><head></head><body><div>" + mailbody + "</div></body></html>";
+                        if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+                            this.sendEmail(emlSndngList);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+
+        }
         public bool sendEmail(EmailSend emlSndngList)
         {
             if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId))

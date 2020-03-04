@@ -14,6 +14,7 @@ using System.Data.OleDb;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using DALayer.Emails;
 
 namespace SCMAPI.Controllers
 {
@@ -21,10 +22,12 @@ namespace SCMAPI.Controllers
     public class MPRController : ApiController
     {
         private readonly IMPRBA _mprBusenessAcess;
-        public MPRController(IMPRBA mprBA)
+        private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
+        public MPRController(IMPRBA mprBA, IEmailTemplateDA EmailTemplateDA)
         {
             this._mprBusenessAcess = mprBA;
-        }
+            this.emailTemplateDA = EmailTemplateDA;
+        }      
 
         [HttpPost]
         [Route("getDBMastersList")]
@@ -162,6 +165,14 @@ namespace SCMAPI.Controllers
             return Ok(result);
 
         }
+
+        [HttpPost]
+        [Route("sendMailtoVendor")]
+        public IHttpActionResult sendMailtoVendor([FromBody] sendMailObj mailObj)
+        {          
+            return Ok(this.emailTemplateDA.sendMailtoVendor(mailObj));
+        }
+
         [Route("UploadFile")]
         [HttpPost]
         public IHttpActionResult UploadFile()
@@ -197,6 +208,81 @@ namespace SCMAPI.Controllers
                 }
             }
             return Ok(parsedFileName);
+
+        }
+        [HttpPost]
+        [Route("uploadVendorData")]
+        public IHttpActionResult uploadVendorData()
+        {
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                var serverPath = HttpContext.Current.Server.MapPath("~/SCMDocs");
+                string parsedFileName = "";
+                if (httpRequest.Files.Count > 0)
+                {
+                    var Id = httpRequest.Files.AllKeys[0];
+                    var postedFile = httpRequest.Files[0];
+                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + Id + "\\" + ToValidFileName(postedFile.FileName));
+                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + Id;
+                    var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
+                    if (!Directory.Exists(serverPath))
+                        Directory.CreateDirectory(serverPath);
+                    postedFile.SaveAs(filePath);
+
+
+                    DataTable dtexcel = new DataTable();
+                    bool hasHeaders = false;
+                    string HDR = hasHeaders ? "Yes" : "No";
+                    string strConn;
+                    if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
+                        strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
+                    else
+                        strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
+
+                    OleDbConnection conn = new OleDbConnection(strConn);
+                    conn.Open();
+                    DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+
+                    DataRow schemaRow = schemaTable.Rows[0];
+                    string sheet = schemaRow["TABLE_NAME"].ToString();
+                    if (!sheet.EndsWith("_"))
+                    {
+                        string query = "SELECT  * FROM [Sheet1$]";
+                        OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
+                        dtexcel.Locale = CultureInfo.CurrentCulture;
+                        daexcel.Fill(dtexcel);
+                    }
+
+                    conn.Close();
+                    int iSucceRows = 0;
+                    YSCMEntities obj = new YSCMEntities();
+                    foreach (DataRow row in dtexcel.Rows)
+                    {
+                        var vendorcode = row["Vendor Code"].ToString();
+                        VendorMaster vendorMaster = obj.VendorMasters.Where(li => li.VendorCode == vendorcode).FirstOrDefault();
+                        if (vendorMaster != null) {
+                            VendormasterModel vendorModel = new VendormasterModel();
+                            vendorModel.Vendorid = vendorMaster.Vendorid;
+                            vendorModel.VendorName = row["Vendor Name"].ToString();
+                            var Emailids = row["Email Id 1"].ToString() + "," + row["Email Id 2"].ToString() + "," + row["Email Id 2"].ToString() + "," + row["Email Id 4"].ToString();
+                            vendorModel.Emailid = Emailids;
+                            vendorModel.ContactNumber= row["contact number"].ToString();
+                            vendorModel.ContactPerson = row["contact person"].ToString();
+                           this._mprBusenessAcess.addNewVendor(vendorModel);
+                        }
+                    }
+
+
+                    int succRecs = iSucceRows;
+                }
+                return Ok(parsedFileName);
+
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
 
         }
         [HttpPost]

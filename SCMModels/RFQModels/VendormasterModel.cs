@@ -13,7 +13,8 @@ namespace SCMModels.RFQModels
         public string VendorCode { get; set; }
         public string VendorName { get; set; }
         public string Emailid { get; set; }
-        public string ContactNo { get; set; }
+        public string ContactNumber { get; set; }
+        public string ContactPerson { get; set; }
         public string OldVendorCode { get; set; }
         public string Street { get; set; }
         public string FaxNo { get; set; }

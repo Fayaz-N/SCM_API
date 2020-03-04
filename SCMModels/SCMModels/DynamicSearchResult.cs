@@ -88,4 +88,10 @@ namespace SCMModels
         public string accessToken { get; set; }
 }
 
+    public class sendMailObj
+    {
+        public string Message { get; set; }
+        public Boolean IncludeUrl { get; set; }
+        public Boolean IncludeCredentials { get; set; }
+    }
 }

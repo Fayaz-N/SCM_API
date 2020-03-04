@@ -2283,7 +2283,7 @@ namespace DALayer.RFQ
                 var data = obj.VendorMasters.Where(x => x.Deleteflag == false).ToList();
                 vendor = data.Select(x => new VendormasterModel()
                 {
-                    ContactNo = x.ContactNo,
+                    ContactNumber = x.ContactNo,
                     Vendorid = x.Vendorid,
                     VendorCode = x.VendorCode,
                     VendorName = x.VendorName,
@@ -2305,7 +2305,7 @@ namespace DALayer.RFQ
                 var data = obj.VendorMasters.Where(x => x.Vendorid == id && x.Deleteflag == false).SingleOrDefault();
                 if (data != null)
                 {
-                    vendor.ContactNo = data.ContactNo;
+                    vendor.ContactNumber = data.ContactNo;
                     vendor.Emailid = data.Emailid;
                     vendor.VendorCode = data.VendorCode;
                     vendor.VendorName = data.VendorName;
@@ -4852,7 +4852,7 @@ namespace DALayer.RFQ
                             var vendormasters = obj.VendorMasters.Where(x => x.Vendorid == masters.VendorId).FirstOrDefault();
                             masters.Vendor = new VendormasterModel()
                             {
-                                ContactNo = vendormasters.ContactNo,
+                                ContactNumber = vendormasters.ContactNo,
                                 VendorCode = vendormasters.VendorCode,
                                 VendorName = vendormasters.VendorName,
                                 Emailid = vendormasters.Emailid,

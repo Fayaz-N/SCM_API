@@ -10,6 +10,7 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace DALayer.MPR
@@ -682,13 +683,14 @@ namespace DALayer.MPR
                 vendor.City = model.City;
                 //vendor.RegionCode = model.RegionCode;
                 vendor.PostalCode = model.PostalCode;
-                vendor.PhoneNo = model.ContactNo;
+                vendor.PhoneNo = model.ContactNumber;
                 vendor.FaxNo = null;
                 vendor.AuGr = null;
                 vendor.PaymentTermCode = null;
                 vendor.Blocked = null;
                 vendor.AutoAssignmentofRFQ = true;
                 vendor.Emailid = model.Emailid;
+                vendor.Deleteflag = true;
                 vscm.RemoteVendorMasters.Add(vendor);
                 vscm.SaveChanges();
                 vendorid = vendor.Vendorid;
@@ -697,19 +699,20 @@ namespace DALayer.MPR
             {
                 var vendordata = vscm.RemoteVendorMasters.Where(x => x.Vendorid == model.Vendorid).FirstOrDefault();
                 vendordata.VendorCode = vendordata.VendorCode;
-                vendordata.VendorName = vendordata.VendorName;
+                vendordata.VendorName = model.VendorName;
                 vendordata.OldVendorCode = vendordata.OldVendorCode;
                 vendordata.Street = vendordata.Street;
                 vendordata.City = vendordata.City;
                 //vendordata.RegionCode = model.RegionCode;
                 vendordata.PostalCode = vendordata.PostalCode;
-                vendordata.PhoneNo = model.ContactNo;
+                vendordata.PhoneNo = model.ContactNumber;
                 vendordata.FaxNo = null;
                 vendordata.AuGr = null;
                 vendordata.PaymentTermCode = null;
                 vendordata.Blocked = null;
                 vendordata.AutoAssignmentofRFQ = vendordata.AutoAssignmentofRFQ;
                 vendordata.Emailid = model.Emailid;
+                vendordata.Deleteflag = true;
                 vscm.SaveChanges();
                 vendorid = vendordata.Vendorid;
             }
@@ -717,9 +720,9 @@ namespace DALayer.MPR
             foreach (var item in EmailList)
             {
                 RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item).FirstOrDefault();
-               
+
                 //need to implement vUniqueId value
-                if (vendorUsermaster == null)
+                if (vendorUsermaster == null && !string.IsNullOrEmpty(item))
                 {
                     RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
                     Int32 sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
@@ -730,10 +733,12 @@ namespace DALayer.MPR
                         sequenceNo = sequenceNo + 1;
                     }
                     var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
-                    vendorUsermasters.VuniqueId = "C" + value;                  
+                    vendorUsermasters.VuniqueId = "C" + value;
                     vendorUsermasters.SequenceNo = sequenceNo;
                     vendorUsermasters.Vuserid = item;
-                    vendorUsermasters.pwd = "Yil@123";
+                    vendorUsermasters.pwd = GeneratePassword();
+                    vendorUsermasters.ContactNumber = model.ContactNumber;
+                    vendorUsermasters.ContactPerson = model.ContactPerson;
                     vendorUsermasters.VendorId = vendorid;
                     vendorUsermasters.Active = true;
                     vendorUsermasters.SuperUser = true;
@@ -741,16 +746,19 @@ namespace DALayer.MPR
                     vscm.SaveChanges();
                 }
 
-                //else
-                //{             
-                //    vendorUsermaster.Vuserid = model.Emailid;
-                //    //vendorUsermaster.pwd = "Yil@123";
-                //    //vendorUsermaster.VendorId = vendorid;
-                //    vscm.SaveChanges();
+                else
+                {
+                    if (vendorUsermaster != null && !string.IsNullOrEmpty(item))
+                    {
+                        //vendorUsermaster.Vuserid = model.Emailid;
+                        vendorUsermaster.pwd = GeneratePassword();
+                        //vendorUsermaster.VendorId = vendorid;
+                        vscm.SaveChanges();
+                    }
 
-                //}
+                }
             }
-           
+
             using (YSCMEntities Context = new YSCMEntities())
             {
                 VendorMaster localvendor = new VendorMaster();
@@ -766,7 +774,7 @@ namespace DALayer.MPR
                     localvendor.City = model.City;
                     //localvendor.RegionCode = model.RegionCode;
                     localvendor.PostalCode = model.PostalCode;
-                    localvendor.PhoneNo = model.ContactNo;
+                    localvendor.PhoneNo = model.ContactNumber;
                     //localvendor.FaxNo = model.FaxNo;
                     //localvendor.AuGr = model.AuGr;
                     //localvendor.PaymentTermCode = model.PaymentTermCode;
@@ -788,13 +796,13 @@ namespace DALayer.MPR
                     vendormaster.City = vendormaster.City;
                     //vendormaster.RegionCode = model.RegionCode;
                     vendormaster.PostalCode = vendormaster.PostalCode;
-                    vendormaster.PhoneNo = model.ContactNo;
+                    vendormaster.PhoneNo = model.ContactNumber;
                     //vendormaster.FaxNo = model.FaxNo;
                     //vendormaster.AuGr = model.AuGr;
                     //vendormaster.PaymentTermCode = model.PaymentTermCode;
                     //vendormaster.Blocked = model.Blocked;
                     vendormaster.Emailid = model.Emailid;
-
+                    vendormaster.Deleteflag = true;
                     vendormaster.AutoAssignmentofRFQ = true;
                     Context.SaveChanges();
                     vendorid = vendormaster.Vendorid;
@@ -811,8 +819,10 @@ namespace DALayer.MPR
                         {
                             VendorUserMaster vendorUsermasters = new VendorUserMaster();
                             vendorUsermasters.Vuserid = item.Vuserid;
-                            vendorUsermasters.pwd = "Yil@123";
+                            vendorUsermasters.pwd = item.pwd;
                             vendorUsermasters.VendorId = vendorid;
+                            vendorUsermasters.ContactNumber = item.ContactNumber;
+                            vendorUsermasters.ContactPerson = item.ContactPerson;
                             vendorUsermasters.Active = true;
                             vendorUsermasters.SuperUser = true;
                             vendorUsermasters.VuniqueId = item.VuniqueId;
@@ -821,14 +831,14 @@ namespace DALayer.MPR
                             Context.SaveChanges();
                         }
 
-                        //else
-                        //{             
-                        //    vendorUsermaster.Vuserid = model.Emailid;
-                        //    //vendorUsermaster.pwd = "Yil@123";
-                        //    //vendorUsermaster.VendorId = vendorid;
-                        //    vscm.SaveChanges();
+                        else
+                        {
+                            // vendorUsermaster.Vuserid = model.Emailid;
+                            venmaster.pwd = item.pwd;
+                            //vendorUsermaster.VendorId = vendorid;
+                            Context.SaveChanges();
 
-                        //}
+                        }
                     }
                     catch (DbEntityValidationException e)
                     {
@@ -1267,5 +1277,78 @@ namespace DALayer.MPR
             }
             DB.SaveChanges();
         }
+        public static string GeneratePassword()
+        {
+            bool includeLowercase = true;
+            bool includeUppercase = true;
+            bool includeNumeric = true;
+            bool includeSpecial = true;
+            bool includeSpaces = false;
+            int lengthOfPassword = 8;
+            const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
+            const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
+            const string UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string NUMERIC_CHARACTERS = "0123456789";
+            const string SPECIAL_CHARACTERS = @"!#$%&*@\";
+            const string SPACE_CHARACTER = " ";
+            const int PASSWORD_LENGTH_MIN = 8;
+            const int PASSWORD_LENGTH_MAX = 128;
+
+            if (lengthOfPassword < PASSWORD_LENGTH_MIN || lengthOfPassword > PASSWORD_LENGTH_MAX)
+            {
+                return "Password length must be between 8 and 128.";
+            }
+
+            string characterSet = "";
+
+            if (includeLowercase)
+            {
+                characterSet += LOWERCASE_CHARACTERS;
+            }
+
+            if (includeUppercase)
+            {
+                characterSet += UPPERCASE_CHARACTERS;
+            }
+
+            if (includeNumeric)
+            {
+                characterSet += NUMERIC_CHARACTERS;
+            }
+
+            if (includeSpecial)
+            {
+                characterSet += SPECIAL_CHARACTERS;
+            }
+
+            if (includeSpaces)
+            {
+                characterSet += SPACE_CHARACTER;
+            }
+
+            char[] password = new char[lengthOfPassword];
+            int characterSetLength = characterSet.Length;
+
+            System.Random random = new System.Random();
+            for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
+            {
+                password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
+
+                bool moreThanTwoIdenticalInARow =
+                    characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
+                    && password[characterPosition] == password[characterPosition - 1]
+                    && password[characterPosition - 1] == password[characterPosition - 2];
+
+                if (moreThanTwoIdenticalInARow)
+                {
+                    characterPosition--;
+                }
+            }
+
+            return string.Join(null, password);
+        }
+
+
+
     }
 }
