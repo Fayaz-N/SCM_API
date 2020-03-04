@@ -50,7 +50,7 @@ namespace DALayer.PurchaseAuthorization
         Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model);
         Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId);
         Task<List<Employeemappingtopurchase>> GetPurchaseSlabsandMappedemployeesByDeptId(EmployeeFilterModel model);
-        Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem);
+        Task<statuscheckmodel> InsertPaitems(List<ItemsViewModel> paitem);
         Task<List<GetMappedSlab>> GetAllMappedSlabs();
         Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model);
         Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);

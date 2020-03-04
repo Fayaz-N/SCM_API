@@ -21,6 +21,7 @@ namespace SCMModels.RFQModels
         public int RFQItemID { get; set; }
         public int RFQRevisionId { get; set; }
         public  Nullable<int> MRPItemsDetailsID { get; set; }
+        public int MPRRevisionId { get; set; }
         public string ItemId { get; set; }
         public double QuotationQty { get; set; }
         public string ItemName { get; set; }

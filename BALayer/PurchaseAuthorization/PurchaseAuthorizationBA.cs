@@ -195,7 +195,7 @@ namespace BALayer.PurchaseAuthorization
             return await _purchaseDataAcess.GetPurchaseSlabsandMappedemployeesByDeptId(model);
         }
 
-        public async Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem)
+        public async Task<statuscheckmodel> InsertPaitems(List<ItemsViewModel> paitem)
         {
             return await _purchaseDataAcess.InsertPaitems(paitem);
         }
