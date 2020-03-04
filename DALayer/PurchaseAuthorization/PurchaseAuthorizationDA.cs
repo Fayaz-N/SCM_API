@@ -920,7 +920,7 @@ namespace DALayer.PurchaseAuthorization
                     };
                     obj.MPRPAApprovers.Add(buyergroup);
                     obj.SaveChanges();
-                   // this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
+                    this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
                     //foreach (var item in model.ApproversList)
                     //{
                     //    var Approveritem = new MPRPAApprover()
