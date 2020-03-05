@@ -7,6 +7,7 @@ using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
@@ -71,7 +72,7 @@ namespace DALayer.RFQ
                            .ToList();
             foreach (RFQQuoteView item in mainList)
             {
-                if (item.RFQType== "Rate Contract" || item.RFQType== "Repeat Order")
+                if (item.RFQType == "Rate Contract" || item.RFQType == "Repeat Order")
                 {
                     MPRRfqItem mprRfq = new MPRRfqItem();
                     mprRfq.MPRRevisionId = item.MPRRevisionId;
@@ -81,7 +82,13 @@ namespace DALayer.RFQ
                     mprRfqInfo.rfqsplititemid = item.RFQSplitItemId;
                     mprRfq.MPRRfqItemInfos.Add(mprRfqInfo);
                     createMPRRFQItems(mprRfq);
-
+                    if (item.RFQType == "Repeat Order")
+                    {
+                        MPRItemInfo previousprice = new MPRItemInfo();
+                        previousprice.Itemdetailsid =Convert.ToInt32(item.MPRItemDetailsid);
+                        previousprice.PONumber = item.PONO;
+                        PreviouPriceUpdate(previousprice);
+                    }
                 }
                 else
                 {
@@ -227,7 +234,7 @@ namespace DALayer.RFQ
                     rfqItem.StatusUpdateddate = DateTime.Now;
                     Context.SaveChanges();
                     //need to add status track    
-                    mPRStatusTrackDetails.RevisionId =Convert.ToInt32(item.MPRRevisionId);
+                    mPRStatusTrackDetails.RevisionId = Convert.ToInt32(item.MPRRevisionId);
                     mPRStatusTrackDetails.UpdatedBy = item.CreatedBy;
                 }
 
@@ -2484,7 +2491,7 @@ namespace DALayer.RFQ
                     obj.SaveChanges();
                     status.Sid = Localdata.RFQItemsId;
                 }
-                
+
                 return status;
             }
             catch (Exception ex)
@@ -5527,6 +5534,28 @@ namespace DALayer.RFQ
                     obj.RFQCommunications.Add(remotedataforvendorcommyscm);
                     obj.SaveChanges();
 
+                    //Send mail to vendor
+                    if (!string.IsNullOrEmpty(model.RemarksTo))
+                    {
+                        var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+                        int rfqmasterid = obj.RFQRevisions_N.Where(li => li.rfqRevisionId == model.RfqRevisionId).FirstOrDefault().rfqMasterId;
+                        var rfqno = obj.RFQMasters.Where(li => li.RfqMasterId == rfqmasterid).FirstOrDefault().RFQNo;
+                        EmailSend emlSndngList = new EmailSend();
+                        emlSndngList.Subject = "Message From Yokogawa for RFQ NO:"+ rfqno + "";
+                        emlSndngList.Body = "<html><head></head><body><div>" + model.Remarks + "<br /><br /><b  style='color:#40bfbf;'>Click Here to Redirect: <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /></div></body></html>";
+                        emlSndngList.FrmEmailId = (obj.Employees.Where(li => li.EmployeeNo == model.RemarksFrom).FirstOrDefault<Employee>()).EMail;
+                        //emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
+                        int vendorid = Convert.ToInt16(model.RemarksTo);
+                        string emails = (obj.VendorMasters.Where(li => li.Vendorid == vendorid).FirstOrDefault<VendorMaster>()).Emailid;
+                        List<string> emailList = emails.Split(',').ToList();
+                        foreach (var item in emailList)
+                        {
+                            emlSndngList.ToEmailId = item;
+                            if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+                                this.emailTemplateDA.sendEmail(emlSndngList);
+
+                        }
+                    }
                     msg = "OK";
 
 

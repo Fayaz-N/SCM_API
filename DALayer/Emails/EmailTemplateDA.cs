@@ -242,15 +242,16 @@ namespace DALayer.Emails
                 using (var db = new YSCMEntities()) //ok
                 {
                     var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+                    var fromEmail = ConfigurationManager.AppSettings["fromEmailTovendor"];
                     EmailSend emlSndngList = new EmailSend();
                     emlSndngList.Subject = "Message From Yokogawa";
-                    emlSndngList.FrmEmailId = "Developer@in.yokogawa.com";
-                    emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
+                    emlSndngList.FrmEmailId = fromEmail;
+                    //emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
                     List<VendorUserMaster> userlist = db.VendorUserMasters.ToList();
                     foreach (var item in userlist)
                     {
                         string mailbody = mailObj.Message;
-                        //emlSndngList.ToEmailId = item.Vuserid;
+                        emlSndngList.ToEmailId = item.Vuserid;
                         if (mailObj.IncludeUrl)
                         {
                             string url = "The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect: <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br />";
@@ -280,12 +281,15 @@ namespace DALayer.Emails
         {
             if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId))
             {
+                var BCC = ConfigurationManager.AppSettings["BCC"];
                 MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
                 SmtpClient client = new SmtpClient();
                 if (!string.IsNullOrEmpty(emlSndngList.Subject))
                     mailMessage.Subject = emlSndngList.Subject;
                 if (!string.IsNullOrEmpty(emlSndngList.CC))
                     mailMessage.CC.Add(emlSndngList.CC);
+                if (!string.IsNullOrEmpty(BCC))
+                    mailMessage.Bcc.Add(BCC);
                 mailMessage.Body = emlSndngList.Body;
                 mailMessage.IsBodyHtml = true;
                 mailMessage.BodyEncoding = Encoding.UTF8;

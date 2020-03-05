@@ -27,7 +27,7 @@ namespace SCMAPI.Controllers
         {
             this._mprBusenessAcess = mprBA;
             this.emailTemplateDA = EmailTemplateDA;
-        }      
+        }
 
         [HttpPost]
         [Route("getDBMastersList")]
@@ -169,7 +169,7 @@ namespace SCMAPI.Controllers
         [HttpPost]
         [Route("sendMailtoVendor")]
         public IHttpActionResult sendMailtoVendor([FromBody] sendMailObj mailObj)
-        {          
+        {
             return Ok(this.emailTemplateDA.sendMailtoVendor(mailObj));
         }
 
@@ -261,15 +261,25 @@ namespace SCMAPI.Controllers
                     {
                         var vendorcode = row["Vendor Code"].ToString();
                         VendorMaster vendorMaster = obj.VendorMasters.Where(li => li.VendorCode == vendorcode).FirstOrDefault();
-                        if (vendorMaster != null) {
+                        if (vendorMaster != null)
+                        {
                             VendormasterModel vendorModel = new VendormasterModel();
                             vendorModel.Vendorid = vendorMaster.Vendorid;
                             vendorModel.VendorName = row["Vendor Name"].ToString();
-                            var Emailids = row["Email Id 1"].ToString() + "," + row["Email Id 2"].ToString() + "," + row["Email Id 2"].ToString() + "," + row["Email Id 4"].ToString();
+                            string Emailids = "";
+                            if (!string.IsNullOrEmpty(row["Email Id 1"].ToString()))
+                                Emailids = row["Email Id 1"].ToString();
+                            if (!string.IsNullOrEmpty(row["Email Id 2"].ToString()))
+                                Emailids += "," + row["Email Id 2"].ToString();
+                            if (!string.IsNullOrEmpty(row["Email Id 3"].ToString()))
+                                Emailids += "," + row["Email Id 3"].ToString();
+                            if (!string.IsNullOrEmpty(row["Email Id 4"].ToString()))
+                                Emailids += "," + row["Email Id 4"].ToString();
+
                             vendorModel.Emailid = Emailids;
-                            vendorModel.ContactNumber= row["contact number"].ToString();
+                            vendorModel.ContactNumber = row["contact number"].ToString();
                             vendorModel.ContactPerson = row["contact person"].ToString();
-                           this._mprBusenessAcess.addNewVendor(vendorModel);
+                            this._mprBusenessAcess.addNewVendor(vendorModel);
                         }
                     }
 
