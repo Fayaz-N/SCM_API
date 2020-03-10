@@ -593,7 +593,7 @@ namespace DALayer.PurchaseAuthorization
                             var vendormasters = obj.VendorMasters.Where(x => x.Vendorid == masters.VendorId).FirstOrDefault();
                             masters.Vendor = new VendormasterModel()
                             {
-                                ContactNo = vendormasters.ContactNo,
+                                ContactNumber = vendormasters.ContactNo,
                                 VendorCode = vendormasters.VendorCode,
                                 VendorName = vendormasters.VendorName,
                                 Emailid = vendormasters.Emailid,
