@@ -177,7 +177,7 @@ namespace DALayer.Emails
                     var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
                     EmailSend emlSndngList = new EmailSend();
                     emlSndngList.Subject = "New RFQ Generated From YOKOGAWA";
-                    emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
+                    emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Click Here to Redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
                     emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>()).EMail;
                     //emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
                     string emails = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
@@ -282,6 +282,7 @@ namespace DALayer.Emails
             if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId))
             {
                 var BCC = ConfigurationManager.AppSettings["BCC"];
+                var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
                 MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
                 SmtpClient client = new SmtpClient();
                 if (!string.IsNullOrEmpty(emlSndngList.Subject))
@@ -293,7 +294,8 @@ namespace DALayer.Emails
                 mailMessage.Body = emlSndngList.Body;
                 mailMessage.IsBodyHtml = true;
                 mailMessage.BodyEncoding = Encoding.UTF8;
-                SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+                SmtpClient mailClient = new SmtpClient(SMTPServer, 25);
+                //SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
                 //mailClient.EnableSsl = true;
                 mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                 mailClient.Send(mailMessage);

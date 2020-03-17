@@ -119,6 +119,13 @@ namespace SCMAPI.Controllers
         }
 
         [HttpPost]
+        [Route("getSavingsReport")]
+        public IHttpActionResult getSavingsReport(mprFilterParams mprfilterparams)
+        {
+            return Ok(this._mprBusenessAcess.getSavingsReport(mprfilterparams));
+        }
+
+        [HttpPost]
         [Route("getMPRPendingListCnt/{preparedBy}")]
         public IHttpActionResult getMPRPendingListCnt(string preparedBy)
         {

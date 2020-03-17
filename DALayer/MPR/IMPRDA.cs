@@ -27,6 +27,7 @@ namespace DALayer.MPR
         bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation);
         MPRRevision getMPRRevisionDetails(int RevisionId);
         DataTable getMPRList(mprFilterParams mprfilterparams);
+        DataTable getSavingsReport(mprFilterParams mprfilterparams);
         int getMPRPendingListCnt(string preparedBy);
         List<Employee> getEmployeeList();
         List<MPRRevisionDetails_woItems> getMPRRevisionList(int RequisitionId);

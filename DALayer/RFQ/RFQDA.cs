@@ -1380,49 +1380,6 @@ namespace DALayer.RFQ
             return status;
         }
 
-        //public async Task<statusmodel> UpdateRfqRevision(RFQMasterModel model)
-        //{
-        //    statusmodel status = new statusmodel();
-        //    var result = obj.RFQMasters.Where(x => x.RfqMasterId == model.RfqMasterId).Include(x=>x.RFQRevisions).FirstOrDefault<RFQMaster>();
-        //    try
-        //    {
-        //        if (result!=null)
-        //        {
-        //            foreach (var item in model.Revision)
-        //            {
-        //                // var revision = new RFQRevision();
-        //                var existing = result.RFQRevisions.Where(x => x.rfqMasterId == item.RfqMasterId).ToList<RFQRevision>();
-        //                if (existing!=null)
-        //                {
-        //                    obj.Entry(existing).CurrentValues.SetValues(item);
-        //                }
-
-        //                //revision.SalesTax = item.salesTax;
-        //                //revision.RFQValidDate = item.RfqValidDate;
-        //                //revision.CreatedBy = item.CreatedBy;
-        //                //revision.PaymentTermDays = item.PaymentTermDays;
-        //                //revision.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
-        //                //revision.DeliveryMinWeeks = item.DeliveryMinWeeks;
-        //                //revision.BankGuarantee = item.BankGuarantee;
-        //                //revision.ExciseDuty = item.ExciseDuty;
-        //                //revision.CustomsDuty = item.CustomsDuty;
-        //                //revision.Insurance = item.Insurance;
-        //                //revision.Freight = item.freight;
-        //                //revision.PackingForwarding = item.PackingForwading;
-        //                //revision.CreatedDate = item.CreatedDate;
-        //            }
-
-        //            await obj.SaveChangesAsync();
-        //        }
-        //        status.Sid = model.RfqMasterId;
-        //        return  status;
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        throw;
-        //    }
-        //}
         public async Task<statuscheckmodel> UpdateRfqRevision(RfqRevisionModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -1627,32 +1584,7 @@ namespace DALayer.RFQ
             }
         }
 
-        //public async Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid)
-        //{
-        //    List<RfqItemModel> rfq = new List<RfqItemModel>();
-        //    try
-        //    {
-        //        return (from x in vscm.RemoteRFQItems
-        //                where x.RFQRevisionId == revisionid
-        //                select new RfqItemModel
-        //                {
-        //                    HSNCode = x.HSNCode,
-        //                    QuotationQty = x.QuotationQty,
-        //                    RFQRevisionId = x.RFQRevisionId,
-        //                    VendorModelNo = x.VendorModelNo,
-        //                    RequestRemarks = x.RequestRemarks,
-        //                    RFQItemID = x.RFQItemsId,
-        //                    ItemName = x.ItemName,
-        //                    ItemDescription = x.ItemDescription
-        //                }).ToList();
-
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
+        
         public async Task<List<RfqItemModel>> GetRfqItemsByRevisionId(int revisionid)
         {
             List<RfqItemModel> rfq = new List<RfqItemModel>();
@@ -1700,23 +1632,7 @@ namespace DALayer.RFQ
                 throw;
             }
         }
-        //public RFQMasterModel getItemsbyRevisionno(string id)
-        // {
-        //     RFQMasterModel master = new RFQMasterModel();
-        //     try
-        //     {
-        //         var masters = obj.RFQMasters.Where(x => x.RFQNo == id && x.DeleteFlag == false).Include(x => x.RFQRevisions_N).Select(x => x).SingleOrDefault();
-        //         if (masters!=null)
-        //         {
-
-        //         }
-        //     }
-        //     catch (Exception)
-        //     {
-
-        //         throw;
-        //     }
-        // }
+     
         public async Task<statuscheckmodel> UpdateSingleRfqItem(RfqItemModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
