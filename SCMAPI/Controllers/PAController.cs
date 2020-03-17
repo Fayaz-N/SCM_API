@@ -369,5 +369,14 @@ namespace SCMAPI.Controllers
             filter = await _paBusenessAcess.getMprPaDetailsBySearch(model);
             return Ok(filter);
         }
+        [HttpPost]
+        [Route("GetPaStatusReports")]
+        [ResponseType(typeof(List<MPRDate>))]
+        public async Task<IHttpActionResult> GetPaStatusReports(PAReportInputModel model)
+        {
+            List<MPRDate> filter = new List<MPRDate>();
+            filter = await _paBusenessAcess.GetPaStatusReports(model);
+            return Ok(filter);
+        }
     }
 }

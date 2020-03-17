@@ -213,5 +213,10 @@ namespace BALayer.PurchaseAuthorization
         {
             return await _purchaseDataAcess.getMprPaDetailsBySearch(model);
         }
+
+        public async Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model)
+        {
+            return await _purchaseDataAcess.GetPaStatusReports(model);
+        }
     }
 }

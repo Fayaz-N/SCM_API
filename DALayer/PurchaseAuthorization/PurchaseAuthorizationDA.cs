@@ -527,9 +527,9 @@ namespace DALayer.PurchaseAuthorization
                 using (YSCMEntities yscm = new YSCMEntities())
                 {
                     var sqlquery = "";
-                    sqlquery = "select * from LoadItemsByID where itemstatus='Approved'";
-                    if (masters.VendorId != 0)
-                        sqlquery += " and VendorId='" + masters.VendorId + "'";
+                    sqlquery = "select * from LoadItemsByID where itemstatus='Approved' and ActiveRevision=1 ";
+                    if (masters.venderid != 0)
+                        sqlquery += " and VendorId='" + masters.venderid + "'";
                     if (masters.RevisionId != 0)
                         sqlquery += " and MPRRevisionId='" + masters.RevisionId + "'";
                     if (masters.RFQNo != null)
@@ -540,12 +540,12 @@ namespace DALayer.PurchaseAuthorization
                         sqlquery += " and BuyerGroupId='" + masters.BuyerGroupId + "'";
                     if (masters.SaleOrderNo != null)
                         sqlquery += " and SaleOrderNo='" + masters.SaleOrderNo + "'";
-                    if (masters.DeptID != 0)
-                        sqlquery += " and DepartmentId='" + masters.DeptID + "'";
+                    if (masters.DepartmentId != 0)
+                        sqlquery += " and DepartmentId='" + masters.DepartmentId + "'";
                     //if (masters.EmployeeNo != null)
                     //    sqlquery += " and DepartmentId='" + masters.EmployeeNo + "'";
-                    if (masters.EmployeeNo != null)
-                        sqlquery += " and ProjectManager='" + masters.EmployeeNo + "'";
+                    if (masters.vendorProjectManager != null && masters.vendorProjectManager !="")
+                        sqlquery += " and ProjectManager='" + masters.vendorProjectManager + "'";
 
                     return yscm.Database.SqlQuery<LoadItemsByID>(sqlquery).ToList();
                 }
@@ -593,7 +593,7 @@ namespace DALayer.PurchaseAuthorization
                             var vendormasters = obj.VendorMasters.Where(x => x.Vendorid == masters.VendorId).FirstOrDefault();
                             masters.Vendor = new VendormasterModel()
                             {
-                                ContactNo = vendormasters.ContactNo,
+                                ContactNumber = vendormasters.ContactNo,
                                 VendorCode = vendormasters.VendorCode,
                                 VendorName = vendormasters.VendorName,
                                 Emailid = vendormasters.Emailid,
@@ -978,6 +978,7 @@ namespace DALayer.PurchaseAuthorization
                     model.Taxes = data.Taxes;
                     model.Freight = data.Freight;
                     model.Insurance = data.Insurance;
+
                     model.DeliveryCondition = data.DeliveryCondition;
                     model.ShipmentMode = data.ShipmentMode;
                     model.PaymentTerms = data.PaymentTerms;
@@ -1486,6 +1487,31 @@ namespace DALayer.PurchaseAuthorization
 
                 filter = obj.Database.SqlQuery<GetMprPaDetailsByFilter>(sqlquery).ToList();
                 return filter;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model)
+        {
+            List<MPRDate> report = new List<MPRDate>();
+            //DateTime? fromdate= model.FromDate;
+            string fromdate = model.FromDate?.ToString("yyyy-MM-dd");
+            string todate = model.ToDate?.ToString("yyyy-MM-dd");
+            //DateTime?  todate = model.ToDate;
+            try
+            {
+                var sqlquery = "";
+                //sqlquery = "select * from pareports where PreparedOn between '" + fromdate + "' and '" + todate + "'";
+                sqlquery= "select * from MPRDates where mprrevisionid!=0 ";
+                if (fromdate != null && todate != null)
+                    sqlquery += " and preparedon between '" + fromdate + "' and '" + todate + "' ";
+                if (model.MPRRevisionId != 0)
+                    sqlquery += " and mprrevisionid='" + model.MPRRevisionId + "'";
+                //sqlquery = " select * from (select ms.Status, ms.StatusId, mr.RevisionId, mst.UpdatedDate, mr.ApprovalStatus, mr.ApprovedOn, mr.SecondApproversStatus, mr.ThirdApproverStatus, mr.SecondApprovedOn from MPRStatusTrack mst inner join MPRRevisions mr on mr.RevisionId = mst.RevisionId inner join MPRStatus ms on ms.StatusId = mst.StatusId) t pivot(count(statusid) for status in (submitted, Checked, approved, rejected, Acknowledged,[Clarification to End User],[RFQ Generated],[RFQ Responded],[Technical Spec Approved],[Quote Finalized],[PA Generated],[PO Released],[Raising PO Checked],[Raising PO Approved],[MPR Rejected],[MPR On Hold],[RFQ Finalized],[PA Approved],[MPR Closed])) as pivot_table ";
+                report = obj.Database.SqlQuery<MPRDate>(sqlquery).ToList();
+                return report;
             }
             catch (Exception ex)
             {

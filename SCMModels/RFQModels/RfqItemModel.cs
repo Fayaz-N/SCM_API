@@ -81,6 +81,7 @@ namespace SCMModels.RFQModels
     public class PADetailsModel
     {
         public int VendorId { get; set; }
+        public int venderid { get; set; }
         public int RequisitionIds { get; set; }
         public int RevisionId { get; set; }
         public string DocumentNumber { get; set; }
@@ -89,7 +90,7 @@ namespace SCMModels.RFQModels
         public int BuyerGroupId { get; set; }
         public string SaleOrderNo { get; set; }
         public int DeptID { get; set; }
-        public string EmployeeNo { get; set; }
+        public string vendorProjectManager { get; set; }
         public string POItemNo { get; set; }
         public Nullable<DateTime> POdate { get; set; }
         public string PONO { get; set; }
