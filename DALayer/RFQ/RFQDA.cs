@@ -96,6 +96,7 @@ namespace DALayer.RFQ
                     rfqModel.rfqmaster = new RFQMasterModel();
                     rfqModel.rfqmaster.MPRRevisionId = Convert.ToInt32(item.MPRRevisionId);
                     rfqModel.rfqmaster.VendorId = item.VendorId;
+					rfqModel.rfqmaster.VendorVisibility = false;
                     rfqModel.rfqmaster.CreatedBy = item.CreatedBy;
                     rfqModel.rfqmaster.Created = DateTime.Now;
                     rfqModel.CreatedBy = Convert.ToInt32(item.CreatedBy);
@@ -330,7 +331,8 @@ namespace DALayer.RFQ
                         revision.BankGuarantee = model.BankGuarantee;
                         revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
                         revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
-                        if (rfqremote.MPRRevisionId != null)
+						revision.DeleteFlag = false;
+						if (rfqremote.MPRRevisionId != null)
                         {
                             MPRRevision mprrevision = obj.MPRRevisions.Where(li => li.RevisionId == rfqremote.MPRRevisionId).FirstOrDefault();
                             if (mprrevision != null && mprrevision.BuyerGroupId != null)
@@ -376,8 +378,9 @@ namespace DALayer.RFQ
                         revision.BankGuarantee = model.BankGuarantee;
                         revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
                         revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+						revision.DeleteFlag = false;
 
-                        try
+						try
                         {
                             // vscm.RemoteRFQRevisions_N.Add(revision);
                             vscm.SaveChanges();
@@ -599,8 +602,9 @@ namespace DALayer.RFQ
                         revision.BankGuarantee = model.BankGuarantee;
                         revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
                         revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+						revision.DeleteFlag = false;
 
-                        try
+						try
                         {
                             //obj.RFQRevisions_N.Add(revision);
                             obj.SaveChanges();

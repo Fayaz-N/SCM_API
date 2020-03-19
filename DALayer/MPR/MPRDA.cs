@@ -735,7 +735,7 @@ namespace DALayer.MPR
                     var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
                     vendorUsermasters.VuniqueId = "C" + value;
                     vendorUsermasters.SequenceNo = sequenceNo;
-                    vendorUsermasters.Vuserid = item;
+                    vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
                     vendorUsermasters.pwd = GeneratePassword();
                     vendorUsermasters.ContactNumber = model.ContactNumber;
                     vendorUsermasters.ContactPerson = model.ContactPerson;
@@ -751,7 +751,7 @@ namespace DALayer.MPR
                     if (vendorUsermaster != null && !string.IsNullOrEmpty(item))
                     {
                         //vendorUsermaster.Vuserid = model.Emailid;
-                        vendorUsermaster.pwd = GeneratePassword();
+                       // vendorUsermaster.pwd = GeneratePassword();
                         //vendorUsermaster.VendorId = vendorid;
                         vscm.SaveChanges();
                     }
@@ -873,7 +873,14 @@ namespace DALayer.MPR
         {
             using (YSCMEntities Context = new YSCMEntities())
             {
-                MPRItemInfo deptDelete = Context.MPRItemInfoes.Find(mprItemInfo.Itemdetailsid);
+				foreach (var item in mprItemInfo.MPRDocuments)
+				{
+					MPRDocument docDel = Context.MPRDocuments.Find(item.MprDocId);
+					Context.MPRDocuments.Remove(docDel);
+					Context.SaveChanges();
+				}
+				
+				MPRItemInfo deptDelete = Context.MPRItemInfoes.Find(mprItemInfo.Itemdetailsid);
                 Context.MPRItemInfoes.Remove(deptDelete);
                 Context.SaveChanges();
             }
@@ -969,9 +976,9 @@ namespace DALayer.MPR
                 if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
                     viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
                 if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
                 else
-                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+                    query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
 				//query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
 				if (!string.IsNullOrEmpty(mprfilterparams.ToDate))
 					query+=" and PreparedOn <= '" + mprfilterparams.ToDate + "'";
@@ -1336,7 +1343,7 @@ namespace DALayer.MPR
             const string LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
             const string UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const string NUMERIC_CHARACTERS = "0123456789";
-            const string SPECIAL_CHARACTERS = @"!#$%&*@\";
+            const string SPECIAL_CHARACTERS = @"!#$%*@\";
             const string SPACE_CHARACTER = " ";
             const int PASSWORD_LENGTH_MIN = 8;
             const int PASSWORD_LENGTH_MAX = 128;
