@@ -380,6 +380,7 @@ namespace DALayer.MPR
 						//mprRevisionDetails.OThirdApprover = mpr.OThirdApprover;
 						//mprRevisionDetails.OThirdApproverStatusChangedOn = DateTime.Now;
 						mprRevisionDetails.CheckedBy = mpr.CheckedBy;
+						mprRevisionDetails.ApprovedBy = mpr.ApprovedBy;
 						int cnt = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == mpr.RequisitionId && li.StatusId == 1).Count();//checking mpr generated already or not 
 						if (!string.IsNullOrEmpty(mpr.CheckedBy))
 						{
@@ -393,10 +394,11 @@ namespace DALayer.MPR
 								mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
 								updateMprstatusTrack(mPRStatusTrackDetails);
 								mprRevisionDetails.StatusId = 1;
+								DB.SaveChanges();
 								this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mpr.RevisionId, mpr.PreparedBy, mpr.CheckedBy, "");
 							}
 						}
-						mprRevisionDetails.ApprovedBy = mpr.ApprovedBy;
+						
 						if (mprRevisionDetails.PurchaseTypeId == 1)//for single vendor we are updating second and third approvers from mprdepartment table
 						{
 							mprRevisionDetails.SecondApprover = DB.MPRDepartments.Where(li => li.DepartmentId == mprRevisionDetails.DepartmentId).FirstOrDefault().SecondApprover;
@@ -708,13 +710,13 @@ namespace DALayer.MPR
 			{
 				var vendordata = vscm.RemoteVendorMasters.Where(x => x.Vendorid == model.Vendorid).FirstOrDefault();
 				vendordata.VendorCode = vendordata.VendorCode;
-				vendordata.VendorName = model.VendorName;
+				vendordata.VendorName = vendordata.VendorName;
 				vendordata.OldVendorCode = vendordata.OldVendorCode;
 				vendordata.Street = vendordata.Street;
 				vendordata.City = vendordata.City;
 				//vendordata.RegionCode = model.RegionCode;
 				vendordata.PostalCode = vendordata.PostalCode;
-				vendordata.PhoneNo = model.ContactNumber;
+				vendordata.PhoneNo = vendordata.ContactNo;
 				vendordata.FaxNo = null;
 				vendordata.AuGr = null;
 				vendordata.PaymentTermCode = null;
@@ -926,7 +928,7 @@ namespace DALayer.MPR
 							eve.Entry.Entity.GetType().Name, eve.Entry.State);
 						foreach (var ve in eve.ValidationErrors)
 						{
-							errmsg= ve.PropertyName + ve.ErrorMessage;
+							errmsg = ve.PropertyName + ve.ErrorMessage;
 						}
 					}
 					return errmsg;
