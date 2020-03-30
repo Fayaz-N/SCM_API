@@ -23,7 +23,9 @@ namespace DALayer.MPR
         DataTable GetListItems(DynamicSearchResult Result);
         bool deleteMPRDocument(MPRDocument mprDocument);
         bool deleteMPRItemInfo(MPRItemInfo mprItemInfo);
-        bool deleteMPRVendor(MPRVendorDetail mprVendor);
+		string addMprItemInfo(MPRItemInfo mPRItemInfo);
+
+		bool deleteMPRVendor(MPRVendorDetail mprVendor);
         bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation);
         MPRRevision getMPRRevisionDetails(int RevisionId);
         DataTable getMPRList(mprFilterParams mprfilterparams);

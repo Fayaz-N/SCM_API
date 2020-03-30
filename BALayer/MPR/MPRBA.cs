@@ -60,7 +60,11 @@ namespace BALayer.MPR
         {
             return this._mprDataAcess.deleteMPRItemInfo(mprItemInfo);
         }
-        public bool deleteMPRVendor(MPRVendorDetail mprVendor)
+		public string addMprItemInfo(MPRItemInfo mprItemInfo)
+		{
+			return this._mprDataAcess.addMprItemInfo(mprItemInfo);
+		}
+		public bool deleteMPRVendor(MPRVendorDetail mprVendor)
         {
             return this._mprDataAcess.deleteMPRVendor(mprVendor);
         }

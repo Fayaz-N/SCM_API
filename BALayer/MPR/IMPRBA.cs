@@ -22,6 +22,7 @@ namespace BALayer.MPR
         DataTable GetListItems(DynamicSearchResult Result);
 		bool deleteMPRDocument(MPRDocument mprDocument);
 		bool deleteMPRItemInfo(MPRItemInfo mprItemInfo);
+		string addMprItemInfo(MPRItemInfo mPRItemInfo);
 		bool deleteMPRVendor(MPRVendorDetail mprVendor);
 		bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation);
 		MPRRevision getMPRRevisionDetails(int RevisionId);
