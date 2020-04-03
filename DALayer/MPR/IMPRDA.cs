@@ -38,6 +38,7 @@ namespace DALayer.MPR
         List<UserPermission> getAccessList(int RoleId);
         bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
         void updateMprstatusTrack(MPRStatusTrack mprStatusTrackDetails);
+		bool deleteMPR(DeleteMpr deleteMprInfo);
 
-    }
+	}
 }

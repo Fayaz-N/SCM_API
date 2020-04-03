@@ -119,6 +119,7 @@ namespace DALayer.MPR
 						mprRevisionDetails.RevisionNo = Convert.ToByte(mprLastRecord.RevisionNo + 1);
 						mprRevisionDetails.BoolValidRevision = true;
 						mprRevisionDetails.MPRDetail = null;
+						mprRevisionDetails.DeleteFlag = false;
 						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
 						DB.MPRRevisions.Add(mprRevisionDetails);
 						DB.SaveChanges();
@@ -398,7 +399,7 @@ namespace DALayer.MPR
 								this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mpr.RevisionId, mpr.PreparedBy, mpr.CheckedBy, "");
 							}
 						}
-						
+
 						if (mprRevisionDetails.PurchaseTypeId == 1)//for single vendor we are updating second and third approvers from mprdepartment table
 						{
 							mprRevisionDetails.SecondApprover = DB.MPRDepartments.Where(li => li.DepartmentId == mprRevisionDetails.DepartmentId).FirstOrDefault().SecondApprover;
@@ -1026,9 +1027,9 @@ namespace DALayer.MPR
 				if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
 					viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
 				if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-					query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
+					query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
 				else
-					query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+					query = "Select mprasgn.EmployeeName as AssignEmployeeName, RevisionId,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
 				//query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
 				if (!string.IsNullOrEmpty(mprfilterparams.ToDate))
 					query += " and PreparedOn <= '" + mprfilterparams.ToDate + "'";
@@ -1051,6 +1052,8 @@ namespace DALayer.MPR
 
 				if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
 					query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";
+				if (!string.IsNullOrEmpty(mprfilterparams.ORgDepartmentid))
+					query += " and ORgDepartmentid='" + mprfilterparams.ORgDepartmentid + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.JobCode))
 					query += " and JobCode='" + mprfilterparams.JobCode + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.IssuePurposeId))
@@ -1066,7 +1069,7 @@ namespace DALayer.MPR
 				if (!string.IsNullOrEmpty(mprfilterparams.PurchaseTypeId))
 					query += " and PurchaseTypeId='" + mprfilterparams.PurchaseTypeId + "'";
 
-
+				query += " order by RevisionId desc ";
 				//if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
 				//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
 				//else if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
@@ -1131,7 +1134,7 @@ namespace DALayer.MPR
 
 		public int getMPRPendingListCnt(string PreparedBy)
 		{
-			return DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && li.PreparedBy == PreparedBy && li.CheckedBy == "-").Count();
+			return DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && li.PreparedBy == PreparedBy && li.CheckedBy == "-" || li.ApprovedBy == "-").Count();
 		}
 		public List<Employee> getEmployeeList()
 		{
@@ -1438,6 +1441,22 @@ namespace DALayer.MPR
 			}
 			DB.SaveChanges();
 		}
+
+		public bool deleteMPR(DeleteMpr deleteMprInfo)
+		{
+
+			using (YSCMEntities Context = new YSCMEntities())
+			{
+				MPRRevision mPRRevision = Context.MPRRevisions.Where(li => li.RevisionId == deleteMprInfo.RevisionId).FirstOrDefault();
+				mPRRevision.DeleteFlag = true;
+				mPRRevision.DeletedRemarks = deleteMprInfo.DeletedRemarks;
+				mPRRevision.DeletedBy = deleteMprInfo.Deletedby;
+				mPRRevision.DeletedOn = DateTime.Now;
+				Context.SaveChanges();
+			}
+			return true;
+		}
+
 		public static string GeneratePassword()
 		{
 			bool includeLowercase = true;

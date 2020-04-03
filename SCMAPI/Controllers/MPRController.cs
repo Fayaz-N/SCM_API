@@ -173,6 +173,12 @@ namespace SCMAPI.Controllers
 			return Ok(result);
 
 		}
+		[HttpPost]
+		[Route("deleteMPR")]
+		public IHttpActionResult deleteMPR(DeleteMpr deleteMprInfo)
+		{
+			return Ok(this._mprBusenessAcess.deleteMPR(deleteMprInfo));
+		}
 
 		[HttpPost]
 		[Route("sendMailtoVendor")]
@@ -341,7 +347,7 @@ namespace SCMAPI.Controllers
 				string sheet = schemaRow["TABLE_NAME"].ToString();
 				if (!sheet.EndsWith("_"))
 				{
-					string query = "SELECT  * FROM [Sheet1$]";
+					string query = "SELECT  * FROM [Sheet1$A4:J]";
 					OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
 					dtexcel.Locale = CultureInfo.CurrentCulture;
 					daexcel.Fill(dtexcel);
@@ -354,27 +360,28 @@ namespace SCMAPI.Controllers
 					YSCMEntities entities = new YSCMEntities();
 					foreach (DataRow row in dtexcel.Rows)
 					{
-						string unitname = row["UnitId"].ToString();
-						var data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
-
+						
 						MPRItemInfo mprIteminfos = new MPRItemInfo();
-						if (row["ItemDescription"].ToString() != "" && row["Quantity"].ToString() != "")
+						if (row[1].ToString() != "" && row[2].ToString() != "")
 						{
-							mprIteminfos.ItemDescription = row["ItemDescription"].ToString();
+							string unitname = row[3].ToString();
+							var data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
+							mprIteminfos.ItemDescription = row[1].ToString();
 							mprIteminfos.RevisionId = Convert.ToInt32(revisionId);
-							mprIteminfos.Quantity = Convert.ToInt32(row["Quantity"]);
-							mprIteminfos.SOLineItemNo = row["SOLineItemNo"].ToString();
-							mprIteminfos.TargetSpend = Convert.ToInt32(row["TargetSpend"]);
-							mprIteminfos.MfgPartNo = row["MfgPartNo"].ToString();
-							mprIteminfos.MfgModelNo = row["MfgModelNo"].ToString();
-							mprIteminfos.ReferenceDocNo = row["ReferenceDocNo"].ToString();
-							mprIteminfos.UnitId = data.UnitId;
-							if (row["YGSMaterialCode"].ToString() == "")
+							mprIteminfos.Quantity = Convert.ToInt32(row[2]);
+							mprIteminfos.SOLineItemNo = row[4].ToString();
+							mprIteminfos.TargetSpend = Convert.ToInt32(row[5]);
+							mprIteminfos.MfgPartNo = row[6].ToString();
+							mprIteminfos.MfgModelNo = row[7].ToString();
+							mprIteminfos.ReferenceDocNo = row[8].ToString();
+							if (data != null)
+								mprIteminfos.UnitId = data.UnitId;
+							if (row[9].ToString() == "")
 								mprIteminfos.Itemid = "0000";
 							else
 							{
-								mprIteminfos.Itemid = row["YGSMaterialCode"].ToString();
-								if (row["YGSMaterialCode"].ToString() == "NewItem")
+								mprIteminfos.Itemid = row[9].ToString();
+								if (row[9].ToString() == "NewItem")
 									mprIteminfos.Itemid = "0000";
 							}
 							this._mprBusenessAcess.addMprItemInfo(mprIteminfos);
@@ -382,7 +389,38 @@ namespace SCMAPI.Controllers
 							//entities.SaveChanges();
 						}
 						iSucceRows++;
-					}
+						}
+					
+					//string unitname = row["UnitId"].ToString();
+					//var data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
+
+					//MPRItemInfo mprIteminfos = new MPRItemInfo();
+					//if (row["ItemDescription"].ToString() != "" && row["Quantity"].ToString() != "")
+					//{
+					//	mprIteminfos.ItemDescription = row["ItemDescription"].ToString();
+					//	mprIteminfos.RevisionId = Convert.ToInt32(revisionId);
+					//	mprIteminfos.Quantity = Convert.ToInt32(row["Quantity"]);
+					//	mprIteminfos.SOLineItemNo = row["SOLineItemNo"].ToString();
+					//	mprIteminfos.TargetSpend = Convert.ToInt32(row["TargetSpend"]);
+					//	mprIteminfos.MfgPartNo = row["MfgPartNo"].ToString();
+					//	mprIteminfos.MfgModelNo = row["MfgModelNo"].ToString();
+					//	mprIteminfos.ReferenceDocNo = row["ReferenceDocNo"].ToString();
+					//	if(data!=null)
+					//	mprIteminfos.UnitId = data.UnitId;
+					//	if (row["YGSMaterialCode"].ToString() == "")
+					//		mprIteminfos.Itemid = "0000";
+					//	else
+					//	{
+					//		mprIteminfos.Itemid = row["YGSMaterialCode"].ToString();
+					//		if (row["YGSMaterialCode"].ToString() == "NewItem")
+					//			mprIteminfos.Itemid = "0000";
+					//	}
+					//	this._mprBusenessAcess.addMprItemInfo(mprIteminfos);
+					//	//entities.MPRItemInfoes.Add(mprIteminfos);
+					//	//entities.SaveChanges();
+					//}
+					//iSucceRows++;
+					//}
 					int succRecs = iSucceRows;
 				}
 				catch (Exception e)
@@ -396,7 +434,7 @@ namespace SCMAPI.Controllers
 
 		private static string ToValidFileName(string fileName)
 		{
-			fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_");
+			fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+","_");
 			return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
 		}
 

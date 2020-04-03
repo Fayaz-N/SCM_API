@@ -35,7 +35,7 @@ namespace BALayer.MPR
 		List<SCMStatu> getStatusList();
         List<UserPermission> getAccessList(int RoleId);
         bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
-
+		 bool deleteMPR(DeleteMpr deleteMprInfo);
 	}
 
 }
