@@ -144,6 +144,7 @@ namespace DALayer.MPR
 						mprRevisionDetails = mpr;
 						mprRevisionDetails.RevisionNo = 0;
 						mprRevisionDetails.BoolValidRevision = true;
+						mprRevisionDetails.DeleteFlag = false;
 						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = mprRevisionDetails.OApprovalStatus = mprRevisionDetails.OCheckStatus = mprRevisionDetails.OSecondApproversStatus = mprRevisionDetails.OThirdApproverStatus = "Pending";
 						DB.MPRRevisions.Add(mprRevisionDetails);
 						DB.SaveChanges();
@@ -1134,7 +1135,7 @@ namespace DALayer.MPR
 
 		public int getMPRPendingListCnt(string PreparedBy)
 		{
-			return DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && li.PreparedBy == PreparedBy && li.CheckedBy == "-" || li.ApprovedBy == "-").Count();
+			return DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && li.PreparedBy == PreparedBy && (li.CheckedBy == "-" || li.ApprovedBy == "-")).Count();
 		}
 		public List<Employee> getEmployeeList()
 		{

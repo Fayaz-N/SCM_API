@@ -497,12 +497,12 @@ namespace DALayer.RFQ
                         }
                         var value = obj.SP_sequenceNumber(sequenceNo).FirstOrDefault();
                         rfqlocal.RFQNo = rfeNo;
-                        rfqlocal.RFQUniqueNo = Convert.ToInt32(sequenceNo);
+                        //rfqlocal.RFQUniqueNo = Convert.ToInt32(sequenceNo);
                         rfqlocal.MPRRevisionId = model.rfqmaster.MPRRevisionId;
                         if (model.rfqmaster.MPRRevisionId == 0)
                             rfqlocal.MPRRevisionId = null;
                         rfqlocal.RfqMasterId = masterid;
-                        // rfqlocal.RFQUniqueNo = model.rfqmaster.RfqUniqueNo;
+                        rfqlocal.RFQUniqueNo = rfqremote.RFQUniqueNo;
                         rfqlocal.CreatedBy = model.rfqmaster.CreatedBy;
                         rfqlocal.CreatedDate = DateTime.Now;
                         rfqlocal.VendorId = model.rfqmaster.VendorId;
@@ -551,8 +551,8 @@ namespace DALayer.RFQ
                         revision.rfqMasterId = masterid;
                         revision.RevisionNo = model.RfqRevisionNo;
                         revision.CreatedBy = model.CreatedBy;
-                        revision.CreatedDate = model.CreatedDate;
-                        revision.RFQValidDate = model.RfqValidDate;
+                        revision.CreatedDate = DateTime.Now;
+						revision.RFQValidDate = model.RfqValidDate;
                         revision.SalesTax = model.salesTax;
                         revision.PaymentTermRemarks = model.PaymentTermRemarks;
                         revision.PackingForwarding = model.PackingForwading;
@@ -2303,7 +2303,7 @@ namespace DALayer.RFQ
                         EndQty = model.EndQty,
                         Qty = model.Qty,
                         UnitPrice = model.UnitPrice,
-
+						UOM=model.UOM,
                         CurrencyId = model.CurrencyId,
                         CurrencyValue = model.CurrencyValue,
                         DeliveryDays = model.DeliveryDays,
@@ -2327,8 +2327,8 @@ namespace DALayer.RFQ
                         rfqRemoteitem.EndQty = model.EndQty;
                         rfqRemoteitem.Qty = model.Qty;
                         rfqRemoteitem.UnitPrice = model.UnitPrice;
-
-                        rfqRemoteitem.CurrencyId = model.CurrencyId;
+						rfqRemoteitem.UOM = model.UOM;
+						rfqRemoteitem.CurrencyId = model.CurrencyId;
                         rfqRemoteitem.CurrencyValue = model.CurrencyValue;
                         rfqRemoteitem.DeliveryDays = model.DeliveryDays;
                         rfqRemoteitem.DeliveryDate = model.DeliveryDate;
@@ -2349,6 +2349,7 @@ namespace DALayer.RFQ
                             StartQty = model.StartQty,
                             EndQty = model.EndQty,
                             Qty = model.Qty,
+							UOM=model.UOM,
                             UnitPrice = model.UnitPrice,
                             CurrencyId = model.CurrencyId,
                             CurrencyValue = model.CurrencyValue,
@@ -2369,8 +2370,8 @@ namespace DALayer.RFQ
                         localRfqiteminfo.EndQty = model.EndQty;
                         localRfqiteminfo.Qty = model.Qty;
                         localRfqiteminfo.UnitPrice = model.UnitPrice;
-
-                        localRfqiteminfo.CurrencyId = model.CurrencyId;
+						localRfqiteminfo.UOM = model.UOM;
+						localRfqiteminfo.CurrencyId = model.CurrencyId;
                         localRfqiteminfo.CurrencyValue = model.CurrencyValue;
                         localRfqiteminfo.DeliveryDays = model.DeliveryDays;
                         localRfqiteminfo.DeliveryDate = model.DeliveryDate;

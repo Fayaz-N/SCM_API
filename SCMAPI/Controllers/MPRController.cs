@@ -360,20 +360,31 @@ namespace SCMAPI.Controllers
 					YSCMEntities entities = new YSCMEntities();
 					foreach (DataRow row in dtexcel.Rows)
 					{
-						
+
 						MPRItemInfo mprIteminfos = new MPRItemInfo();
 						if (row[1].ToString() != "" && row[2].ToString() != "")
 						{
-							string unitname = row[3].ToString();
-							var data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
-							mprIteminfos.ItemDescription = row[1].ToString();
+							string unitname = "";
+							UnitMaster data = new UnitMaster();
+							if (!string.IsNullOrEmpty(row[3].ToString()))
+								unitname = row[3].ToString();
+							if (!string.IsNullOrEmpty(unitname))
+								data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
+							if (!string.IsNullOrEmpty(row[1].ToString()))
+								mprIteminfos.ItemDescription = row[1].ToString();
 							mprIteminfos.RevisionId = Convert.ToInt32(revisionId);
-							mprIteminfos.Quantity = Convert.ToInt32(row[2]);
-							mprIteminfos.SOLineItemNo = row[4].ToString();
-							mprIteminfos.TargetSpend = Convert.ToInt32(row[5]);
-							mprIteminfos.MfgPartNo = row[6].ToString();
-							mprIteminfos.MfgModelNo = row[7].ToString();
-							mprIteminfos.ReferenceDocNo = row[8].ToString();
+							if (!string.IsNullOrEmpty(row[2].ToString()))
+								mprIteminfos.Quantity = Convert.ToInt32(row[2]);
+							if (!string.IsNullOrEmpty(row[4].ToString()))
+								mprIteminfos.SOLineItemNo = row[4].ToString();
+							if (!string.IsNullOrEmpty(row[5].ToString()))
+								mprIteminfos.TargetSpend = Convert.ToInt32(row[5]);
+							if (!string.IsNullOrEmpty(row[6].ToString()))
+								mprIteminfos.MfgPartNo = row[6].ToString();
+							if (!string.IsNullOrEmpty(row[7].ToString()))
+								mprIteminfos.MfgModelNo = row[7].ToString();
+							if (!string.IsNullOrEmpty(row[8].ToString()))
+								mprIteminfos.ReferenceDocNo = row[8].ToString();
 							if (data != null)
 								mprIteminfos.UnitId = data.UnitId;
 							if (row[9].ToString() == "")
@@ -389,8 +400,8 @@ namespace SCMAPI.Controllers
 							//entities.SaveChanges();
 						}
 						iSucceRows++;
-						}
-					
+					}
+
 					//string unitname = row["UnitId"].ToString();
 					//var data = entities.UnitMasters.Where(x => x.UnitName == unitname).FirstOrDefault();
 
@@ -434,7 +445,7 @@ namespace SCMAPI.Controllers
 
 		private static string ToValidFileName(string fileName)
 		{
-			fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+","_");
+			fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+", "_");
 			return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
 		}
 

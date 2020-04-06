@@ -21,7 +21,7 @@ namespace SCMModels.RFQModels
         public int CurrencyId { get; set; }
         public decimal CurrencyValue { get; set; }
         public string Remarks { get; set; }
-        public DateTime DeliveryDate { get; set; }
+		public Nullable<System.DateTime> DeliveryDate { get; set; }
         public Nullable<int> DeliveryDays { get; set; }
         public Nullable<System.DateTime> ValidFrom { get; set; }
         public Nullable<System.DateTime> ValidTo { get; set; }

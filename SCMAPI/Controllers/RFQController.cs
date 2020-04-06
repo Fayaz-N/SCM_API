@@ -36,7 +36,13 @@ namespace SCMAPI.Controllers
         {
             return Ok(this._rfqBusenessAcess.getRFQCompareItems(MPRRevisionId));
         }
-        [HttpPost]
+		[HttpGet]
+		[Route("GetAllMasterCurrency")]
+		public IHttpActionResult GetAllMasterCurrency()
+		{
+			return Ok(this._rfqBusenessAcess.GetAllMasterCurrency());
+		}
+		[HttpPost]
         [Route("rfqStatusUpdate")]
         public IHttpActionResult rfqStatusUpdate([FromBody] DataModel Result)
         {
