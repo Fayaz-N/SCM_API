@@ -164,8 +164,8 @@ namespace DALayer.MPR
 								foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
 								{
 									item.Itemid = mPRItemInfo.Itemid;
-									if (mPRItemInfo.Itemid == "NewItem")
-										item.Itemid = "0000";
+									if (mPRItemInfo.Itemid == "NewItem" || mPRItemInfo.Itemid == "0000")
+										item.Itemid = "NewItem";
 									item.ItemDescription = mPRItemInfo.ItemDescription;
 									item.Quantity = mPRItemInfo.Quantity;
 									item.UnitId = mPRItemInfo.UnitId;

@@ -388,12 +388,12 @@ namespace SCMAPI.Controllers
 							if (data != null)
 								mprIteminfos.UnitId = data.UnitId;
 							if (row[9].ToString() == "")
-								mprIteminfos.Itemid = "0000";
+								mprIteminfos.Itemid = "NewItem";
 							else
 							{
 								mprIteminfos.Itemid = row[9].ToString();
-								if (row[9].ToString() == "NewItem")
-									mprIteminfos.Itemid = "0000";
+								if (row[9].ToString() == "NewItem" || row[9].ToString() == "0000")
+									mprIteminfos.Itemid = "NewItem";
 							}
 							this._mprBusenessAcess.addMprItemInfo(mprIteminfos);
 							//entities.MPRItemInfoes.Add(mprIteminfos);
