@@ -102,9 +102,10 @@ namespace DALayer.Emails
 										this.sendEmail(emlSndngList);
 								}
 								else
-								{							
-									emlSndngList.Subject = "New MPR is submitted for acknowledgement - "+ mprrevisionDetails.DocumentNo+"";									
-									emlSndngList.ToEmailId = db.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevisionDetails.BuyerGroupId).FirstOrDefault().BuyerManager;
+								{
+									emlSndngList.Subject = "New MPR is submitted for acknowledgement - " + mprrevisionDetails.DocumentNo + "";
+									var TooEmailId = db.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevisionDetails.BuyerGroupId).FirstOrDefault().BuyerManager;
+									emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == TooEmailId).FirstOrDefault<Employee>()).EMail;
 									if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 										this.sendEmail(emlSndngList);
 								}
