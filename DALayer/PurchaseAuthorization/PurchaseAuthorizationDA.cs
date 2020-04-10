@@ -872,16 +872,16 @@ namespace DALayer.PurchaseAuthorization
 
                     }
                     //var rfqterms = obj.RFQTerms.Where(x => model.TermId.Contains(x.termsid)).ToList();
-                    foreach (var item in model.TermId)
-                    {
-                        var paterms = new PATerm()
-                        {
-                            PAID = status.Sid,
-                            RfqTermId = item,
-                        };
-                        obj.PATerms.Add(paterms);
-                        obj.SaveChanges();
-                    }
+                    //foreach (var item in model.TermId)
+                    //{
+                    //    var paterms = new PATerm()
+                    //    {
+                    //        PAID = status.Sid,
+                    //        RfqTermId = item,
+                    //    };
+                    //    obj.PATerms.Add(paterms);
+                    //    obj.SaveChanges();
+                    //}
                     var Approveritem = new MPRPAApprover();
                     foreach (var item in model.ApproversList)
                     {
@@ -1011,7 +1011,7 @@ namespace DALayer.PurchaseAuthorization
                         PONO = x.PONO,
                         Remarks = x.Remarks,
                         PODate = x.PODate.ToString(),
-                        MPRRevisionId=Convert.ToInt32( x.MPRRevisionId)
+                        MPRRevisionId = Convert.ToInt32( x.MPRRevisionId)
                     }).ToList();
                     var sqlquery = " ";
                     sqlquery = "select * from GetmprApproverdeatils where PAId = '" + PID + "' order by XOrder";

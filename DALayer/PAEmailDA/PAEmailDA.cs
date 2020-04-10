@@ -20,7 +20,7 @@ namespace DALayer.PAEmailDA
             ipaddress = ipaddress + "SCM/mprpa/" + paid + "";
             EmailSend mails = new EmailSend();
             mails.FrmEmailId = obj.Employees.Where(x => x.EmployeeNo == loginemployee).FirstOrDefault().EMail;
-            mails.CC = "n.senthilkumar@in.yokogawa.com";
+            //mails.CC = "n.senthilkumar@in.yokogawa.com";
             foreach (var item in data)
             {
                 if (item.RoleName == "PM")
@@ -77,21 +77,45 @@ namespace DALayer.PAEmailDA
 
         public bool sendEmail(EmailSend emlSndngList)
         {
-            MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
-            SmtpClient client = new SmtpClient();
-            if (!string.IsNullOrEmpty(emlSndngList.Subject))
-                mailMessage.Subject = emlSndngList.Subject;
-            if (!string.IsNullOrEmpty(emlSndngList.CC))
-                mailMessage.CC.Add(emlSndngList.CC);
-            mailMessage.Body = emlSndngList.Body;
-            mailMessage.IsBodyHtml = true;
-            mailMessage.BodyEncoding = Encoding.UTF8;
-            SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
-              //  mailClient.EnableSsl = true;
-            mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            mailClient.Send(mailMessage);
+            bool validEmail = IsValidEmail(emlSndngList.ToEmailId);
+            if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId) && validEmail)
+            {
+                var BCC = ConfigurationManager.AppSettings["BCC"];
+                var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
+                MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
+                SmtpClient client = new SmtpClient();
+                if (!string.IsNullOrEmpty(emlSndngList.Subject))
+                    mailMessage.Subject = emlSndngList.Subject;
+                if (!string.IsNullOrEmpty(emlSndngList.CC))
+                    mailMessage.CC.Add(emlSndngList.CC);
+                if (!string.IsNullOrEmpty(BCC))
+                    mailMessage.Bcc.Add(BCC);
+                mailMessage.Body = emlSndngList.Body;
+                mailMessage.IsBodyHtml = true;
+                mailMessage.BodyEncoding = Encoding.UTF8;
+                SmtpClient mailClient = new SmtpClient(SMTPServer, 25);
+                //SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+                //mailClient.EnableSsl = true;
+                mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                mailClient.Send(mailMessage);
+            }
             return true;
+
+            bool IsValidEmail(string email)
+            {
+                try
+                {
+                    var addr = new System.Net.Mail.MailAddress(email);
+                    return addr.Address == email;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
         }
+
+
     }
     public class EmailSend
     {
