@@ -1262,7 +1262,7 @@ namespace DALayer.PurchaseAuthorization
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId).FirstOrDefault();
+                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId && x.Approver==model.EmployeeNo && x.RoleName==model.RoleName).FirstOrDefault();
                 if (approverdata != null)
                 {
                     approverdata.ApproversRemarks = model.ApproversRemarks;
