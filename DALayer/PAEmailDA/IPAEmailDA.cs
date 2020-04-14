@@ -9,5 +9,6 @@ namespace DALayer.PAEmailDA
    public interface IPAEmailDA
     {
         bool PAEmailRequest(int paid, string FrmEmailId);
+        bool paemailstatus(int paid, int statusid,int mprrevisionid,string ApprovalStatus,string employeeno);
     }
 }

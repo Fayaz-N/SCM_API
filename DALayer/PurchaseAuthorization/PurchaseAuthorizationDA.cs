@@ -1014,13 +1014,13 @@ namespace DALayer.PurchaseAuthorization
                         MPRRevisionId = Convert.ToInt32( x.MPRRevisionId)
                     }).ToList();
                     var sqlquery = " ";
-                    sqlquery = "select * from GetmprApproverdeatils where PAId = '" + PID + "' order by XOrder";
-                    var approverdata = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
+                    sqlquery = "select * from MergedStatusApprovers where PAId = '" + PID + "' ";
+                    var approverdata = obj.Database.SqlQuery<MergedStatusApprover>(sqlquery).ToList();
                     //var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
                     {
                         ApproverName = x.Name,
-                        RoleName = x.RoleName,
+                        RoleName = x.rolename,
                         ApproversRemarks = x.ApproversRemarks,
                         ApprovalStatus = x.ApprovalStatus,
                         EmployeeNo = x.Approver,
@@ -1262,15 +1262,22 @@ namespace DALayer.PurchaseAuthorization
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId && x.Approver==model.EmployeeNo && x.RoleName==model.RoleName).FirstOrDefault();
+                var approverdata = obj.MPRPAApprovers.Where(x => x.PAId == model.PAId && x.Approver == model.EmployeeNo).ToList();
                 if (approverdata != null)
                 {
-                    approverdata.ApproversRemarks = model.ApproversRemarks;
-                    approverdata.ApprovalStatus = model.ApprovalStatus;
-                    approverdata.ApprovedOn = System.DateTime.Now;
-                    obj.SaveChanges();
-                    status.Sid = approverdata.PAId;
-                    UpdatePAStatus(model.PAId,model.mprrevisionid,model.EmployeeNo);
+                    foreach (var data in approverdata)
+                    {
+                        data.ApproversRemarks = model.ApproversRemarks;
+                        data.ApprovalStatus = model.ApprovalStatus;
+                        data.ApprovedOn = System.DateTime.Now;
+                        obj.SaveChanges();
+                    }
+                    //approverdata.ApproversRemarks = model.ApproversRemarks;
+                    //approverdata.ApprovalStatus = model.ApprovalStatus;
+                    //approverdata.ApprovedOn = System.DateTime.Now;
+                    //obj.SaveChanges();
+                    //status.Sid = approverdata.PAId;
+                    UpdatePAStatus(model.PAId,model.mprrevisionid,model.EmployeeNo,model.ApprovalStatus);
                     return status;
                 }
                 else
@@ -1284,15 +1291,24 @@ namespace DALayer.PurchaseAuthorization
             }
         }
 
-        public bool UpdatePAStatus(int paid,int mprrevisionid,string employeeno)
+        public bool UpdatePAStatus(int paid,int mprrevisionid,string employeeno,string ApprovalStatus)
         {
             List<approverFinalview> approver = new List<approverFinalview>();
+            int statusid = 0;
             var sqlquery = "";
-            //sqlquery = "select MAX(PAId) as PAId,COUNT(*) as Approvedstatus from MPRPAApprovers where (ApprovalStatus in ('submitted','pending','Rejected') or ApprovalStatus is null) and PAId='" + paid + "'";
-            //sqlquery = "select ISNULL(PAId,0) as PAId,ISNULL(count(*),0)  as approved,* from MPRPAApprovers where PAId='" + paid + "' and  ApprovalStatus in ('submitted','pending','Rejected') group by PAId  having COUNT(*)>0";
+            var padetails = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault();
+            if (padetails!=null)
+            {
+                padetails.PAStatus = ApprovalStatus;
+                obj.SaveChanges();
+            }
             sqlquery = "select * from approverFinalview where PAId='" + paid + "' ";
             approver = obj.Database.SqlQuery<approverFinalview>(sqlquery).ToList();
-            int statusid = 18;
+            if (ApprovalStatus=="Approved")
+                 statusid = 18;
+            else if (ApprovalStatus=="Rejected")
+                statusid = 21;
+
             if (approver == null || approver.Count == 0)
             {
                 MPRStatusTrack statustrack = new MPRStatusTrack();
@@ -1301,14 +1317,26 @@ namespace DALayer.PurchaseAuthorization
                 int requisitionid = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().RequisitionId;
                 statustrack.RequisitionId = requisitionid;
                 statustrack.UpdatedBy = employeeno;
+                statustrack.UpdatedDate = System.DateTime.Now;
                 //statustrack.Status = "PA Approved";
-                //obj.MPRStatus.Add(statustrack);
+                obj.MPRStatusTracks.Add(statustrack);
                 obj.SaveChanges();
+                this.emailDA.paemailstatus(statusid, paid,mprrevisionid,ApprovalStatus,employeeno);
                 int id = statustrack.StatusId;
             }
-            else
+            else if(ApprovalStatus=="Rejected")
             {
-
+                MPRStatusTrack statustrack = new MPRStatusTrack();
+                statustrack.StatusId = statusid;
+                statustrack.RevisionId = mprrevisionid;
+                int requisitionid = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().RequisitionId;
+                statustrack.RequisitionId = requisitionid;
+                statustrack.UpdatedBy = employeeno;
+                statustrack.UpdatedDate = System.DateTime.Now;
+                //statustrack.Status = "PA Approved";
+                obj.MPRStatusTracks.Add(statustrack);
+                obj.SaveChanges();
+                this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
             }
             //approver.approved;
             return true;
