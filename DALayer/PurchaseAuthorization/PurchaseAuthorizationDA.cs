@@ -414,6 +414,63 @@ namespace DALayer.PurchaseAuthorization
         //        throw;
         //    }
         //}
+        public DataSet GetEmployeeMappings1(PAConfigurationModel model)
+        {
+            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+            EmployeModel employee = new EmployeModel();
+            DataSet Ds = new DataSet();
+            string data = string.Join(",", model.MPRItemDetailsid);
+            model.PAValue = model.UnitPrice;
+            int Termscode = 0;
+            if (model.PAValue > model.TargetSpend)
+                model.LessBudget = false;
+            else
+                model.LessBudget = true;
+            
+            if (model.PaymentTermCode != null)
+                Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
+            else
+                Termscode = 0;
+
+            try
+            {
+                SqlParameter[] Param = new SqlParameter[5];
+                Param[0] = new SqlParameter("@itemid", data);
+                Param[1] = new SqlParameter("@PAvalue", model.PAValue);
+                Param[2] = new SqlParameter("@TargetSpend", model.TargetSpend);
+                Param[3] = new SqlParameter("@creditdays", Termscode);
+                Param[4] = new SqlParameter("@departmentid", model.DeptId);
+                string spname = "PAApprovers";
+                SqlCommand cmd = new SqlCommand();
+                SqlDataAdapter Adp = new SqlDataAdapter();
+                cmd = new SqlCommand();
+                cmd.Connection = Conn1;
+                cmd.CommandText = spname;
+                cmd.CommandTimeout = 0;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                if (Param != null)
+                {
+                    foreach (SqlParameter sqlParam in Param)
+                    {
+                        cmd.Parameters.Add(sqlParam);
+                    }
+                }
+
+                Adp = new SqlDataAdapter(cmd);
+                Ds = new DataSet();
+
+                Adp.Fill(Ds);
+                cmd.Parameters.Clear();
+                //Ds.Clear();
+                return Ds;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
         public async Task<EmployeModel> GetEmployeeMappings(PAConfigurationModel model)
         {
             EmployeModel employee = new EmployeModel();
@@ -544,7 +601,7 @@ namespace DALayer.PurchaseAuthorization
                         sqlquery += " and DepartmentId='" + masters.DepartmentId + "'";
                     //if (masters.EmployeeNo != null)
                     //    sqlquery += " and DepartmentId='" + masters.EmployeeNo + "'";
-                    if (masters.vendorProjectManager != null && masters.vendorProjectManager !="")
+                    if (masters.vendorProjectManager != null && masters.vendorProjectManager != "")
                         sqlquery += " and ProjectManager='" + masters.vendorProjectManager + "'";
 
                     return yscm.Database.SqlQuery<LoadItemsByID>(sqlquery).ToList();
@@ -849,7 +906,7 @@ namespace DALayer.PurchaseAuthorization
 
                         var data1 = new MPRRevision();
                         data1 = obj.MPRRevisions.Where(x => x.RevisionId == item.MPRRevisionId).FirstOrDefault();
-                        data1.StatusId =Convert.ToByte(data.StatusId);
+                        data1.StatusId = Convert.ToByte(data.StatusId);
                         obj.SaveChanges();
                     }
                     // var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
@@ -888,8 +945,8 @@ namespace DALayer.PurchaseAuthorization
 
                         Approveritem.PAId = status.Sid;
                         Approveritem.ApproverLevel = 1;
-                        Approveritem.RoleName = item.RoleId;
-                        Approveritem.Approver = item.EmployeeNo;
+                        Approveritem.RoleName = item.rolename;
+                        Approveritem.Approver = item.Approver;
                         Approveritem.ApproversRemarks = item.ApproversRemarks;
                         Approveritem.ApprovalStatus = "submitted";
                         Approveritem.ApprovedOn = dateAndTime.Date;
@@ -897,45 +954,31 @@ namespace DALayer.PurchaseAuthorization
                         obj.MPRPAApprovers.Add(Approveritem);
                         obj.SaveChanges();
                     }
-                    var projectmanger = new MPRPAApprover()
-                    {
-                        PAId = status.Sid,
-                        Approver = model.ProjectMangerNo,
-                        RoleName = model.PMRole,
-                        ApprovalStatus = "Submitted",
-                        ApproverLevel = 1,
-                        ApprovedOn = dateAndTime.Date
-
-                    };
-                    obj.MPRPAApprovers.Add(projectmanger);
-                    obj.SaveChanges();
-                    var buyergroup = new MPRPAApprover()
-                    {
-                        PAId = status.Sid,
-                        Approver = model.BuyerGroupNo,
-                        RoleName = model.BGRole,
-                        ApprovalStatus = "Submitted",
-                        ApproverLevel = 1,
-                        ApprovedOn = dateAndTime.Date
-                    };
-                    obj.MPRPAApprovers.Add(buyergroup);
-                    obj.SaveChanges();
-                    this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
-                    //foreach (var item in model.ApproversList)
+                    ///var projectmanger = new MPRPAApprover()
                     //{
-                    //    var Approveritem = new MPRPAApprover()
-                    //    {
-                    //        PAId = status.Sid,
-                    //        ApproverLevel = 1,
-                    //        RoleName = item.RoleId,
-                    //        Approver = item.EmployeeNo,
-                    //        ApproversRemarks = item.ApproversRemarks,
-                    //        ApprovalStatus = "submitted",
-                    //        ApprovedOn = System.DateTime.Now
-                    //    };
-                    //    obj.MPRPAApprovers.Add(Approveritem);
-                    //    obj.SaveChanges();
-                    //}
+                    //    PAId = status.Sid,
+                    //    Approver = model.ProjectMangerNo,
+                    //    RoleName = model.PMRole,
+                    //    ApprovalStatus = "Submitted",
+                    //    ApproverLevel = 1,
+                    //    ApprovedOn = dateAndTime.Date
+
+                    //};
+                    //obj.MPRPAApprovers.Add(projectmanger);
+                    //obj.SaveChanges();
+                    //var buyergroup = new MPRPAApprover()
+                    //{
+                    //    PAId = status.Sid,
+                    //    Approver = model.BuyerGroupNo,
+                    //    RoleName = model.BGRole,
+                    //    ApprovalStatus = "Submitted",
+                    //    ApproverLevel = 1,
+                    //    ApprovedOn = dateAndTime.Date
+                    //};
+                    //obj.MPRPAApprovers.Add(buyergroup);
+                    //obj.SaveChanges();
+                    this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
+                   
 
                 }
                 else
@@ -1011,16 +1054,16 @@ namespace DALayer.PurchaseAuthorization
                         PONO = x.PONO,
                         Remarks = x.Remarks,
                         PODate = x.PODate.ToString(),
-                        MPRRevisionId = Convert.ToInt32( x.MPRRevisionId)
+                        MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
                     }).ToList();
-                    var sqlquery = " ";
-                    sqlquery = "select * from MergedStatusApprovers where PAId = '" + PID + "' ";
-                    var approverdata = obj.Database.SqlQuery<MergedStatusApprover>(sqlquery).ToList();
-                    //var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
+                    //var sqlquery = " ";
+                    //sqlquery = "select * from MergedStatusApprovers where PAId = '" + PID + "' ";
+                    //var approverdata = obj.Database.SqlQuery<MergedStatusApprover>(sqlquery).ToList();
+                    var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
                     {
                         ApproverName = x.Name,
-                        RoleName = x.rolename,
+                        RoleName = x.RoleName,
                         ApproversRemarks = x.ApproversRemarks,
                         ApprovalStatus = x.ApprovalStatus,
                         EmployeeNo = x.Approver,
@@ -1277,7 +1320,7 @@ namespace DALayer.PurchaseAuthorization
                     //approverdata.ApprovedOn = System.DateTime.Now;
                     //obj.SaveChanges();
                     //status.Sid = approverdata.PAId;
-                    UpdatePAStatus(model.PAId,model.mprrevisionid,model.EmployeeNo,model.ApprovalStatus);
+                    UpdatePAStatus(model.PAId, model.mprrevisionid, model.EmployeeNo, model.ApprovalStatus);
                     return status;
                 }
                 else
@@ -1291,22 +1334,22 @@ namespace DALayer.PurchaseAuthorization
             }
         }
 
-        public bool UpdatePAStatus(int paid,int mprrevisionid,string employeeno,string ApprovalStatus)
+        public bool UpdatePAStatus(int paid, int mprrevisionid, string employeeno, string ApprovalStatus)
         {
             List<approverFinalview> approver = new List<approverFinalview>();
             int statusid = 0;
             var sqlquery = "";
             var padetails = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault();
-            if (padetails!=null)
+            if (padetails != null)
             {
                 padetails.PAStatus = ApprovalStatus;
                 obj.SaveChanges();
             }
             sqlquery = "select * from approverFinalview where PAId='" + paid + "' ";
             approver = obj.Database.SqlQuery<approverFinalview>(sqlquery).ToList();
-            if (ApprovalStatus=="Approved")
-                 statusid = 18;
-            else if (ApprovalStatus=="Rejected")
+            if (ApprovalStatus == "Approved")
+                statusid = 18;
+            else if (ApprovalStatus == "Rejected")
                 statusid = 21;
 
             if (approver == null || approver.Count == 0)
@@ -1321,10 +1364,10 @@ namespace DALayer.PurchaseAuthorization
                 //statustrack.Status = "PA Approved";
                 obj.MPRStatusTracks.Add(statustrack);
                 obj.SaveChanges();
-                this.emailDA.paemailstatus(statusid, paid,mprrevisionid,ApprovalStatus,employeeno);
+                this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
                 int id = statustrack.StatusId;
             }
-            else if(ApprovalStatus=="Rejected")
+            else if (ApprovalStatus == "Rejected")
             {
                 MPRStatusTrack statustrack = new MPRStatusTrack();
                 statustrack.StatusId = statusid;
@@ -1337,6 +1380,19 @@ namespace DALayer.PurchaseAuthorization
                 obj.MPRStatusTracks.Add(statustrack);
                 obj.SaveChanges();
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
+            }
+            else
+            {
+                MPRStatusTrack statustrack = new MPRStatusTrack();
+                statustrack.StatusId = statusid;
+                statustrack.RevisionId = mprrevisionid;
+                int requisitionid = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().RequisitionId;
+                statustrack.RequisitionId = requisitionid;
+                statustrack.UpdatedBy = employeeno;
+                statustrack.UpdatedDate = System.DateTime.Now;
+                //statustrack.Status = "PA Approved";
+                obj.MPRStatusTracks.Add(statustrack);
+                obj.SaveChanges();
             }
             //approver.approved;
             return true;
@@ -1532,7 +1588,7 @@ namespace DALayer.PurchaseAuthorization
             {
                 var sqlquery = "";
                 //sqlquery = "select * from pareports where PreparedOn between '" + fromdate + "' and '" + todate + "'";
-                sqlquery= "select * from MPRDates where mprrevisionid!=0 ";
+                sqlquery = "select * from MPRDates where mprrevisionid!=0 ";
                 if (fromdate != null && todate != null)
                     sqlquery += " and preparedon between '" + fromdate + "' and '" + todate + "' ";
                 if (model.MPRRevisionId != 0)

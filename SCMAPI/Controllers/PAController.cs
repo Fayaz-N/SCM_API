@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BALayer.PurchaseAuthorization;
-
+using System.Data;
 namespace SCMAPI.Controllers
 {
     [RoutePrefix("Api/PA")]
@@ -125,6 +125,15 @@ namespace SCMAPI.Controllers
             EmployeModel employee = new EmployeModel();
             employee = await _paBusenessAcess.GetEmployeeMappings(model);
             return Ok(employee);
+        }
+        [HttpPost]
+        [Route("GetEmployeeMappings1")]
+        [ResponseType(typeof(DataSet))]
+        public DataSet GetEmployeeMappings1(PAConfigurationModel model)
+        {
+            DataSet ds = new DataSet();
+            ds = _paBusenessAcess.GetEmployeeMappings1(model);
+            return ds;
         }
 
         //[HttpPost]

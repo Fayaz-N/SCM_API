@@ -27,7 +27,8 @@ namespace DALayer.PurchaseAuthorization
         Task<statuscheckmodel> RemovePurchaseApprover(EmployeemappingtopurchaseModel model);
         Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId);
         Task<EmployeModel> GetEmployeeMappings(PAConfigurationModel model);
-        
+        DataSet GetEmployeeMappings1(PAConfigurationModel model);
+
         //Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters);
         List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters);
         Task<List<DepartmentModel>> GetAllDepartments();

@@ -127,7 +127,7 @@ namespace DALayer.PAEmailDA
             string mprpreparedby = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().PreparedBy;
             if (ApprovalStatus=="Approved")
             {
-                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
                 mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == parequestby).FirstOrDefault().EMail;
                 mails.Subject = "Purchase Authorization Is Approved";
                 Nullable<byte> buyergroup = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().BuyerGroupId;
@@ -136,13 +136,14 @@ namespace DALayer.PAEmailDA
                 if (mails.FrmEmailId!="NULL" && mails.ToEmailId!= "NULL")
                     sendEmail(mails);
                 mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == mprpreparedby).FirstOrDefault().EMail;
-                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress1 + "'>" + ipaddress1 + " </a></div></body></html>";
+                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress1 + "'>" + ipaddress1 + " </a></div></body></html>";
+                mails.CC = "";
                 if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
                     sendEmail(mails);
             }
             else
             {
-                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
                 mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == parequestby).FirstOrDefault().EMail;
                 mails.Subject = "Purchase Authorization Is Rejected";
                 Nullable<byte> buyergroup = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().BuyerGroupId;
@@ -151,7 +152,8 @@ namespace DALayer.PAEmailDA
                 if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
                     sendEmail(mails);
                 mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == mprpreparedby).FirstOrDefault().EMail;
-                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress1 + "'>" + ipaddress1 + " </a></div></body></html>";
+                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress1 + "'>" + ipaddress1 + " </a></div></body></html>";
+                mails.CC = "";
                 if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
                     sendEmail(mails);
                 //mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";

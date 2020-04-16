@@ -10,6 +10,7 @@ namespace SCMModels.RFQModels
     {
         public int Sid { get; set; }
         public string StatusMesssage { get; set; }
+        public string StatusRole { get; set; }
     }
     public class PAApproverDetailsInputModel
     {

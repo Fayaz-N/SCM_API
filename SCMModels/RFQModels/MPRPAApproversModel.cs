@@ -12,6 +12,12 @@ namespace SCMModels.RFQModels
         {
             MPRPADetail = new MPRPADetailsModel();
         }
+
+        public string Approvername { get; set; }
+        public string rolename { get; set; }
+        public string Approver { get; set; }
+
+
         public int ApproverId { get; set; }
         public int PAId { get; set; }
         public byte ApproverLevel { get; set; }

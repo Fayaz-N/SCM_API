@@ -84,7 +84,10 @@ namespace BALayer.PurchaseAuthorization
         {
             return await _purchaseDataAcess.GetEmployeeMappings(model);
         }
-
+        public DataSet GetEmployeeMappings1(PAConfigurationModel model)
+        {
+            return  _purchaseDataAcess.GetEmployeeMappings1(model);
+        }
         public async Task<statuscheckmodel> RemovePurchaseApprover(EmployeemappingtopurchaseModel model)
         {
             return await _purchaseDataAcess.RemovePurchaseApprover(model);
