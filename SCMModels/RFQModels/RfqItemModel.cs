@@ -96,7 +96,10 @@ namespace SCMModels.RFQModels
         public string PONO { get; set; }
         public int DepartmentId { get; set; }
 		public object EmployeeNo { get; set; }
-	}
+        public string PAStatus { get; set; }
+        public string POStatus { get; set; }
+    }
+
     public class ItemsViewModel
     {
         public string POItemNo { get; set; }

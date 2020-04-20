@@ -426,7 +426,7 @@ namespace DALayer.PurchaseAuthorization
                 model.LessBudget = false;
             else
                 model.LessBudget = true;
-            
+
             if (model.PaymentTermCode != null)
                 Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
             else
@@ -954,31 +954,9 @@ namespace DALayer.PurchaseAuthorization
                         obj.MPRPAApprovers.Add(Approveritem);
                         obj.SaveChanges();
                     }
-                    ///var projectmanger = new MPRPAApprover()
-                    //{
-                    //    PAId = status.Sid,
-                    //    Approver = model.ProjectMangerNo,
-                    //    RoleName = model.PMRole,
-                    //    ApprovalStatus = "Submitted",
-                    //    ApproverLevel = 1,
-                    //    ApprovedOn = dateAndTime.Date
 
-                    //};
-                    //obj.MPRPAApprovers.Add(projectmanger);
-                    //obj.SaveChanges();
-                    //var buyergroup = new MPRPAApprover()
-                    //{
-                    //    PAId = status.Sid,
-                    //    Approver = model.BuyerGroupNo,
-                    //    RoleName = model.BGRole,
-                    //    ApprovalStatus = "Submitted",
-                    //    ApproverLevel = 1,
-                    //    ApprovedOn = dateAndTime.Date
-                    //};
-                    //obj.MPRPAApprovers.Add(buyergroup);
-                    //obj.SaveChanges();
                     this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
-                   
+
 
                 }
                 else
@@ -999,6 +977,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 var data = obj.MPRPADetails.Where(x => x.PAId == PID).FirstOrDefault();
+
                 if (data != null)
                 {
                     model.PurchaseTypeId = data.PurchaseTypeId;
@@ -1340,11 +1319,7 @@ namespace DALayer.PurchaseAuthorization
             int statusid = 0;
             var sqlquery = "";
             var padetails = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault();
-            if (padetails != null)
-            {
-                padetails.PAStatus = ApprovalStatus;
-                obj.SaveChanges();
-            }
+
             sqlquery = "select * from approverFinalview where PAId='" + paid + "' ";
             approver = obj.Database.SqlQuery<approverFinalview>(sqlquery).ToList();
             if (ApprovalStatus == "Approved")
@@ -1364,8 +1339,16 @@ namespace DALayer.PurchaseAuthorization
                 //statustrack.Status = "PA Approved";
                 obj.MPRStatusTracks.Add(statustrack);
                 obj.SaveChanges();
+                if (padetails != null)
+                    padetails.PAStatus = ApprovalStatus;
+                    padetails.POStatus = "Pending";
+                    padetails.POStatusUpdate = System.DateTime.Now;
+                    padetails.PAStatusUpdate = System.DateTime.Now;
+                obj.SaveChanges();
+
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
                 int id = statustrack.StatusId;
+                updatepaitems(mprrevisionid,paid);
             }
             else if (ApprovalStatus == "Rejected")
             {
@@ -1379,7 +1362,12 @@ namespace DALayer.PurchaseAuthorization
                 //statustrack.Status = "PA Approved";
                 obj.MPRStatusTracks.Add(statustrack);
                 obj.SaveChanges();
+                if (padetails != null)
+                    padetails.PAStatus = ApprovalStatus;
+               
+                obj.SaveChanges();
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
+                
             }
             else
             {
@@ -1393,9 +1381,37 @@ namespace DALayer.PurchaseAuthorization
                 //statustrack.Status = "PA Approved";
                 obj.MPRStatusTracks.Add(statustrack);
                 obj.SaveChanges();
+                padetails.PAStatus = "Pending";
+                padetails.POStatus = "Pending";
+                obj.SaveChanges();
             }
             //approver.approved;
             return true;
+        }
+        public bool updatepaitems(int mprrevisionid,int paid)
+        {
+            List<Updatepaitem> items = new List<Updatepaitem>();
+            try
+            {
+                var sqlquery = "";
+                sqlquery = "select * from Updatepaitem where MPRRevisionId='" + mprrevisionid + "' and paid='"+ paid +"' ";
+                items = obj.Database.SqlQuery<Updatepaitem>(sqlquery).ToList();
+                List<MPRRfqItemInfo> paitem = new List<MPRRfqItemInfo>();
+                foreach (var item in items)
+                {
+                    var mprrfq = new MPRRfqItemInfo()
+                    {
+                        PAItemID = item.paitemid,
+                    };
+                    obj.SaveChanges();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
         public async Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId)
         {
@@ -1507,6 +1523,23 @@ namespace DALayer.PurchaseAuthorization
                         paitems.Remarks = itemdata.Remarks;
                         obj.SaveChanges();
                     }
+                    status.Sid = paitems.PAID;
+                }
+               
+                var sqlquery = "";
+                sqlquery = "select * from  PAItem where  PONO  is null and paid= " + status.Sid + " ";
+                List<PAItem> item = new List<PAItem>();
+                item = obj.Database.SqlQuery<PAItem>(sqlquery).ToList();
+                if (item.Count==0)
+                {
+                    var data = obj.MPRPADetails.Where(x => x.PAId == status.Sid).FirstOrDefault();
+                    data.POStatus = "PORelasesd";
+                    data.POStatusUpdate = System.DateTime.Now;
+                    obj.SaveChanges();
+                }
+                else
+                {
+
                 }
                 return status;
             }
@@ -1566,6 +1599,10 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and BuyerGroupId='" + model.BuyerGroupId + "'";
                 if (model.VendorId != 0)
                     sqlquery += " and VendorId='" + model.VendorId + "'";
+                if (model.PAStatus != null)
+                    sqlquery += " and PAStatus='" + model.PAStatus + "'";
+                if (model.POStatus != null)
+                    sqlquery += " and POStatus='" + model.POStatus + "'";
                 //if (model.FromDate != null && model.ToDate != null)
                 //    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 
@@ -1596,6 +1633,20 @@ namespace DALayer.PurchaseAuthorization
                 //sqlquery = " select * from (select ms.Status, ms.StatusId, mr.RevisionId, mst.UpdatedDate, mr.ApprovalStatus, mr.ApprovedOn, mr.SecondApproversStatus, mr.ThirdApproverStatus, mr.SecondApprovedOn from MPRStatusTrack mst inner join MPRRevisions mr on mr.RevisionId = mst.RevisionId inner join MPRStatus ms on ms.StatusId = mst.StatusId) t pivot(count(statusid) for status in (submitted, Checked, approved, rejected, Acknowledged,[Clarification to End User],[RFQ Generated],[RFQ Responded],[Technical Spec Approved],[Quote Finalized],[PA Generated],[PO Released],[Raising PO Checked],[Raising PO Approved],[MPR Rejected],[MPR On Hold],[RFQ Finalized],[PA Approved],[MPR Closed])) as pivot_table ";
                 report = obj.Database.SqlQuery<MPRDate>(sqlquery).ToList();
                 return report;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                string email = obj.Employees.Where(x => x.EmployeeNo == model.Approver).FirstOrDefault().EMail;
+                this.emailDA.PAEmailRequestForApproval(model.PAId, email);
+                return status;
             }
             catch (Exception ex)
             {

@@ -221,5 +221,9 @@ namespace BALayer.PurchaseAuthorization
         {
             return await _purchaseDataAcess.GetPaStatusReports(model);
         }
+        public async Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model)
+        {
+            return await _purchaseDataAcess.UpdateApproverforRequest(model);
+        }
     }
 }

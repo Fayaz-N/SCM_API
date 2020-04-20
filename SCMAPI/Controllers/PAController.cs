@@ -387,5 +387,14 @@ namespace SCMAPI.Controllers
             filter = await _paBusenessAcess.GetPaStatusReports(model);
             return Ok(filter);
         }
+        [HttpPost]
+        [Route("UpdateApproverforRequest")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> UpdateApproverforRequest(MPRPAApproversModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _paBusenessAcess.UpdateApproverforRequest(model);
+            return Ok(status);
+        }
     }
 }

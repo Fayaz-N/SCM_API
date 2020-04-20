@@ -23,54 +23,12 @@ namespace DALayer.PAEmailDA
             //mails.CC = "n.senthilkumar@in.yokogawa.com";
             foreach (var item in data)
             {
-                if (item.RoleName == "PM")
-                {
-                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-                    mails.Subject = "Purchase Authorization Waiting For Your Approval";
-                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-                        this.sendEmail(mails);
-                }
-                else if (item.RoleName == "CPM")
-                {
-                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-                    mails.Subject = "Purchase Authorization Waiting For Your Approval";
-                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-                        this.sendEmail(mails);
-                }
-                else if (item.RoleName == "DM")
-                {
-                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-                    mails.Subject = "Purchase Authorization Waiting For Your Approval";
-                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-                        this.sendEmail(mails);
-                }
-                else if (item.RoleName == "CMMH")
-                {
-                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-                    mails.Subject = "Purchase Authorization Waiting For Your Approval";
-                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-                        this.sendEmail(mails);
-                }
-                else if (item.RoleName == "UH")
-                {
-                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-                    mails.Subject = "Purchase Authorization Waiting For Your Approval";
-                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-                        this.sendEmail(mails);
-                }
-                else if (item.RoleName == "DGM")
-                {
-                    mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                    mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
-                    mails.Subject = "Purchase Authorization Waiting For Your Approval";
-                    if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
-                        this.sendEmail(mails);
-                }
+                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
+                mails.Subject = "Purchase Authorization Waiting For Your Approval";
+                if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
+                    this.sendEmail(mails);
+                
             }
             return true;
         }
@@ -163,6 +121,26 @@ namespace DALayer.PAEmailDA
                 //sendEmail(mails);
             }
             return true;
+        }
+        public bool PAEmailRequestForApproval(int paid, string ToEmailId)
+        {
+            EmailSend emails = new EmailSend();
+            var ipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
+            ipaddress = ipaddress + "SCM/mprpa/" + paid + "";
+            string employeeno = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault().RequestedBy;
+            try
+            {
+                emails.ToEmailId = ToEmailId;
+                emails.FrmEmailId = obj.Employees.Where(x=>x.EmployeeNo==employeeno).FirstOrDefault().EMail;
+                emails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Request For Purchase Authorization To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                if (emails.FrmEmailId != "NULL" && emails.ToEmailId != "NULL")
+                    sendEmail(emails);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
    

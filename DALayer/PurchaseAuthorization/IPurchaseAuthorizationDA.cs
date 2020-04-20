@@ -56,5 +56,6 @@ namespace DALayer.PurchaseAuthorization
         Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model);
         Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);
         Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model);
+        Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model);
     }
 }
