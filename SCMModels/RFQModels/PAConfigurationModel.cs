@@ -8,12 +8,12 @@ namespace SCMModels.RFQModels
 {
    public class PAConfigurationModel
     {
-        public int PAValue { get; set; }
+        public decimal PAValue { get; set; }
         public int Creditdays { get; set; } 
         public bool Budgetvalue { get; set; }
         public int DeptId { get; set; }
-        public int TargetSpend { get; set; }
-        public int  UnitPrice { get; set; }
+        public decimal TargetSpend { get; set; }
+        public decimal  UnitPrice { get; set; }
         public Nullable<bool> LessBudget { get; set; }
         public Nullable<bool> MoreBudget { get; set; }
         public string PaymentTermCode { get; set; }

@@ -68,6 +68,7 @@ namespace SCMModels.RFQModels
         public string POItemNo { get; set; }
         public string PODate { get; set; }
         public string Remarks { get; set; }
+        public int MPRItemDetailsid { get; set; }
         public RfqRevisionModel RFQRevision { get; set; }
         public List<RFQTermsModel> rfqterms { get; set; }
         public List<RfqItemInfoModel> iteminfo { get; set; }

@@ -409,7 +409,7 @@ namespace DALayer.PurchaseAuthorization
         //        }
         //        return employee;
         //    }
-        //    catch (Exception ex)
+        //    catch (Exception ex)  
         //    {
         //        throw;
         //    }
@@ -921,7 +921,14 @@ namespace DALayer.PurchaseAuthorization
                             PAItem paitem = new PAItem()
                             {
                                 PAID = status.Sid,
-                                RfqSplitItemId = items.RFQSplitItemId
+                                RfqSplitItemId = items.RFQSplitItemId,
+                                MPRItemDetailsId = model.Item.Select(x => x.MPRItemDetailsid).FirstOrDefault()
+                                //MPRItemDetailsId = Convert.ToInt32(model.Item.Select(x => new RfqItemModel()
+                                //{
+                                //  MPRItemDetailsid=x.MPRItemDetailsid
+                                //}))
+                                //MPRItemDetailsId=items.
+                                
                             };
                             obj.PAItems.Add(paitem);
                             obj.SaveChanges();
