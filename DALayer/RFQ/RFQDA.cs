@@ -184,9 +184,10 @@ namespace DALayer.RFQ
             using (YSCMEntities Context = new YSCMEntities())
             {
 
-                //string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where (Status not like '%Approved%' or Status is null) and MPRRevisionId=" + RevisionId + "";
-                string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, RFQCompareView.* from RFQCompareView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQCompareView.MPRRevisionId where  MPRRevisionId=" + RevisionId + " and RFQCompareView.RowNumber=1 and mprdet.RowNumber=1";
-                var cmd = Context.Database.Connection.CreateCommand();
+				//string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where (Status not like '%Approved%' or Status is null) and MPRRevisionId=" + RevisionId + "";
+				// string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, RFQCompareView.* from RFQCompareView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQCompareView.MPRRevisionId where  MPRRevisionId=" + RevisionId + " and RFQCompareView.RowNumber=1 and mprdet.RowNumber=1";
+				string query = "select * from rfqcompareItemDetails where MPRRevisionId=" + RevisionId + "";
+				var cmd = Context.Database.Connection.CreateCommand();
                 cmd.CommandText = query;
                 cmd.Connection.Open();
                 compareDet.Load(cmd.ExecuteReader());
