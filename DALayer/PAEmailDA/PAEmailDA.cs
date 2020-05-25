@@ -132,6 +132,7 @@ namespace DALayer.PAEmailDA
             {
                 emails.ToEmailId = ToEmailId;
                 emails.FrmEmailId = obj.Employees.Where(x=>x.EmployeeNo==employeeno).FirstOrDefault().EMail;
+                emails.Subject = "Reminder for Purchase Authorization to approve";
                 emails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Request For Purchase Authorization To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
                 if (emails.FrmEmailId != "NULL" && emails.ToEmailId != "NULL")
                     sendEmail(emails);
@@ -141,7 +142,7 @@ namespace DALayer.PAEmailDA
             {
                 throw;
             }
-        }
+        }   
     }
    
     public class EmailSend

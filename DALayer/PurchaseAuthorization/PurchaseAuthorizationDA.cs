@@ -1651,7 +1651,7 @@ namespace DALayer.PurchaseAuthorization
             statuscheckmodel status = new statuscheckmodel();
             try
             {
-                string email = obj.Employees.Where(x => x.EmployeeNo == model.Approver).FirstOrDefault().EMail;
+                string email = obj.Employees.Where(x => x.EmployeeNo == model.EmployeeNo).FirstOrDefault().EMail;
                 this.emailDA.PAEmailRequestForApproval(model.PAId, email);
                 return status;
             }
