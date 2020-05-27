@@ -9,6 +9,11 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using BALayer.PurchaseAuthorization;
 using System.Data;
+using System.Web;
+using System.IO;
+using System.Data.OleDb;
+using System.Globalization;
+
 namespace SCMAPI.Controllers
 {
     [RoutePrefix("Api/PA")]
@@ -225,6 +230,15 @@ namespace SCMAPI.Controllers
             status = await _paBusenessAcess.InsertPurchaseAuthorization(model);
             return Ok(status);
         }
+        [HttpPost]
+        [Route("finalpa")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> finalpa(MPRPADetailsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _paBusenessAcess.finalpa(model);
+            return Ok(status);
+        }
         [HttpGet]
         [Route("GetMPRPADeatilsByPAID/{PID}")]
         [ResponseType(typeof(MPRPADetailsModel))]
@@ -395,6 +409,120 @@ namespace SCMAPI.Controllers
             statuscheckmodel status = new statuscheckmodel();
             status = await _paBusenessAcess.UpdateApproverforRequest(model);
             return Ok(status);
+        }
+
+        [HttpPost]
+        [Route("UploadFile")]
+        public IHttpActionResult UploadPADocuments()
+        {
+            var httpRequest = HttpContext.Current.Request;
+            var serverPath = HttpContext.Current.Server.MapPath("~/PADocuments");
+            string parsedFileName = "";
+            var revisionId = httpRequest.Files.AllKeys[0];
+            if (httpRequest.Files.Count > 0)
+            {
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    byte[] fileData = null;
+                    using (var binaryReader = new BinaryReader(postedFile.InputStream))
+                    {
+                        fileData = binaryReader.ReadBytes(postedFile.ContentLength);
+                    }
+
+                    GC.Collect();
+                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + revisionId + "\\" + ToValidFileName(postedFile.FileName));
+                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + revisionId;
+                    var path = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
+                    if (!Directory.Exists(serverPath))
+                        Directory.CreateDirectory(serverPath);
+                    var memory = new MemoryStream();
+                    FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+                    var updatedStream = new MemoryStream(fileData);
+                    updatedStream.Seek(0, SeekOrigin.Begin);
+                    updatedStream.CopyToAsync(fs).Wait();
+                    fs.Flush();
+                    GC.Collect();
+                }
+            }
+            return Ok(parsedFileName);
+
+        }
+
+        [HttpPost]
+        [Route("uploadExcel")]
+        public IHttpActionResult uploadExcel()
+        {
+            var paid = "";
+            var httpRequest = HttpContext.Current.Request;
+            var serverPath = HttpContext.Current.Server.MapPath("~/PADocuments");
+            string parsedFileName = "";
+            if (httpRequest.Files.Count > 0)
+            {
+                paid = httpRequest.Files.AllKeys[0];
+                var postedFile = httpRequest.Files[0];
+                parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + paid + "\\"+ ToValidFileName(postedFile.FileName));
+                serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + paid;
+                //serverPath =  string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + ToValidFileName(postedFile.FileName)) + "\\" + paid;
+                //serverPath = serverPath + "\\" + paid;
+                var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
+                if (!Directory.Exists(serverPath))
+                    Directory.CreateDirectory(serverPath);
+                postedFile.SaveAs(filePath);
+
+                DataTable dtexcel = new DataTable();
+
+                bool hasHeaders = false;
+                string HDR = hasHeaders ? "Yes" : "No";
+                string strConn;
+                if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
+                    strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
+                else
+                    strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
+
+                OleDbConnection conn = new OleDbConnection(strConn);
+                conn.Open();
+                DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+
+                DataRow schemaRow = schemaTable.Rows[0];
+                string sheet = schemaRow["TABLE_NAME"].ToString();
+                if (!sheet.EndsWith("_"))
+                {
+                    string query = "SELECT  * FROM ["+ sheet + "]";
+                    OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
+                    dtexcel.Locale = CultureInfo.CurrentCulture;
+                    daexcel.Fill(dtexcel);
+                }
+
+                conn.Close();
+                int iSucceRows = 0;
+                try
+                {
+                    YSCMEntities entities = new YSCMEntities();
+                   
+                        entities.MPRPADocuments.Add(new MPRPADocument
+                        {
+                            Filename = postedFile.FileName,
+                            Filepath= parsedFileName,
+                            uploadeddate=System.DateTime.Now,
+                            paid=Convert.ToInt32(paid)
+                        });
+                       
+                    entities.SaveChanges();
+                    int succRecs = iSucceRows;
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            return Ok(parsedFileName);
+
+        }
+        private static string ToValidFileName(string fileName)
+        {
+            fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+", "_");
+            return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
         }
     }
 }

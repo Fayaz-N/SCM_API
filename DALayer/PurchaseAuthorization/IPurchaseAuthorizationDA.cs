@@ -39,6 +39,7 @@ namespace DALayer.PurchaseAuthorization
         Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes();
         Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes();
         Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model);
+        Task<statuscheckmodel> finalpa(MPRPADetailsModel model);
         Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID);
         Task<List<MPRPADetailsModel>> GetAllMPRPAList();
         Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles();

@@ -916,19 +916,11 @@ namespace DALayer.PurchaseAuthorization
                         //var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).FirstOrDefault();
                         foreach (var items in itemdata)
                         {
-                            //items.Paid = status.Sid;
-                            //obj.SaveChanges();
                             PAItem paitem = new PAItem()
                             {
                                 PAID = status.Sid,
                                 RfqSplitItemId = items.RFQSplitItemId,
                                 MPRItemDetailsId = model.Item.Select(x => x.MPRItemDetailsid).FirstOrDefault()
-                                //MPRItemDetailsId = Convert.ToInt32(model.Item.Select(x => new RfqItemModel()
-                                //{
-                                //  MPRItemDetailsid=x.MPRItemDetailsid
-                                //}))
-                                //MPRItemDetailsId=items.
-                                
                             };
                             obj.PAItems.Add(paitem);
                             obj.SaveChanges();
@@ -946,11 +938,52 @@ namespace DALayer.PurchaseAuthorization
                     //    obj.PATerms.Add(paterms);
                     //    obj.SaveChanges();
                     //}
+                    //var Approveritem = new MPRPAApprover();
+                    //foreach (var item in model.ApproversList)
+                    //{
+
+                    //    Approveritem.PAId = status.Sid;
+                    //    Approveritem.ApproverLevel = 1;
+                    //    Approveritem.RoleName = item.rolename;
+                    //    Approveritem.Approver = item.Approver;
+                    //    Approveritem.ApproversRemarks = item.ApproversRemarks;
+                    //    Approveritem.ApprovalStatus = "submitted";
+                    //    Approveritem.ApprovedOn = dateAndTime.Date;
+
+                    //    obj.MPRPAApprovers.Add(Approveritem);
+                    //    obj.SaveChanges();
+                    //}
+
+                   // this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
+
+
+                }
+                else
+                {
+
+                }
+
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> finalpa(MPRPADetailsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var dateAndTime = DateTime.Now;
+                var authorization = new MPRPADetail();
+                if (model != null)
+                {
                     var Approveritem = new MPRPAApprover();
                     foreach (var item in model.ApproversList)
                     {
 
-                        Approveritem.PAId = status.Sid;
+                        Approveritem.PAId = model.PAId;
                         Approveritem.ApproverLevel = 1;
                         Approveritem.RoleName = item.rolename;
                         Approveritem.Approver = item.Approver;
@@ -962,7 +995,7 @@ namespace DALayer.PurchaseAuthorization
                         obj.SaveChanges();
                     }
 
-                    this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
+                     this.emailDA.PAEmailRequest(model.PAId, model.LoginEmployee);
 
 
                 }
@@ -1055,6 +1088,14 @@ namespace DALayer.PurchaseAuthorization
                         EmployeeNo = x.Approver,
                         ApprovedOn = x.ApprovedOn
                     }).ToList();
+
+                    var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID).FirstOrDefault();
+                    if (documentsdata!=null)
+                    {
+                        model.documents.filename = documentsdata.Filename;
+                        model.documents.path = documentsdata.Filepath;
+                        model.documents.uploadeddate = documentsdata.uploadeddate;
+                    }
                     return model;
                 }
                 else

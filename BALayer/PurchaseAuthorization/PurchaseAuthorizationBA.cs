@@ -138,6 +138,10 @@ namespace BALayer.PurchaseAuthorization
             return await _purchaseDataAcess.InsertPurchaseAuthorization(model);
         }
 
+        public async Task<statuscheckmodel> finalpa(MPRPADetailsModel model)
+        {
+            return await _purchaseDataAcess.finalpa(model);
+        }
         public async Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID)
         {
             return await _purchaseDataAcess.GetMPRPADeatilsByPAID(PID);
