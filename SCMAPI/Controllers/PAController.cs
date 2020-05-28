@@ -461,10 +461,17 @@ namespace SCMAPI.Controllers
             string filename = "";
             if (httpRequest.Files.Count > 0)
             {
-                foreach (string file in httpRequest.Files)
+                for (int i = 0; i < httpRequest.Files.Count; i++)
                 {
                     paid = httpRequest.Files.AllKeys[0];
-                    var postedFile = httpRequest.Files[file];
+                    //string employeeno = httpRequest.Files.AllKeys[1];
+                    var postedFile = httpRequest.Files[i];
+                    byte[] fileData = null;
+                    using (var binaryReader = new BinaryReader(postedFile.InputStream))
+                    {
+                        fileData = binaryReader.ReadBytes(postedFile.ContentLength);
+                    }
+
                     //byte[] fileData = null;
                     //using (var binaryReader = new BinaryReader(postedFile.InputStream))
                     //{
@@ -472,8 +479,6 @@ namespace SCMAPI.Controllers
                     //}
                     parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + paid + "\\" + ToValidFileName(postedFile.FileName));
                     serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + paid;
-                    //serverPath =  string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + ToValidFileName(postedFile.FileName)) + "\\" + paid;
-                    //serverPath = serverPath + "\\" + paid;
                     var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
                     if (!Directory.Exists(serverPath))
                         Directory.CreateDirectory(serverPath);
@@ -508,6 +513,7 @@ namespace SCMAPI.Controllers
                         throw e;
                     }
                 }
+
 
             }
             return Ok(filename);
