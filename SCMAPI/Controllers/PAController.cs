@@ -454,69 +454,63 @@ namespace SCMAPI.Controllers
         public IHttpActionResult uploadExcel()
         {
             var paid = "";
+            int documentid = 0;
             var httpRequest = HttpContext.Current.Request;
             var serverPath = HttpContext.Current.Server.MapPath("~/PADocuments");
             string parsedFileName = "";
+            string filename = "";
             if (httpRequest.Files.Count > 0)
             {
-                paid = httpRequest.Files.AllKeys[0];
-                var postedFile = httpRequest.Files[0];
-                parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + paid + "\\"+ ToValidFileName(postedFile.FileName));
-                serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + paid;
-                //serverPath =  string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + ToValidFileName(postedFile.FileName)) + "\\" + paid;
-                //serverPath = serverPath + "\\" + paid;
-                var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
-                if (!Directory.Exists(serverPath))
-                    Directory.CreateDirectory(serverPath);
-                postedFile.SaveAs(filePath);
-
-                DataTable dtexcel = new DataTable();
-
-                bool hasHeaders = false;
-                string HDR = hasHeaders ? "Yes" : "No";
-                string strConn;
-                if (filePath.Substring(filePath.LastIndexOf('.')).ToLower() == ".xlsx")
-                    strConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
-                else
-                    strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties=\"Excel 8.0;HDR=" + HDR + ";IMEX=0\"";
-
-                OleDbConnection conn = new OleDbConnection(strConn);
-                conn.Open();
-                DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-
-                DataRow schemaRow = schemaTable.Rows[0];
-                string sheet = schemaRow["TABLE_NAME"].ToString();
-                if (!sheet.EndsWith("_"))
+                foreach (string file in httpRequest.Files)
                 {
-                    string query = "SELECT  * FROM ["+ sheet + "]";
-                    OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
-                    dtexcel.Locale = CultureInfo.CurrentCulture;
-                    daexcel.Fill(dtexcel);
+                    paid = httpRequest.Files.AllKeys[0];
+                    var postedFile = httpRequest.Files[file];
+                    //byte[] fileData = null;
+                    //using (var binaryReader = new BinaryReader(postedFile.InputStream))
+                    //{
+                    //    fileData = binaryReader.ReadBytes(postedFile.ContentLength);
+                    //}
+                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + paid + "\\" + ToValidFileName(postedFile.FileName));
+                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + paid;
+                    //serverPath =  string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + ToValidFileName(postedFile.FileName)) + "\\" + paid;
+                    //serverPath = serverPath + "\\" + paid;
+                    var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
+                    if (!Directory.Exists(serverPath))
+                        Directory.CreateDirectory(serverPath);
+                    postedFile.SaveAs(filePath);
+                    try
+                    {
+                        YSCMEntities entities = new YSCMEntities();
+
+                        var data = new MPRPADocument();
+                        data.Filename = postedFile.FileName;
+                        data.Filepath = parsedFileName;
+                        data.uploadeddate = System.DateTime.Now;
+                        data.paid = Convert.ToInt32(paid);
+                        entities.MPRPADocuments.Add(data);
+                        entities.SaveChanges();
+                        documentid = data.DocumentId;
+                        filename = data.Filename;
+
+                        //entities.MPRPADocuments.Add(new MPRPADocument
+                        //{
+                        //    Filename = postedFile.FileName,
+                        //    Filepath = parsedFileName,
+                        //    uploadeddate = System.DateTime.Now,
+                        //    paid = Convert.ToInt32(paid)
+                        //});
+                        //entities.SaveChanges();
+
+                        // int succRecs = iSucceRows;
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
                 }
 
-                conn.Close();
-                int iSucceRows = 0;
-                try
-                {
-                    YSCMEntities entities = new YSCMEntities();
-                   
-                        entities.MPRPADocuments.Add(new MPRPADocument
-                        {
-                            Filename = postedFile.FileName,
-                            Filepath= parsedFileName,
-                            uploadeddate=System.DateTime.Now,
-                            paid=Convert.ToInt32(paid)
-                        });
-                       
-                    entities.SaveChanges();
-                    int succRecs = iSucceRows;
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
             }
-            return Ok(parsedFileName);
+            return Ok(filename);
 
         }
         private static string ToValidFileName(string fileName)

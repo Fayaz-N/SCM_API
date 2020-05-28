@@ -1089,12 +1089,17 @@ namespace DALayer.PurchaseAuthorization
                         ApprovedOn = x.ApprovedOn
                     }).ToList();
 
-                    var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID).FirstOrDefault();
-                    if (documentsdata!=null)
+                    var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID).ToList();
+                    if (documentsdata.Count!=0)
                     {
-                        model.documents.filename = documentsdata.Filename;
-                        model.documents.path = documentsdata.Filepath;
-                        model.documents.uploadeddate = documentsdata.uploadeddate;
+                        
+                            model.documents = documentsdata.Select(x => new PADocumentsmodel()
+                            {
+                                filename=x.Filename,
+                                path=x.Filepath,
+                                uploadeddate=x.uploadeddate,
+                            }).ToList();
+                     
                     }
                     return model;
                 }

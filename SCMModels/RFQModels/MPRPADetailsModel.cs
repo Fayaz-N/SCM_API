@@ -20,7 +20,7 @@ namespace SCMModels.RFQModels
             RfqTerms = new List<RFQTermsModel>();
             ItemInfo = new List<RfqItemInfoModel>();
             TermId = new List<int>();
-            documents = new PADocumentsmodel();
+            documents = new List<PADocumentsmodel>();
         }
         public int PAId { get; set; }
         public string RequestedBy { get; set; }
@@ -61,7 +61,7 @@ namespace SCMModels.RFQModels
         public MPRPAPurchaseTypesModel purchasetypes { get; set; }
         public MPRBuyerGroupModel buyergroup { get; set; }
         public MPRDepartmentModel department { get; set; }
-        public PADocumentsmodel documents { get; set; }
+        public List<PADocumentsmodel> documents { get; set; }
         public List<RfqItemModel> Item { get; set; }
         public List<MPRPAApproversModel> ApproversList { get; set; }
         public List<RFQTermsModel> RfqTerms { get; set; }
