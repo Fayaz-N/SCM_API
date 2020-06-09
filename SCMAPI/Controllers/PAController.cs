@@ -13,6 +13,7 @@ using System.Web;
 using System.IO;
 using System.Data.OleDb;
 using System.Globalization;
+using System.Net.Http;
 
 namespace SCMAPI.Controllers
 {
@@ -459,60 +460,52 @@ namespace SCMAPI.Controllers
             var serverPath = HttpContext.Current.Server.MapPath("~/PADocuments");
             string parsedFileName = "";
             string filename = "";
+
             if (httpRequest.Files.Count > 0)
             {
-                for (int i = 0; i < httpRequest.Files.Count; i++)
+                paid = httpRequest.Files.AllKeys[0];
+                //string employeeno = httpRequest.Files.AllKeys[1];
+                var postedFile = httpRequest.Files[0];
+                parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + paid + "\\" + ToValidFileName(postedFile.FileName));
+                serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + paid;
+                var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
+                if (!Directory.Exists(serverPath))
+                    Directory.CreateDirectory(serverPath);
+                postedFile.SaveAs(filePath);
+                try
                 {
-                    paid = httpRequest.Files.AllKeys[0];
-                    //string employeeno = httpRequest.Files.AllKeys[1];
-                    var postedFile = httpRequest.Files[i];
-                    byte[] fileData = null;
-                    using (var binaryReader = new BinaryReader(postedFile.InputStream))
-                    {
-                        fileData = binaryReader.ReadBytes(postedFile.ContentLength);
-                    }
+                    YSCMEntities entities = new YSCMEntities();
 
-                    //byte[] fileData = null;
-                    //using (var binaryReader = new BinaryReader(postedFile.InputStream))
+                    var data = new MPRPADocument();
+                    data.Filename = postedFile.FileName;
+                    data.Filepath = parsedFileName;
+                    data.uploadeddate = System.DateTime.Now;
+                    data.paid = Convert.ToInt32(paid);
+                    entities.MPRPADocuments.Add(data);
+                    entities.SaveChanges();
+                    documentid = data.DocumentId;
+                    filename = data.Filename;
+
+                    //entities.MPRPADocuments.Add(new MPRPADocument
                     //{
-                    //    fileData = binaryReader.ReadBytes(postedFile.ContentLength);
-                    //}
-                    parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + paid + "\\" + ToValidFileName(postedFile.FileName));
-                    serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + paid;
-                    var filePath = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
-                    if (!Directory.Exists(serverPath))
-                        Directory.CreateDirectory(serverPath);
-                    postedFile.SaveAs(filePath);
-                    try
-                    {
-                        YSCMEntities entities = new YSCMEntities();
+                    //    Filename = postedFile.FileName,
+                    //    Filepath = parsedFileName,
+                    //    uploadeddate = System.DateTime.Now,
+                    //    paid = Convert.ToInt32(paid)
+                    //});
+                    //entities.SaveChanges();
 
-                        var data = new MPRPADocument();
-                        data.Filename = postedFile.FileName;
-                        data.Filepath = parsedFileName;
-                        data.uploadeddate = System.DateTime.Now;
-                        data.paid = Convert.ToInt32(paid);
-                        entities.MPRPADocuments.Add(data);
-                        entities.SaveChanges();
-                        documentid = data.DocumentId;
-                        filename = data.Filename;
-
-                        //entities.MPRPADocuments.Add(new MPRPADocument
-                        //{
-                        //    Filename = postedFile.FileName,
-                        //    Filepath = parsedFileName,
-                        //    uploadeddate = System.DateTime.Now,
-                        //    paid = Convert.ToInt32(paid)
-                        //});
-                        //entities.SaveChanges();
-
-                        // int succRecs = iSucceRows;
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
+                    // int succRecs = iSucceRows;
                 }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                //for (int i = 0; i < httpRequest.Files.Count; i++)
+                //{
+
+
+                //}
 
 
             }
@@ -524,5 +517,48 @@ namespace SCMAPI.Controllers
             fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+", "_");
             return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
         }
+        //[HttpPost]
+        //[Route("FileUploading1")]
+        //public async Task<string> FileUploading1()
+        //{
+        //    var ctx = HttpContext.Current.Request;
+        //    var root = HttpContext.Current.Server.MapPath("~/PADocuments");
+        //    string path = "";
+        //    string parsedFileName = "";
+        //    DateTime dateUpload;
+        //    string FileName = "";
+        //    int paid = 61;
+        //    var provider = new MultipartFormDataStreamProvider(root);
+        //    try
+        //    {
+        //        await Request.Content.ReadAsMultipartAsync(provider);
+        //        string FileType = ctx.Files.AllKeys[0];
+        //        if (ctx.Files.Count > 0)
+        //        {
+        //            foreach (var file in provider.FileData)
+        //            {
+        //                var postedfile = ctx.Files[0];
+        //                var name = file.Headers.ContentDisposition.FileName;
+        //                name = name.Trim('"');
+        //                //string extension = System.IO.Path.GetExtension(name);
+        //                //string result = name.Substring(0, name.Length - extension.Length);
+        //                //FileName = result;
+        //                dateUpload = DateTime.Now;
+        //                parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + paid + "\\" + ToValidFileName(postedfile.FileName));
+        //                root = root + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + paid;
+        //                var filePath = Path.Combine(root, ToValidFileName(postedfile.FileName));
+        //                if (!Directory.Exists(root))
+        //                    Directory.CreateDirectory(root);
+        //                postedfile.SaveAs(filePath);
+        //            }
+        //        }
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return $"Error:{e.Message}";
+        //    }
+        //    return "File Uploaded!";
+        //}
     }
 }

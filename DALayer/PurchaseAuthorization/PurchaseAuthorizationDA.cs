@@ -1323,6 +1323,9 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and ApprovalStatus='" + model.Status + "'";
                 if (model.FromDate != null && model.ToDate != null)
                     sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
+                if (model.Status == null)
+                    sqlquery += " and ApprovalStatus in('submitted', 'pending') ";
+                sqlquery += "  order by PAId desc ";
 
                 details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
                 return details;
