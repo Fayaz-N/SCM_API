@@ -163,6 +163,8 @@ namespace DALayer.MPR
 							{
 								foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
 								{
+									if (string.IsNullOrEmpty(mPRItemInfo.Itemid))
+										mPRItemInfo.Itemid = "NewItem";
 									item.Itemid = mPRItemInfo.Itemid;
 									if (mPRItemInfo.Itemid == "NewItem" || mPRItemInfo.Itemid == "0000")
 										item.Itemid = "NewItem";
@@ -732,24 +734,28 @@ namespace DALayer.MPR
 			List<string> EmailList = model.Emailid.Split(new char[] { ',' }).ToList();
 			foreach (var item in EmailList)
 			{
+				Int32 sequenceNo = 0;
+				string password = "";
+				var value="";
 				RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item).FirstOrDefault();
 
 				//need to implement vUniqueId value
 				if (vendorUsermaster == null && !string.IsNullOrEmpty(item))
 				{
 					RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
-					Int32 sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
+					 sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
 					if (sequenceNo == null || sequenceNo == 0)
 						sequenceNo = 1;
 					else
 					{
 						sequenceNo = sequenceNo + 1;
 					}
-					var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+					 value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
 					vendorUsermasters.VuniqueId = "C" + value;
 					vendorUsermasters.SequenceNo = sequenceNo;
 					vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
-					vendorUsermasters.pwd = GeneratePassword();
+					password = GeneratePassword();
+					vendorUsermasters.pwd = password;
 					vendorUsermasters.ContactNumber = model.ContactNumber;
 					vendorUsermasters.ContactPerson = model.ContactPerson;
 					vendorUsermasters.VendorId = vendorid;
@@ -768,6 +774,32 @@ namespace DALayer.MPR
 						//vendorUsermaster.VendorId = vendorid;
 						vscm.SaveChanges();
 					}
+
+				}
+				YSCMEntities Context1 = new YSCMEntities();
+				VendorUserMaster venmaster = Context1.VendorUserMasters.Where(li => li.Vuserid == item).FirstOrDefault<VendorUserMaster>();
+				if (venmaster == null && !string.IsNullOrEmpty(item))
+				{
+					VendorUserMaster vendorUsermasters = new VendorUserMaster();
+					vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
+					vendorUsermasters.pwd = password;
+					vendorUsermasters.VendorId = vendorid;
+					vendorUsermasters.ContactNumber = model.ContactNumber;
+					vendorUsermasters.ContactPerson = model.ContactPerson;
+					vendorUsermasters.Active = true;
+					vendorUsermasters.SuperUser = true;
+					vendorUsermasters.VuniqueId = "C" + value;
+					vendorUsermasters.SequenceNo = sequenceNo;
+					Context1.VendorUserMasters.Add(vendorUsermasters);
+					Context1.SaveChanges();
+				}
+
+				else
+				{
+					// vendorUsermaster.Vuserid = model.Emailid;
+					//venmaster.pwd = item.pwd;
+					//vendorUsermaster.VendorId = vendorid;
+					Context1.SaveChanges();
 
 				}
 			}
@@ -821,52 +853,52 @@ namespace DALayer.MPR
 					vendorid = vendormaster.Vendorid;
 
 				}
-				List<RemoteVendorUserMaster> remoteVendorUsermaster = vscm.RemoteVendorUserMasters.ToList();
-				foreach (var item in remoteVendorUsermaster)
-				{
-					try
-					{
+				//List<RemoteVendorUserMaster> remoteVendorUsermaster = vscm.RemoteVendorUserMasters.ToList();
+				//foreach (var item in remoteVendorUsermaster)
+				//{
+				//	try
+				//	{
 
-						VendorUserMaster venmaster = Context.VendorUserMasters.Where(li => li.Vuserid == item.Vuserid).FirstOrDefault<VendorUserMaster>();
-						if (venmaster == null)
-						{
-							VendorUserMaster vendorUsermasters = new VendorUserMaster();
-							vendorUsermasters.Vuserid = item.Vuserid;
-							vendorUsermasters.pwd = item.pwd;
-							vendorUsermasters.VendorId = vendorid;
-							vendorUsermasters.ContactNumber = item.ContactNumber;
-							vendorUsermasters.ContactPerson = item.ContactPerson;
-							vendorUsermasters.Active = true;
-							vendorUsermasters.SuperUser = true;
-							vendorUsermasters.VuniqueId = item.VuniqueId;
-							vendorUsermasters.SequenceNo = item.SequenceNo;
-							Context.VendorUserMasters.Add(vendorUsermasters);
-							Context.SaveChanges();
-						}
+				//		VendorUserMaster venmaster = Context.VendorUserMasters.Where(li => li.Vuserid == item.Vuserid).FirstOrDefault<VendorUserMaster>();
+				//		if (venmaster == null)
+				//		{
+				//			VendorUserMaster vendorUsermasters = new VendorUserMaster();
+				//			vendorUsermasters.Vuserid = item.Vuserid;
+				//			vendorUsermasters.pwd = item.pwd;
+				//			vendorUsermasters.VendorId = vendorid;
+				//			vendorUsermasters.ContactNumber = item.ContactNumber;
+				//			vendorUsermasters.ContactPerson = item.ContactPerson;
+				//			vendorUsermasters.Active = true;
+				//			vendorUsermasters.SuperUser = true;
+				//			vendorUsermasters.VuniqueId = item.VuniqueId;
+				//			vendorUsermasters.SequenceNo = item.SequenceNo;
+				//			Context.VendorUserMasters.Add(vendorUsermasters);
+				//			Context.SaveChanges();
+				//		}
 
-						else
-						{
-							// vendorUsermaster.Vuserid = model.Emailid;
-							venmaster.pwd = item.pwd;
-							//vendorUsermaster.VendorId = vendorid;
-							Context.SaveChanges();
+				//		else
+				//		{
+				//			// vendorUsermaster.Vuserid = model.Emailid;
+				//			venmaster.pwd = item.pwd;
+				//			//vendorUsermaster.VendorId = vendorid;
+				//			Context.SaveChanges();
 
-						}
-					}
-					catch (DbEntityValidationException e)
-					{
-						foreach (var eve in e.EntityValidationErrors)
-						{
-							Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-								eve.Entry.Entity.GetType().Name, eve.Entry.State);
-							foreach (var ve in eve.ValidationErrors)
-							{
-								Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-									ve.PropertyName, ve.ErrorMessage);
-							}
-						}
-					}
-				}
+				//		}
+				//	}
+				//	catch (DbEntityValidationException e)
+				//	{
+				//		foreach (var eve in e.EntityValidationErrors)
+				//		{
+				//			Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+				//				eve.Entry.Entity.GetType().Name, eve.Entry.State);
+				//			foreach (var ve in eve.ValidationErrors)
+				//			{
+				//				Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+				//					ve.PropertyName, ve.ErrorMessage);
+				//			}
+				//		}
+				//	}
+				//}
 				return vendorid;
 			}
 		}
@@ -1189,9 +1221,11 @@ namespace DALayer.MPR
 									MPR_Assignment.Employeeno = item.Employeeno;
 									Context.SaveChanges();
 								}
+								mprrevision.StatusId = Convert.ToByte(mPRStatusTrackDetails.StatusId);
+								Context.SaveChanges();
 								this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, item.Employeeno, "mprAssign", mprStatus.RevisionId);
 							}
-
+							
 						}
 						if (mprStatus.BuyerGroupId != null)
 						{
