@@ -49,6 +49,7 @@ namespace SCMModels.RFQModels
         public Nullable<decimal> CGSTPercentage { get; set; }
         public string MfgPartNo { get; set; }
         public string MfgModelNo { get; set; }
+        public string RFQNo { get; set; }
         public Nullable<decimal> SGSTPercentage { get; set; }
         public Nullable<decimal> ItemUnitPrice { get; set; }
         public Nullable<decimal> IGSTAmount { get; set; }
@@ -81,6 +82,7 @@ namespace SCMModels.RFQModels
     }
     public class PADetailsModel
     {
+        public string rfqnumber { get; set; }
         public int VendorId { get; set; }
         public int venderid { get; set; }
         public int RequisitionIds { get; set; }

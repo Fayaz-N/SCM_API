@@ -891,7 +891,7 @@ namespace DALayer.PurchaseAuthorization
                     obj.MPRPADetails.Add(authorization);
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
-
+                    
                     foreach (var item in model.Item)
                     {
                         var data = new MPRStatusTrack();
@@ -909,11 +909,10 @@ namespace DALayer.PurchaseAuthorization
                         data1.StatusId = Convert.ToByte(data.StatusId);
                         obj.SaveChanges();
                     }
-                    // var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
+                    //var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
                     foreach (var item in model.Item.GroupBy(n => n.RFQItemsId).Select(x => x.FirstOrDefault()))
                     {
                         var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
-                        //var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).FirstOrDefault();
                         foreach (var items in itemdata)
                         {
                             PAItem paitem = new PAItem()
@@ -954,7 +953,7 @@ namespace DALayer.PurchaseAuthorization
                     //    obj.SaveChanges();
                     //}
 
-                   // this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
+                    // this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
 
 
                 }
@@ -1073,6 +1072,7 @@ namespace DALayer.PurchaseAuthorization
                         PONO = x.PONO,
                         Remarks = x.Remarks,
                         PODate = x.PODate.ToString(),
+                        RFQNo=x.RFQNo,
                         MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
                     }).ToList();
                     //var sqlquery = " ";
@@ -1313,6 +1313,32 @@ namespace DALayer.PurchaseAuthorization
         public async Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
         {
             List<GetmprApproverdeatil> details = new List<GetmprApproverdeatil>();
+            int mprno = 0;
+            int rfqno = 0;
+            if (model.DocumentNumber != null && model.DocumentNumber != "")
+            {
+                if (model.DocumentNumber.StartsWith("MPR", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    model.DocumentNumber = model.DocumentNumber;
+                }
+                else
+                {
+                    mprno = Convert.ToInt32(model.DocumentNumber);
+                    model.DocumentNumber = null;
+                }
+            }
+            if (model.rfqnumber != null && model.rfqnumber != null)
+            {
+                if (model.rfqnumber.StartsWith("RFQ", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    model.rfqnumber = model.rfqnumber;
+                }
+                else
+                {
+                    rfqno = Convert.ToInt32(model.rfqnumber);
+                    model.rfqnumber = null;
+                }
+            }
             try
             {
                 var sqlquery = "";
@@ -1325,8 +1351,20 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
                 if (model.Status == null)
                     sqlquery += " and ApprovalStatus in('submitted', 'pending') ";
+                if (model.rfqnumber != null && model.rfqnumber != "")
+                    sqlquery += " and  RFQNo='" + model.rfqnumber + "'";
+                if (model.DocumentNumber != null && model.DocumentNumber != "")
+                    sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
+                if (model.VendorId != 0)
+                    sqlquery += " and  Vendorid='" + model.VendorId + "'";
+                if (model.DepartmentId != 0)
+                    sqlquery += " and  DepartmentID='" + model.DepartmentId + "'";
+                if (mprno != 0)
+                    sqlquery += " and MPRSeqNo = '" + mprno + "'";
+                if (rfqno != 0)
+                    sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
                 sqlquery += "  order by PAId desc ";
-
+                
                 details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
                 return details;
             }
@@ -1638,12 +1676,38 @@ namespace DALayer.PurchaseAuthorization
         }
         public async Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
         {
+            int mprno = 0;
+            int rfqno = 0;
+            if (model.DocumentNumber!=null && model.DocumentNumber!="")
+            {
+                if (model.DocumentNumber.StartsWith("MPR", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    model.DocumentNumber = model.DocumentNumber;
+                }
+                else
+                {
+                    mprno = Convert.ToInt32(model.DocumentNumber);
+                    model.DocumentNumber = null;
+                }
+            }
+            if (model.rfqnumber!=null && model.rfqnumber!=null)
+            {
+                if (model.rfqnumber.StartsWith("RFQ", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    model.rfqnumber = model.rfqnumber;
+                }
+                else
+                {
+                    rfqno = Convert.ToInt32(model.rfqnumber);
+                    model.rfqnumber = null;
+                }
+            }
             List<GetMprPaDetailsByFilter> filter = new List<GetMprPaDetailsByFilter>();
             try
             {
                 var sqlquery = "";
                 sqlquery = "select * from GetMprPaDetailsByFilters where PAId!=0";
-                if (model.DocumentNumber != null)
+                if (model.DocumentNumber != null && model.DocumentNumber!="")
                     sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
                 if (model.DepartmentId != 0)
                     sqlquery += " and DepartmentId='" + model.DepartmentId + "'";
@@ -1659,6 +1723,12 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and PAStatus='" + model.PAStatus + "'";
                 if (model.POStatus != null)
                     sqlquery += " and POStatus='" + model.POStatus + "'";
+                if (mprno != 0)
+                    sqlquery += " and MPRSeqNo = '" + mprno + "'";
+                if (model.rfqnumber != null && model.rfqnumber != "")
+                    sqlquery += " and RFQNo ='" + model.rfqnumber + "'";
+                if (rfqno != 0)
+                    sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
                 //if (model.FromDate != null && model.ToDate != null)
                 //    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 

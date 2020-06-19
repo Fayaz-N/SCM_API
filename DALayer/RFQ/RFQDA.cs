@@ -2229,7 +2229,7 @@ namespace DALayer.RFQ
 			List<VendormasterModel> vendor = new List<VendormasterModel>();
 			try
 			{
-				var data = obj.VendorMasters.Where(x => x.Deleteflag == false).ToList();
+				var data = obj.VendorMasters.Where(x => x.Deleteflag == true).ToList();
 				vendor = data.Select(x => new VendormasterModel()
 				{
 					ContactNumber = x.ContactNo,

@@ -19,5 +19,10 @@ namespace SCMModels.RFQModels
         public Nullable<DateTime> ToDate { get; set; }
         public string Status { get; set; }
         public string CreatedBy { get; set; }
+        public string DocumentNumber { get; set; }
+        public int DepartmentId { get; set; }
+        public int BuyerGroupId { get; set; }
+        public int VendorId { get; set; }
+        public string rfqnumber { get; set; }
     }
 }
