@@ -95,12 +95,15 @@ namespace SCMModels.RFQModels
         public int DeptID { get; set; }
         public string vendorProjectManager { get; set; }
         public string POItemNo { get; set; }
-        public Nullable<DateTime> POdate { get; set; }
+        public string POdate { get; set; }
         public string PONO { get; set; }
         public int DepartmentId { get; set; }
 		public object EmployeeNo { get; set; }
         public string PAStatus { get; set; }
         public string POStatus { get; set; }
+        public string fromDate { get; set; }
+        public string toDate { get; set; }
+        public int Paid { get; set; }
     }
 
     public class ItemsViewModel

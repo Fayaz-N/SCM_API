@@ -12,6 +12,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,7 @@ namespace DALayer.PurchaseAuthorization
         }
         VSCMEntities vscm = new VSCMEntities();
         YSCMEntities obj = new YSCMEntities();
+        //inserting pa limits
         public async Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -56,6 +58,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //bulk insert palimits
         public async Task<statuscheckmodel> BulkInsertPAAuthorizationLimits(List<PAAuthorizationLimitModel> model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -82,6 +85,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //get authorization limits by deptid
         public async Task<PAAuthorizationLimitModel> GetPAAuthorizationLimitById(int deptid)
         {
             PAAuthorizationLimitModel model = new PAAuthorizationLimitModel();
@@ -103,6 +107,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //employee mapping to the palimits
         public async Task<statuscheckmodel> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -149,6 +154,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //adding credit days
         public async Task<statuscheckmodel> CreatePACreditDaysmaster(PACreditDaysMasterModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -175,6 +181,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //get credit days by credit id
         public async Task<PACreditDaysMasterModel> GetCreditdaysMasterByID(int creditdaysid)
         {
             PACreditDaysMasterModel model = new PACreditDaysMasterModel();
@@ -198,6 +206,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //mapping credit days to employee
         public async Task<statuscheckmodel> AssignCreditdaysToEmployee(PACreditDaysApproverModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -223,6 +232,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //remove pa limits by Auth id
         public async Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -252,6 +262,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //removing pa creditdays by creditid
         public async Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -289,6 +300,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //removing employee assigned to pa credit days
         public async Task<statuscheckmodel> RemovePACreditDaysApprover(EmployeemappingtocreditModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -327,6 +340,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //getting credit days approver by approval id
         public async Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId)
         {
             PACreditDaysApproverModel model = new PACreditDaysApproverModel();
@@ -414,6 +428,8 @@ namespace DALayer.PurchaseAuthorization
         //        throw;
         //    }
         //}
+
+        //getting approvers based on toatl unitprice and target spend
         public DataSet GetEmployeeMappings1(PAConfigurationModel model)
         {
             SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
@@ -576,6 +592,8 @@ namespace DALayer.PurchaseAuthorization
         //        throw;
         //    }
         //}
+
+        //getting approved items and also go by filters to get approved items
         public List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters)
         {
             //List<LoadItemsByID> view = new List<LoadItemsByID>();
@@ -700,6 +718,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting all departments
         public async Task<List<DepartmentModel>> GetAllDepartments()
         {
             List<DepartmentModel> model = new List<DepartmentModel>();
@@ -721,6 +741,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting mapped slabs to department by department id
         public async Task<List<PAAuthorizationLimitModel>> GetSlabsByDepartmentID(int DeptID)
         {
             List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
@@ -743,6 +765,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting all the employees
         public async Task<List<EmployeModel>> GetAllEmployee()
         {
             List<EmployeModel> model = new List<EmployeModel>();
@@ -765,6 +789,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting all the credit days mapped
         public async Task<List<PAAuthorizationLimitModel>> GetAllCredits()
         {
             List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
@@ -816,6 +842,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting the mpr purcahse modes
         public async Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes()
         {
             List<MPRPAPurchaseModesModel> model = new List<MPRPAPurchaseModesModel>();
@@ -836,6 +864,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+        //getting mpr purchase types
         public async Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes()
         {
             List<MPRPAPurchaseTypesModel> model = new List<MPRPAPurchaseTypesModel>();
@@ -855,6 +884,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //generating the purchase authorization for approve ditems
         public async Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -909,7 +940,7 @@ namespace DALayer.PurchaseAuthorization
                         data1.StatusId = Convert.ToByte(data.StatusId);
                         obj.SaveChanges();
                     }
-                    //var itemsdata = obj.RFQItemsInfo_N.Where(x => model.Item.Contains(x.RFQItemsId));
+                    //model.Item.Select(x => x.MPRItemDetailsid).FirstOrDefault()
                     foreach (var item in model.Item.GroupBy(n => n.RFQItemsId).Select(x => x.FirstOrDefault()))
                     {
                         var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
@@ -919,43 +950,13 @@ namespace DALayer.PurchaseAuthorization
                             {
                                 PAID = status.Sid,
                                 RfqSplitItemId = items.RFQSplitItemId,
-                                MPRItemDetailsId = model.Item.Select(x => x.MPRItemDetailsid).FirstOrDefault()
+                                MPRItemDetailsId = item.MPRItemDetailsid
                             };
                             obj.PAItems.Add(paitem);
                             obj.SaveChanges();
                         }
 
                     }
-                    //var rfqterms = obj.RFQTerms.Where(x => model.TermId.Contains(x.termsid)).ToList();
-                    //foreach (var item in model.TermId)
-                    //{
-                    //    var paterms = new PATerm()
-                    //    {
-                    //        PAID = status.Sid,
-                    //        RfqTermId = item,
-                    //    };
-                    //    obj.PATerms.Add(paterms);
-                    //    obj.SaveChanges();
-                    //}
-                    //var Approveritem = new MPRPAApprover();
-                    //foreach (var item in model.ApproversList)
-                    //{
-
-                    //    Approveritem.PAId = status.Sid;
-                    //    Approveritem.ApproverLevel = 1;
-                    //    Approveritem.RoleName = item.rolename;
-                    //    Approveritem.Approver = item.Approver;
-                    //    Approveritem.ApproversRemarks = item.ApproversRemarks;
-                    //    Approveritem.ApprovalStatus = "submitted";
-                    //    Approveritem.ApprovedOn = dateAndTime.Date;
-
-                    //    obj.MPRPAApprovers.Add(Approveritem);
-                    //    obj.SaveChanges();
-                    //}
-
-                    // this.emailDA.PAEmailRequest(status.Sid, model.LoginEmployee);
-
-
                 }
                 else
                 {
@@ -1010,6 +1011,9 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+
+        //getting the generated purchase authorization by pa id
         public async Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID)
         {
             MPRPADetailsModel model = new MPRPADetailsModel();
@@ -1075,9 +1079,6 @@ namespace DALayer.PurchaseAuthorization
                         RFQNo=x.RFQNo,
                         MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
                     }).ToList();
-                    //var sqlquery = " ";
-                    //sqlquery = "select * from MergedStatusApprovers where PAId = '" + PID + "' ";
-                    //var approverdata = obj.Database.SqlQuery<MergedStatusApprover>(sqlquery).ToList();
                     var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
                     model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
                     {
@@ -1114,7 +1115,7 @@ namespace DALayer.PurchaseAuthorization
             }
         }
 
-
+        //retreving the generated pa total list
         public async Task<List<MPRPADetailsModel>> GetAllMPRPAList()
         {
             List<MPRPADetailsModel> model = new List<MPRPADetailsModel>();
@@ -1141,6 +1142,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting the functinal role of approvers 
         public async Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles()
         {
             List<PAFunctionalRolesModel> model = new List<PAFunctionalRolesModel>();
@@ -1235,6 +1238,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting allthe project managers based on employeeno
         public async Task<List<ProjectManagerModel>> LoadAllProjectManagers()
         {
             List<ProjectManagerModel> model = new List<ProjectManagerModel>();
@@ -1310,6 +1315,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting pa approved,pending and submitted
         public async Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
         {
             List<GetmprApproverdeatil> details = new List<GetmprApproverdeatil>();
@@ -1339,6 +1346,7 @@ namespace DALayer.PurchaseAuthorization
                     model.rfqnumber = null;
                 }
             }
+            CultureInfo provider = CultureInfo.InvariantCulture;
             try
             {
                 var sqlquery = "";
@@ -1363,6 +1371,7 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and MPRSeqNo = '" + mprno + "'";
                 if (rfqno != 0)
                     sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
+
                 sqlquery += "  order by PAId desc ";
                 
                 details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
@@ -1373,6 +1382,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //updating the pa status based on paid
         public async Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -1406,7 +1417,7 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
-
+        //continuation to above api
         public bool UpdatePAStatus(int paid, int mprrevisionid, string employeeno, string ApprovalStatus)
         {
             List<approverFinalview> approver = new List<approverFinalview>();
@@ -1555,6 +1566,7 @@ namespace DALayer.PurchaseAuthorization
         //    }
         //}
 
+            //getting mapped salbs and corresponding employee based on budget or deptid or employee id
         public async Task<List<Employeemappingtopurchase>> GetPurchaseSlabsandMappedemployeesByDeptId(EmployeeFilterModel model)
         {
             List<Employeemappingtopurchase> purchase = new List<Employeemappingtopurchase>();
@@ -1601,6 +1613,8 @@ namespace DALayer.PurchaseAuthorization
         //        throw;
         //    }
         //}
+
+        //inserting pa items after pa approval
         public async Task<statuscheckmodel> InsertPaitems(List<ItemsViewModel> paitem)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -1656,6 +1670,8 @@ namespace DALayer.PurchaseAuthorization
             }
 
         }
+
+        //removing mapped slabs
         public async Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
@@ -1674,6 +1690,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting the all palist and also go by filetrs like mprno or vendor or buyergroup or rfqno or paid or postatus or pastatus or fromdate and todate
         public async Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
         {
             int mprno = 0;
@@ -1713,8 +1731,12 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and DepartmentId='" + model.DepartmentId + "'";
                 if (model.PONO != null)
                     sqlquery += " and PONO='" + model.PONO + "'";
+                if (model.Paid != 0)
+                    sqlquery += " and PAId='" + model.Paid + "'";
                 if (model.POdate != null)
                     sqlquery += " and PODate='" + model.POdate + "'";
+                if (model.fromDate != null && model.toDate != null)
+                    sqlquery += " and RequestedOn between '" + model.fromDate + "' and '" + model.toDate + "'";
                 if (model.BuyerGroupId != 0)
                     sqlquery += " and BuyerGroupId='" + model.BuyerGroupId + "'";
                 if (model.VendorId != 0)
@@ -1729,6 +1751,9 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and RFQNo ='" + model.rfqnumber + "'";
                 if (rfqno != 0)
                     sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
+
+
+                sqlquery += " order by PAId desc ";
                 //if (model.FromDate != null && model.ToDate != null)
                 //    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 
@@ -1740,6 +1765,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //getting ps status reports 
         public async Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model)
         {
             List<MPRDate> report = new List<MPRDate>();
@@ -1765,6 +1792,8 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
+
+        //sending email to approver that to approve pa
         public async Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model)
         {
             statuscheckmodel status = new statuscheckmodel();
