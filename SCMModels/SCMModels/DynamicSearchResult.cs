@@ -60,7 +60,7 @@ namespace SCMModels
 		public string AssignEmployee { get; set; }
 		public string MPRStatusId { get; set; }
 		public string PurchaseTypeId { get; set; }
-
+		public List<string> mprStatusListId { get; set; }
 	}
 	public class rfqFilterParams
 	{
@@ -76,6 +76,7 @@ namespace SCMModels
 	{
 		public List<RFQQuoteView> RFQQuoteViewList { get; set; }
 		public List<YILTermsandCondition> TermsList { get; set; }
+		public List<MPRRFQDocument> mprfqDocs { get; set; }
 	}
 	public class EmployeeModel
 	{
@@ -101,5 +102,22 @@ namespace SCMModels
 		public string DeletedRemarks { get; set; }
 		public string Deletedby { get; set; }
 		public int RevisionId { get; set; }
+	}
+
+	public  class MPRRFQDocument
+	{
+		public int MprDocId { get; set; }
+		public int RevisionId { get; set; }
+		public Nullable<int> ItemDetailsId { get; set; }
+		public string DocumentName { get; set; }
+		public string UploadedBy { get; set; }
+		public System.DateTime UplaodedDate { get; set; }
+		public bool CanShareWithVendor { get; set; }
+		public string Path { get; set; }
+		public byte DocumentTypeid { get; set; }
+		public int VendorId { get; set; }
+		public bool Deleteflag { get; set; }
+
+
 	}
 }

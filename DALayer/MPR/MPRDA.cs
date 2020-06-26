@@ -736,21 +736,21 @@ namespace DALayer.MPR
 			{
 				Int32 sequenceNo = 0;
 				string password = "";
-				var value="";
+				var value = "";
 				RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item).FirstOrDefault();
 
 				//need to implement vUniqueId value
 				if (vendorUsermaster == null && !string.IsNullOrEmpty(item))
 				{
 					RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
-					 sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
+					sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
 					if (sequenceNo == null || sequenceNo == 0)
 						sequenceNo = 1;
 					else
 					{
 						sequenceNo = sequenceNo + 1;
 					}
-					 value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+					value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
 					vendorUsermasters.VuniqueId = "C" + value;
 					vendorUsermasters.SequenceNo = sequenceNo;
 					vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
@@ -1101,7 +1101,26 @@ namespace DALayer.MPR
 					query += " and MPRStatusId='" + mprfilterparams.MPRStatusId + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.PurchaseTypeId))
 					query += " and PurchaseTypeId='" + mprfilterparams.PurchaseTypeId + "'";
+				if (mprfilterparams.mprStatusListId != null && mprfilterparams.mprStatusListId.Count > 0)
+				{
+					//completed,pending
+					if (mprfilterparams.mprStatusListId.Count == 2)
+					{
+						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)";//completed and pending}
 
+					}
+					//completed
+					else if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId[0] == "1")//PO Released,MPR Rejected,  MPR Closed
+					{
+						query += " and MPRStatusId in (12,15,19)";
+					}
+					//pending
+					if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId[0] == "2")
+					{
+						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,13,14,16,17,18,20,21)";
+					}
+
+				}
 				query += " order by RevisionId desc ";
 				//if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
 				//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
@@ -1225,7 +1244,7 @@ namespace DALayer.MPR
 								Context.SaveChanges();
 								this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, item.Employeeno, "mprAssign", mprStatus.RevisionId);
 							}
-							
+
 						}
 						if (mprStatus.BuyerGroupId != null)
 						{

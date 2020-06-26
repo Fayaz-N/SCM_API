@@ -28,7 +28,7 @@ namespace SCMAPI.Controllers
 		[Route("updateVendorQuotes")]
 		public IHttpActionResult updateVendorQuotes([FromBody] DataModel Result)
 		{
-			return Ok(this._rfqBusenessAcess.updateVendorQuotes(Result.RFQQuoteViewList, Result.TermsList));
+			return Ok(this._rfqBusenessAcess.updateVendorQuotes(Result.RFQQuoteViewList, Result.TermsList, Result.mprfqDocs));
 		}
 		[HttpGet]
 		[Route("getRFQCompareItems/{MPRRevisionId}")]

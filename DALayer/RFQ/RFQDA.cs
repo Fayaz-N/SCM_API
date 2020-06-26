@@ -50,7 +50,7 @@ namespace DALayer.RFQ
 			}
 			return table;
 		}
-		public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList)
+		public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList, List<MPRRFQDocument> mprfqDocs)
 		{
 			List<RFQTermsModel> rfqList = new List<RFQTermsModel>();
 			foreach (var data in termsList)
@@ -102,7 +102,7 @@ namespace DALayer.RFQ
 						rfqModel.rfqmaster = new RFQMasterModel();
 						rfqModel.rfqmaster.MPRRevisionId = Convert.ToInt32(item.MPRRevisionId);
 						rfqModel.rfqmaster.VendorId = item.VendorId;
-						rfqModel.rfqmaster.VendorVisibility = false;
+						rfqModel.rfqmaster.VendorVisibility = item.VendorVisibility;
 						rfqModel.rfqmaster.CreatedBy = item.CreatedBy;
 						rfqModel.rfqmaster.Created = DateTime.Now;
 						rfqModel.CreatedBy = Convert.ToInt32(item.CreatedBy);
@@ -121,6 +121,8 @@ namespace DALayer.RFQ
 						rfqModel.DeliveryMinWeeks = item.DeliveryMinWeeks;
 						rfqModel.DeliveryMaxWeeks = item.DeliveryMaxWeeks;
 						rfqModel.RFQType = "Quote";
+						rfqModel.PaymentTermRemarks = item.PaymentTermRemarks;
+						rfqModel.Remarks = item.Remarks;
 						var itemList = RFQQuoteViewList.Where(li => li.VendorId == item.VendorId).ToList();
 						foreach (RFQQuoteView sitem in itemList)
 						{
@@ -133,6 +135,7 @@ namespace DALayer.RFQ
 							rfqModel.rfqitem.Add(rfqitem);
 						}
 						rfqModel.RFQTerms = rfqList;
+						rfqModel.RfqDocuments = mprfqDocs;
 						CreateRfQ(rfqModel, true);
 						MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
 						mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == item.MPRRevisionId).FirstOrDefault().RequisitionId;
@@ -141,7 +144,8 @@ namespace DALayer.RFQ
 						mPRStatusTrackDetails.UpdatedBy = item.CreatedBy;
 						mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
 						this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
-						this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId);
+						//if (item.sendemail == true)
+						//	this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId);
 					}
 				}
 			}
@@ -339,6 +343,7 @@ namespace DALayer.RFQ
 						revision.BankGuarantee = model.BankGuarantee;
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+						revision.Remarks = model.Remarks;
 						revision.DeleteFlag = false;
 						if (rfqremote.MPRRevisionId != null)
 						{
@@ -386,6 +391,7 @@ namespace DALayer.RFQ
 						revision.BankGuarantee = model.BankGuarantee;
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+						revision.Remarks = model.Remarks;
 						revision.DeleteFlag = false;
 
 						try
@@ -458,29 +464,61 @@ namespace DALayer.RFQ
 							vscm.SaveChanges();
 
 						}
-						List<MPRDocument> mprdocumnts = obj.MPRDocuments.Where(li => li.ItemDetailsId == data.MRPItemsDetailsID && li.ItemDetailsId != null).ToList();
-
-						foreach (var item in mprdocumnts)
+						if (model.RfqDocuments.Count > 0)
 						{
-							RemoteRFQDocument rfqDoc = new RemoteRFQDocument();
-							rfqDoc.rfqRevisionId = revisionid;
-							rfqDoc.rfqItemsid = rfqItemdata.RFQItemsId;
-							rfqDoc.DocumentName = item.DocumentName;
-							rfqDoc.DocumentType = item.DocumentTypeid;
-							rfqDoc.Path = item.Path;
-							rfqDoc.UploadedBy = Convert.ToString(revision.CreatedBy);
-							rfqDoc.uploadedDate = DateTime.Now;
-							try
+							List<MPRRFQDocument> mprdocumnts = model.RfqDocuments.Where(li => li.ItemDetailsId == data.MRPItemsDetailsID || li.ItemDetailsId == null).ToList();
+							foreach (var item in mprdocumnts)
 							{
-								vscm.RemoteRFQDocuments.Add(rfqDoc);
-								vscm.SaveChanges();
-							}
-							catch (Exception)
-							{
+								RemoteRFQDocument rfqDoc = new RemoteRFQDocument();
+								rfqDoc.rfqRevisionId = revisionid;
+								if (item.ItemDetailsId != null)
+									rfqDoc.rfqItemsid = rfqItemdata.RFQItemsId;
+								else
+									rfqDoc.rfqItemsid = null;
+								rfqDoc.DocumentName = item.DocumentName;
+								rfqDoc.DocumentType = item.DocumentTypeid;
+								rfqDoc.Path = item.Path;
+								rfqDoc.UploadedBy = Convert.ToString(revision.CreatedBy);
+								rfqDoc.uploadedDate = DateTime.Now;
+								try
+								{
+									vscm.RemoteRFQDocuments.Add(rfqDoc);
+									vscm.SaveChanges();
+								}
+								catch (Exception)
+								{
 
-								throw;
+									throw;
+								}
 							}
 						}
+						else
+						{
+							List<MPRDocument> mprdocumnts = obj.MPRDocuments.Where(li => li.ItemDetailsId == data.MRPItemsDetailsID && li.ItemDetailsId != null).ToList();
+							foreach (var item in mprdocumnts)
+							{
+								RemoteRFQDocument rfqDoc = new RemoteRFQDocument();
+								rfqDoc.rfqRevisionId = revisionid;
+								rfqDoc.rfqItemsid = rfqItemdata.RFQItemsId;
+								rfqDoc.DocumentName = item.DocumentName;
+								rfqDoc.DocumentType = item.DocumentTypeid;
+								rfqDoc.Path = item.Path;
+								rfqDoc.UploadedBy = Convert.ToString(revision.CreatedBy);
+								rfqDoc.uploadedDate = DateTime.Now;
+								try
+								{
+									vscm.RemoteRFQDocuments.Add(rfqDoc);
+									vscm.SaveChanges();
+								}
+								catch (Exception)
+								{
+
+									throw;
+								}
+							}
+						}
+
+
 					}
 				}
 
@@ -571,6 +609,7 @@ namespace DALayer.RFQ
 						revision.BankGuarantee = model.BankGuarantee;
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+						revision.Remarks = model.Remarks;
 						revision.BuyergroupEmail = BuyergroupEmail;
 						revision.DeleteFlag = false;
 						//revision.RFQStatus.Select(x => new RFQStatu()
@@ -610,6 +649,7 @@ namespace DALayer.RFQ
 						revision.BankGuarantee = model.BankGuarantee;
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
+						revision.Remarks = model.Remarks;
 						revision.DeleteFlag = false;
 
 						try
@@ -631,8 +671,6 @@ namespace DALayer.RFQ
 					{
 						try
 						{
-
-
 
 							var rfqitemLocal = obj.RFQItems_N.Where(li => li.RFQItemsId == data.RFQItemsId).FirstOrDefault();
 
@@ -713,28 +751,28 @@ namespace DALayer.RFQ
 								mprRfq.MPRItemDetailsid = rfqitemLocal.MPRItemDetailsid;
 								mprRfq.MPRRevisionId = model.rfqmaster.MPRRevisionId;
 								mprRfq.RfqItemsid = Convert.ToInt16(rfqitemLocal.RFQItemsId);
-								var splitdata = obj.RateContracts.Where(li => li.ItemId == rfqitemLocal.ItemId &&li.VendorId==model.rfqmaster.VendorId && li.RFQType == "Quote").ToList();
+								//var splitdata = obj.RateContracts.Where(li => li.ItemId == rfqitemLocal.ItemId && li.VendorId == model.rfqmaster.VendorId && li.RFQType == "Quote").ToList();
 
-								foreach (var rfqspliData in splitdata)
-								{
-									MPRRfqItemInfo mprRfqInfo = new MPRRfqItemInfo();
-									if (rfqspliData == null)
-										mprRfqInfo.rfqsplititemid = null;
-									else
-										mprRfqInfo.rfqsplititemid = rfqspliData.RFQSplitItemId;
-									mprRfq.MPRRfqItemInfos.Add(mprRfqInfo);
-								}
-								if(splitdata.Count==0)
-								{
-									MPRRfqItemInfo mprRfqInfo = new MPRRfqItemInfo();
-									mprRfqInfo.rfqsplititemid = null;
-									mprRfq.MPRRfqItemInfos.Add(mprRfqInfo);
-								}
+								//foreach (var rfqspliData in splitdata)
+								//{
+								//MPRRfqItemInfo mprRfqInfo = new MPRRfqItemInfo();
+								//if (rfqspliData == null)
+								//mprRfqInfo.rfqsplititemid = null;
+								//else
+								//mprRfqInfo.rfqsplititemid = rfqspliData.RFQSplitItemId;
+								//mprRfq.MPRRfqItemInfos.Add(mprRfqInfo);
+								//}
+								//if (splitdata.Count == 0)
+								//{
+								//	MPRRfqItemInfo mprRfqInfo = new MPRRfqItemInfo();
+								//	mprRfqInfo.rfqsplititemid = null;
+								//	mprRfq.MPRRfqItemInfos.Add(mprRfqInfo);
+								//}
 								createMPRRFQItems(mprRfq);
 							}
 
 							List<MPRDocument> mprdocumnts = obj.MPRDocuments.Where(li => li.ItemDetailsId == data.MPRItemDetailsid).ToList();
-							var rfqdocs = vscm.RemoteRFQDocuments.Where(li => li.rfqItemsid == rfqitemLocal.RFQItemsId).ToList();
+							var rfqdocs = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqitemLocal.RFQRevisionId).ToList();
 							foreach (var item in rfqdocs)
 							{
 								RFQDocument rfqDoc = new RFQDocument();
@@ -758,6 +796,7 @@ namespace DALayer.RFQ
 								}
 							}
 						}
+
 						catch (Exception ex)
 						{
 
@@ -2384,6 +2423,7 @@ namespace DALayer.RFQ
 						};
 						obj.RFQItemsInfo_N.Add(localinfo);
 						obj.SaveChanges();
+
 					}
 					else
 					{
@@ -2403,8 +2443,23 @@ namespace DALayer.RFQ
 						localRfqiteminfo.Status = model.Status;
 						obj.SaveChanges();
 					}
+					//update rfqsplit item id in mprrfqitem
+
+					MPRRfqItem mprItem = obj.MPRRfqItems.Where(li => li.RfqItemsid == model.RFQItemsId).FirstOrDefault();
+					MPRRfqItemInfo mprItemInfo = obj.MPRRfqItemInfos.Where(li => li.rfqsplititemid == remoteinfo.RFQSplitItemId && li.MPRRFQitemId == mprItem.MPRRFQitemId).FirstOrDefault();
+					if (mprItemInfo == null)
+					{
+						mprItemInfo = new MPRRfqItemInfo();
+						mprItemInfo.MPRRFQitemId = mprItem.MPRRFQitemId;
+						mprItemInfo.rfqsplititemid = remoteinfo.RFQSplitItemId;
+						obj.MPRRfqItemInfos.Add(mprItemInfo);
+						obj.SaveChanges();
+
+					}
 				}
+
 				int revisionid = obj.RFQItems_N.Where(li => li.RFQItemsId == model.RFQItemsId).FirstOrDefault().RFQRevisionId;
+
 				return await this.GetRfqDetailsById(revisionid);
 			}
 			catch (Exception ex)

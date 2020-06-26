@@ -23,9 +23,9 @@ namespace BALayer.RFQ
         {
             return this._rfqDataAcess.getRFQItems(RevisionId);
         }
-        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList)
+        public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList, List<MPRRFQDocument> mprfqDocs)
         {
-            return this._rfqDataAcess.updateVendorQuotes(RFQQuoteViewList, termsList);
+            return this._rfqDataAcess.updateVendorQuotes(RFQQuoteViewList, termsList, mprfqDocs);
 
         }
         public DataSet getRFQCompareItems(int RevisionId)
