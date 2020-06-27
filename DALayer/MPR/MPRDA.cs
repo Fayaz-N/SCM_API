@@ -158,7 +158,14 @@ namespace DALayer.MPR
 							MPRItemInfo mPRItemInfo = mpr.MPRItemInfoes.FirstOrDefault();
 							mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.Itemdetailsid == mPRItemInfo.Itemdetailsid).ToList();
 							if (mprRevisionDetails.MPRItemInfoes.Count == 0)
+							{
+								if (string.IsNullOrEmpty(mPRItemInfo.Itemid))
+									mPRItemInfo.Itemid = "NewItem";
+								mPRItemInfo.Itemid = mPRItemInfo.Itemid;
+								if (mPRItemInfo.Itemid == "NewItem" || mPRItemInfo.Itemid == "0000")
+									mPRItemInfo.Itemid = "NewItem";
 								mprRevisionDetails.MPRItemInfoes.Add(mPRItemInfo);
+							}
 							else
 							{
 								foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)

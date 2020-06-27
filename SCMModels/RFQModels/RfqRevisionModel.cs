@@ -12,7 +12,7 @@ namespace SCMModels.RFQModels
 		public RfqRevisionModel()
 		{
 			rfqitem = new List<RfqItemModel>();
-			RFQStatus = new List<RFQStatusModel>();
+			RFQStatus = new List<RFQStatu>();
 			rfqvendor = new List<RfqVendorTermModel>();
 			RFQTerms = new List<RFQTermsModel>();
 			mprIncharges = new List<MPRIncharge>();
@@ -47,11 +47,13 @@ namespace SCMModels.RFQModels
 		public bool ActiveRevision { get; set; }
 		public RFQMasterModel rfqmaster { get; set; }
 		public List<RfqItemModel> rfqitem { get; set; }
-		public List<RFQStatusModel> RFQStatus { get; set; }
+		public List<RFQStatu> RFQStatus { get; set; }
 		public List<RfqVendorTermModel> rfqvendor { get; set; }
 		public List<RFQTermsModel> RFQTerms { get; set; }
 		public List<MPRIncharge> mprIncharges { get; set; }
 		public List<RFQCommunication> rfqCommunications { get; set; }
 		public List<MPRRFQDocument> RfqDocuments { get; set; }
+		public Nullable<byte> StatusId { get; set; }
+
 	}
 }

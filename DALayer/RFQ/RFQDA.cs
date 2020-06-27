@@ -123,6 +123,7 @@ namespace DALayer.RFQ
 						rfqModel.RFQType = "Quote";
 						rfqModel.PaymentTermRemarks = item.PaymentTermRemarks;
 						rfqModel.Remarks = item.Remarks;
+						rfqModel.StatusId = 7;
 						var itemList = RFQQuoteViewList.Where(li => li.VendorId == item.VendorId).ToList();
 						foreach (RFQQuoteView sitem in itemList)
 						{
@@ -137,15 +138,9 @@ namespace DALayer.RFQ
 						rfqModel.RFQTerms = rfqList;
 						rfqModel.RfqDocuments = mprfqDocs;
 						CreateRfQ(rfqModel, true);
-						MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
-						mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == item.MPRRevisionId).FirstOrDefault().RequisitionId;
-						mPRStatusTrackDetails.RevisionId = Convert.ToInt32(item.MPRRevisionId);
-						mPRStatusTrackDetails.StatusId = 7;
-						mPRStatusTrackDetails.UpdatedBy = item.CreatedBy;
-						mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
-						this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
-						//if (item.sendemail == true)
-						//	this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId);
+
+						if (item.sendemail == true)
+							this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId);
 					}
 				}
 			}
@@ -344,6 +339,7 @@ namespace DALayer.RFQ
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
 						revision.Remarks = model.Remarks;
+						revision.StatusId = model.StatusId;
 						revision.DeleteFlag = false;
 						if (rfqremote.MPRRevisionId != null)
 						{
@@ -392,6 +388,7 @@ namespace DALayer.RFQ
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
 						revision.Remarks = model.Remarks;
+						revision.StatusId = model.StatusId;
 						revision.DeleteFlag = false;
 
 						try
@@ -610,7 +607,9 @@ namespace DALayer.RFQ
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
 						revision.Remarks = model.Remarks;
+						revision.Remarks = model.Remarks;
 						revision.BuyergroupEmail = BuyergroupEmail;
+						revision.StatusId = model.StatusId;
 						revision.DeleteFlag = false;
 						//revision.RFQStatus.Select(x => new RFQStatu()
 						//{
@@ -620,6 +619,12 @@ namespace DALayer.RFQ
 						{
 							obj.RFQRevisions_N.Add(revision);
 							obj.SaveChanges();
+							RFQStatu rfqStatus = new RFQStatu();
+							rfqStatus.StatusId = model.StatusId;
+							rfqStatus.RfqRevisionId = revisionid;
+							rfqStatus.Remarks = "";
+							rfqStatus.updatedby = model.rfqmaster.CreatedBy;
+							this.insertRFQStatus(rfqStatus);
 						}
 						catch (Exception ex)
 						{
@@ -650,6 +655,7 @@ namespace DALayer.RFQ
 						revision.DeliveryMaxWeeks = model.DeliveryMaxWeeks;
 						revision.DeliveryMinWeeks = model.DeliveryMinWeeks;
 						revision.Remarks = model.Remarks;
+						revision.StatusId = model.StatusId;
 						revision.DeleteFlag = false;
 
 						try
@@ -803,7 +809,20 @@ namespace DALayer.RFQ
 							throw;
 						}
 					}
-
+					//update mpr status
+					if (revision.StatusId != null && model.rfqmaster.MPRRevisionId != null)
+					{
+						MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
+						mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == model.rfqmaster.MPRRevisionId).FirstOrDefault().RequisitionId;
+						mPRStatusTrackDetails.RevisionId = Convert.ToInt32(model.rfqmaster.MPRRevisionId);
+						mPRStatusTrackDetails.StatusId = Convert.ToInt32(revision.StatusId);//rfqgenerated
+						mPRStatusTrackDetails.UpdatedBy = model.rfqmaster.CreatedBy;
+						mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
+						this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
+						MPRRevision revision1 = obj.MPRRevisions.Where(li => li.RevisionId == model.rfqmaster.MPRRevisionId).FirstOrDefault();
+						revision1.StatusId = revision.StatusId;
+						obj.SaveChanges();
+					}
 					foreach (RFQTermsModel terms in model.RFQTerms)
 					{
 						try
@@ -2685,7 +2704,8 @@ namespace DALayer.RFQ
 					revision.BankGuarantee = localrevision.BankGuarantee;
 					revision.DeliveryMaxWeeks = localrevision.DeliveryMaxWeeks;
 					revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
-
+					revision.StatusId = localrevision.StatusId;
+					revision.RFQStatus = obj.RFQStatus.Where(li => li.RfqRevisionId == revisionId).ToList();
 
 					var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
 					var masters = new RFQMasterModel();
@@ -5707,6 +5727,47 @@ namespace DALayer.RFQ
 			mpritem.POPrice = previousprice.POPrice;
 			mpritem.PORemarks = previousprice.PORemarks;
 			obj.SaveChanges();
+			return true;
+		}
+
+		public bool insertRFQStatus(RFQStatu model)
+		{
+			//add in remote table
+			var rfqstatusId = 0;
+			using (VSCMEntities vscmContext = new VSCMEntities())
+			{
+				RemoteRFQStatu rfqStatuss = vscmContext.RemoteRFQStatus.Where(li => li.RfqRevisionId == model.RfqRevisionId && li.StatusId == model.StatusId).FirstOrDefault();
+
+				if (rfqStatuss == null)
+				{
+					RemoteRFQStatu rfqStatus = new RemoteRFQStatu();
+					rfqStatus.RfqRevisionId = model.RfqRevisionId;
+					rfqStatus.StatusId = model.StatusId;
+					rfqStatus.Remarks = model.Remarks;
+					rfqStatus.updatedby = model.updatedby;
+					rfqStatus.updatedDate = DateTime.Now;
+					vscmContext.RemoteRFQStatus.Add(rfqStatus);
+					vscmContext.SaveChanges();
+					rfqstatusId = rfqStatus.RfqStatusId;
+				}
+			}
+			using (YSCMEntities yscmContext = new YSCMEntities())
+			{
+				RFQStatu rfqStatuss = yscmContext.RFQStatus.Where(li => li.RfqRevisionId == model.RfqRevisionId && li.StatusId == model.StatusId).FirstOrDefault();
+
+				if (rfqStatuss == null)
+				{
+					RFQStatu locrfqStatus = new RFQStatu();
+					locrfqStatus.RfqStatusId = rfqstatusId;
+					locrfqStatus.RfqRevisionId = model.RfqRevisionId;
+					locrfqStatus.StatusId = model.StatusId;
+					locrfqStatus.Remarks = model.Remarks;
+					locrfqStatus.updatedby = model.updatedby;
+					locrfqStatus.updatedDate = DateTime.Now;
+					yscmContext.RFQStatus.Add(locrfqStatus);
+					yscmContext.SaveChanges();
+				}
+			}
 			return true;
 		}
 	}
