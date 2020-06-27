@@ -4276,6 +4276,7 @@ namespace DALayer.RFQ
 					query += " and VendorId='" + rfqfilterparams.venderid + "'";
 				if (!string.IsNullOrEmpty(rfqfilterparams.DocumentNo))
 					query += " and DocumentNo='" + rfqfilterparams.DocumentNo + "'";
+				query += " order by rfqRevisionId desc";
 				mprRevisionDetails = db.RFQListViews.SqlQuery(query).ToList<RFQListView>();
 			}
 
