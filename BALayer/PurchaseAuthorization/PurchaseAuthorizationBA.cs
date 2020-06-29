@@ -137,7 +137,10 @@ namespace BALayer.PurchaseAuthorization
         {
             return await _purchaseDataAcess.InsertPurchaseAuthorization(model);
         }
-
+        public async Task<statuscheckmodel> UpdatePurchaseAuthorization(MPRPADetailsModel model)
+        {
+            return await _purchaseDataAcess.UpdatePurchaseAuthorization(model);
+        }
         public async Task<statuscheckmodel> finalpa(MPRPADetailsModel model)
         {
             return await _purchaseDataAcess.finalpa(model);
@@ -228,6 +231,21 @@ namespace BALayer.PurchaseAuthorization
         public async Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model)
         {
             return await _purchaseDataAcess.UpdateApproverforRequest(model);
+        }
+
+        public async Task<statuscheckmodel> DeletePAByPAid(padeletemodel model)
+        {
+            return await _purchaseDataAcess.DeletePAByPAid(model);
+        }
+
+        public async Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model)
+        {
+            return await _purchaseDataAcess.GetIncompletedPAlist(model);
+        }
+
+        public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
+        {
+            return _purchaseDataAcess.getrfqtermsbyrevisionsid1(revisionid);
         }
     }
 }

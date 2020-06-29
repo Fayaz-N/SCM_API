@@ -40,6 +40,7 @@ namespace BALayer.PurchaseAuthorization
         Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes();
         Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes();
         Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model);
+        Task<statuscheckmodel> UpdatePurchaseAuthorization(MPRPADetailsModel model);
         Task<statuscheckmodel> finalpa(MPRPADetailsModel model);
         Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID);
         Task<List<MPRPADetailsModel>> GetAllMPRPAList();
@@ -59,5 +60,8 @@ namespace BALayer.PurchaseAuthorization
         Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);
         Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model);
         Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model);
+        Task<statuscheckmodel> DeletePAByPAid(padeletemodel model);
+        Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model);
+        DataTable getrfqtermsbyrevisionsid1(List<int> revisionid);
     }
 }

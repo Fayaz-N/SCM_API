@@ -232,6 +232,15 @@ namespace SCMAPI.Controllers
             return Ok(status);
         }
         [HttpPost]
+        [Route("UpdatePurchaseAuthorization")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> UpdatePurchaseAuthorization(MPRPADetailsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _paBusenessAcess.UpdatePurchaseAuthorization(model);
+            return Ok(status);
+        }
+        [HttpPost]
         [Route("finalpa")]
         [ResponseType(typeof(statuscheckmodel))]
         public async Task<IHttpActionResult> finalpa(MPRPADetailsModel model)
@@ -517,6 +526,24 @@ namespace SCMAPI.Controllers
             fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+", "_");
             return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
         }
+        [HttpPost]
+        [Route("DeletePAByPAid")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> DeletePAByPAid(padeletemodel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _paBusenessAcess.DeletePAByPAid(model);
+            return Ok(status);
+        }
+        [HttpPost]
+        [Route("LoadIncompletedPAlist")]
+        [ResponseType(typeof(List<IncompletedPAlist>))]
+        public async Task<IHttpActionResult> LoadIncompletedPAlist(painputmodel model)
+        {
+            List<IncompletedPAlist> status = new List<IncompletedPAlist>();
+            status = await _paBusenessAcess.GetIncompletedPAlist(model);
+            return Ok(status);
+        }
         //[HttpPost]
         //[Route("FileUploading1")]
         //public async Task<string> FileUploading1()
@@ -560,5 +587,14 @@ namespace SCMAPI.Controllers
         //    }
         //    return "File Uploaded!";
         //}
+        [HttpPost]
+        [Route("getrfqtermsbyrevisionsid1")]
+        [ResponseType(typeof(DataTable))]
+        public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
+        {
+            DataTable ds = new DataTable();
+            ds = _paBusenessAcess.getrfqtermsbyrevisionsid1(revisionid);
+            return ds;
+        }
     }
 }

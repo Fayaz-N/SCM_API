@@ -443,8 +443,10 @@ namespace DALayer.PurchaseAuthorization
             else
                 model.LessBudget = true;
 
-            if (model.PaymentTermCode != null)
+            if (model.PaymentTermCode != null && model.PaymentTermCode.Length>=2)
                 Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
+            else if (model.PaymentTermCode != null && model.PaymentTermCode.Length < 2 && model.PaymentTermCode!="")
+                Termscode = Convert.ToInt32(model.PaymentTermCode);
             else
                 Termscode = 0;
 
@@ -602,18 +604,18 @@ namespace DALayer.PurchaseAuthorization
                 using (YSCMEntities yscm = new YSCMEntities())
                 {
                     var sqlquery = "";
-                    sqlquery = "select * from LoadItemsByID where itemstatus='Approved' and ActiveRevision=1 ";
+                    sqlquery = "select * from LoadItemsByID where itemstatus='Approved' and Mprrfqsplititemid not in(select Mprrfqsplititemid  from PAItem inner join MPRPADetails on PAItem.PAID = MPRPADetails.PAId and(DeleteFlag = 0 or DeleteFlag is null)  and Mprrfqsplititemid is not null) ";
                     if (masters.venderid != 0)
                         sqlquery += " and VendorId='" + masters.venderid + "'";
                     if (masters.RevisionId != 0)
                         sqlquery += " and MPRRevisionId='" + masters.RevisionId + "'";
-                    if (masters.RFQNo != null)
+                    if (masters.RFQNo != null && masters.RFQNo!="")
                         sqlquery += " and RFQNo='" + masters.RFQNo + "'";
-                    if (masters.DocumentNumber != null)
+                    if (masters.DocumentNumber != null && masters.DocumentNumber!="")
                         sqlquery += " and DocumentNo='" + masters.DocumentNumber + "'";
                     if (masters.BuyerGroupId != 0)
                         sqlquery += " and BuyerGroupId='" + masters.BuyerGroupId + "'";
-                    if (masters.SaleOrderNo != null)
+                    if (masters.SaleOrderNo != null && masters.SaleOrderNo != "")
                         sqlquery += " and SaleOrderNo='" + masters.SaleOrderNo + "'";
                     if (masters.DepartmentId != 0)
                         sqlquery += " and DepartmentId='" + masters.DepartmentId + "'";
@@ -919,6 +921,7 @@ namespace DALayer.PurchaseAuthorization
                     authorization.SpecialRemarks = model.SpecialRemarks;
                     authorization.SuppliersReference = model.SuppliersReference;
                     authorization.VendorId = model.VendorId;
+                    authorization.PAStatus = "Inprogress";
                     obj.MPRPADetails.Add(authorization);
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
@@ -950,6 +953,7 @@ namespace DALayer.PurchaseAuthorization
                             {
                                 PAID = status.Sid,
                                 RfqSplitItemId = items.RFQSplitItemId,
+                                Mprrfqsplititemid=item.Mprrfqsplititemid,
                                 MPRItemDetailsId = item.MPRItemDetailsid
                             };
                             obj.PAItems.Add(paitem);
@@ -997,6 +1001,9 @@ namespace DALayer.PurchaseAuthorization
 
                      this.emailDA.PAEmailRequest(model.PAId, model.LoginEmployee);
 
+                    var data = obj.MPRPADetails.Where(x => x.PAId == model.PAId).FirstOrDefault();
+                    data.PAStatus = "Submitted";
+                    obj.SaveChanges();
 
                 }
                 else
@@ -1043,7 +1050,7 @@ namespace DALayer.PurchaseAuthorization
                     model.Taxes = data.Taxes;
                     model.Freight = data.Freight;
                     model.Insurance = data.Insurance;
-
+                    model.PAStatus = data.PAStatus;
                     model.DeliveryCondition = data.DeliveryCondition;
                     model.ShipmentMode = data.ShipmentMode;
                     model.PaymentTerms = data.PaymentTerms;
@@ -1724,7 +1731,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 var sqlquery = "";
-                sqlquery = "select * from GetMprPaDetailsByFilters where PAId!=0";
+                sqlquery = "select * from GetMprPaDetailsByFilters  where PAStatus in ('Pending','rejected','Approved') ";
                 if (model.DocumentNumber != null && model.DocumentNumber!="")
                     sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
                 if (model.DepartmentId != 0)
@@ -1805,6 +1812,123 @@ namespace DALayer.PurchaseAuthorization
             }
             catch (Exception ex)
             {
+                throw; 
+            }
+        }
+        public async Task<statuscheckmodel> DeletePAByPAid(padeletemodel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.MPRPADetails.Where(x => x.PAId == model.PAId).FirstOrDefault();
+                if (data!=null)
+                {
+                    data.DeleteFlag = true;
+                    data.DeleteBy = model.employeeno;
+                    data.DeleteOn = DateTime.Now;
+                    obj.SaveChanges();
+                }
+                status.Sid = data.PAId;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model)
+        {
+            List<IncompletedPAlist> filter = new List<IncompletedPAlist>();
+            try
+            {
+                var sqlquery = "";
+                sqlquery = "select * from IncompletedPAlist where PAStatus in ('Inprogress','submitted')";
+                if (model.PAId != 0)
+                    sqlquery += " and PAId='" + model.PAId + "'";
+                filter = obj.Database.SqlQuery<IncompletedPAlist>(sqlquery).ToList();
+                return filter;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<statuscheckmodel> UpdatePurchaseAuthorization(MPRPADetailsModel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            var dateAndTime = DateTime.Now;
+            try
+            {
+                var authorization = obj.MPRPADetails.Where(x => x.PAId == model.PAId).FirstOrDefault();
+                authorization.PurchaseTypeId = model.PurchaseTypeId;
+                authorization.PurchaseModeId = model.PurchaseModeId;
+                authorization.RequestedOn = dateAndTime.Date;
+                authorization.RequestedBy = model.RequestedBy;
+                authorization.DepartmentID = model.DepartmentID;
+                authorization.BuyerGroupId = model.BuyerGroupId;
+                authorization.ProjectCode = model.ProjectCode;
+                authorization.ProjectName = model.ProjectName;
+                authorization.PackagingForwarding = model.PackagingForwarding;
+                authorization.Taxes = model.Taxes;
+                authorization.Freight = model.Freight;
+                authorization.Insurance = model.Insurance;
+                authorization.DeliveryCondition = model.DeliveryCondition;
+                authorization.ShipmentMode = model.ShipmentMode;
+                authorization.PaymentTerms = model.PaymentTerms;
+                authorization.CreditDays = model.CreditDays;
+                authorization.Warranty = model.Warranty;
+                authorization.BankGuarantee = model.BankGuarantee;
+                authorization.LDPenaltyTerms = model.LDPenaltyTerms;
+                authorization.SpecialInstructions = model.SpecialInstructions;
+                authorization.FactorsForImports = model.FactorsForImports;
+                authorization.SpecialRemarks = model.SpecialRemarks;
+                authorization.SuppliersReference = model.SuppliersReference;
+                obj.SaveChanges();
+                status.Sid = authorization.PAId;
+                return status;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
+        {
+            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.68;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+            EmployeModel employee = new EmployeModel();
+            DataTable Ds = new DataTable();
+            string data = string.Join(",", revisionid);
+            try
+            {
+                SqlParameter[] Param = new SqlParameter[1];
+                Param[0] = new SqlParameter("@revisionid", data);
+                string spname = "Getrfqtermsbyrevision";
+                SqlCommand cmd = new SqlCommand();
+                SqlDataAdapter Adp = new SqlDataAdapter();
+                cmd = new SqlCommand();
+                cmd.Connection = Conn1;
+                cmd.CommandText = spname;
+                cmd.CommandTimeout = 0;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                if (Param != null)
+                {
+                    foreach (SqlParameter sqlParam in Param)
+                    {
+                        cmd.Parameters.Add(sqlParam);
+                    }
+                }
+
+                Adp = new SqlDataAdapter(cmd);
+
+                Adp.Fill(Ds);
+                cmd.Parameters.Clear();
+                //Ds.Clear();
+                return Ds;
+            }
+            catch (Exception ex)
+            {
+
                 throw;
             }
         }

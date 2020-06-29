@@ -37,6 +37,7 @@ namespace SCMModels.RFQModels
         public string Taxes { get; set; }
         public string Freight { get; set; }
         public string Insurance { get; set; }
+        public string PAStatus { get; set; }
         public string DeliveryCondition { get; set; }
         public string ShipmentMode { get; set; }
         public string PaymentTerms { get; set; }
@@ -72,5 +73,17 @@ namespace SCMModels.RFQModels
         public string filename { get; set; }
         public string path { get; set; }
         public Nullable<System.DateTime> uploadeddate { get; set; }
+    }
+    public class padeletemodel
+    {
+        public int PAId { get; set; }
+        public string employeeno { get; set; }
+    }
+    public class painputmodel
+    {
+        public int PAId { get; set; }
+        public string mprno { get; set; }
+        public string employeeno { get; set; }
+        public DateTime padate { get; set; }
     }
 }
