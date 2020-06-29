@@ -107,7 +107,26 @@ namespace DALayer.Emails
 									var TooEmailId = db.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevisionDetails.BuyerGroupId).FirstOrDefault().BuyerManager;
 									emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == TooEmailId).FirstOrDefault<Employee>()).EMail;
 									if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+									{
+										List<MPRBGMailConfiguration> configList = db.MPRBGMailConfigurations.Where(li => li.BuyerGroupID == mprrevisionDetails.BuyerGroupId).ToList();
+										foreach (var item in configList)
+										{
+											var mailId = (db.Employees.Where(li => li.EmployeeNo == item.EmployeeNo).FirstOrDefault<Employee>()).EMail;
+											if (item.MailType == "BCC" && mailId != null)
+											{
+												emlSndngList.BCC += mailId + ",";
+											}
+											if (item.MailType == "CC" && mailId != null)
+											{
+												emlSndngList.CC += mailId + ",";
+											}
+											if (item.MailType == "TO" && mailId != null)
+											{
+												emlSndngList.ToEmailId += mailId + ",";
+											}
+										}
 										this.sendEmail(emlSndngList);
+									}
 								}
 							}
 						}
@@ -144,7 +163,27 @@ namespace DALayer.Emails
 									emlSndngList.Subject = "New MPR is submitted for acknowledgement - " + mprrevisionDetails.DocumentNo + "";
 									emlSndngList.ToEmailId = db.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevisionDetails.BuyerGroupId).FirstOrDefault().BuyerManager;
 									if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+									{
+										mprrevisionDetails.BuyerGroupId = 3;
+										List<MPRBGMailConfiguration> configList = db.MPRBGMailConfigurations.Where(li => li.BuyerGroupID == mprrevisionDetails.BuyerGroupId).ToList();
+										foreach (var item in configList)
+										{
+											var mailId = (db.Employees.Where(li => li.EmployeeNo == item.EmployeeNo).FirstOrDefault<Employee>()).EMail;
+											if (item.MailType == "BCC" && mailId != null)
+											{
+												emlSndngList.BCC += mailId + ",";
+											}
+											if (item.MailType == "CC" && mailId != null)
+											{
+												emlSndngList.CC += mailId + ",";
+											}
+											if (item.MailType == "TO" && mailId != null)
+											{
+												emlSndngList.ToEmailId += "," + mailId ;
+											}
+										}
 										this.sendEmail(emlSndngList);
+									}
 								}
 							}
 						}
@@ -176,7 +215,26 @@ namespace DALayer.Emails
 								emlSndngList.Subject = "New MPR is submitted for acknowledgement - " + mprrevisionDetails.DocumentNo + "";
 								emlSndngList.ToEmailId = db.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevisionDetails.BuyerGroupId).FirstOrDefault().BuyerManager;
 								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								{
+									List<MPRBGMailConfiguration> configList = db.MPRBGMailConfigurations.Where(li => li.BuyerGroupID == mprrevisionDetails.BuyerGroupId).ToList();
+									foreach (var item in configList)
+									{
+										var mailId = (db.Employees.Where(li => li.EmployeeNo == item.EmployeeNo).FirstOrDefault<Employee>()).EMail;
+										if (item.MailType == "BCC" && mailId != null)
+										{
+											emlSndngList.BCC += mailId + ",";
+										}
+										if (item.MailType == "CC" && mailId != null)
+										{
+											emlSndngList.CC += mailId + ",";
+										}
+										if (item.MailType == "TO" && mailId != null)
+										{
+											emlSndngList.ToEmailId += mailId + ",";
+										}
+									}
 									this.sendEmail(emlSndngList);
+								}
 							}
 						}
 					}
@@ -199,19 +257,24 @@ namespace DALayer.Emails
 				{
 					var vscm = new VSCMEntities();
 					var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
-					var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
-					EmailSend emlSndngList = new EmailSend();
-					emlSndngList.Subject = "New RFQ Generated From YOKOGAWA";
-					emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
-					emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>()).EMail;
-					//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
-					string emails = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
-					List<string> emailList = emails.Split(',').ToList();
-					foreach (var item in emailList)
+					if (vendor != null)
 					{
-						emlSndngList.ToEmailId = item;
-						if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
-							this.sendEmail(emlSndngList);
+						var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+						EmailSend emlSndngList = new EmailSend();
+						emlSndngList.Subject = "New RFQ Generated From YOKOGAWA";
+						emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+						var mailData = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>());
+						if (mailData != null)
+							emlSndngList.FrmEmailId = mailData.EMail;
+						//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
+						string emails = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
+						List<string> emailList = emails.Split(',').ToList();
+						foreach (var item in emailList)
+						{
+							emlSndngList.ToEmailId = item;
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
 					}
 
 				}
@@ -305,6 +368,7 @@ namespace DALayer.Emails
 			return true;
 
 		}
+
 		public bool sendEmail(EmailSend emlSndngList)
 		{
 			bool validEmail = IsValidEmail(emlSndngList.ToEmailId);
@@ -312,14 +376,40 @@ namespace DALayer.Emails
 			{
 				var BCC = ConfigurationManager.AppSettings["BCC"];
 				var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
-				MailMessage mailMessage = new MailMessage(emlSndngList.FrmEmailId, emlSndngList.ToEmailId);
+				MailMessage mailMessage = new MailMessage();
+				mailMessage.From = new MailAddress(emlSndngList.FrmEmailId); //From Email Id
+				string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
+				foreach (string ToEMailId in ToMuliId)
+				{
+					mailMessage.To.Add(new MailAddress(ToEMailId)); //adding multiple TO Email Id
+				}
 				SmtpClient client = new SmtpClient();
 				if (!string.IsNullOrEmpty(emlSndngList.Subject))
 					mailMessage.Subject = emlSndngList.Subject;
+
 				if (!string.IsNullOrEmpty(emlSndngList.CC))
-					mailMessage.CC.Add(emlSndngList.CC);
+				{
+					string[] CCId = emlSndngList.CC.Split(',');
+
+					foreach (string CCEmail in CCId)
+					{
+						mailMessage.CC.Add(new MailAddress(CCEmail)); //Adding Multiple CC email Id
+					}
+				}
+
+				if (!string.IsNullOrEmpty(emlSndngList.BCC))
+				{
+					string[] bccid = emlSndngList.BCC.Split(',');
+
+
+					foreach (string bccEmailId in bccid)
+					{
+						mailMessage.Bcc.Add(new MailAddress(bccEmailId)); //Adding Multiple BCC email Id
+					}
+				}
+
 				if (!string.IsNullOrEmpty(BCC))
-					mailMessage.Bcc.Add(BCC);
+					mailMessage.Bcc.Add(new MailAddress(BCC));
 				mailMessage.Body = emlSndngList.Body;
 				mailMessage.IsBodyHtml = true;
 				mailMessage.BodyEncoding = Encoding.UTF8;
@@ -351,6 +441,7 @@ namespace DALayer.Emails
 		public string FrmEmailId { get; set; }
 		public string ToEmailId { get; set; }
 		public string CC { get; set; }
+		public string BCC { get; set; }
 		public string Subject { get; set; }
 		public string Body { get; set; }
 	}
