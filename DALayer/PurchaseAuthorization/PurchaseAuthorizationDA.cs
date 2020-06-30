@@ -1731,7 +1731,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 var sqlquery = "";
-                sqlquery = "select * from GetMprPaDetailsByFilters  where PAStatus in ('Pending','rejected','Approved') ";
+                sqlquery = "select * from GetMprPaDetailsByFilters  where PAStatus in ('Pending','rejected','Approved') and DeleteFlag=0 ";
                 if (model.DocumentNumber != null && model.DocumentNumber!="")
                     sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
                 if (model.DepartmentId != 0)
@@ -1897,7 +1897,7 @@ namespace DALayer.PurchaseAuthorization
             SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
             EmployeModel employee = new EmployeModel();
             DataTable Ds = new DataTable();
-            string data = string.Join(",", revisionid.Distinct());
+            string data = string.Join(" ',' ", revisionid.Distinct());
             try
             {
                 SqlParameter[] Param = new SqlParameter[1];
