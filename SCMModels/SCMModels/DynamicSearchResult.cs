@@ -61,6 +61,8 @@ namespace SCMModels
 		public string MPRStatusId { get; set; }
 		public string PurchaseTypeId { get; set; }
 		public List<string> mprStatusListId { get; set; }
+		public string PONO { get; set; }
+		public string PAID { get; set; }
 	}
 	public class rfqFilterParams
 	{
