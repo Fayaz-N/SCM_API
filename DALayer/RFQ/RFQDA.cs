@@ -1,4 +1,12 @@
-﻿using DALayer.Emails;
+﻿/*
+    Name of File : <<RFQDA>>  Author :<<Prasanna>>  
+    Date of Creation <<01-10-2019>>
+    Purpose : <<This is Data access Layer to create rfq, get rfq data, comparision data and status update>>
+    Review Date :<<>>   Reviewed By :<<>>
+    Version : 0.1 <change version only if there is major change - new release etc>
+    Sourcecode Copyright : Yokogawa India Limited
+*/
+using DALayer.Emails;
 using DALayer.MPR;
 using SCMModels;
 using SCMModels.MPRMasterModels;
@@ -19,6 +27,13 @@ using System.Threading.Tasks;
 
 namespace DALayer.RFQ
 {
+	/*
+    Name of Class : <<RFQDA>>  Author :<<Prasanna>>  
+    Date of Creation <<01-10-2019>>
+    Purpose : <<to create rfq, get rfq data>>
+    Review Date :<<>>   Reviewed By :<<>>
+   
+*/
 	public class RFQDA : IRFQDA
 	{
 		private IMPRDA MPRDA = default(IMPRDA);
@@ -33,6 +48,10 @@ namespace DALayer.RFQ
 		VSCMEntities vscm = new VSCMEntities();
 		YSCMEntities obj = new YSCMEntities();
 
+		/*Name of Function : <<getRFQItems>>  Author :<<Prasanna>>  
+		  Date of Creation <<10-10-2019>>
+		  Purpose : <<used to get vendor and item details frm stored procedure>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public DataTable getRFQItems(int RevisionId)
 		{
 			DataTable table = new DataTable();
@@ -50,6 +69,11 @@ namespace DALayer.RFQ
 			}
 			return table;
 		}
+
+		/*Name of Function : <<updateVendorQuotes>>  Author :<<Prasanna>>  
+		  Date of Creation <<10-10-2019>>
+		  Purpose : <<to create rfq from generate rfq page>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool updateVendorQuotes(List<RFQQuoteView> RFQQuoteViewList, List<YILTermsandCondition> termsList, List<MPRRFQDocument> mprfqDocs)
 		{
 			List<RFQTermsModel> rfqList = new List<RFQTermsModel>();
@@ -148,6 +172,10 @@ namespace DALayer.RFQ
 
 		}
 
+		/*Name of Function : <<createMPRRFQItems>>  Author :<<Prasanna>>  
+		  Date of Creation <<03-11-2019>>
+		  Purpose : <<create relationship for comparision sheet using rfqsplitid >>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public void createMPRRFQItems(MPRRfqItem mrRfqitems)
 		{
 			using (YSCMEntities Context = new YSCMEntities())
@@ -179,6 +207,11 @@ namespace DALayer.RFQ
 
 			}
 		}
+
+		/*Name of Function : <<getRFQCompareItems>>  Author :<<Prasanna>>  
+		  Date of Creation <<15-11-2019>>
+		  Purpose : <<showing Item details,price,discount..details of vendor in rfq comparision sheet>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public DataSet getRFQCompareItems(int RevisionId)
 		{
 			DataSet dataset = new DataSet();
@@ -211,6 +244,11 @@ namespace DALayer.RFQ
 			}
 			return dataset;
 		}
+
+		/*Name of Function : <<gerRFQVendorQuoteDetails>>  Author :<<Prasanna>>  
+		  Date of Creation <<15-11-2019>>
+		  Purpose : <<get vendor quote details>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public DataTable gerRFQVendorQuoteDetails(int rfqRevisionId)
 		{
 			DataTable table = new DataTable();
@@ -228,6 +266,11 @@ namespace DALayer.RFQ
 			}
 			return table;
 		}
+
+		/*Name of Function : <<rfqStatusUpdate>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<RFQ status update>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool rfqStatusUpdate(List<RFQQuoteView> vendorList)
 		{
 			using (YSCMEntities Context = new YSCMEntities())
@@ -253,6 +296,11 @@ namespace DALayer.RFQ
 			}
 			return true;
 		}
+
+		/*Name of Function : <<CreateRfQ>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-10-2019>>
+		  Purpose : <<Create RFQ both cloud and local server>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<RfqRevisionModel> CreateRfQ(RfqRevisionModel model, bool addMPRRfq)
 		{
 
@@ -781,21 +829,36 @@ namespace DALayer.RFQ
 							var rfqdocs = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqitemLocal.RFQRevisionId).ToList();
 							foreach (var item in rfqdocs)
 							{
-								RFQDocument rfqDoc = new RFQDocument();
-								rfqDoc.RfqDocId = item.RfqDocId;
-								rfqDoc.rfqRevisionId = item.rfqRevisionId;
-								rfqDoc.rfqItemsid = item.rfqItemsid;
-								rfqDoc.DocumentName = item.DocumentName;
-								rfqDoc.DocumentType = item.DocumentType;
-								rfqDoc.Path = item.Path;
-								rfqDoc.UploadedBy = item.UploadedBy;
-								rfqDoc.UploadedDate = item.uploadedDate;
+								RFQDocument rfqdocss = obj.RFQDocuments.Where(li => li.RfqDocId == item.RfqDocId).FirstOrDefault();
 								try
 								{
-									obj.RFQDocuments.Add(rfqDoc);
+									if (rfqdocss == null)
+									{
+										RFQDocument rfqDoc = new RFQDocument();
+										rfqDoc.RfqDocId = item.RfqDocId;
+										rfqDoc.rfqRevisionId = item.rfqRevisionId;
+										rfqDoc.rfqItemsid = item.rfqItemsid;
+										rfqDoc.DocumentName = item.DocumentName;
+										rfqDoc.DocumentType = item.DocumentType;
+										rfqDoc.Path = item.Path;
+										rfqDoc.UploadedBy = item.UploadedBy;
+										rfqDoc.UploadedDate = item.uploadedDate;
+										obj.RFQDocuments.Add(rfqDoc);
+									}
+									else
+									{
+										rfqdocss.RfqDocId = item.RfqDocId;
+										rfqdocss.rfqRevisionId = item.rfqRevisionId;
+										rfqdocss.rfqItemsid = item.rfqItemsid;
+										rfqdocss.DocumentName = item.DocumentName;
+										rfqdocss.DocumentType = item.DocumentType;
+										rfqdocss.Path = item.Path;
+										rfqdocss.UploadedBy = item.UploadedBy;
+										rfqdocss.UploadedDate = item.uploadedDate;
+									}
 									obj.SaveChanges();
 								}
-								catch (Exception)
+								catch (Exception ex)
 								{
 
 									throw;
@@ -1148,6 +1211,12 @@ namespace DALayer.RFQ
 			}
 
 		}
+
+
+		/*Name of Function : <<getallrfqlist>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-10-2019>>
+		  Purpose : <<get rfq list>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<List<RFQMasterModel>> getallrfqlist()
 		{
 			List<RFQMasterModel> master = new List<RFQMasterModel>();
@@ -1324,6 +1393,11 @@ namespace DALayer.RFQ
 		//    }
 
 		//}
+
+		/*Name of Function : <<GetAllrevisionRFQs>>  Author :<<Prasanna>>  
+	  Date of Creation <<01-10-2019>>
+	  Purpose : <<get rfq revisions>>
+	  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<List<RfqRevisionModel>> GetAllrevisionRFQs()
 		{
 			List<RfqRevisionModel> rfq = new List<RfqRevisionModel>();
@@ -1350,6 +1424,11 @@ namespace DALayer.RFQ
 			}
 
 		}
+
+		/*Name of Function : <<GetRFQById>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-10-2019>>
+		  Purpose : <<get rfq details by id>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<RFQMasterModel> GetRFQById(int masterID)
 		{
 			RFQMasterModel model = new RFQMasterModel();
@@ -1431,6 +1510,11 @@ namespace DALayer.RFQ
 			}
 
 		}
+
+		/*Name of Function : <<DeleteRfqById>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-10-2019>>
+		  Purpose : <<Delete Rfq by id>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public statuscheckmodel DeleteRfqById(int rfqmasterid)
 		{
 			statuscheckmodel status = new statuscheckmodel();
@@ -1464,6 +1548,10 @@ namespace DALayer.RFQ
 			return status;
 		}
 
+		/*Name of Function : <<UpdateRfqRevision>>  Author :<<Prasanna>>  
+		  Date of Creation <<15-11-2019>>
+		  Purpose : <<update rfq details>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<statuscheckmodel> UpdateRfqRevision(RfqRevisionModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
@@ -1620,6 +1708,10 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
+		/*Name of Function : <<GetItemsByRevisionId>>  Author :<<Prasanna>>  
+		  Date of Creation <<15-11-2019>>
+		  Purpose : <<Get rfq item details by revision id>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<List<RfqItemModel>> GetItemsByRevisionId(int revisionid)
 		{
 			List<RfqItemModel> rfq = new List<RfqItemModel>();
@@ -1769,6 +1861,11 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
+
+		/*Name of Function : <<DeleteRfqRevisionbyId>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<Delete rfq by revision id>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public statuscheckmodel DeleteRfqRevisionbyId(int id)
 		{
 			statuscheckmodel staus = new statuscheckmodel();
@@ -1788,6 +1885,11 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
+
+		/*Name of Function : <<DeleteRfqItemById>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<Delete rfq item by revision id>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public statuscheckmodel DeleteRfqItemById(int id)
 		{
 			statuscheckmodel status = new statuscheckmodel();
@@ -1824,6 +1926,11 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
+
+		/*Name of Function : <<InsertDocument>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<Insert RFQ documents>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<statuscheckmodel> InsertDocument(RfqDocumentsModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
@@ -1923,6 +2030,11 @@ namespace DALayer.RFQ
 
 			return FilePathWithExtension;
 		}
+
+		/*Name of Function : <<CommunicationAdd>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<to add rfq communication details>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public statuscheckmodel CommunicationAdd(RfqCommunicationModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
@@ -2282,6 +2394,11 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
+
+		/*Name of Function : <<GetAllvendorList>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<get all vendor details>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public List<VendormasterModel> GetAllvendorList()
 		{
 			List<VendormasterModel> vendor = new List<VendormasterModel>();
@@ -2365,6 +2482,11 @@ namespace DALayer.RFQ
 		{
 			throw new NotImplementedException();
 		}
+
+		/*Name of Function : <<InsertRfqItemInfo>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<Insert and update rfq item info details>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<RfqRevisionModel> InsertRfqItemInfo(RFQItemsInfo_N model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
@@ -2486,6 +2608,11 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
+
+		/*Name of Function : <<DeleteRfqIteminfoByid>>  Author :<<Prasanna>>  
+		  Date of Creation <<20-11-2019>>
+		  Purpose : <<Delete rfqiteminfo>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<statuscheckmodel> DeleteRfqIteminfoByid(int id)
 		{
 			statuscheckmodel status = new statuscheckmodel();
@@ -5589,7 +5716,10 @@ namespace DALayer.RFQ
 
 			// throw new NotImplementedException();
 		}
-
+		/*Name of Function : <<getrfqtermsbyrevisionid>>  Author :<<Prasanna>>  
+		  Date of Creation <<28-05-2020>>
+		  Purpose : <<getrfqtermsbyrevisionid >>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId)
 		{
 			List<DisplayRfqTermsByRevisionId> revision = new List<DisplayRfqTermsByRevisionId>();
@@ -5688,6 +5818,10 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
+		/*Name of Function : <<getMprPaDetailsBySearch>>  Author :<<Prasanna>>  
+		  Date of Creation <<28-05-2020>>
+		  Purpose : <<getMprPaDetailsBySearch >>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public async Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
 		{
 			List<GetMprPaDetailsByFilter> filter = new List<GetMprPaDetailsByFilter>();
@@ -5719,6 +5853,10 @@ namespace DALayer.RFQ
 			}
 		}
 
+		/*Name of Function : <<PreviouPriceUpdate>>  Author :<<Prasanna>>  
+		  Date of Creation <<28-05-2020>>
+		  Purpose : <<Previou Price Update >>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool PreviouPriceUpdate(MPRItemInfo previousprice)
 		{
 			MPRItemInfo mpritem = obj.MPRItemInfoes.Where(li => li.Itemdetailsid == previousprice.Itemdetailsid).FirstOrDefault();
@@ -5730,6 +5868,10 @@ namespace DALayer.RFQ
 			return true;
 		}
 
+		/*Name of Function : <<insertRFQStatus>>  Author :<<Prasanna>>  
+		  Date of Creation <<27-06-2020>>
+		  Purpose : <<Insert and update rfq status details>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool insertRFQStatus(RFQStatu model)
 		{
 			//add in remote table
@@ -5771,8 +5913,4 @@ namespace DALayer.RFQ
 			return true;
 		}
 	}
-
-
-
 }
-

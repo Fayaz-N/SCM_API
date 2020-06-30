@@ -1,4 +1,12 @@
-﻿using DALayer.Emails;
+﻿/*
+    Name of File : <<MPRDA>>  Author :<<Prasanna>>  
+    Date of Creation <<15-09-2019>>
+    Purpose : <<This is Data access Layer to create MPR, get MPR data, MPR List>>
+    Review Date :<<>>   Reviewed By :<<>>
+    Version : 0.1 <change version only if there is major change - new release etc>
+    Sourcecode Copyright : Yokogawa India Limited
+*/
+using DALayer.Emails;
 using SCMModels;
 using SCMModels.RemoteModel;
 using SCMModels.RFQModels;
@@ -15,6 +23,13 @@ using System.Web;
 
 namespace DALayer.MPR
 {
+	/*
+Name of Class : <<MPRDA>>  Author :<<Prasanna>>  
+Date of Creation <<15-09-2019>>
+Purpose : <<to create MPR, get MPR data>>
+Review Date :<<>>   Reviewed By :<<>>
+
+*/
 	public class MPRDA : IMPRDA
 	{
 		private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
@@ -24,6 +39,10 @@ namespace DALayer.MPR
 		}
 		YSCMEntities DB = new YSCMEntities();
 
+		/*Name of Function : <<getDBMastersList>>  Author :<<Prasanna>>  
+	    Date of Creation <<15-09-2019>>
+	    Purpose : <<get table data dynamically by passing query as parameter>>
+	    Review Date :<<>>   Reviewed By :<<>>*/
 		public DataTable getDBMastersList(DynamicSearchResult Result)
 		{
 			Result.connectionString = DB.Database.Connection.ConnectionString;
@@ -53,6 +72,10 @@ namespace DALayer.MPR
 			return dtDBMastersList;
 		}
 
+		/*Name of Function : <<addDataToDBMasters>>  Author :<<Prasanna>>  
+		Date of Creation <<15-09-2019>>
+		Purpose : <<insert table data dynamically by passing query as parameter>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool addDataToDBMasters(DynamicSearchResult Result)
 		{
 			string query = "insert into " + Result.tableName + "(" + Result.columnNames + ")values('" + Result.columnValues + "')";
@@ -65,6 +88,11 @@ namespace DALayer.MPR
 			return true;
 		}
 
+
+		/*Name of Function : <<updateDataToDBMasters>>  Author :<<Prasanna>>  
+		Date of Creation <<15-09-2019>>
+		Purpose : <<update table data dynamically by passing query as parameter>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool updateDataToDBMasters(DynamicSearchResult Result)
 		{
 			Result.connectionString = DB.Database.Connection.ConnectionString;
@@ -77,6 +105,10 @@ namespace DALayer.MPR
 			con.Close();
 			return true;
 		}
+		/*Name of Function : <<GetListItems>>  Author :<<Prasanna>>  
+		Date of Creation <<15-09-2019>>
+		Purpose : <<Get table data as list using dynamic query>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public DataTable GetListItems(DynamicSearchResult Result)
 		{
 			Result.connectionString = DB.Database.Connection.ConnectionString;
@@ -95,6 +127,10 @@ namespace DALayer.MPR
 			return dataTable;
 		}
 
+		/*Name of Function : <<updateMPR>>  Author :<<Prasanna>>  
+		Date of Creation <<20-09-2019>>
+		Purpose : <<insert,update mpr data>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public MPRRevision updateMPR(MPRRevision mpr)
 		{
 			MPRRevision mprRevisionDetails = new MPRRevision();
@@ -473,6 +509,11 @@ namespace DALayer.MPR
 			}
 			return mprRevisionDetails;
 		}
+
+		/*Name of Function : <<copyMprRevision>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<copy existing MPR as new revision>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder)
 		{
 			MPRRevision mprRevisionDetails = new MPRRevision();
@@ -689,6 +730,11 @@ namespace DALayer.MPR
 		//        return vendor.Vendorid;
 		//    }
 		//}
+
+		/*Name of Function : <<addNewVendor>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<add new vendor in both vscm and yscm>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public int addNewVendor(VendormasterModel model)
 		{
 			int vendorid = model.Vendorid;
@@ -910,6 +956,10 @@ namespace DALayer.MPR
 			}
 		}
 
+		/*Name of Function : <<deleteMPRDocument>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<to delete mpr documents>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool deleteMPRDocument(MPRDocument mprDocument)
 		{
 			using (YSCMEntities Context = new YSCMEntities())
@@ -921,6 +971,10 @@ namespace DALayer.MPR
 			return true;
 		}
 
+		/*Name of Function : <<deleteMPRItemInfo>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<delete mpritem info>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool deleteMPRItemInfo(MPRItemInfo mprItemInfo)
 		{
 			using (YSCMEntities Context = new YSCMEntities())
@@ -938,6 +992,11 @@ namespace DALayer.MPR
 			}
 			return true;
 		}
+
+		/*Name of Function : <<addMprItemInfo>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<add mpr item info>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public string addMprItemInfo(MPRItemInfo mPRItemInfo)
 		{
 			using (YSCMEntities context = new YSCMEntities())
@@ -978,6 +1037,11 @@ namespace DALayer.MPR
 				}
 			}
 		}
+
+		/*Name of Function : <<deleteMPRVendor>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<deleteMPRVendor>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool deleteMPRVendor(MPRVendorDetail mprVendor)
 		{
 			using (YSCMEntities Context = new YSCMEntities())
@@ -989,6 +1053,10 @@ namespace DALayer.MPR
 			return true;
 		}
 
+		/*Name of Function : <<deleteMPRDocumentation>>  Author :<<Prasanna>>  
+		Date of Creation <<02-01-2020>>
+		Purpose : <<deleteMPRVendor>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation)
 		{
 			using (YSCMEntities Context = new YSCMEntities())
@@ -1000,6 +1068,10 @@ namespace DALayer.MPR
 			return true;
 		}
 
+		/*Name of Function : <<getMPRRevisionDetails>>  Author :<<Prasanna>>  
+		Date of Creation <<06-12-2019>>
+		Purpose : <<get mpr revision details based on revision id>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public MPRRevision getMPRRevisionDetails(int RevisionId)
 		{
 			DB.Configuration.ProxyCreationEnabled = false;
@@ -1055,6 +1127,11 @@ namespace DALayer.MPR
 
 		}
 
+
+		/*Name of Function : <<getMPRList>>  Author :<<Prasanna>>  
+		Date of Creation <<06-12-2019>>
+		Purpose : <<get mpr List based on filter parameters>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public DataTable getMPRList(mprFilterParams mprfilterparams)
 		{
 			DataTable table = new DataTable();
@@ -1167,6 +1244,10 @@ namespace DALayer.MPR
 
 		}
 
+		/*Name of Function : <<getSavingsReport>>  Author :<<Prasanna>>  
+		Date of Creation <<06-12-2019>>
+		Purpose : <<getSavingsReport>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public DataTable getSavingsReport(mprFilterParams mprfilterparams)
 		{
 			DataTable table = new DataTable();
@@ -1210,16 +1291,29 @@ namespace DALayer.MPR
 
 		}
 
+		/*Name of Function : <<getMPRPendingListCnt>>  Author :<<Prasanna>>  
+		Date of Creation <<06-04-2020>>
+		Purpose : <<get MPR PendingList count>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public int getMPRPendingListCnt(string PreparedBy)
 		{
 			return DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && li.PreparedBy == PreparedBy && (li.CheckedBy == "-" || li.ApprovedBy == "-")).Count();
 		}
+
+		/*Name of Function : <<getEmployeeList>>  Author :<<Prasanna>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get MPR PendingList count>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public List<Employee> getEmployeeList()
 		{
 			DB.Configuration.ProxyCreationEnabled = false;
 			return DB.Employees.ToList();
 		}
 
+		/*Name of Function : <<getMPRRevisionList>>  Author :<<Prasanna>>  
+		Date of Creation <<12-12-2019>>
+		Purpose : <<get MPR Revision List>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public List<MPRRevisionDetails_woItems> getMPRRevisionList(int RequisitionId)
 		{
 			DB.Configuration.ProxyCreationEnabled = false;
@@ -1234,6 +1328,10 @@ namespace DALayer.MPR
 			return mprRevisionDetails;
 		}
 
+		/*Name of Function : <<statusUpdate>>  Author :<<Prasanna>>  
+		Date of Creation <<26-06-2020>>
+		Purpose : <<statusUpdate when Acknowledge,MPRManualStatus,Checker,approver,... status changed as approved>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public MPRRevision statusUpdate(MPRStatusUpdate mprStatus)
 		{
 			MPRRevision mprrevision = new MPRRevision();
@@ -1426,6 +1524,10 @@ namespace DALayer.MPR
 			return this.getMPRRevisionDetails(mprStatus.RevisionId);
 		}
 
+		/*Name of Function : <<createMPRRFQRepeatOrder>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<create mprrfq for repeat order>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public void createMPRRFQRepeatOrder(int revisionid)
 		{
 
@@ -1464,6 +1566,11 @@ namespace DALayer.MPR
 				}
 			}
 		}
+
+		/*Name of Function : <<getStatusList>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<get mpr status list>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public List<SCMStatu> getStatusList()
 		{
 			using (YSCMEntities Context = new YSCMEntities())
@@ -1472,6 +1579,10 @@ namespace DALayer.MPR
 			}
 		}
 
+		/*Name of Function : <<getAccessList>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<get  Access list of userpermissions>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public List<UserPermission> getAccessList(int RoleId)
 		{
 			using (YSCMEntities context = new YSCMEntities())
@@ -1479,6 +1590,11 @@ namespace DALayer.MPR
 				return context.UserPermissions.Where(li => li.RoleId == RoleId).ToList();
 			}
 		}
+
+		/*Name of Function : <<updateMPRVendor>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<update mpr vendor details>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId)
 		{
 			foreach (MPRVendorDetail item in MPRVendorDetails)
@@ -1504,6 +1620,10 @@ namespace DALayer.MPR
 			return true;
 		}
 
+		/*Name of Function : <<updateMprstatusTrack>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<update mpr status track details>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public void updateMprstatusTrack(MPRStatusTrack mprStatusTrackDetails)
 		{
 			if (mprStatusTrackDetails.StatusTrackId == 0)
@@ -1522,6 +1642,10 @@ namespace DALayer.MPR
 			DB.SaveChanges();
 		}
 
+		/*Name of Function : <<deleteMPR>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<delete mpr revision by setting delete flag as true>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public bool deleteMPR(DeleteMpr deleteMprInfo)
 		{
 
@@ -1537,6 +1661,10 @@ namespace DALayer.MPR
 			return true;
 		}
 
+		/*Name of Function : <<GeneratePassword>>  Author :<<Prasanna>>  
+		Date of Creation <<30-03-2020>>
+		Purpose : <<Genereate password for vendor user>>
+		Review Date :<<>>   Reviewed By :<<>>*/
 		public static string GeneratePassword()
 		{
 			bool includeLowercase = true;

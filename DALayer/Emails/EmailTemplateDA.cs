@@ -1,4 +1,12 @@
-﻿using SCMModels.SCMModels;
+﻿/*
+    Name of File : <<EmailTemplateDA>>  Author :<<Prasanna>>  
+    Date of Creation <<01-12-2019>>
+    Purpose : <<email template preparation to send emails>>
+    Review Date :<<>>   Reviewed By :<<>>
+    Version : 0.1 <change version only if there is major change - new release etc>
+    Sourcecode Copyright : Yokogawa India Limited
+*/
+using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +21,18 @@ using SCMModels.RemoteModel;
 
 namespace DALayer.Emails
 {
+
+	/*Name of Class : <<EmailTemplateDA>>  Author :<<Prasanna>>  
+    Date of Creation <<01-12-2019>>
+    Purpose : <<email template preparation to send emails>
+    Review Date :<<>>   Reviewed By :<<>>*/
 	public class EmailTemplateDA : IEmailTemplateDA
 	{
+
+		/*Name of Function : <<prepareMPREmailTemplate>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-12-2019>>
+		  Purpose : <<preparing Email template to send status to requestiot,checker,approver,.. based onstatus>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool prepareMPREmailTemplate(string typeOfUser, int revisionId, string FrmEmailId, string ToEmailId, string Remarks)
 		{
 
@@ -164,7 +182,6 @@ namespace DALayer.Emails
 									emlSndngList.ToEmailId = db.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevisionDetails.BuyerGroupId).FirstOrDefault().BuyerManager;
 									if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 									{
-										mprrevisionDetails.BuyerGroupId = 3;
 										List<MPRBGMailConfiguration> configList = db.MPRBGMailConfigurations.Where(li => li.BuyerGroupID == mprrevisionDetails.BuyerGroupId).ToList();
 										foreach (var item in configList)
 										{
@@ -179,7 +196,7 @@ namespace DALayer.Emails
 											}
 											if (item.MailType == "TO" && mailId != null)
 											{
-												emlSndngList.ToEmailId += "," + mailId ;
+												emlSndngList.ToEmailId += "," + mailId;
 											}
 										}
 										this.sendEmail(emlSndngList);
@@ -249,6 +266,10 @@ namespace DALayer.Emails
 
 		}
 
+		/*Name of Function : <<prepareRFQGeneratedEmail>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-12-2019>>
+		  Purpose : <<Emial template when rfq generated>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId)
 		{
 			try
@@ -285,6 +306,11 @@ namespace DALayer.Emails
 			}
 			return true;
 		}
+
+		/*Name of Function : <<prepareMPRStatusEmail>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-12-2019>>
+		  Purpose : <<Emial template when buyer group changed,mpr assigned>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool prepareMPRStatusEmail(string FrmEmailId, string ToEmailId, string type, int revisionid)
 		{
 			try
@@ -323,6 +349,10 @@ namespace DALayer.Emails
 			return true;
 		}
 
+		/*Name of Function : <<sendMailtoVendor>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-12-2019>>
+		  Purpose : <<Emial template for vendor when RFQ Generated>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool sendMailtoVendor(sendMailObj mailObj)
 		{
 			try
@@ -369,6 +399,12 @@ namespace DALayer.Emails
 
 		}
 
+
+
+		/*Name of Function : <<sendEmail>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-12-2019>>
+		  Purpose : <<Sending mail method>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool sendEmail(EmailSend emlSndngList)
 		{
 			bool validEmail = IsValidEmail(emlSndngList.ToEmailId);
@@ -422,6 +458,11 @@ namespace DALayer.Emails
 			return true;
 		}
 
+
+		/*Name of Function : <<IsValidEmail>>  Author :<<Prasanna>>  
+		  Date of Creation <<01-12-2019>>
+		  Purpose : <<validate mail>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
 		bool IsValidEmail(string email)
 		{
 			try
@@ -436,6 +477,10 @@ namespace DALayer.Emails
 		}
 	}
 
+	/*Name of Class : <<EmailSend>>  Author :<<Prasanna>>  
+	  Date of Creation <<01-12-2019>>
+	  Purpose : <<to send email>>
+	  Review Date :<<>>   Reviewed By :<<>>*/
 	public class EmailSend
 	{
 		public string FrmEmailId { get; set; }
