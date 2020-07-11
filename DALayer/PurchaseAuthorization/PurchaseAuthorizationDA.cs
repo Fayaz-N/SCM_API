@@ -922,6 +922,7 @@ namespace DALayer.PurchaseAuthorization
                     authorization.SuppliersReference = model.SuppliersReference;
                     authorization.VendorId = model.VendorId;
                     authorization.PAStatus = "Inprogress";
+                    authorization.DeleteFlag = false;
                     obj.MPRPADetails.Add(authorization);
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
@@ -1084,6 +1085,7 @@ namespace DALayer.PurchaseAuthorization
                         Remarks = x.Remarks,
                         PODate = x.PODate.ToString(),
                         RFQNo=x.RFQNo,
+                        HSNCode=x.HSNCode,
                         MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
                     }).ToList();
                     var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
@@ -1431,7 +1433,7 @@ namespace DALayer.PurchaseAuthorization
             int statusid = 0;
             var sqlquery = "";
             var padetails = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault();
-
+            var pastatus = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault();
             sqlquery = "select * from approverFinalview where PAId='" + paid + "' ";
             approver = obj.Database.SqlQuery<approverFinalview>(sqlquery).ToList();
             if (ApprovalStatus == "Approved")
@@ -1457,6 +1459,8 @@ namespace DALayer.PurchaseAuthorization
                     padetails.POStatusUpdate = System.DateTime.Now;
                     padetails.PAStatusUpdate = System.DateTime.Now;
                 obj.SaveChanges();
+                pastatus.StatusId = 10;
+                obj.SaveChanges();
 
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
                 int id = statustrack.StatusId;
@@ -1476,8 +1480,11 @@ namespace DALayer.PurchaseAuthorization
                 obj.SaveChanges();
                 if (padetails != null)
                     padetails.PAStatus = ApprovalStatus;
-               
                 obj.SaveChanges();
+
+                pastatus.StatusId = 18;
+                obj.SaveChanges();
+
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
                 
             }
@@ -1807,7 +1814,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 string email = obj.Employees.Where(x => x.EmployeeNo == model.EmployeeNo).FirstOrDefault().EMail;
-                this.emailDA.PAEmailRequestForApproval(model.PAId, email);
+                this.emailDA.PAEmailRequestForApproval(model.PAId, email,model.EmployeeNo);
                 return status;
             }
             catch (Exception ex)

@@ -23,7 +23,32 @@ namespace DALayer.PAEmailDA
             //mails.CC = "n.senthilkumar@in.yokogawa.com";
             foreach (var item in data)
             {
-                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                var maildata = obj.Mailsendingviews.Where(x => x.Approver==item.Approver).FirstOrDefault();
+                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head>" +
+                    "<body>" +
+                    "<div class='container'>" +
+                    "<table border='1' class='table table-bordered table-sm'>" +
+                    "<tr>" +
+                    "<td><b>MPR Number</b></td><td>" + maildata.DocumentNo + "</td>" +
+                    "<td><b>Document Description</b></td><td>" + maildata.DocumentDescription + "</td>" +
+                    "<td><b>Vendor</b></td><td>" + maildata.VendorName + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td><b>Department</b></td><td>" + maildata.Department + "</td>" +
+                    "<td><b>Project Manager</td></td><td>" + maildata.projectmanagername + "</td>" +
+                    "<td><b>Buyer Group</b></td><td>" + maildata.BuyerGroup + "</td></tr>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td><b>Paid</b></td><td>" + maildata.PAId + "</td>" +
+                    "<td><b>PARequested</b></td><td>" + maildata.parequestedname + "</td>" +
+                    "<td><b>RequestedOn</b></td><td>" + maildata.RequestedOn + "</td>" +
+                    "</tr>" +
+                    "<tr>"+
+                    "<td><b>Approver Name</b></td><td>" + maildata.Approver + "</td>" +
+                    "<td><b>Approver Status</b></td><td>" + maildata.ApprovalStatus + "</td>" +
+                    "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
+                    "</tr>" +
+                    "</table><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
                 mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
                 mails.Subject = "Purchase Authorization Waiting For Your Approval";
                 if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
@@ -85,7 +110,22 @@ namespace DALayer.PAEmailDA
             string mprpreparedby = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().PreparedBy;
             if (ApprovalStatus=="Approved")
             {
-                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                var maildata = obj.Mailsendingviews.Where(x => x.Approver == employeeno).FirstOrDefault();
+                mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head>" +
+                    "<body>" +
+                    "<div class='container'>" +
+                    "<table border='1' class='table table-bordered table-sm'>" +
+                    "<tr>" +
+                    "<td><b>Paid</b></td><td>" + maildata.PAId + "</td>" +
+                    "<td><b>PARequested</b></td><td>" + maildata.parequestedname + "</td>" +
+                    "<td><b>RequestedOn</b></td><td>" + maildata.RequestedOn + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td><b>Approver Name</b></td><td>" + maildata.Approver + "</td>" +
+                    "<td><b>Approver Status</b></td><td>" + maildata.ApproversRemarks + "</td>" +
+                    "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
+                    "</tr>" +
+                    "</table><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
                 mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == parequestby).FirstOrDefault().EMail;
                 mails.Subject = "Purchase Authorization Is Approved";
                 Nullable<byte> buyergroup = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().BuyerGroupId;
@@ -122,18 +162,44 @@ namespace DALayer.PAEmailDA
             }
             return true;
         }
-        public bool PAEmailRequestForApproval(int paid, string ToEmailId)
+        public bool PAEmailRequestForApproval(int paid, string ToEmailId,string EmployeeNo)
         {
             EmailSend emails = new EmailSend();
             var ipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
             ipaddress = ipaddress + "SCM/mprpa/" + paid + "";
             string employeeno = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault().RequestedBy;
+            var maildata = obj.Mailsendingviews.Where(x => x.Approver == employeeno).FirstOrDefault();
             try
             {
                 emails.ToEmailId = ToEmailId;
                 emails.FrmEmailId = obj.Employees.Where(x=>x.EmployeeNo==employeeno).FirstOrDefault().EMail;
                 emails.Subject = "Reminder for Purchase Authorization to approve";
-                emails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Request For Purchase Authorization To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+                emails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head>" +
+                    "<body>" +
+                    "<div class='container'>" +
+                    "<table border='1' class='table table-bordered table-sm'>" +
+                    "<tr>" +
+                    "<td><b>MPR Number</b></td><td>" + maildata.DocumentNo + "</td>" +
+                    "<td><b>Document Description</b></td><td>" + maildata.DocumentDescription + "</td>" +
+                    "<td><b>Vendor</b></td><td>" + maildata.DocumentDescription + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td><b>Department</b></td><td>" + maildata.Department + "</td>" +
+                    "<td><b>Project Manager</td></td><td>" + maildata.projectmanagername + "</td>" +
+                    "<td><b>Buyer Group</b></td><td>" + maildata.BuyerGroup + "</td></tr>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td><b>Paid</b></td><td>" + maildata.PAId + "</td>" +
+                    "<td><b>PARequested</b></td><td>" + maildata.parequestedname + "</td>" +
+                    "<td><b>RequestedOn</b></td><td>" + maildata.RequestedOn + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td><b>Approver Name</b></td><td>" + maildata.Approver + "</td>" +
+                    "<td><b>Approver Status</b></td><td>" + maildata.ApproversRemarks + "</td>" +
+                    "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
+                    "</tr>" +
+                    "</table><br/><b>Request For Purchase Authorization To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
+
                 if (emails.FrmEmailId != "NULL" && emails.ToEmailId != "NULL")
                     sendEmail(emails);
                 return true;
