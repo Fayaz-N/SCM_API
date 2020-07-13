@@ -18,17 +18,19 @@ using System.Configuration;
 using SCMModels;
 using System.Text.RegularExpressions;
 using SCMModels.RemoteModel;
+using DALayer.Common;
 
 namespace DALayer.Emails
 {
 
+	
 	/*Name of Class : <<EmailTemplateDA>>  Author :<<Prasanna>>  
     Date of Creation <<01-12-2019>>
     Purpose : <<email template preparation to send emails>
     Review Date :<<>>   Reviewed By :<<>>*/
 	public class EmailTemplateDA : IEmailTemplateDA
 	{
-
+		private ErrorLog log = new ErrorLog();
 		/*Name of Function : <<prepareMPREmailTemplate>>  Author :<<Prasanna>>  
 		  Date of Creation <<01-12-2019>>
 		  Purpose : <<preparing Email template to send status to requestiot,checker,approver,.. based onstatus>>
@@ -260,7 +262,8 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				log.ErrorMessage("EmailTemplate", "prepareMPREmailTemplate", ex.Message + "; " + ex.StackTrace.ToString());
+				//throw ex;
 			}
 			return true;
 
@@ -302,7 +305,8 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				log.ErrorMessage("EmailTemplate", "prepareRFQGeneratedEmail", ex.Message + "; " + ex.StackTrace.ToString());
+				//throw ex;
 			}
 			return true;
 		}
@@ -344,7 +348,8 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				log.ErrorMessage("EmailTemplate", "prepareMPRStatusEmail", ex.Message + "; " + ex.StackTrace.ToString());
+				//throw ex;
 			}
 			return true;
 		}
@@ -393,6 +398,7 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
+				log.ErrorMessage("EmailTemplate", "sendMailtoVendor", ex.Message + "; " +  ex.StackTrace.ToString());
 				//throw ex;
 			}
 			return true;
@@ -400,6 +406,38 @@ namespace DALayer.Emails
 		}
 
 
+		public bool mailtoRequestor(int revisionId, string FrmEmailId)
+		{
+			try
+			{
+				using (var db = new YSCMEntities()) //ok
+				{
+
+					var ipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
+					MPRRevisionDetail mprrevisionDetails = db.MPRRevisionDetails.Where(li => li.RevisionId == revisionId).FirstOrDefault<MPRRevisionDetail>();
+					ipaddress = ipaddress + "SCM/MPRForm/" + mprrevisionDetails.RevisionId + "";
+					var issueOfPurpose = mprrevisionDetails.IssuePurposeId == 1 ? "For Enquiry" : "For Issuing PO";
+					EmailSend emlSndngList = new EmailSend();
+					Employee frmEmail = db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>();
+					emlSndngList.FrmEmailId = frmEmail.EMail;
+					emlSndngList.Subject = "MPR Information: " + mprrevisionDetails.DocumentNo + " ; " + "Client Name: " + mprrevisionDetails.ClientName + " ; " + "Current Status: " + mprrevisionDetails.MPRStatus;
+					emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><table border='1' class='table table-bordered table-sm'><tr><td><b>MPR Number</b></td><td>" + mprrevisionDetails.DocumentNo + "</td><td><b>Document Description</b></td><td>" + mprrevisionDetails.DocumentDescription + "</td><td><b>Purpose of Iussing MPR</b></td><td>" + issueOfPurpose + "</td></tr><tr><td><b>Department</b></td><td>" + mprrevisionDetails.DepartmentName + "</td><td><b>Project Manager</td></td><td>" + mprrevisionDetails.ProjectManagerName + "</td><td><b>Job Code</b></td><td>" + mprrevisionDetails.JobCode + "</td></tr><tr><td><b>Client Name</b></td><td>" + mprrevisionDetails.ClientName + "</td><td><b>Job Name</b></td><td>" + mprrevisionDetails.JobName + "</td><td><b>Buyer Group</b></td><td>" + mprrevisionDetails.BuyerGroupName + "</td></tr><tr><td><b>Checker Name</b></td><td>" + mprrevisionDetails.CheckedName + "</td><td><b>Checker Status</b></td><td>" + mprrevisionDetails.CheckStatus + "</td><td><b>Checker Remarks</b></td><td>" + mprrevisionDetails.CheckerRemarks + "</td></tr><tr><td><b>Approver Name</b></td><td>" + mprrevisionDetails.ApproverName + "</td><td><b>Approver Status</b></td><td>" + mprrevisionDetails.ApprovalStatus + "</td><td><b>Approver Remarks</b></td><td>" + mprrevisionDetails.ApproverRemarks + "</td></tr></table><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
+					emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.PreparedBy).FirstOrDefault<Employee>()).EMail;
+					if (mprrevisionDetails.CheckedBy != "-" && mprrevisionDetails.CheckedBy != "")
+					{
+						emlSndngList.CC = (db.Employees.Where(li => li.EmployeeNo == mprrevisionDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
+					}
+					if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+						this.sendEmail(emlSndngList);
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("EmailTemplate", "mailtoRequestor", ex.Message +"; "+ ex.StackTrace.ToString());
+				//throw ex;
+			}
+			return true;
+		}
 
 		/*Name of Function : <<sendEmail>>  Author :<<Prasanna>>  
 		  Date of Creation <<01-12-2019>>

@@ -6,6 +6,7 @@
     Version : 0.1 <change version only if there is major change - new release etc>
     Sourcecode Copyright : Yokogawa India Limited
 */
+using DALayer.Common;
 using DALayer.Emails;
 using SCMModels;
 using SCMModels.RemoteModel;
@@ -33,6 +34,7 @@ Review Date :<<>>   Reviewed By :<<>>
 	public class MPRDA : IMPRDA
 	{
 		private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
+		private ErrorLog log = new ErrorLog();
 		public MPRDA(IEmailTemplateDA EmailTemplateDA)
 		{
 			this.emailTemplateDA = EmailTemplateDA;
@@ -156,7 +158,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						mprRevisionDetails.BoolValidRevision = true;
 						mprRevisionDetails.MPRDetail = null;
 						mprRevisionDetails.DeleteFlag = false;
-						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
+						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = mprRevisionDetails.OApprovalStatus = mprRevisionDetails.OCheckStatus = mprRevisionDetails.OSecondApproversStatus = mprRevisionDetails.OThirdApproverStatus = "Pending";
 						DB.MPRRevisions.Add(mprRevisionDetails);
 						DB.SaveChanges();
 						requestionId = mprDetails.RequisitionId;
@@ -428,7 +430,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						//mprRevisionDetails.OThirdApproverStatusChangedOn = DateTime.Now;
 						mprRevisionDetails.CheckedBy = mpr.CheckedBy;
 						mprRevisionDetails.ApprovedBy = mpr.ApprovedBy;
-						int cnt = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == mpr.RequisitionId && li.StatusId == 1).Count();//checking mpr generated already or not 
+						int cnt = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == mpr.RequisitionId && li.RevisionId == mpr.RevisionId && li.StatusId == 1).Count();//checking mpr generated already or not 
 						if (!string.IsNullOrEmpty(mpr.CheckedBy))
 						{
 							if (cnt == 0)
@@ -500,6 +502,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							eve.Entry.Entity.GetType().Name, eve.Entry.State);
 						foreach (var ve in eve.ValidationErrors)
 						{
+							log.ErrorMessage("MPRController", "updateMPR", ve.ErrorMessage);
 							Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
 								ve.PropertyName, ve.ErrorMessage);
 						}
@@ -514,8 +517,9 @@ Review Date :<<>>   Reviewed By :<<>>
 		Date of Creation <<30-03-2020>>
 		Purpose : <<copy existing MPR as new revision>>
 		Review Date :<<>>   Reviewed By :<<>>*/
-		public MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder)
+		public MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder, bool revise)
 		{
+
 			MPRRevision mprRevisionDetails = new MPRRevision();
 			if (mpr != null)
 			{
@@ -534,20 +538,42 @@ Review Date :<<>>   Reviewed By :<<>>
 						sequenceNo = sequenceNo + 1;
 					}
 					var value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
-					MPRDetail MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == requisitinId).FirstOrDefault<MPRDetail>();
-					mprRevisionDetails.MPRDetail = new MPRDetail();
-					mprRevisionDetails.MPRDetail.DocumentNo = "MPR/" + DateTime.Now.ToString("MMyy") + "/" + value;
-					mprRevisionDetails.MPRDetail.MPRSeqNo = sequenceNo;
-					mprRevisionDetails.MPRDetail.SubmittedBy = mpr.PreparedBy;
-					mprRevisionDetails.MPRDetail.SubmittedDate = DateTime.Now;
-					mprRevisionDetails.MPRDetail.DocumentDescription = MPRDetail.DocumentDescription;
-					mprRevisionDetails.RevisionNo = 0;
-					mprRevisionDetails.BoolValidRevision = true;
-					mprRevisionDetails.PreparedBy = mpr.PreparedBy;
-					mprRevisionDetails.PreparedOn = DateTime.Now;
-					mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = "Pending";
-					DB.MPRRevisions.Add(mprRevisionDetails);
-					DB.SaveChanges();
+					if (revise == true)
+					{
+						MPRRevision mprLastRecord = DB.MPRRevisions.OrderByDescending(p => p.RevisionId).Where(li => li.RequisitionId == mpr.RequisitionId).FirstOrDefault<MPRRevision>();
+						mprLastRecord.BoolValidRevision = false;
+						DB.SaveChanges();
+						mprRevisionDetails = mpr;
+						mprRevisionDetails.RequisitionId = mprLastRecord.RequisitionId;
+						mprRevisionDetails.RevisionNo = Convert.ToByte(mprLastRecord.RevisionNo + 1);
+						mprRevisionDetails.BoolValidRevision = true;
+						mprRevisionDetails.MPRDetail = null;
+						mprRevisionDetails.PreparedBy = mpr.PreparedBy;
+						mprRevisionDetails.PreparedOn = DateTime.Now;
+						mprRevisionDetails.DeleteFlag = false;
+						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = mprRevisionDetails.OApprovalStatus = mprRevisionDetails.OCheckStatus = mprRevisionDetails.OSecondApproversStatus = mprRevisionDetails.OThirdApproverStatus = "Pending";
+						DB.MPRRevisions.Add(mprRevisionDetails);
+						DB.SaveChanges();
+
+					}
+					else
+					{
+						MPRDetail MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == requisitinId).FirstOrDefault<MPRDetail>();
+						mprRevisionDetails.MPRDetail = new MPRDetail();
+						mprRevisionDetails.MPRDetail.DocumentNo = "MPR/" + DateTime.Now.ToString("MMyy") + "/" + value;
+						mprRevisionDetails.MPRDetail.MPRSeqNo = sequenceNo;
+						mprRevisionDetails.MPRDetail.SubmittedBy = mpr.PreparedBy;
+						mprRevisionDetails.MPRDetail.SubmittedDate = DateTime.Now;
+						mprRevisionDetails.MPRDetail.DocumentDescription = MPRDetail.DocumentDescription;
+						mprRevisionDetails.RevisionNo = 0;
+						mprRevisionDetails.BoolValidRevision = true;
+						mprRevisionDetails.PreparedBy = mpr.PreparedBy;
+						mprRevisionDetails.PreparedOn = DateTime.Now;
+						mprRevisionDetails.DeleteFlag = false;
+						mprRevisionDetails.ApprovalStatus = mprRevisionDetails.CheckStatus = mprRevisionDetails.SecondApproversStatus = mprRevisionDetails.ThirdApproverStatus = mprRevisionDetails.OApprovalStatus = mprRevisionDetails.OCheckStatus = mprRevisionDetails.OSecondApproversStatus = mprRevisionDetails.OThirdApproverStatus = "Pending";
+						DB.MPRRevisions.Add(mprRevisionDetails);
+						DB.SaveChanges();
+					}
 					if (repeatOrder == false)
 						mpr = DB.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault();
 
@@ -701,6 +727,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							eve.Entry.Entity.GetType().Name, eve.Entry.State);
 						foreach (var ve in eve.ValidationErrors)
 						{
+							log.ErrorMessage("MPRController", "copyMprRevision", ve.ErrorMessage);
 							Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
 								ve.PropertyName, ve.ErrorMessage);
 						}
@@ -886,7 +913,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				}
 				else
 				{
-					VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == model.Vendorid).FirstOrDefault();
+					VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == vendorid).FirstOrDefault();
 					vendormaster.VendorCode = vendormaster.VendorCode;
 					vendormaster.VendorName = vendormaster.VendorName;
 					vendormaster.OldVendorCode = vendormaster.OldVendorCode;
@@ -1031,6 +1058,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							errmsg = ve.PropertyName + ve.ErrorMessage;
 						}
 					}
+					log.ErrorMessage("MPRController", "addMprItemInfo", errmsg);
 					return errmsg;
 
 
@@ -1335,6 +1363,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		public MPRRevision statusUpdate(MPRStatusUpdate mprStatus)
 		{
 			MPRRevision mprrevision = new MPRRevision();
+			var statusId = mprStatus.StatusId;
 			try
 			{
 				MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
@@ -1349,7 +1378,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					{
 						if (mprStatus.MPRAssignments.Count > 0)
 						{
-							mPRStatusTrackDetails.StatusId = 4;
+							statusId = mPRStatusTrackDetails.StatusId = 4;
 							updateMprstatusTrack(mPRStatusTrackDetails);
 							foreach (MPR_Assignment item in mprStatus.MPRAssignments)
 							{
@@ -1364,7 +1393,7 @@ Review Date :<<>>   Reviewed By :<<>>
 									MPR_Assignment.Employeeno = item.Employeeno;
 									Context.SaveChanges();
 								}
-								mprrevision.StatusId = Convert.ToByte(mPRStatusTrackDetails.StatusId);
+								mprrevision.StatusId = Convert.ToByte(statusId);
 								Context.SaveChanges();
 								this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, item.Employeeno, "mprAssign", mprStatus.RevisionId);
 							}
@@ -1384,7 +1413,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					{
 						if (mprStatus.typeOfuser == "MPRManualStatus")
 						{
-							mPRStatusTrackDetails.StatusId = mprStatus.StatusId;
+							statusId = mPRStatusTrackDetails.StatusId = mprStatus.StatusId;
 							mPRStatusTrackDetails.Remarks = mprStatus.Remarks;
 							updateMprstatusTrack(mPRStatusTrackDetails);
 						}
@@ -1395,9 +1424,9 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.CheckedOn = DateTime.Now;
 							if (mprStatus.status == "Approved" || mprStatus.status == "Sent for Modification")
 							{
-								mPRStatusTrackDetails.StatusId = 2;
+								statusId = mPRStatusTrackDetails.StatusId = 2;
 								if (mprStatus.status == "Sent for Modification")
-									mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 
@@ -1411,7 +1440,7 @@ Review Date :<<>>   Reviewed By :<<>>
 								mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
 								mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
 								mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
-								mPRStatusTrackDetails1.StatusId = 13;
+								statusId = mPRStatusTrackDetails1.StatusId = 13;//Raising PO Checked
 								updateMprstatusTrack(mPRStatusTrackDetails1);
 							}
 
@@ -1422,12 +1451,21 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.ApproverRemarks = mprStatus.Remarks;
 							mprrevision.ApprovedOn = DateTime.Now;
 
-							if (mprStatus.status == "Approved" || mprStatus.status == "Sent for Modification")
+							if (mprStatus.status == "Sent for Modification")
 							{
-								mPRStatusTrackDetails.StatusId = 3;
-								if (mprStatus.status == "Sent for Modification")
-									mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+								//mPRStatusTrackDetails.StatusId = 3;
+								//if (mprStatus.status == "Sent for Modification")
+								statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
 								updateMprstatusTrack(mPRStatusTrackDetails);
+							}
+							if (mprStatus.status == "Approved")
+							{
+								//need to check second  approver
+								if (mprrevision.SecondApprover == null)
+								{
+									statusId = mPRStatusTrackDetails.StatusId = 3;
+									updateMprstatusTrack(mPRStatusTrackDetails);
+								}
 							}
 							if (mprrevision.IssuePurposeId == 2)//update oapprover
 							{
@@ -1439,7 +1477,7 @@ Review Date :<<>>   Reviewed By :<<>>
 								mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
 								mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
 								mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
-								mPRStatusTrackDetails1.StatusId = 14;
+								statusId = mPRStatusTrackDetails1.StatusId = 14;//Raising PO Approved
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 						}
@@ -1448,7 +1486,12 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.SecondApproversStatus = mprStatus.status;
 							mprrevision.SecondApproverRemarks = mprStatus.Remarks;
 							mprrevision.SecondApprovedOn = DateTime.Now;
-
+							//need to check third  approver
+							if (mprrevision.ThirdApprover == null)
+							{
+								statusId = mPRStatusTrackDetails.StatusId = 3;
+								updateMprstatusTrack(mPRStatusTrackDetails);
+							}
 							mprrevision.OSecondApproversStatus = mprStatus.status;
 							mprrevision.OSecondApproverRemarks = mprStatus.Remarks;
 							mprrevision.OSecondApprovedOn = DateTime.Now;
@@ -1459,7 +1502,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.ThirdApproverStatus = mprStatus.status;
 							mprrevision.ThirdApproverRemarks = mprStatus.Remarks;
 							mprrevision.ThirdApproverStatusChangedOn = DateTime.Now;
-
+							statusId = mPRStatusTrackDetails.StatusId = 3;
+							updateMprstatusTrack(mPRStatusTrackDetails);
 
 							mprrevision.OThirdApproverStatus = mprStatus.status;
 							mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
@@ -1472,7 +1516,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.OCheckedOn = DateTime.Now;
 							if (mprStatus.status == "Approved")
 							{
-								mPRStatusTrackDetails.StatusId = 13;
+								statusId = mPRStatusTrackDetails.StatusId = 13;
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 						}
@@ -1483,7 +1527,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.OApprovedOn = DateTime.Now;
 							if (mprStatus.status == "Approved")
 							{
-								mPRStatusTrackDetails.StatusId = 14;
+								statusId = mPRStatusTrackDetails.StatusId = 14;
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 						}
@@ -1499,12 +1543,21 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
 							mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
 						}
-						mprrevision.StatusId = Convert.ToByte(mPRStatusTrackDetails.StatusId);
+						mprrevision.StatusId = Convert.ToByte(statusId);
 						Context.SaveChanges();
 					}
 					Context.SaveChanges();
 
 					this.emailTemplateDA.prepareMPREmailTemplate(mprStatus.typeOfuser, mprStatus.RevisionId, "", "", "");
+					if (mprStatus.typeOfuser == "Checker" || mprStatus.typeOfuser == "Approver" || mprStatus.typeOfuser == "SecondApprover" || mprStatus.typeOfuser == "ThirdApprover")
+					{
+
+					}
+					else
+					{
+						//send mail to requestor for manual status,acknoweldge,buyer group change
+						this.emailTemplateDA.mailtoRequestor(mprrevision.RevisionId, mprrevision.PreparedBy);
+					}
 				}
 
 			}
@@ -1516,6 +1569,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						eve.Entry.Entity.GetType().Name, eve.Entry.State);
 					foreach (var ve in eve.ValidationErrors)
 					{
+						log.ErrorMessage("MPRController", "statusUpdate", ve.ErrorMessage);
 						Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
 							ve.PropertyName, ve.ErrorMessage);
 					}

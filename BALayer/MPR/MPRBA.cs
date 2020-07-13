@@ -39,9 +39,9 @@ namespace BALayer.MPR
 			return this._mprDataAcess.updateMPR(mpr);
 
 		}
-		public MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder)
+		public MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder, bool revise)
 		{
-			return this._mprDataAcess.copyMprRevision(mpr, repeatOrder);
+			return this._mprDataAcess.copyMprRevision(mpr, repeatOrder,  revise);
 		}
 		public int addNewVendor(VendormasterModel vendor)
 		{

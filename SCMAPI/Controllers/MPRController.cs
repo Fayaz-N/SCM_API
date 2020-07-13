@@ -66,10 +66,10 @@ namespace SCMAPI.Controllers
 		}
 
 		[HttpPost]
-		[Route("copyMprRevision/{repeatOrder}")]
-		public IHttpActionResult copyMprRevision([FromBody] MPRRevision mpr, bool repeatOrder)
+		[Route("copyMprRevision/{repeatOrder}/{revise}")]
+		public IHttpActionResult copyMprRevision([FromBody] MPRRevision mpr, bool repeatOrder, bool revise)
 		{
-			return Ok(this._mprBusenessAcess.copyMprRevision(mpr, repeatOrder));
+			return Ok(this._mprBusenessAcess.copyMprRevision(mpr, repeatOrder, revise));
 		}
 		[HttpPost]
 		[Route("addNewVendor")]
@@ -191,39 +191,47 @@ namespace SCMAPI.Controllers
 		[HttpPost]
 		public IHttpActionResult UploadFile()
 		{
-			var httpRequest = HttpContext.Current.Request;
-			var serverPath = HttpContext.Current.Server.MapPath("~/SCMDocs");
-			string parsedFileName = "";
-			var revisionId = httpRequest.Files.AllKeys[0];
-			if (httpRequest.Files.Count > 0)
+			try
 			{
-				foreach (string file in httpRequest.Files)
+				var httpRequest = HttpContext.Current.Request;
+				var serverPath = HttpContext.Current.Server.MapPath("~/SCMDocs");
+				string parsedFileName = "";
+				var revisionId = httpRequest.Files.AllKeys[0];
+				if (httpRequest.Files.Count > 0)
 				{
-					var postedFile = httpRequest.Files[file];
-					byte[] fileData = null;
-					using (var binaryReader = new BinaryReader(postedFile.InputStream))
+					foreach (string file in httpRequest.Files)
 					{
-						fileData = binaryReader.ReadBytes(postedFile.ContentLength);
-					}
+						var postedFile = httpRequest.Files[file];
+						byte[] fileData = null;
+						using (var binaryReader = new BinaryReader(postedFile.InputStream))
+						{
+							fileData = binaryReader.ReadBytes(postedFile.ContentLength);
+						}
 
-					GC.Collect();
-					parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + revisionId + "\\" + ToValidFileName(postedFile.FileName));
-					serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + revisionId;
-					var path = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
-					if (!Directory.Exists(serverPath))
-						Directory.CreateDirectory(serverPath);
-					var memory = new MemoryStream();
-					FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
-					var updatedStream = new MemoryStream(fileData);
-					updatedStream.Seek(0, SeekOrigin.Begin);
-					updatedStream.CopyToAsync(fs).Wait();
-					fs.Flush();
-					GC.Collect();
+						GC.Collect();
+						parsedFileName = string.Format(DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + revisionId + "\\" + ToValidFileName(postedFile.FileName));
+						serverPath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + revisionId;
+						var path = Path.Combine(serverPath, ToValidFileName(postedFile.FileName));
+						if (!Directory.Exists(serverPath))
+							Directory.CreateDirectory(serverPath);
+						var memory = new MemoryStream();
+						FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+						var updatedStream = new MemoryStream(fileData);
+						updatedStream.Seek(0, SeekOrigin.Begin);
+						updatedStream.CopyToAsync(fs).Wait();
+						fs.Flush();
+						GC.Collect();
+					}
 				}
+				return Ok(parsedFileName);
 			}
-			return Ok(parsedFileName);
+			catch (Exception e)
+			{
+				return Ok(e);
+			}
 
 		}
+
 		[HttpPost]
 		[Route("uploadVendorData")]
 		public IHttpActionResult uploadVendorData()

@@ -6,6 +6,7 @@
     Version : 0.1 <change version only if there is major change - new release etc>
     Sourcecode Copyright : Yokogawa India Limited
 */
+using DALayer.Common;
 using DALayer.Emails;
 using DALayer.MPR;
 using SCMModels;
@@ -38,6 +39,7 @@ namespace DALayer.RFQ
 	{
 		private IMPRDA MPRDA = default(IMPRDA);
 		private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
+		private ErrorLog log = new ErrorLog();
 		public RFQDA(IMPRDA MPRDA, IEmailTemplateDA EmailTemplateDA)
 		{
 			this.MPRDA = MPRDA;
@@ -293,6 +295,7 @@ namespace DALayer.RFQ
 				mPRStatusTrackDetails.StatusId = 17; //RFQ Finalized           
 				mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
 				this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
+				this.emailTemplateDA.mailtoRequestor(mPRStatusTrackDetails.RevisionId, mPRStatusTrackDetails.UpdatedBy);//send mail to requestor when rfq finalized
 			}
 			return true;
 		}
@@ -355,10 +358,9 @@ namespace DALayer.RFQ
 							//vscm.RemoteRFQMasters.Add(rfqremote);
 							vscm.SaveChanges();
 						}
-						catch (Exception)
+						catch (Exception ex)
 						{
-
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());						
 						}
 					}
 
@@ -411,7 +413,7 @@ namespace DALayer.RFQ
 						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 					else
@@ -447,7 +449,7 @@ namespace DALayer.RFQ
 						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 
@@ -530,10 +532,10 @@ namespace DALayer.RFQ
 									vscm.RemoteRFQDocuments.Add(rfqDoc);
 									vscm.SaveChanges();
 								}
-								catch (Exception)
+								catch (Exception ex)
 								{
 
-									throw;
+									log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 								}
 							}
 						}
@@ -555,10 +557,10 @@ namespace DALayer.RFQ
 									vscm.RemoteRFQDocuments.Add(rfqDoc);
 									vscm.SaveChanges();
 								}
-								catch (Exception)
+								catch (Exception ex)
 								{
 
-									throw;
+									log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 								}
 							}
 						}
@@ -606,7 +608,7 @@ namespace DALayer.RFQ
 						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 					else
@@ -627,7 +629,7 @@ namespace DALayer.RFQ
 						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 
@@ -677,7 +679,7 @@ namespace DALayer.RFQ
 						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 
 					}
@@ -711,10 +713,10 @@ namespace DALayer.RFQ
 							//obj.RFQRevisions_N.Add(revision);
 							obj.SaveChanges();
 						}
-						catch (Exception)
+						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 
@@ -759,8 +761,7 @@ namespace DALayer.RFQ
 								}
 								catch (Exception ex)
 								{
-
-									throw;
+									log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 								}
 
 							}
@@ -793,7 +794,7 @@ namespace DALayer.RFQ
 								catch (Exception ex)
 								{
 
-									throw;
+									log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 								}
 
 							}
@@ -861,7 +862,7 @@ namespace DALayer.RFQ
 								catch (Exception ex)
 								{
 
-									throw;
+									log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 								}
 							}
 						}
@@ -869,7 +870,7 @@ namespace DALayer.RFQ
 						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 					//update mpr status
@@ -885,6 +886,7 @@ namespace DALayer.RFQ
 						MPRRevision revision1 = obj.MPRRevisions.Where(li => li.RevisionId == model.rfqmaster.MPRRevisionId).FirstOrDefault();
 						revision1.StatusId = revision.StatusId;
 						obj.SaveChanges();
+						this.emailTemplateDA.mailtoRequestor(mPRStatusTrackDetails.RevisionId, mPRStatusTrackDetails.UpdatedBy);//send mail to requestor when rfq generated
 					}
 					foreach (RFQTermsModel terms in model.RFQTerms)
 					{
@@ -894,10 +896,10 @@ namespace DALayer.RFQ
 							terms.RFQrevisionId = revisionid;
 							InsertRFQTerms(terms);
 						}
-						catch (Exception)
+						catch (Exception ex)
 						{
 
-							throw;
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 				}
@@ -912,8 +914,8 @@ namespace DALayer.RFQ
 						   eve.Entry.Entity.GetType().Name, eve.Entry.State);
 					foreach (var ve in eve.ValidationErrors)
 					{
-						Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-							   ve.PropertyName, ve.ErrorMessage);
+						log.ErrorMessage("RFQController", "CreateRfQ", ve.ErrorMessage.ToString());
+						
 					}
 				}
 				throw;
@@ -992,10 +994,10 @@ namespace DALayer.RFQ
 						vscm.RemoteRFQDocuments.Add(rfqDoc);
 						vscm.SaveChanges();
 					}
-					catch (Exception)
+					catch (Exception ex)
 					{
 
-						throw;
+						log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 					}
 				}
 				var remoteRFQItemInfos = vscm.RemoteRFQItemsInfo_N.Where(li => li.RFQItemsId == rfitems.RFQItemsId).ToList();
@@ -1054,7 +1056,7 @@ namespace DALayer.RFQ
 			catch (Exception ex)
 			{
 
-				throw;
+				log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 			}
 
 			var localrfqitems = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == Localrevision.rfqRevisionId).ToList();
@@ -1080,10 +1082,10 @@ namespace DALayer.RFQ
 						Localrevision.RFQItems_N.Add(localRfitem);
 						obj.SaveChanges();
 					}
-					catch (Exception)
+					catch (Exception ex)
 					{
 
-						throw;
+						log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 					}
 
 					var rfqdocs = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == revision.rfqRevisionId).ToList();
@@ -1109,7 +1111,7 @@ namespace DALayer.RFQ
 							catch (Exception ex)
 							{
 
-								throw;
+								log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 							}
 						}
 					}
@@ -1137,7 +1139,7 @@ namespace DALayer.RFQ
 				catch (Exception ex)
 				{
 
-					throw;
+					log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 				}
 			}
 
@@ -1206,7 +1208,7 @@ namespace DALayer.RFQ
 
 			catch (Exception ex)
 			{
-
+				
 				throw;
 			}
 
@@ -1419,8 +1421,8 @@ namespace DALayer.RFQ
 
 			catch (Exception ex)
 			{
-
-				throw;
+				log.ErrorMessage("RFQController", "GetAllrevisionRFQs", ex.Message + "; " + ex.StackTrace.ToString());
+				return rfq;
 			}
 
 		}
@@ -1502,6 +1504,7 @@ namespace DALayer.RFQ
 						   eve.Entry.Entity.GetType().Name, eve.Entry.State);
 					foreach (var ve in eve.ValidationErrors)
 					{
+						log.ErrorMessage("RFQController", "GetRFQById", ve.ErrorMessage);
 						Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
 							   ve.PropertyName, ve.ErrorMessage);
 					}
@@ -1607,8 +1610,9 @@ namespace DALayer.RFQ
 			}
 			catch (Exception ex)
 			{
-
-				throw;
+				log.ErrorMessage("RFQController", "UpdateRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
+				return status;
+				//throw;
 			}
 		}
 		public async Task<statuscheckmodel> UpdateBulkRfqRevision(RfqRevisionModel model)
@@ -2587,15 +2591,18 @@ namespace DALayer.RFQ
 					//update rfqsplit item id in mprrfqitem
 
 					MPRRfqItem mprItem = obj.MPRRfqItems.Where(li => li.RfqItemsid == model.RFQItemsId).FirstOrDefault();
-					MPRRfqItemInfo mprItemInfo = obj.MPRRfqItemInfos.Where(li => li.rfqsplititemid == remoteinfo.RFQSplitItemId && li.MPRRFQitemId == mprItem.MPRRFQitemId).FirstOrDefault();
-					if (mprItemInfo == null)
+					if (mprItem!=null)
 					{
-						mprItemInfo = new MPRRfqItemInfo();
-						mprItemInfo.MPRRFQitemId = mprItem.MPRRFQitemId;
-						mprItemInfo.rfqsplititemid = remoteinfo.RFQSplitItemId;
-						obj.MPRRfqItemInfos.Add(mprItemInfo);
-						obj.SaveChanges();
+						MPRRfqItemInfo mprItemInfo = obj.MPRRfqItemInfos.Where(li => li.rfqsplititemid == remoteinfo.RFQSplitItemId && li.MPRRFQitemId == mprItem.MPRRFQitemId).FirstOrDefault();
+						if (mprItemInfo == null)
+						{
+							mprItemInfo = new MPRRfqItemInfo();
+							mprItemInfo.MPRRFQitemId = mprItem.MPRRFQitemId;
+							mprItemInfo.rfqsplititemid = remoteinfo.RFQSplitItemId;
+							obj.MPRRfqItemInfos.Add(mprItemInfo);
+							obj.SaveChanges();
 
+						}
 					}
 				}
 
@@ -2605,7 +2612,10 @@ namespace DALayer.RFQ
 			}
 			catch (Exception ex)
 			{
-				throw;
+				log.ErrorMessage("RFQController", "InsertRfqItemInfo", ex.Message + "; " + ex.StackTrace.ToString());
+				RfqRevisionModel rq= new RfqRevisionModel();
+				return rq;
+				//throw;
 			}
 		}
 

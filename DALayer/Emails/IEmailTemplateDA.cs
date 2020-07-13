@@ -13,7 +13,9 @@ namespace DALayer.Emails
         bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId);
         bool prepareMPRStatusEmail(string FrmEmailId, string ToEmailId, string type, int revisionid);
         bool sendMailtoVendor(sendMailObj mailObj);
-        bool sendEmail(EmailSend emlSndngList);
+		bool mailtoRequestor(int revisionId, string FrmEmailId);
+
+		bool sendEmail(EmailSend emlSndngList);
 
     }
 }

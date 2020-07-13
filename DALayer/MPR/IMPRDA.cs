@@ -17,7 +17,7 @@ namespace DALayer.MPR
         bool addDataToDBMasters(DynamicSearchResult Result);
         bool updateDataToDBMasters(DynamicSearchResult Result);
         MPRRevision updateMPR(MPRRevision mpr);
-        MPRRevision copyMprRevision(MPRRevision mpr,bool repeatOrder);
+        MPRRevision copyMprRevision(MPRRevision mpr,bool repeatOrder, bool revise);
         int addNewVendor(VendormasterModel vendor);
 
         DataTable GetListItems(DynamicSearchResult Result);
