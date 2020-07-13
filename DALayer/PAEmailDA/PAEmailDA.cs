@@ -110,7 +110,7 @@ namespace DALayer.PAEmailDA
             string mprpreparedby = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().PreparedBy;
             if (ApprovalStatus=="Approved")
             {
-                var maildata = obj.Mailsendingviews.Where(x => x.Approver == employeeno).FirstOrDefault();
+                var maildata = obj.Mailsendingviews.Where(x => x.Approver == employeeno && x.PAId==paid).FirstOrDefault();
                 mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head>" +
                     "<body>" +
                     "<div class='container'>" +
@@ -121,8 +121,8 @@ namespace DALayer.PAEmailDA
                     "<td><b>RequestedOn</b></td><td>" + maildata.RequestedOn + "</td>" +
                     "</tr>" +
                     "<tr>" +
-                    "<td><b>Approver Name</b></td><td>" + maildata.Approver + "</td>" +
-                    "<td><b>Approver Status</b></td><td>" + maildata.ApproversRemarks + "</td>" +
+                    "<td><b>Approver Name</b></td><td>" + maildata.approvername + "</td>" +
+                    "<td><b>Approver Status</b></td><td>" + maildata.ApprovalStatus + "</td>" +
                     "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
                     "</tr>" +
                     "</table><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
@@ -167,12 +167,12 @@ namespace DALayer.PAEmailDA
             EmailSend emails = new EmailSend();
             var ipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
             ipaddress = ipaddress + "SCM/mprpa/" + paid + "";
-            string employeeno = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault().RequestedBy;
-            var maildata = obj.Mailsendingviews.Where(x => x.Approver == employeeno).FirstOrDefault();
+            string reqemployeeno = obj.MPRPADetails.Where(x => x.PAId == paid).FirstOrDefault().RequestedBy;
+            var maildata = obj.Mailsendingviews.Where(x => x.Approver == EmployeeNo && x.PAId==paid).FirstOrDefault();
             try
             {
                 emails.ToEmailId = ToEmailId;
-                emails.FrmEmailId = obj.Employees.Where(x=>x.EmployeeNo==employeeno).FirstOrDefault().EMail;
+                emails.FrmEmailId = obj.Employees.Where(x=>x.EmployeeNo== reqemployeeno).FirstOrDefault().EMail;
                 emails.Subject = "Reminder for Purchase Authorization to approve";
                 emails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head>" +
                     "<body>" +
@@ -181,7 +181,7 @@ namespace DALayer.PAEmailDA
                     "<tr>" +
                     "<td><b>MPR Number</b></td><td>" + maildata.DocumentNo + "</td>" +
                     "<td><b>Document Description</b></td><td>" + maildata.DocumentDescription + "</td>" +
-                    "<td><b>Vendor</b></td><td>" + maildata.DocumentDescription + "</td>" +
+                    "<td><b>Vendor</b></td><td>" + maildata.VendorName + "</td>" +
                     "</tr>" +
                     "<tr>" +
                     "<td><b>Department</b></td><td>" + maildata.Department + "</td>" +
@@ -194,8 +194,8 @@ namespace DALayer.PAEmailDA
                     "<td><b>RequestedOn</b></td><td>" + maildata.RequestedOn + "</td>" +
                     "</tr>" +
                     "<tr>" +
-                    "<td><b>Approver Name</b></td><td>" + maildata.Approver + "</td>" +
-                    "<td><b>Approver Status</b></td><td>" + maildata.ApproversRemarks + "</td>" +
+                    "<td><b>Approver Name</b></td><td>" + maildata.approvername + "</td>" +
+                    "<td><b>Approver Status</b></td><td>" + maildata.ApprovalStatus + "</td>" +
                     "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
                     "</tr>" +
                     "</table><br/><b>Request For Purchase Authorization To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
