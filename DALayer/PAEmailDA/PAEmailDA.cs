@@ -23,7 +23,7 @@ namespace DALayer.PAEmailDA
             //mails.CC = "n.senthilkumar@in.yokogawa.com";
             foreach (var item in data)
             {
-                var maildata = obj.Mailsendingviews.Where(x => x.Approver==item.Approver).FirstOrDefault();
+                var maildata = obj.Mailsendingviews.Where(x => x.Approver==item.Approver && x.PAId==paid).FirstOrDefault();
                 mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head>" +
                     "<body>" +
                     "<div class='container'>" +
@@ -44,7 +44,7 @@ namespace DALayer.PAEmailDA
                     "<td><b>RequestedOn</b></td><td>" + maildata.RequestedOn + "</td>" +
                     "</tr>" +
                     "<tr>"+
-                    "<td><b>Approver Name</b></td><td>" + maildata.Approver + "</td>" +
+                    "<td><b>Approver Name</b></td><td>" + maildata.approvername + "</td>" +
                     "<td><b>Approver Status</b></td><td>" + maildata.ApprovalStatus + "</td>" +
                     "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
                     "</tr>" +
