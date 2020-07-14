@@ -1478,7 +1478,7 @@ Review Date :<<>>   Reviewed By :<<>>
 								mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
 								mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
 								statusId = mPRStatusTrackDetails1.StatusId = 14;//Raising PO Approved
-								updateMprstatusTrack(mPRStatusTrackDetails);
+								updateMprstatusTrack(mPRStatusTrackDetails1);
 							}
 						}
 						else if (mprStatus.typeOfuser == "SecondApprover")
