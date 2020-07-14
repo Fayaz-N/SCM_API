@@ -1459,7 +1459,7 @@ namespace DALayer.PurchaseAuthorization
                     padetails.POStatusUpdate = System.DateTime.Now;
                     padetails.PAStatusUpdate = System.DateTime.Now;
                 obj.SaveChanges();
-                pastatus.StatusId = 10;
+                pastatus.StatusId = 18;
                 obj.SaveChanges();
 
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
@@ -1482,7 +1482,7 @@ namespace DALayer.PurchaseAuthorization
                     padetails.PAStatus = ApprovalStatus;
                 obj.SaveChanges();
 
-                pastatus.StatusId = 18;
+                pastatus.StatusId = 21;
                 obj.SaveChanges();
 
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
