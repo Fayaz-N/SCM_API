@@ -295,6 +295,9 @@ namespace DALayer.RFQ
 				mPRStatusTrackDetails.StatusId = 17; //RFQ Finalized           
 				mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
 				this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
+				MPRRevision mprrevision = new MPRRevision();
+				mprrevision = Context.MPRRevisions.Find(mPRStatusTrackDetails.RevisionId);
+				mprrevision.StatusId = Convert.ToByte(mPRStatusTrackDetails.StatusId);
 				this.emailTemplateDA.mailtoRequestor(mPRStatusTrackDetails.RevisionId, mPRStatusTrackDetails.UpdatedBy);//send mail to requestor when rfq finalized
 			}
 			return true;
