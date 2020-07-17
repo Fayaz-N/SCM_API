@@ -116,6 +116,7 @@ namespace SCMModels.RFQModels
         public int paid { get; set; }
         public int paitemid { get; set; }
         public int MRPItemsDetailsID { get; set; }
+        public string EmployeeNo { get; set; }
     }
     public class EmployeeFilterModel
     {

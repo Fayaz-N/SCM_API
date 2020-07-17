@@ -78,6 +78,7 @@ namespace SCMModels.RFQModels
     {
         public int PAId { get; set; }
         public string employeeno { get; set; }
+        public string Remarks { get; set; }
     }
     public class painputmodel
     {

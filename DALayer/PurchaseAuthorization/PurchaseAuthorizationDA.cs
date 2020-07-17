@@ -926,21 +926,22 @@ namespace DALayer.PurchaseAuthorization
                     obj.MPRPADetails.Add(authorization);
                     obj.SaveChanges();
                     status.Sid = authorization.PAId;
-                    
-                    foreach (var item in model.Item)
+
+                    List<int> revisionid = model.Item.Select(x => x.MPRRevisionId).Distinct().ToList();
+                    foreach (var item in revisionid)
                     {
                         var data = new MPRStatusTrack();
                         data.StatusId = 11;
-                        int requisitionid = obj.MPRRevisions.Where(x => x.RevisionId == item.MPRRevisionId).FirstOrDefault().RequisitionId;
+                        int requisitionid = obj.MPRRevisions.Where(x => x.RevisionId == item).FirstOrDefault().RequisitionId;
                         data.RequisitionId = requisitionid;
-                        data.RevisionId = item.MPRRevisionId;
+                        data.RevisionId = item;
                         data.UpdatedDate = dateAndTime.Date;
                         data.UpdatedBy = model.LoginEmployee;
                         obj.MPRStatusTracks.Add(data);
                         obj.SaveChanges();
 
                         var data1 = new MPRRevision();
-                        data1 = obj.MPRRevisions.Where(x => x.RevisionId == item.MPRRevisionId).FirstOrDefault();
+                        data1 = obj.MPRRevisions.Where(x => x.RevisionId == item).FirstOrDefault();
                         data1.StatusId = Convert.ToByte(data.StatusId);
                         obj.SaveChanges();
                     }
@@ -1063,12 +1064,12 @@ namespace DALayer.PurchaseAuthorization
                     model.FactorsForImports = data.FactorsForImports;
                     model.SpecialRemarks = data.SpecialRemarks;
                     model.SuppliersReference = data.SuppliersReference;
-                    var statusdata = obj.LoadItemsByPAIDs.Where(x => x.itemstatus == "Approved" && x.PAID == PID).ToList();
+                    var statusdata = obj.LoadItemsByPAIDs.Where(x => x.itemstatus == "Approved" && x.PAId == PID).ToList();
                     model.Item = statusdata.Select(x => new RfqItemModel()
                     {
                         ItemDescription = x.ItemDescription,
                         UnitPrice = Convert.ToDecimal(x.UnitPrice),
-                        QuotationQty = x.QuotationQty,
+                        QuotationQty =Convert.ToDouble(x.QuotationQty),
                         DocumentNo = x.DocumentNo,
                         SaleOrderNo = x.SaleOrderNo,
                         Department = x.Department,
@@ -1078,7 +1079,7 @@ namespace DALayer.PurchaseAuthorization
                         DepartmentId = x.DepartmentId,
                         MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
                         RFQRevisionId = x.rfqRevisionId,
-                        paid = x.PAID,
+                        paid = x.PAId,
                         paitemid = x.PAItemID,
                         POItemNo = x.POItemNo,
                         PONO = x.PONO,
@@ -1096,7 +1097,8 @@ namespace DALayer.PurchaseAuthorization
                         ApproversRemarks = x.ApproversRemarks,
                         ApprovalStatus = x.ApprovalStatus,
                         EmployeeNo = x.Approver,
-                        ApprovedOn = x.ApprovedOn
+                        ApprovedOn = x.ApprovedOn,
+                        parequested = x.parequested
                     }).ToList();
 
                     var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID).ToList();
@@ -1478,6 +1480,7 @@ namespace DALayer.PurchaseAuthorization
                 //statustrack.Status = "PA Approved";
                 obj.MPRStatusTracks.Add(statustrack);
                 obj.SaveChanges();
+
                 if (padetails != null)
                     padetails.PAStatus = ApprovalStatus;
                 obj.SaveChanges();
@@ -1643,6 +1646,8 @@ namespace DALayer.PurchaseAuthorization
                         paitems.POItemNo = itemdata.POItemNo;
                         paitems.PODate = itemdata.PODate;
                         paitems.Remarks = itemdata.Remarks;
+                        paitems.UpdatedDate = System.DateTime.Now;
+                        paitems.UpdatedBy = itemdata.EmployeeNo;
                         obj.SaveChanges();
                     }
                     status.Sid = paitems.PAID;
@@ -1830,6 +1835,7 @@ namespace DALayer.PurchaseAuthorization
                 var data = obj.MPRPADetails.Where(x => x.PAId == model.PAId).FirstOrDefault();
                 if (data!=null)
                 {
+                    data.Remarks = model.Remarks;
                     data.DeleteFlag = true;
                     data.DeleteBy = model.employeeno;
                     data.DeleteOn = DateTime.Now;
