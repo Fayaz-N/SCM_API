@@ -1196,8 +1196,10 @@ Review Date :<<>>   Reviewed By :<<>>
 				if (!string.IsNullOrEmpty(mprfilterparams.FromDate))
 					query += "  and PreparedOn >= '" + mprfilterparams.FromDate + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
-					query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "' or RevisionId in ( select RevisionId from  MPRIncharges where incharge=" + mprfilterparams.PreparedBy + ")";
-				if (mprfilterparams.ListType == "MPRPendingList")
+					query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
+				if (mprfilterparams.ListType != "MPRPendingList" && !string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+					query += "  or RevisionId in (select RevisionId from  MPRIncharges where incharge = " + mprfilterparams.PreparedBy + ")";
+					if (mprfilterparams.ListType == "MPRPendingList")
 					query += " and CheckedBy ='-'";
 				if (mprfilterparams.ListType == "MPRSingleVendorList")
 					query += " and PurchaseTypeId =1 and  CheckStatus='Approved' and ApprovalStatus='Approved' and(SecondApprover = '" + mprfilterparams.SecOrThirdApprover + "' and SecondApproversStatus = 'Pending') or (ThirdApprover = '" + mprfilterparams.SecOrThirdApprover + "' and ThirdApproverStatus = 'Pending' and SecondApproversStatus='Approved')";
@@ -1364,6 +1366,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		{
 			MPRRevision mprrevision = new MPRRevision();
 			var statusId = mprStatus.StatusId;
+			mprStatus.typeOfuser = "Approver";
 			try
 			{
 				MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
@@ -1629,7 +1632,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		{
 			using (YSCMEntities Context = new YSCMEntities())
 			{
-				return Context.SCMStatus.ToList();
+				return Context.SCMStatus.Where(li => li.deleteFlag == false).ToList();
 			}
 		}
 
