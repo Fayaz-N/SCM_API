@@ -1366,7 +1366,6 @@ Review Date :<<>>   Reviewed By :<<>>
 		{
 			MPRRevision mprrevision = new MPRRevision();
 			var statusId = mprStatus.StatusId;
-			mprStatus.typeOfuser = "Approver";
 			try
 			{
 				MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
