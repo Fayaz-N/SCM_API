@@ -1064,6 +1064,8 @@ namespace DALayer.PurchaseAuthorization
                     model.FactorsForImports = data.FactorsForImports;
                     model.SpecialRemarks = data.SpecialRemarks;
                     model.SuppliersReference = data.SuppliersReference;
+                    model.Deleteflag = data.DeleteFlag;
+
                     var statusdata = obj.LoadItemsByPAIDs.Where(x => x.itemstatus == "Approved" && x.PAId == PID).ToList();
                     model.Item = statusdata.Select(x => new RfqItemModel()
                     {
@@ -1098,9 +1100,9 @@ namespace DALayer.PurchaseAuthorization
                         ApprovalStatus = x.ApprovalStatus,
                         EmployeeNo = x.Approver,
                         ApprovedOn = x.ApprovedOn,
-                        parequested = x.parequested
+                        parequested = x.parequested,
+                        PARequestedOn = x.RequestedOn
                     }).ToList();
-
                     var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID).ToList();
                     if (documentsdata.Count!=0)
                     {
@@ -1113,6 +1115,20 @@ namespace DALayer.PurchaseAuthorization
                             }).ToList();
                      
                     }
+
+                    var requested = obj.parequestedanddeletedemployees.Where(x => x.paid == PID).ToList();
+                    model.request = requested.Select(x => new parequestedanddeletemodel()
+                    {
+                        parequested=x.parequested,
+                        RequestedOn=x.RequestedOn,
+                        PAStatus=x.PAStatus,
+                        PAStatusUpdate=x.PAStatusUpdate,
+                        DeleteFlag=x.DeleteFlag,
+                        DeleteBy=x.DeleteBy,
+                        DeleteOn=x.DeleteOn,
+                        padeleted=x.padeleted
+                    }).ToList();
+
                     return model;
                 }
                 else
@@ -1488,7 +1504,7 @@ namespace DALayer.PurchaseAuthorization
                 pastatus.StatusId = 21;
                 obj.SaveChanges();
 
-                this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
+                //this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
                 
             }
             else
