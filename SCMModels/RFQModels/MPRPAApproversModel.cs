@@ -28,6 +28,10 @@ namespace SCMModels.RFQModels
         public string ApprovalStatus { get; set; }
         public string RoleId { get; set; }
         public int mprrevisionid { get; set; }
+        public string parequested { get; set; }
+        public Nullable<System.DateTime> PARequestedOn { get; set; }
+        public string Pastatus { get; set; }
+        public Nullable<System.DateTime> Pastatusupdate { get; set; }
         public Nullable<System.DateTime> ApprovedOn { get; set; }
         public  MPRPADetailsModel MPRPADetail { get; set; }
     }

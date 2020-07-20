@@ -21,6 +21,7 @@ namespace SCMModels.RFQModels
             ItemInfo = new List<RfqItemInfoModel>();
             TermId = new List<int>();
             documents = new List<PADocumentsmodel>();
+            request = new List<parequestedanddeletemodel>();
         }
         public int PAId { get; set; }
         public string RequestedBy { get; set; }
@@ -58,6 +59,7 @@ namespace SCMModels.RFQModels
         public string ProjectManager { get; set; }
         public string ProjectMangerNo { get; set; }
         public string LoginEmployee { get; set; }
+        public Nullable<bool> Deleteflag { get; set; }
         public MPRPAPurchaseModesModel purchasemodes { get; set; }
         public MPRPAPurchaseTypesModel purchasetypes { get; set; }
         public MPRBuyerGroupModel buyergroup { get; set; }
@@ -67,6 +69,7 @@ namespace SCMModels.RFQModels
         public List<MPRPAApproversModel> ApproversList { get; set; }
         public List<RFQTermsModel> RfqTerms { get; set; }
         public List<RfqItemInfoModel> ItemInfo { get; set; }
+        public List<parequestedanddeletemodel> request { get; set; }
     }
     public class PADocumentsmodel
     {
@@ -78,6 +81,7 @@ namespace SCMModels.RFQModels
     {
         public int PAId { get; set; }
         public string employeeno { get; set; }
+        public string Remarks { get; set; }
     }
     public class painputmodel
     {
@@ -85,5 +89,18 @@ namespace SCMModels.RFQModels
         public string mprno { get; set; }
         public string employeeno { get; set; }
         public DateTime padate { get; set; }
+    }
+    public class parequestedanddeletemodel
+    {
+        public int paid { get; set; }
+        public string RequestedBy { get; set; }
+        public string parequested { get; set; }
+        public Nullable<System.DateTime> RequestedOn { get; set; }
+        public string PAStatus { get; set; }
+        public Nullable<System.DateTime> PAStatusUpdate { get; set; }
+        public Nullable<bool> DeleteFlag { get; set; }
+        public string DeleteBy { get; set; }
+        public Nullable<System.DateTime> DeleteOn { get; set; }
+        public string padeleted { get; set; }
     }
 }

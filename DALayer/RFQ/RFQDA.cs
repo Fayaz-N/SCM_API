@@ -5344,69 +5344,69 @@ namespace DALayer.RFQ
 				var data = obj.MPRPADetails.Where(x => x.PAId == PID).FirstOrDefault();
 				if (data != null)
 				{
-					model.PurchaseTypeId = data.PurchaseTypeId;
-					var purchasetype = obj.MPRPAPurchaseTypes.Where(x => x.PurchaseTypeId == model.PurchaseTypeId).FirstOrDefault();
-					model.purchasetypes.PurchaseType = purchasetype.PurchaseType;
-					model.PurchaseModeId = data.PurchaseModeId;
-					var purchasemode = obj.MPRPAPurchaseModes.Where(x => x.PurchaseModeId == model.PurchaseModeId).FirstOrDefault();
-					model.purchasemodes.PurchaseMode = purchasemode.PurchaseMode;
-					model.RequestedOn = data.RequestedOn;
-					model.RequestedBy = data.RequestedBy;
-					model.DepartmentID = data.DepartmentID;
-					var department = obj.MPRDepartments.Where(x => x.DepartmentId == model.DepartmentID).FirstOrDefault();
-					model.department.Department = department.Department;
-					model.BuyerGroupId = data.BuyerGroupId;
-					var buyergroup = obj.MPRBuyerGroups.Where(x => x.BuyerGroupId == model.BuyerGroupId).FirstOrDefault();
-					model.buyergroup.BuyerGroup = buyergroup.BuyerGroup;
-					model.ProjectCode = data.ProjectCode;
-					model.ProjectName = data.ProjectName;
-					model.PackagingForwarding = data.PackagingForwarding;
-					model.Taxes = data.Taxes;
-					model.Freight = data.Freight;
-					model.Insurance = data.Insurance;
-					model.DeliveryCondition = data.DeliveryCondition;
-					model.ShipmentMode = data.ShipmentMode;
-					model.PaymentTerms = data.PaymentTerms;
-					model.CreditDays = data.CreditDays;
-					model.Warranty = data.Warranty;
-					model.BankGuarantee = data.BankGuarantee;
-					model.LDPenaltyTerms = data.LDPenaltyTerms;
-					model.SpecialInstructions = data.SpecialInstructions;
-					model.FactorsForImports = data.FactorsForImports;
-					model.SpecialRemarks = data.SpecialRemarks;
-					model.SuppliersReference = data.SuppliersReference;
-					var statusdata = obj.LoadItemsByPAIDs.Where(x => x.Status == "Approved" && x.PAID == PID).ToList();
-					model.Item = statusdata.Select(x => new RfqItemModel()
-					{
-						ItemDescription = x.ItemDescription,
-						UnitPrice = Convert.ToDecimal(x.UnitPrice),
-						QuotationQty = x.QuotationQty,
-						DocumentNo = x.DocumentNo,
-						SaleOrderNo = x.SaleOrderNo,
-						Department = x.Department,
-						TargetSpend = Convert.ToDecimal(x.TargetSpend),
-						PaymentTermCode = x.PaymentTermCode,
-						VendorName = x.VendorName,
-						DepartmentId = x.DepartmentId,
-						MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
-						RFQRevisionId = x.rfqRevisionId,
-						paid = x.PAID,
-						paitemid = x.PAItemID,
-						POItemNo = x.POItemNo,
-						PONO = x.PONO,
-						Remarks = x.Remarks,
-						PODate = x.PODate.ToString()
-					}).ToList();
-					var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
-					model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
-					{
-						ApproverName = x.Name,
-						RoleName = x.RoleName,
-						ApproversRemarks = x.ApproversRemarks,
-						ApprovalStatus = x.ApprovalStatus,
-						EmployeeNo = x.Approver,
-						ApprovedOn = x.ApprovedOn
-					}).ToList();
+					//model.PurchaseTypeId = data.PurchaseTypeId;
+					//var purchasetype = obj.MPRPAPurchaseTypes.Where(x => x.PurchaseTypeId == model.PurchaseTypeId).FirstOrDefault();
+					//model.purchasetypes.PurchaseType = purchasetype.PurchaseType;
+					//model.PurchaseModeId = data.PurchaseModeId;
+					//var purchasemode = obj.MPRPAPurchaseModes.Where(x => x.PurchaseModeId == model.PurchaseModeId).FirstOrDefault();
+					//model.purchasemodes.PurchaseMode = purchasemode.PurchaseMode;
+					//model.RequestedOn = data.RequestedOn;
+					//model.RequestedBy = data.RequestedBy;
+					//model.DepartmentID = data.DepartmentID;
+					//var department = obj.MPRDepartments.Where(x => x.DepartmentId == model.DepartmentID).FirstOrDefault();
+					//model.department.Department = department.Department;
+					//model.BuyerGroupId = data.BuyerGroupId;
+					//var buyergroup = obj.MPRBuyerGroups.Where(x => x.BuyerGroupId == model.BuyerGroupId).FirstOrDefault();
+					//model.buyergroup.BuyerGroup = buyergroup.BuyerGroup;
+					//model.ProjectCode = data.ProjectCode;
+					//model.ProjectName = data.ProjectName;
+					//model.PackagingForwarding = data.PackagingForwarding;
+					//model.Taxes = data.Taxes;
+					//model.Freight = data.Freight;
+					//model.Insurance = data.Insurance;
+					//model.DeliveryCondition = data.DeliveryCondition;
+					//model.ShipmentMode = data.ShipmentMode;
+					//model.PaymentTerms = data.PaymentTerms;
+					//model.CreditDays = data.CreditDays;
+					//model.Warranty = data.Warranty;
+					//model.BankGuarantee = data.BankGuarantee;
+					//model.LDPenaltyTerms = data.LDPenaltyTerms;
+					//model.SpecialInstructions = data.SpecialInstructions;
+					//model.FactorsForImports = data.FactorsForImports;
+					//model.SpecialRemarks = data.SpecialRemarks;
+					//model.SuppliersReference = data.SuppliersReference;
+					//var statusdata = obj.LoadItemsByPAIDs.Where(x => x.Status == "Approved" && x.PAId == PID).ToList();
+					//model.Item = statusdata.Select(x => new RfqItemModel()
+					//{
+					//	ItemDescription = x.ItemDescription,
+					//	UnitPrice = Convert.ToDecimal(x.UnitPrice),
+					//	QuotationQty = x.QuotationQty,
+					//	DocumentNo = x.DocumentNo,
+					//	SaleOrderNo = x.SaleOrderNo,
+					//	Department = x.Department,
+					//	TargetSpend = Convert.ToDecimal(x.TargetSpend),
+					//	PaymentTermCode = x.PaymentTermCode,
+					//	VendorName = x.VendorName,
+					//	DepartmentId = x.DepartmentId,
+					//	MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
+					//	RFQRevisionId = x.rfqRevisionId,
+					//	paid = x.PAID,
+					//	paitemid = x.PAItemID,
+					//	POItemNo = x.POItemNo,
+					//	PONO = x.PONO,
+					//	Remarks = x.Remarks,
+					//	PODate = x.PODate.ToString()
+					//}).ToList();
+					//var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
+					//model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
+					//{
+					//	ApproverName = x.Name,
+					//	RoleName = x.RoleName,
+					//	ApproversRemarks = x.ApproversRemarks,
+					//	ApprovalStatus = x.ApprovalStatus,
+					//	EmployeeNo = x.Approver,
+					//	ApprovedOn = x.ApprovedOn
+					//}).ToList();
 					return model;
 				}
 				else
