@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Linq;
 using DALayer.Emails;
 using System.Data.Entity.Validation;
+using DALayer.Common;
 
 namespace SCMAPI.Controllers
 {
@@ -24,6 +25,7 @@ namespace SCMAPI.Controllers
 	{
 		private readonly IMPRBA _mprBusenessAcess;
 		private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
+		private ErrorLog log = new ErrorLog();
 		public MPRController(IMPRBA mprBA, IEmailTemplateDA EmailTemplateDA)
 		{
 			this._mprBusenessAcess = mprBA;
@@ -227,6 +229,7 @@ namespace SCMAPI.Controllers
 			}
 			catch (Exception e)
 			{
+				log.ErrorMessage("MPRController", "UploadFile", e.Message.ToString());
 				return Ok(e);
 			}
 
