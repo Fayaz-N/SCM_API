@@ -170,6 +170,23 @@ namespace DALayer.RFQ
 					}
 				}
 			}
+
+			//update mpr status
+			if (mainList[0].MPRRevisionId != null)
+			{
+				var revisionId = mainList[0].MPRRevisionId;
+				MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
+				mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault().RequisitionId;
+				mPRStatusTrackDetails.RevisionId = Convert.ToInt32(revisionId);
+				mPRStatusTrackDetails.StatusId = 7;//rfqgenerated
+				mPRStatusTrackDetails.UpdatedBy = mainList[0].CreatedBy;
+				mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
+				this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
+				MPRRevision revision1 = obj.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault();
+				revision1.StatusId = 7;
+				obj.SaveChanges();
+				this.emailTemplateDA.mailtoRequestor(mPRStatusTrackDetails.RevisionId, mPRStatusTrackDetails.UpdatedBy);//send mail to requestor when rfq generated
+			}
 			return true;
 
 		}
@@ -877,20 +894,20 @@ namespace DALayer.RFQ
 						}
 					}
 					//update mpr status
-					if (revision.StatusId != null && model.rfqmaster.MPRRevisionId != null)
-					{
-						MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
-						mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == model.rfqmaster.MPRRevisionId).FirstOrDefault().RequisitionId;
-						mPRStatusTrackDetails.RevisionId = Convert.ToInt32(model.rfqmaster.MPRRevisionId);
-						mPRStatusTrackDetails.StatusId = Convert.ToInt32(revision.StatusId);//rfqgenerated
-						mPRStatusTrackDetails.UpdatedBy = model.rfqmaster.CreatedBy;
-						mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
-						this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
-						MPRRevision revision1 = obj.MPRRevisions.Where(li => li.RevisionId == model.rfqmaster.MPRRevisionId).FirstOrDefault();
-						revision1.StatusId = revision.StatusId;
-						obj.SaveChanges();
-						this.emailTemplateDA.mailtoRequestor(mPRStatusTrackDetails.RevisionId, mPRStatusTrackDetails.UpdatedBy);//send mail to requestor when rfq generated
-					}
+					//if (revision.StatusId != null && model.rfqmaster.MPRRevisionId != null)
+					//{
+					//	MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
+					//	mPRStatusTrackDetails.RequisitionId = obj.MPRRevisions.Where(li => li.RevisionId == model.rfqmaster.MPRRevisionId).FirstOrDefault().RequisitionId;
+					//	mPRStatusTrackDetails.RevisionId = Convert.ToInt32(model.rfqmaster.MPRRevisionId);
+					//	mPRStatusTrackDetails.StatusId = Convert.ToInt32(revision.StatusId);//rfqgenerated
+					//	mPRStatusTrackDetails.UpdatedBy = model.rfqmaster.CreatedBy;
+					//	mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
+					//	this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
+					//	MPRRevision revision1 = obj.MPRRevisions.Where(li => li.RevisionId == model.rfqmaster.MPRRevisionId).FirstOrDefault();
+					//	revision1.StatusId = revision.StatusId;
+					//	obj.SaveChanges();
+					//	this.emailTemplateDA.mailtoRequestor(mPRStatusTrackDetails.RevisionId, mPRStatusTrackDetails.UpdatedBy);//send mail to requestor when rfq generated
+					//}
 					foreach (RFQTermsModel terms in model.RFQTerms)
 					{
 						try
