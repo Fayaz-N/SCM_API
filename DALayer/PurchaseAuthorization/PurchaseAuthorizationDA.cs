@@ -1504,7 +1504,7 @@ namespace DALayer.PurchaseAuthorization
                 pastatus.StatusId = 21;
                 obj.SaveChanges();
 
-                //this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
+                this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
                 
             }
             else

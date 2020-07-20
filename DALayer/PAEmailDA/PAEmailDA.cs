@@ -19,7 +19,7 @@ namespace DALayer.PAEmailDA
             var data = obj.MPRPAApprovers.Where(x => x.PAId == paid).ToList();
             ipaddress = ipaddress + "SCM/mprpa/" + paid + "";
             EmailSend mails = new EmailSend();
-            mails.FrmEmailId = obj.Employees.Where(x => x.EmployeeNo == loginemployee).FirstOrDefault().EMail;
+            mails.FrmEmailId = obj.Employees.Where(x => x.EmployeeNo == loginemployee).FirstOrDefault<Employee>().EMail;
             //mails.CC = "n.senthilkumar@in.yokogawa.com";
             foreach (var item in data)
             {
@@ -49,7 +49,7 @@ namespace DALayer.PAEmailDA
                     "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
                     "</tr>" +
                     "</table><br/><b>Please Click The Below Link To Approve:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault().EMail;
+                mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == item.Approver).FirstOrDefault<Employee>().EMail;
                 mails.Subject = "Purchase Authorization Waiting For Your Approval";
                 if (mails.FrmEmailId != "NULL" && mails.ToEmailId != "NULL")
                     this.sendEmail(mails);
@@ -106,7 +106,7 @@ namespace DALayer.PAEmailDA
             ipaddress = ipaddress + "SCM/mprpa/" + paid + "";
             ipaddress1= ipaddress1 + "SCM/MPRForm/" + mprrevisionid + "";
             EmailSend mails = new EmailSend();
-            mails.FrmEmailId = obj.Employees.Where(x => x.EmployeeNo == employeeno).FirstOrDefault().EMail;
+            mails.FrmEmailId = obj.Employees.Where(x => x.EmployeeNo == employeeno).FirstOrDefault<Employee>().EMail;
             string mprpreparedby = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().PreparedBy;
             if (ApprovalStatus=="Approved")
             {
@@ -126,7 +126,7 @@ namespace DALayer.PAEmailDA
                     "<td><b>Approver Remarks</b></td><td>" + maildata.ApproversRemarks + "</td>" +
                     "</tr>" +
                     "</table><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == parequestby).FirstOrDefault().EMail;
+                mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == parequestby).FirstOrDefault<Employee>().EMail;
                 mails.Subject = "Purchase Authorization Is Approved";
                 Nullable<byte> buyergroup = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().BuyerGroupId;
                 string BuyerManager = obj.MPRBuyerGroups.Where(x => x.BuyerGroupId == buyergroup).FirstOrDefault().BuyerManager;
@@ -142,7 +142,7 @@ namespace DALayer.PAEmailDA
             else
             {
                 mails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><br/><b>Please click the below link to View:</b><br/>&nbsp<a href='" + ipaddress + "'>" + ipaddress + " </a></div></body></html>";
-                mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == parequestby).FirstOrDefault().EMail;
+                mails.ToEmailId = obj.Employees.Where(x => x.EmployeeNo == parequestby).FirstOrDefault<Employee>().EMail;
                 mails.Subject = "Purchase Authorization Is Rejected";
                 Nullable<byte> buyergroup = obj.MPRRevisions.Where(x => x.RevisionId == mprrevisionid).FirstOrDefault().BuyerGroupId;
                 string BuyerManager = obj.MPRBuyerGroups.Where(x => x.BuyerGroupId == buyergroup).FirstOrDefault().BuyerManager;
@@ -172,7 +172,7 @@ namespace DALayer.PAEmailDA
             try
             {
                 emails.ToEmailId = ToEmailId;
-                emails.FrmEmailId = obj.Employees.Where(x=>x.EmployeeNo== reqemployeeno).FirstOrDefault().EMail;
+                emails.FrmEmailId = obj.Employees.Where(x=>x.EmployeeNo== reqemployeeno).FirstOrDefault<Employee>().EMail;
                 emails.Subject = "Reminder for Purchase Authorization to approve";
                 emails.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head>" +
                     "<body>" +
