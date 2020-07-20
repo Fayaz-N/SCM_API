@@ -102,5 +102,6 @@ namespace SCMModels.RFQModels
         public string DeleteBy { get; set; }
         public Nullable<System.DateTime> DeleteOn { get; set; }
         public string padeleted { get; set; }
+        public string Remarks { get; set; }
     }
 }

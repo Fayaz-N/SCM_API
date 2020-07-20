@@ -1126,7 +1126,8 @@ namespace DALayer.PurchaseAuthorization
                         DeleteFlag=x.DeleteFlag,
                         DeleteBy=x.DeleteBy,
                         DeleteOn=x.DeleteOn,
-                        padeleted=x.padeleted
+                        padeleted=x.padeleted,
+                        Remarks=x.Remarks
                     }).ToList();
 
                     return model;
