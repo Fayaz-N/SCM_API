@@ -1105,50 +1105,50 @@ Review Date :<<>>   Reviewed By :<<>>
 			DB.Configuration.ProxyCreationEnabled = false;
 
 			MPRRevision mprRevisionDetails = new MPRRevision();
+			mprRevisionDetails = DB.MPRRevisions.Where(li => li.RevisionId == RevisionId).FirstOrDefault<MPRRevision>();
+			//mprRevisionDetails = DB.MPRRevisions.Include(x => x.MPRDetail).Include(x => x.MPRDepartment).Include(x => x.MPRProcurementSource)
+			//	 .Include(x => x.MPRCustomsDuty).Include(x => x.MPRProjectDutyApplicable).Include(x => x.MPRBuyerGroup).Include(x => x.MPRItemInfoes)
+			//	 .Include(x => x.MPRDocuments).Include(x => x.MPRDocumentations).Include(x => x.MPRVendorDetails).Include(x => x.MPRIncharges)
+			//.Include(x => x.MPRCommunications).Include(x => x.MPR_Assignment).Where(li => li.RevisionId == RevisionId).FirstOrDefault<MPRRevision>();
+			//mprRevisionDetails.MPRItemInfoes = mprRevisionDetails.MPRItemInfoes.OrderBy(li => li.Itemdetailsid).ToList();
+			if (mprRevisionDetails != null)
+			{
+				mprRevisionDetails.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == mprRevisionDetails.RequisitionId).FirstOrDefault<MPRDetail>();
+				mprRevisionDetails.MPRDepartment = DB.MPRDepartments.Where(li => li.DepartmentId == mprRevisionDetails.DepartmentId).FirstOrDefault<MPRDepartment>();
 
-			mprRevisionDetails = DB.MPRRevisions.Include(x => x.MPRDetail).Include(x => x.MPRDepartment).Include(x => x.MPRProcurementSource)
-				 .Include(x => x.MPRCustomsDuty).Include(x => x.MPRProjectDutyApplicable).Include(x => x.MPRBuyerGroup).Include(x => x.MPRItemInfoes)
-				 .Include(x => x.MPRDocuments).Include(x => x.MPRDocumentations).Include(x => x.MPRVendorDetails).Include(x => x.MPRIncharges).Include(x => x.MPRCommunications).Include(x => x.MPR_Assignment).Where(li => li.RevisionId == RevisionId).FirstOrDefault<MPRRevision>();
-			mprRevisionDetails.MPRItemInfoes = mprRevisionDetails.MPRItemInfoes.OrderBy(li => li.Itemdetailsid).ToList();
-			//if (mprRevisionDetails != null)
+
+				mprRevisionDetails.MPRProcurementSource = DB.MPRProcurementSources.Where(li => li.ProcurementSourceId == mprRevisionDetails.ProcurementSourceId).FirstOrDefault<MPRProcurementSource>();
+				mprRevisionDetails.MPRCustomsDuty = DB.MPRCustomsDuties.Where(li => li.CustomsDutyId == mprRevisionDetails.CustomsDutyId).FirstOrDefault<MPRCustomsDuty>();
+				mprRevisionDetails.MPRProjectDutyApplicable = DB.MPRProjectDutyApplicables.Where(li => li.ProjectDutyApplicableId == mprRevisionDetails.ProjectDutyApplicableId).FirstOrDefault<MPRProjectDutyApplicable>();
+
+
+				//mprRevisionDetails.MPRScope = DB.MPRScopes.Where(li => li.ScopeId == mprRevisionDetails.ScopeId).FirstOrDefault<MPRScope>();
+				mprRevisionDetails.MPRBuyerGroup = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprRevisionDetails.BuyerGroupId).FirstOrDefault<MPRBuyerGroup>();
+				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).OrderBy(li => li.Itemdetailsid).Include(li=>li.PAItems).ToList();
+				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
+				mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li=>li.MPRDocumentationDescription).ToList();
+				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li=>li.VendorMaster).ToList();
+				mprRevisionDetails.MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
+				//mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Include("MPRReminderTrackings").Where(li=>li.RevisionId==mprRevisionDetails.RevisionId).ToList();
+				mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(li=>li.Employee).Include(li=>li.MPRReminderTrackings).ToList();
+				mprRevisionDetails.MPR_Assignment = DB.MPR_Assignment.Where(li => li.MprRevisionId == mprRevisionDetails.RevisionId).ToList();
+			}
+			//foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
 			//{
-			//	mprRevisionDetails.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == mprRevisionDetails.RequisitionId).FirstOrDefault<MPRDetail>();
-			//	mprRevisionDetails.MPRDepartment = DB.MPRDepartments.Where(li => li.DepartmentId == mprRevisionDetails.DepartmentId).FirstOrDefault<MPRDepartment>();
-
-
-			//	mprRevisionDetails.MPRProcurementSource = DB.MPRProcurementSources.Where(li => li.ProcurementSourceId == mprRevisionDetails.ProcurementSourceId).FirstOrDefault<MPRProcurementSource>();
-			//	mprRevisionDetails.MPRCustomsDuty = DB.MPRCustomsDuties.Where(li => li.CustomsDutyId == mprRevisionDetails.CustomsDutyId).FirstOrDefault<MPRCustomsDuty>();
-			//	mprRevisionDetails.MPRProjectDutyApplicable = DB.MPRProjectDutyApplicables.Where(li => li.ProjectDutyApplicableId == mprRevisionDetails.ProjectDutyApplicableId).FirstOrDefault<MPRProjectDutyApplicable>();
-
-
-			//	//mprRevisionDetails.MPRScope = DB.MPRScopes.Where(li => li.ScopeId == mprRevisionDetails.ScopeId).FirstOrDefault<MPRScope>();
-			//	mprRevisionDetails.MPRBuyerGroup = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprRevisionDetails.BuyerGroupId).FirstOrDefault<MPRBuyerGroup>();
-			//	mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
-			//	mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
-			//	mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
-			//	mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
-			//	mprRevisionDetails.MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
-			//	//mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Include("MPRReminderTrackings").Where(li=>li.RevisionId==mprRevisionDetails.RevisionId).ToList();
-			//	mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(x => x.MPRReminderTrackings).ToList<MPRCommunication>();
-
+			//	item.PAItems = DB.PAItems.Where(li => li.MPRItemDetailsId == item.Itemdetailsid).ToList();
 			//}
-			foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
-			{
-				item.PAItems = DB.PAItems.Where(li => li.MPRItemDetailsId == item.Itemdetailsid).ToList();
-			}
-			foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
-			{
-				item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
-			}
-			foreach (MPRDocumentation item in mprRevisionDetails.MPRDocumentations)
-			{
-				item.MPRDocumentationDescription = DB.MPRDocumentationDescriptions.Where(li => li.DocumentationDescriptionId == item.DocumentationDescriptionId).FirstOrDefault();
-			}
+			//foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
+			//{
+			//	item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
+			//}
+			//foreach (MPRDocumentation item in mprRevisionDetails.MPRDocumentations)
+			//{
+			//	item.MPRDocumentationDescription = DB.MPRDocumentationDescriptions.Where(li => li.DocumentationDescriptionId == item.DocumentationDescriptionId).FirstOrDefault();
+			//}
 			foreach (MPRCommunication item in mprRevisionDetails.MPRCommunications)
 			{
 				item.Employee = DB.Employees.Where(li => li.EmployeeNo == item.RemarksFrom).FirstOrDefault();
 				item.MPRReminderTrackings = DB.MPRReminderTrackings.Include(x => x.Employee).Where(li => li.MPRCCId == item.MPRCCId).ToList();
-
 			}
 			return mprRevisionDetails;
 
