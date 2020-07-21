@@ -1924,10 +1924,11 @@ namespace DALayer.PurchaseAuthorization
         }
         public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
         {
-            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.68;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
             EmployeModel employee = new EmployeModel();
             DataTable Ds = new DataTable();
-            string data = string.Join(" ',' ", revisionid.Distinct());
+            //string data = "'" + string.Join("','" , revisionid.Distinct())+ "'";
+            string data =  string.Join(",", revisionid.Distinct());
             try
             {
                 SqlParameter[] Param = new SqlParameter[1];
