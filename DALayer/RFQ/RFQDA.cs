@@ -199,8 +199,8 @@ namespace DALayer.RFQ
 		{
 			using (YSCMEntities Context = new YSCMEntities())
 			{
-				MPRRfqItem mprItem = Context.MPRRfqItems.Where(li => li.RfqItemsid == mrRfqitems.RfqItemsid).FirstOrDefault();
-				if (mprItem == null)
+				MPRRfqItem mprItem = Context.MPRRfqItems.Where(li => li.RfqItemsid == mrRfqitems.RfqItemsid && li.MPRRevisionId== mrRfqitems.MPRRevisionId && li.MPRItemDetailsid== mrRfqitems.MPRItemDetailsid).FirstOrDefault();
+				if (mprItem == null && mrRfqitems.RfqItemsid!=0)
 				{
 					mprItem = new MPRRfqItem();
 					mprItem.MPRRevisionId = mrRfqitems.MPRRevisionId;
@@ -212,7 +212,7 @@ namespace DALayer.RFQ
 				foreach (MPRRfqItemInfo item in mrRfqitems.MPRRfqItemInfos)
 				{
 					MPRRfqItemInfo mprItemInfo = Context.MPRRfqItemInfos.Where(li => li.rfqsplititemid == item.rfqsplititemid && li.MPRRFQitemId == item.MPRRFQitemId).FirstOrDefault();
-					if (mprItemInfo == null)
+					if (mprItem!=null && mprItemInfo == null)
 					{
 						mprItemInfo = new MPRRfqItemInfo();
 						mprItemInfo.MPRRFQitemId = mprItem.MPRRFQitemId;
