@@ -1124,13 +1124,13 @@ Review Date :<<>>   Reviewed By :<<>>
 
 				//mprRevisionDetails.MPRScope = DB.MPRScopes.Where(li => li.ScopeId == mprRevisionDetails.ScopeId).FirstOrDefault<MPRScope>();
 				mprRevisionDetails.MPRBuyerGroup = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprRevisionDetails.BuyerGroupId).FirstOrDefault<MPRBuyerGroup>();
-				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).OrderBy(li => li.Itemdetailsid).Include(li=>li.PAItems).ToList();
+				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).OrderBy(li => li.Itemdetailsid).Include(li => li.PAItems).ToList();
 				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
-				mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li=>li.MPRDocumentationDescription).ToList();
-				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li=>li.VendorMaster).ToList();
+				mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.MPRDocumentationDescription).ToList();
+				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.VendorMaster).ToList();
 				mprRevisionDetails.MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
 				//mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Include("MPRReminderTrackings").Where(li=>li.RevisionId==mprRevisionDetails.RevisionId).ToList();
-				mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(li=>li.Employee).Include(li=>li.MPRReminderTrackings).ToList();
+				mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.Employee).Include(li => li.MPRReminderTrackings).ToList();
 				mprRevisionDetails.MPR_Assignment = DB.MPR_Assignment.Where(li => li.MprRevisionId == mprRevisionDetails.RevisionId).ToList();
 			}
 			//foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
@@ -1199,7 +1199,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
 				if (mprfilterparams.ListType != "MPRPendingList" && !string.IsNullOrEmpty(mprfilterparams.PreparedBy))
 					query += "  or RevisionId in (select RevisionId from  MPRIncharges where incharge = " + mprfilterparams.PreparedBy + ")";
-					if (mprfilterparams.ListType == "MPRPendingList")
+				if (mprfilterparams.ListType == "MPRPendingList")
 					query += " and CheckedBy ='-'";
 				if (mprfilterparams.ListType == "MPRSingleVendorList")
 					query += " and PurchaseTypeId =1 and  CheckStatus='Approved' and ApprovalStatus='Approved' and(SecondApprover = '" + mprfilterparams.SecOrThirdApprover + "' and SecondApproversStatus = 'Pending') or (ThirdApprover = '" + mprfilterparams.SecOrThirdApprover + "' and ThirdApproverStatus = 'Pending' and SecondApproversStatus='Approved')";
@@ -1544,6 +1544,10 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.OThirdApproverStatus = mprStatus.status;
 							mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
 							mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
+						}
+						else if (mprStatus.typeOfuser == "Requestor")
+						{
+							this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mprrevision.RevisionId, mprrevision.PreparedBy, mprrevision.CheckedBy, "");
 						}
 						mprrevision.StatusId = Convert.ToByte(statusId);
 						Context.SaveChanges();
