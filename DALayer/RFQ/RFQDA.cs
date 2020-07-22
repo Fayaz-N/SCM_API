@@ -2884,7 +2884,7 @@ namespace DALayer.RFQ
 					}
 					revision.mprIncharges = obj.MPRIncharges.Where(li => li.RevisionId == masters.MPRRevisionId).ToList();
 					revision.rfqmaster = masters;
-					var rfqitemss = obj.RFQItems_N.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId && x.DeleteFlag == false).ToList();
+					var rfqitemss = obj.RFQItems_N.Where(x => x.RFQRevisionId == localrevision.rfqRevisionId && x.DeleteFlag == false).OrderBy(x => x.MPRItemDetailsid).ToList();
 					foreach (var item in rfqitemss)
 					{
 						//revision.rfqitem= localrevision.RFQItems.Select(x => new RfqItemModel()
