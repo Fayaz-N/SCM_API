@@ -549,8 +549,12 @@ namespace DALayer.RFQ
 								rfqDoc.uploadedDate = DateTime.Now;
 								try
 								{
-									vscm.RemoteRFQDocuments.Add(rfqDoc);
-									vscm.SaveChanges();
+									if (vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == revisionid && li.rfqItemsid == rfqItemdata.RFQItemsId && li.DocumentName == item.DocumentName).Count() == 0)
+
+									{
+										vscm.RemoteRFQDocuments.Add(rfqDoc);
+										vscm.SaveChanges();
+									}
 								}
 								catch (Exception ex)
 								{
