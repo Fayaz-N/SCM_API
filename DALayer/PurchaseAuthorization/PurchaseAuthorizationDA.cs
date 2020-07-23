@@ -443,9 +443,9 @@ namespace DALayer.PurchaseAuthorization
             else
                 model.LessBudget = true;
 
-            if (model.PaymentTermCode != null && model.PaymentTermCode.Length>=2)
+            if (model.PaymentTermCode != null && model.PaymentTermCode.Length >= 2)
                 Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
-            else if (model.PaymentTermCode != null && model.PaymentTermCode.Length < 2 && model.PaymentTermCode!="")
+            else if (model.PaymentTermCode != null && model.PaymentTermCode.Length < 2 && model.PaymentTermCode != "")
                 Termscode = Convert.ToInt32(model.PaymentTermCode);
             else
                 Termscode = 0;
@@ -609,9 +609,9 @@ namespace DALayer.PurchaseAuthorization
                         sqlquery += " and VendorId='" + masters.venderid + "'";
                     if (masters.RevisionId != 0)
                         sqlquery += " and MPRRevisionId='" + masters.RevisionId + "'";
-                    if (masters.RFQNo != null && masters.RFQNo!="")
+                    if (masters.RFQNo != null && masters.RFQNo != "")
                         sqlquery += " and RFQNo='" + masters.RFQNo + "'";
-                    if (masters.DocumentNumber != null && masters.DocumentNumber!="")
+                    if (masters.DocumentNumber != null && masters.DocumentNumber != "")
                         sqlquery += " and DocumentNo='" + masters.DocumentNumber + "'";
                     if (masters.BuyerGroupId != 0)
                         sqlquery += " and BuyerGroupId='" + masters.BuyerGroupId + "'";
@@ -946,23 +946,41 @@ namespace DALayer.PurchaseAuthorization
                         obj.SaveChanges();
                     }
                     //model.Item.Select(x => x.MPRItemDetailsid).FirstOrDefault()
-                    foreach (var item in model.Item.GroupBy(n => n.RFQItemsId).Select(x => x.FirstOrDefault()))
-                    {
-                        var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
-                        foreach (var items in itemdata)
-                        {
-                            PAItem paitem = new PAItem()
-                            {
-                                PAID = status.Sid,
-                                RfqSplitItemId = items.RFQSplitItemId,
-                                Mprrfqsplititemid=item.Mprrfqsplititemid,
-                                MPRItemDetailsId = item.MPRItemDetailsid
-                            };
-                            obj.PAItems.Add(paitem);
-                            obj.SaveChanges();
-                        }
 
+                    //foreach (var item in model.Item.GroupBy(n => n.RFQItemsId).Select(x => x.FirstOrDefault()))
+                    //{
+                    //    var itemdata = obj.RFQItemsInfo_N.Where(x => x.RFQItemsId == item.RFQItemsId).ToList();
+                    //    foreach (var items in itemdata)
+                    //    {
+                    //        PAItem paitem = new PAItem()
+                    //        {
+                    //            PAID = status.Sid,
+                    //            RfqSplitItemId = items.RFQSplitItemId,
+                    //            Mprrfqsplititemid = item.Mprrfqsplititemid,
+                    //            MPRItemDetailsId = item.MPRItemDetailsid
+                    //        };
+                    //        obj.PAItems.Add(paitem);
+                    //        obj.SaveChanges();
+                    //    }
+
+                    //}
+
+
+                    foreach (var items in model.Item)
+                    {
+                        var splitdata = obj.MPRRfqItemInfos.Where(x => x.Mprrfqsplititemid == items.Mprrfqsplititemid).FirstOrDefault().rfqsplititemid;
+                        PAItem paitem = new PAItem()
+                        {
+                            PAID = status.Sid,
+                            RfqSplitItemId =Convert.ToInt32(splitdata),
+                            Mprrfqsplititemid = items.Mprrfqsplititemid,
+                            MPRItemDetailsId = items.MPRItemDetailsid
+                        };
+                        obj.PAItems.Add(paitem);
+                        obj.SaveChanges();
                     }
+
+
                 }
                 else
                 {
@@ -1001,7 +1019,7 @@ namespace DALayer.PurchaseAuthorization
                         obj.SaveChanges();
                     }
 
-                     this.emailDA.PAEmailRequest(model.PAId, model.LoginEmployee);
+                    this.emailDA.PAEmailRequest(model.PAId, model.LoginEmployee);
 
                     var data = obj.MPRPADetails.Where(x => x.PAId == model.PAId).FirstOrDefault();
                     data.PAStatus = "Submitted";
@@ -1071,7 +1089,7 @@ namespace DALayer.PurchaseAuthorization
                     {
                         ItemDescription = x.ItemDescription,
                         UnitPrice = Convert.ToDecimal(x.UnitPrice),
-                        QuotationQty =Convert.ToDouble(x.QuotationQty),
+                        QuotationQty = Convert.ToDouble(x.QuotationQty),
                         DocumentNo = x.DocumentNo,
                         SaleOrderNo = x.SaleOrderNo,
                         Department = x.Department,
@@ -1087,8 +1105,8 @@ namespace DALayer.PurchaseAuthorization
                         PONO = x.PONO,
                         Remarks = x.Remarks,
                         PODate = x.PODate.ToString(),
-                        RFQNo=x.RFQNo,
-                        HSNCode=x.HSNCode,
+                        RFQNo = x.RFQNo,
+                        HSNCode = x.HSNCode,
                         MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
                     }).ToList();
                     var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
@@ -1104,30 +1122,30 @@ namespace DALayer.PurchaseAuthorization
                         PARequestedOn = x.RequestedOn
                     }).ToList();
                     var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID).ToList();
-                    if (documentsdata.Count!=0)
+                    if (documentsdata.Count != 0)
                     {
-                        
-                            model.documents = documentsdata.Select(x => new PADocumentsmodel()
-                            {
-                                filename=x.Filename,
-                                path=x.Filepath,
-                                uploadeddate=x.uploadeddate,
-                            }).ToList();
-                     
+
+                        model.documents = documentsdata.Select(x => new PADocumentsmodel()
+                        {
+                            filename = x.Filename,
+                            path = x.Filepath,
+                            uploadeddate = x.uploadeddate,
+                        }).ToList();
+
                     }
 
                     var requested = obj.parequestedanddeletedemployees.Where(x => x.paid == PID).ToList();
                     model.request = requested.Select(x => new parequestedanddeletemodel()
                     {
-                        parequested=x.parequested,
-                        RequestedOn=x.RequestedOn,
-                        PAStatus=x.PAStatus,
-                        PAStatusUpdate=x.PAStatusUpdate,
-                        DeleteFlag=x.DeleteFlag,
-                        DeleteBy=x.DeleteBy,
-                        DeleteOn=x.DeleteOn,
-                        padeleted=x.padeleted,
-                        Remarks=x.Remarks
+                        parequested = x.parequested,
+                        RequestedOn = x.RequestedOn,
+                        PAStatus = x.PAStatus,
+                        PAStatusUpdate = x.PAStatusUpdate,
+                        DeleteFlag = x.DeleteFlag,
+                        DeleteBy = x.DeleteBy,
+                        DeleteOn = x.DeleteOn,
+                        padeleted = x.padeleted,
+                        Remarks = x.Remarks
                     }).ToList();
 
                     return model;
@@ -1401,7 +1419,7 @@ namespace DALayer.PurchaseAuthorization
                     sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
 
                 sqlquery += "  order by PAId desc ";
-                
+
                 details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
                 return details;
             }
@@ -1474,16 +1492,16 @@ namespace DALayer.PurchaseAuthorization
                 obj.SaveChanges();
                 if (padetails != null)
                     padetails.PAStatus = ApprovalStatus;
-                    padetails.POStatus = "Pending";
-                    padetails.POStatusUpdate = System.DateTime.Now;
-                    padetails.PAStatusUpdate = System.DateTime.Now;
+                padetails.POStatus = "Pending";
+                padetails.POStatusUpdate = System.DateTime.Now;
+                padetails.PAStatusUpdate = System.DateTime.Now;
                 obj.SaveChanges();
                 pastatus.StatusId = 18;
                 obj.SaveChanges();
 
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
                 int id = statustrack.StatusId;
-                updatepaitems(mprrevisionid,paid);
+                updatepaitems(mprrevisionid, paid);
             }
             else if (ApprovalStatus == "Rejected")
             {
@@ -1506,7 +1524,7 @@ namespace DALayer.PurchaseAuthorization
                 obj.SaveChanges();
 
                 this.emailDA.paemailstatus(statusid, paid, mprrevisionid, ApprovalStatus, employeeno);
-                
+
             }
             else
             {
@@ -1527,13 +1545,13 @@ namespace DALayer.PurchaseAuthorization
             //approver.approved;
             return true;
         }
-        public bool updatepaitems(int mprrevisionid,int paid)
+        public bool updatepaitems(int mprrevisionid, int paid)
         {
             List<Updatepaitem> items = new List<Updatepaitem>();
             try
             {
                 var sqlquery = "";
-                sqlquery = "select * from Updatepaitem where MPRRevisionId='" + mprrevisionid + "' and paid='"+ paid +"' ";
+                sqlquery = "select * from Updatepaitem where MPRRevisionId='" + mprrevisionid + "' and paid='" + paid + "' ";
                 items = obj.Database.SqlQuery<Updatepaitem>(sqlquery).ToList();
                 List<MPRRfqItemInfo> paitem = new List<MPRRfqItemInfo>();
                 foreach (var item in items)
@@ -1600,7 +1618,7 @@ namespace DALayer.PurchaseAuthorization
         //    }
         //}
 
-            //getting mapped salbs and corresponding employee based on budget or deptid or employee id
+        //getting mapped salbs and corresponding employee based on budget or deptid or employee id
         public async Task<List<Employeemappingtopurchase>> GetPurchaseSlabsandMappedemployeesByDeptId(EmployeeFilterModel model)
         {
             List<Employeemappingtopurchase> purchase = new List<Employeemappingtopurchase>();
@@ -1669,12 +1687,12 @@ namespace DALayer.PurchaseAuthorization
                     }
                     status.Sid = paitems.PAID;
                 }
-               
+
                 var sqlquery = "";
                 sqlquery = "select * from  PAItem where  PONO  is null and paid= " + status.Sid + " ";
                 List<PAItem> item = new List<PAItem>();
                 item = obj.Database.SqlQuery<PAItem>(sqlquery).ToList();
-                if (item.Count==0)
+                if (item.Count == 0)
                 {
                     var data = obj.MPRPADetails.Where(x => x.PAId == status.Sid).FirstOrDefault();
                     data.POStatus = "PORelasesd";
@@ -1732,7 +1750,7 @@ namespace DALayer.PurchaseAuthorization
         {
             int mprno = 0;
             int rfqno = 0;
-            if (model.DocumentNumber!=null && model.DocumentNumber!="")
+            if (model.DocumentNumber != null && model.DocumentNumber != "")
             {
                 if (model.DocumentNumber.StartsWith("MPR", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -1744,7 +1762,7 @@ namespace DALayer.PurchaseAuthorization
                     model.DocumentNumber = null;
                 }
             }
-            if (model.rfqnumber!=null && model.rfqnumber!=null)
+            if (model.rfqnumber != null && model.rfqnumber != null)
             {
                 if (model.rfqnumber.StartsWith("RFQ", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -1761,7 +1779,7 @@ namespace DALayer.PurchaseAuthorization
             {
                 var sqlquery = "";
                 sqlquery = "select * from GetMprPaDetailsByFilters  where PAStatus in ('Pending','rejected','Approved') and DeleteFlag=0 ";
-                if (model.DocumentNumber != null && model.DocumentNumber!="")
+                if (model.DocumentNumber != null && model.DocumentNumber != "")
                     sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
                 if (model.DepartmentId != 0)
                     sqlquery += " and DepartmentId='" + model.DepartmentId + "'";
@@ -1836,12 +1854,12 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 string email = obj.Employees.Where(x => x.EmployeeNo == model.EmployeeNo).FirstOrDefault().EMail;
-                this.emailDA.PAEmailRequestForApproval(model.PAId, email,model.EmployeeNo);
+                this.emailDA.PAEmailRequestForApproval(model.PAId, email, model.EmployeeNo);
                 return status;
             }
             catch (Exception ex)
             {
-                throw; 
+                throw;
             }
         }
         public async Task<statuscheckmodel> DeletePAByPAid(padeletemodel model)
@@ -1850,7 +1868,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 var data = obj.MPRPADetails.Where(x => x.PAId == model.PAId).FirstOrDefault();
-                if (data!=null)
+                if (data != null)
                 {
                     data.Remarks = model.Remarks;
                     data.DeleteFlag = true;
@@ -1924,11 +1942,11 @@ namespace DALayer.PurchaseAuthorization
         }
         public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
         {
-            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.68;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
             EmployeModel employee = new EmployeModel();
             DataTable Ds = new DataTable();
             //string data = "'" + string.Join("','" , revisionid.Distinct())+ "'";
-            string data =  string.Join(",", revisionid.Distinct());
+            string data = string.Join(",", revisionid.Distinct());
             try
             {
                 SqlParameter[] Param = new SqlParameter[1];
