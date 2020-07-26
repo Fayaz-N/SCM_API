@@ -76,6 +76,7 @@ namespace SCMModels.RFQModels
         public string filename { get; set; }
         public string path { get; set; }
         public Nullable<System.DateTime> uploadeddate { get; set; }
+        public int DocumentId { get; set; }
     }
     public class padeletemodel
     {

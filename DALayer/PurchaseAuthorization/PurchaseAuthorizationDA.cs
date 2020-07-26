@@ -443,9 +443,9 @@ namespace DALayer.PurchaseAuthorization
             else
                 model.LessBudget = true;
 
-            if (model.PaymentTermCode != null && model.PaymentTermCode.Length >= 2)
-                Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 2, 2));
-            else if (model.PaymentTermCode != null && model.PaymentTermCode.Length < 2 && model.PaymentTermCode != "")
+            if (model.PaymentTermCode != null && model.PaymentTermCode.StartsWith("L0", StringComparison.CurrentCultureIgnoreCase))
+                Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 3, 3));
+            else if (model.PaymentTermCode!=null)
                 Termscode = Convert.ToInt32(model.PaymentTermCode);
             else
                 Termscode = 0;
@@ -1121,7 +1121,7 @@ namespace DALayer.PurchaseAuthorization
                         parequested = x.parequested,
                         PARequestedOn = x.RequestedOn
                     }).ToList();
-                    var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID).ToList();
+                    var documentsdata = obj.MPRPADocuments.Where(x => x.paid == PID && x.deleteflag==false).ToList();
                     if (documentsdata.Count != 0)
                     {
 
@@ -1130,6 +1130,7 @@ namespace DALayer.PurchaseAuthorization
                             filename = x.Filename,
                             path = x.Filepath,
                             uploadeddate = x.uploadeddate,
+                            DocumentId = x.DocumentId
                         }).ToList();
 
                     }
@@ -1363,9 +1364,9 @@ namespace DALayer.PurchaseAuthorization
         }
 
         //getting pa approved,pending and submitted
-        public async Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
+        public async Task<List<mprApproverdetailsview>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
         {
-            List<GetmprApproverdeatil> details = new List<GetmprApproverdeatil>();
+            List<mprApproverdetailsview> details = new List<mprApproverdetailsview>();
             int mprno = 0;
             int rfqno = 0;
             if (model.DocumentNumber != null && model.DocumentNumber != "")
@@ -1396,7 +1397,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 var sqlquery = "";
-                sqlquery = "select * from GetmprApproverdeatils where Approver='" + model.CreatedBy + "'";
+                sqlquery = "select * from mprApproverdetailsview where Approver='" + model.CreatedBy + "' and PAStatus not in ('Rejected','InProgress') ";
                 if (model.Paid != 0)
                     sqlquery += " and  PAId='" + model.Paid + "'";
                 if (model.Status != null)
@@ -1420,7 +1421,7 @@ namespace DALayer.PurchaseAuthorization
 
                 sqlquery += "  order by PAId desc ";
 
-                details = obj.Database.SqlQuery<GetmprApproverdeatil>(sqlquery).ToList();
+                details = obj.Database.SqlQuery<mprApproverdetailsview>(sqlquery).ToList();
                 return details;
             }
             catch (Exception ex)
@@ -1976,6 +1977,27 @@ namespace DALayer.PurchaseAuthorization
                 return Ds;
             }
             catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<statuscheckmodel> DeletePADocument(PADocumentsmodel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            try
+            {
+                var data = obj.MPRPADocuments.Where(x => x.DocumentId == model.DocumentId).FirstOrDefault();
+                if (data!=null)
+                {
+                    data.deleteflag = true;
+                    obj.SaveChanges();
+                    status.Sid = data.DocumentId;
+                }
+                return status;
+            }
+            catch (Exception)
             {
 
                 throw;

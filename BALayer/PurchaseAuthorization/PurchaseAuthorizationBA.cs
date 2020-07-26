@@ -185,7 +185,7 @@ namespace BALayer.PurchaseAuthorization
             return await _purchaseDataAcess.GetAllApproversList();
         }
 
-        public async Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
+        public async Task<List<mprApproverdetailsview>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
         {
             return await _purchaseDataAcess.GetMprApproverDetailsBySearch(model);
         }
@@ -246,6 +246,11 @@ namespace BALayer.PurchaseAuthorization
         public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
         {
             return _purchaseDataAcess.getrfqtermsbyrevisionsid1(revisionid);
+        }
+
+        public Task<statuscheckmodel> DeletePADocument(PADocumentsmodel model)
+        {
+            return _purchaseDataAcess.DeletePADocument(model);
         }
     }
 }

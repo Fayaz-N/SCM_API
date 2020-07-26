@@ -335,7 +335,7 @@ namespace SCMAPI.Controllers
         [ResponseType(typeof(List<GetmprApproverdeatil>))]
         public async Task<IHttpActionResult> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
         {
-            List<GetmprApproverdeatil> details = new List<GetmprApproverdeatil>();
+            List<mprApproverdetailsview> details = new List<mprApproverdetailsview>();
             details = await _paBusenessAcess.GetMprApproverDetailsBySearch(model);
             return Ok(details);
         }
@@ -490,6 +490,7 @@ namespace SCMAPI.Controllers
                     data.Filepath = parsedFileName;
                     data.uploadeddate = System.DateTime.Now;
                     data.paid = Convert.ToInt32(paid);
+                    data.deleteflag = false;
                     entities.MPRPADocuments.Add(data);
                     entities.SaveChanges();
                     documentid = data.DocumentId;
@@ -595,6 +596,15 @@ namespace SCMAPI.Controllers
             DataTable ds = new DataTable();
             ds = _paBusenessAcess.getrfqtermsbyrevisionsid1(revisionid);
             return ds;
+        }
+        [HttpPost]
+        [Route("DeletePADocument")]
+        [ResponseType(typeof(statuscheckmodel))]
+        public async Task<IHttpActionResult> DeletePADocument(PADocumentsmodel model)
+        {
+            statuscheckmodel status = new statuscheckmodel();
+            status = await _paBusenessAcess.DeletePADocument(model);
+            return Ok(status);
         }
     }
 }

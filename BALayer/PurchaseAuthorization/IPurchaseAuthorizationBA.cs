@@ -50,7 +50,7 @@ namespace BALayer.PurchaseAuthorization
         Task<List<ProjectManagerModel>> LoadAllProjectManagers();
         Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int?> MPRItemDetailsid);
         Task<List<MPRPAApproversModel>> GetAllApproversList();
-        Task<List<GetmprApproverdeatil>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model);
+        Task<List<mprApproverdetailsview>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model);
         Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model);
         Task<List<DisplayRfqTermsByRevisionId>> getrfqtermsbyrevisionid(List<int> RevisionId);
         Task<List<Employeemappingtopurchase>> GetPurchaseSlabsandMappedemployeesByDeptId(EmployeeFilterModel model);
@@ -63,5 +63,6 @@ namespace BALayer.PurchaseAuthorization
         Task<statuscheckmodel> DeletePAByPAid(padeletemodel model);
         Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model);
         DataTable getrfqtermsbyrevisionsid1(List<int> revisionid);
+        Task<statuscheckmodel> DeletePADocument(PADocumentsmodel model);
     }
 }
