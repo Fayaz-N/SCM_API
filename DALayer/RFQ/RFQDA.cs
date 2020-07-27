@@ -2669,7 +2669,12 @@ namespace DALayer.RFQ
 					obj.SaveChanges();
 					status.Sid = Localdata.RFQItemsId;
 				}
-
+				var mprrfqitem = obj.MPRRfqItemInfos.Where(li => li.rfqsplititemid == id).FirstOrDefault();
+				if(mprrfqitem!=null)
+				{
+					mprrfqitem.Deleteflag = true;
+					obj.SaveChanges();
+				}
 				return status;
 			}
 			catch (Exception ex)
