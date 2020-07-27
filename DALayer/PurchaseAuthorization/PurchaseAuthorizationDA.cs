@@ -1397,7 +1397,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 var sqlquery = "";
-                sqlquery = "select * from mprApproverdetailsview where Approver='" + model.CreatedBy + "' and PAStatus not in ('Rejected','InProgress') ";
+                sqlquery = "select * from mprApproverdetailsview where Approver='" + model.CreatedBy + "' and PAStatus not in ('Rejected','InProgress') and DeleteFlag=0 ";
                 if (model.Paid != 0)
                     sqlquery += " and  PAId='" + model.Paid + "'";
                 if (model.Status != null)
