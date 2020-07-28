@@ -202,6 +202,7 @@ Review Date :<<>>   Reviewed By :<<>>
 								mPRItemInfo.Itemid = mPRItemInfo.Itemid;
 								if (mPRItemInfo.Itemid == "NewItem" || mPRItemInfo.Itemid == "0000")
 									mPRItemInfo.Itemid = "NewItem";
+								mPRItemInfo.DeleteFlag = false;
 								mprRevisionDetails.MPRItemInfoes.Add(mPRItemInfo);
 							}
 							else
@@ -992,7 +993,8 @@ Review Date :<<>>   Reviewed By :<<>>
 			using (YSCMEntities Context = new YSCMEntities())
 			{
 				MPRDocument deptDelete = Context.MPRDocuments.Find(mprDocument.MprDocId);
-				Context.MPRDocuments.Remove(deptDelete);
+				deptDelete.Deleteflag = true;
+				//Context.MPRDocuments.Remove(deptDelete);
 				Context.SaveChanges();
 			}
 			return true;
@@ -1009,12 +1011,14 @@ Review Date :<<>>   Reviewed By :<<>>
 				foreach (var item in mprItemInfo.MPRDocuments)
 				{
 					MPRDocument docDel = Context.MPRDocuments.Find(item.MprDocId);
-					Context.MPRDocuments.Remove(docDel);
+					docDel.Deleteflag = true;
+					//Context.MPRDocuments.Remove(docDel);
 					Context.SaveChanges();
 				}
 
 				MPRItemInfo deptDelete = Context.MPRItemInfoes.Find(mprItemInfo.Itemdetailsid);
-				Context.MPRItemInfoes.Remove(deptDelete);
+				deptDelete.DeleteFlag = true;
+				//Context.MPRItemInfoes.Remove(deptDelete);
 				Context.SaveChanges();
 			}
 			return true;
@@ -1075,7 +1079,8 @@ Review Date :<<>>   Reviewed By :<<>>
 			using (YSCMEntities Context = new YSCMEntities())
 			{
 				MPRVendorDetail deptDelete = Context.MPRVendorDetails.Find(mprVendor.VendorDetailsId);
-				Context.MPRVendorDetails.Remove(deptDelete);
+				deptDelete.RemoveFlag = true;
+				//Context.MPRVendorDetails.Remove(deptDelete);
 				Context.SaveChanges();
 			}
 			return true;
@@ -1124,10 +1129,11 @@ Review Date :<<>>   Reviewed By :<<>>
 
 				//mprRevisionDetails.MPRScope = DB.MPRScopes.Where(li => li.ScopeId == mprRevisionDetails.ScopeId).FirstOrDefault<MPRScope>();
 				mprRevisionDetails.MPRBuyerGroup = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprRevisionDetails.BuyerGroupId).FirstOrDefault<MPRBuyerGroup>();
-				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).OrderBy(li => li.Itemdetailsid).Include(li => li.PAItems).ToList();
-				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
+				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.DeleteFlag!=true).OrderBy(li => li.Itemdetailsid).Include(li => li.PAItems).ToList();
+				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.Deleteflag!=true).ToList();
 				mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.MPRDocumentationDescription).ToList();
-				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.VendorMaster).ToList();
+				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.RemoveFlag!=true).Include(li => li.VendorMaster).ToList();
+
 				mprRevisionDetails.MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
 				//mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Include("MPRReminderTrackings").Where(li=>li.RevisionId==mprRevisionDetails.RevisionId).ToList();
 				mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.Employee).Include(li => li.MPRReminderTrackings).ToList();
