@@ -443,10 +443,10 @@ namespace DALayer.PurchaseAuthorization
             else
                 model.LessBudget = true;
 
-            if (model.PaymentTermCode != null && model.PaymentTermCode.StartsWith("L0", StringComparison.CurrentCultureIgnoreCase))
+            if (model.PaymentTermCode != null && model.Creditdays==0)
                 Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 3, 3));
-            else if (model.PaymentTermCode!=null)
-                Termscode = Convert.ToInt32(model.PaymentTermCode);
+            else if (model.Creditdays!=0)
+                Termscode = Convert.ToInt32(model.Creditdays);
             else
                 Termscode = 0;
 
@@ -1891,7 +1891,7 @@ namespace DALayer.PurchaseAuthorization
             try
             {
                 var sqlquery = "";
-                sqlquery = "select * from IncompletedPAlist where PAStatus in ('Inprogress','submitted')";
+                sqlquery = "select * from IncompletedPAlist where PAStatus in ('Inprogress')";
                 if (model.PAId != 0)
                     sqlquery += " and PAId='" + model.PAId + "'";
                 filter = obj.Database.SqlQuery<IncompletedPAlist>(sqlquery).ToList();
