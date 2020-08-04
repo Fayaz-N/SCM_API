@@ -188,6 +188,19 @@ namespace SCMAPI.Controllers
 		{
 			return Ok(this.emailTemplateDA.sendMailtoVendor(mailObj));
 		}
+		[HttpPost]
+		[Route("addMprItemInfo")]
+		public IHttpActionResult addMprItemInfo([FromBody] MPRItemInfo mprIteminfos)
+		{
+			return Ok(this._mprBusenessAcess.addMprItemInfo(mprIteminfos));
+		}
+
+		[HttpPost]
+		[Route("updateItemId")]
+		public IHttpActionResult updateItemId([FromBody] materialUpdate mprIteminfos)
+		{
+			return Ok(this._mprBusenessAcess.updateItemId(mprIteminfos));
+		}
 
 		[Route("UploadFile")]
 		[HttpPost]

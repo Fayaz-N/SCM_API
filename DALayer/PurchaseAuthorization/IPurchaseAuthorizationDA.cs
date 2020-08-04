@@ -63,5 +63,9 @@ namespace DALayer.PurchaseAuthorization
         Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model);
         DataTable getrfqtermsbyrevisionsid1(List<int> revisionid);
         Task<statuscheckmodel> DeletePADocument(PADocumentsmodel model);
-    }
+		MPRPADetailsModel GetTokuchuDetailsByPAID(int? PID, int? TokuchRequestid);
+		int updateTokuchuRequest(TokuchuRequest tokuchuRequest, string typeOfuser,int revisionId);
+		List<GetTokuchuDetail> getTokuchuReqList(tokuchuFilterParams tkparameters);
+
+	}
 }

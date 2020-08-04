@@ -1034,20 +1034,29 @@ Review Date :<<>>   Reviewed By :<<>>
 			{
 				try
 				{
-					MPRItemInfo item = new MPRItemInfo();
-					item.Itemid = mPRItemInfo.Itemid;
-					item.RevisionId = mPRItemInfo.RevisionId;
-					item.ItemDescription = mPRItemInfo.ItemDescription;
-					item.Quantity = mPRItemInfo.Quantity;
-					item.UnitId = mPRItemInfo.UnitId;
-					item.SOLineItemNo = mPRItemInfo.SOLineItemNo;
-					item.ReferenceDocNo = mPRItemInfo.ReferenceDocNo;
-					item.MfgModelNo = mPRItemInfo.MfgModelNo;
-					item.MfgPartNo = mPRItemInfo.MfgPartNo;
-					item.TargetSpend = mPRItemInfo.TargetSpend;
-					item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
-					DB.MPRItemInfoes.Add(item);
-					DB.SaveChanges();
+					var item = context.MPRItemInfoes.Where(li => li.Itemdetailsid == mPRItemInfo.Itemdetailsid).FirstOrDefault();
+					if (item == null)
+					{
+
+						item.Itemid = mPRItemInfo.Itemid;
+						item.RevisionId = mPRItemInfo.RevisionId;
+						item.ItemDescription = mPRItemInfo.ItemDescription;
+						item.Quantity = mPRItemInfo.Quantity;
+						item.UnitId = mPRItemInfo.UnitId;
+						item.SOLineItemNo = mPRItemInfo.SOLineItemNo;
+						item.ReferenceDocNo = mPRItemInfo.ReferenceDocNo;
+						item.MfgModelNo = mPRItemInfo.MfgModelNo;
+						item.MfgPartNo = mPRItemInfo.MfgPartNo;
+						item.TargetSpend = mPRItemInfo.TargetSpend;
+						item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
+						context.MPRItemInfoes.Add(item);
+						context.SaveChanges();
+					}
+					else
+					{
+						item.Itemid = mPRItemInfo.Itemid;
+						context.SaveChanges();
+					}
 					return "true";
 				}
 				catch (DbEntityValidationException e)
@@ -1129,10 +1138,10 @@ Review Date :<<>>   Reviewed By :<<>>
 
 				//mprRevisionDetails.MPRScope = DB.MPRScopes.Where(li => li.ScopeId == mprRevisionDetails.ScopeId).FirstOrDefault<MPRScope>();
 				mprRevisionDetails.MPRBuyerGroup = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprRevisionDetails.BuyerGroupId).FirstOrDefault<MPRBuyerGroup>();
-				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.DeleteFlag!=true).OrderBy(li => li.Itemdetailsid).Include(li => li.PAItems).ToList();
-				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.Deleteflag!=true).ToList();
+				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.DeleteFlag != true).OrderBy(li => li.Itemdetailsid).Include(li => li.PAItems).ToList();
+				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.Deleteflag != true).ToList();
 				mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.MPRDocumentationDescription).ToList();
-				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.RemoveFlag!=true).Include(li => li.VendorMaster).ToList();
+				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.RemoveFlag != true).Include(li => li.VendorMaster).ToList();
 
 				mprRevisionDetails.MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).ToList();
 				//mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Include("MPRReminderTrackings").Where(li=>li.RevisionId==mprRevisionDetails.RevisionId).ToList();
@@ -1443,13 +1452,16 @@ Review Date :<<>>   Reviewed By :<<>>
 								mprrevision.OCheckStatus = mprStatus.status;
 								mprrevision.OCheckerRemarks = mprStatus.Remarks;
 								mprrevision.OCheckedOn = DateTime.Now;
-								MPRStatusTrack mPRStatusTrackDetails1 = new MPRStatusTrack();
-								mPRStatusTrackDetails1.RequisitionId = mprStatus.RequisitionId;
-								mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
-								mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
-								mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
-								statusId = mPRStatusTrackDetails1.StatusId = 13;//Raising PO Checked
-								updateMprstatusTrack(mPRStatusTrackDetails1);
+								if (mprStatus.status == "Approved")
+								{
+									MPRStatusTrack mPRStatusTrackDetails1 = new MPRStatusTrack();
+									mPRStatusTrackDetails1.RequisitionId = mprStatus.RequisitionId;
+									mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
+									mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
+									mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
+									statusId = mPRStatusTrackDetails1.StatusId = 13;//Raising PO Checked
+									updateMprstatusTrack(mPRStatusTrackDetails1);
+								}
 							}
 
 						}
@@ -1458,35 +1470,28 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.ApprovalStatus = mprStatus.status;
 							mprrevision.ApproverRemarks = mprStatus.Remarks;
 							mprrevision.ApprovedOn = DateTime.Now;
-
-							if (mprStatus.status == "Sent for Modification")
+							if (mprStatus.status == "Approved" || mprStatus.status == "Sent for Modification")
 							{
-								//mPRStatusTrackDetails.StatusId = 3;
-								//if (mprStatus.status == "Sent for Modification")
-								statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+								statusId = mPRStatusTrackDetails.StatusId = 3;
+								if (mprStatus.status == "Sent for Modification")
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
 								updateMprstatusTrack(mPRStatusTrackDetails);
-							}
-							if (mprStatus.status == "Approved")
-							{
-								//need to check second  approver
-								if (mprrevision.SecondApprover == null)
-								{
-									statusId = mPRStatusTrackDetails.StatusId = 3;
-									updateMprstatusTrack(mPRStatusTrackDetails);
-								}
 							}
 							if (mprrevision.IssuePurposeId == 2)//update oapprover
 							{
 								mprrevision.OApprovalStatus = mprStatus.status;
 								mprrevision.OApproverRemarks = mprStatus.Remarks;
 								mprrevision.OApprovedOn = DateTime.Now;
-								MPRStatusTrack mPRStatusTrackDetails1 = new MPRStatusTrack();
-								mPRStatusTrackDetails1.RequisitionId = mprStatus.RequisitionId;
-								mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
-								mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
-								mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
-								statusId = mPRStatusTrackDetails1.StatusId = 14;//Raising PO Approved
-								updateMprstatusTrack(mPRStatusTrackDetails1);
+								if (mprStatus.status == "Approved")
+								{
+									MPRStatusTrack mPRStatusTrackDetails1 = new MPRStatusTrack();
+									mPRStatusTrackDetails1.RequisitionId = mprStatus.RequisitionId;
+									mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
+									mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
+									mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
+									statusId = mPRStatusTrackDetails1.StatusId = 14;//Raising PO Approved
+									updateMprstatusTrack(mPRStatusTrackDetails1);
+								}
 							}
 						}
 						else if (mprStatus.typeOfuser == "SecondApprover")
@@ -1494,28 +1499,61 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.SecondApproversStatus = mprStatus.status;
 							mprrevision.SecondApproverRemarks = mprStatus.Remarks;
 							mprrevision.SecondApprovedOn = DateTime.Now;
-							//need to check third  approver
-							if (mprrevision.ThirdApprover == null)
+							if (mprStatus.status == "Approved" || mprStatus.status == "Sent for Modification")
 							{
-								statusId = mPRStatusTrackDetails.StatusId = 3;
+								statusId = mPRStatusTrackDetails.StatusId = 22;
+								if (mprStatus.status == "Sent for Modification")
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
-							mprrevision.OSecondApproversStatus = mprStatus.status;
-							mprrevision.OSecondApproverRemarks = mprStatus.Remarks;
-							mprrevision.OSecondApprovedOn = DateTime.Now;
 
+							if (mprrevision.IssuePurposeId == 2)//update osecond approver
+							{
+								mprrevision.OSecondApproversStatus = mprStatus.status;
+								mprrevision.OSecondApproverRemarks = mprStatus.Remarks;
+								mprrevision.OSecondApprovedOn = DateTime.Now;
+								if (mprStatus.status == "Approved")
+								{
+									MPRStatusTrack mPRStatusTrackDetails1 = new MPRStatusTrack();
+									mPRStatusTrackDetails1.RequisitionId = mprStatus.RequisitionId;
+									mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
+									mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
+									mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
+									statusId = mPRStatusTrackDetails1.StatusId = 23;//Second Approver Raising PO Approved
+									updateMprstatusTrack(mPRStatusTrackDetails1);
+								}
+
+							}
 						}
 						else if (mprStatus.typeOfuser == "ThirdApprover")
 						{
 							mprrevision.ThirdApproverStatus = mprStatus.status;
 							mprrevision.ThirdApproverRemarks = mprStatus.Remarks;
 							mprrevision.ThirdApproverStatusChangedOn = DateTime.Now;
-							statusId = mPRStatusTrackDetails.StatusId = 3;
-							updateMprstatusTrack(mPRStatusTrackDetails);
+							if (mprStatus.status == "Approved" || mprStatus.status == "Sent for Modification")
+							{
+								statusId = mPRStatusTrackDetails.StatusId = 24;
+								if (mprStatus.status == "Sent for Modification")
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+								updateMprstatusTrack(mPRStatusTrackDetails);
+							}
+							if (mprrevision.IssuePurposeId == 2)//update osecond approver
+							{
+								mprrevision.OThirdApproverStatus = mprStatus.status;
+								mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
+								mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
+								if (mprStatus.status == "Approved")
+								{
+									MPRStatusTrack mPRStatusTrackDetails1 = new MPRStatusTrack();
+									mPRStatusTrackDetails1.RequisitionId = mprStatus.RequisitionId;
+									mPRStatusTrackDetails1.RevisionId = mprStatus.RevisionId;
+									mPRStatusTrackDetails1.UpdatedBy = mprStatus.PreparedBy;
+									mPRStatusTrackDetails1.UpdatedDate = DateTime.Now;
+									statusId = mPRStatusTrackDetails1.StatusId = 25;//Third Approver Raising PO Approved
+									updateMprstatusTrack(mPRStatusTrackDetails1);
+								}
+							}
 
-							mprrevision.OThirdApproverStatus = mprStatus.status;
-							mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
-							mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
 						}
 						else if (mprStatus.typeOfuser == "OChecker")
 						{
@@ -1725,6 +1763,53 @@ Review Date :<<>>   Reviewed By :<<>>
 				Context.SaveChanges();
 			}
 			return true;
+		}
+
+		public string updateItemId(materialUpdate mPRItemInfo)
+		{
+			using (YSCMEntities context = new YSCMEntities())
+			{
+				try
+				{
+					var item = context.MPRItemInfoes.Where(li => li.Itemdetailsid == mPRItemInfo.Itemdetailsid).FirstOrDefault();
+					if (item != null)
+					{
+						item.Itemid = mPRItemInfo.Itemid;
+						context.SaveChanges();
+					}
+					var rfqitem = context.RFQItems_N.Where(li => li.MPRItemDetailsid == mPRItemInfo.Itemdetailsid && li.RFQItemsId == mPRItemInfo.RFQItemsId).FirstOrDefault();
+					if (rfqitem != null)
+					{
+						rfqitem.ItemId = mPRItemInfo.Itemid;
+						context.SaveChanges();
+					}
+					VSCMEntities vscm = new VSCMEntities();
+					var remotitem = vscm.RemoteRFQItems_N.Where(li => li.MPRItemDetailsid == mPRItemInfo.Itemdetailsid && li.RFQItemsId == mPRItemInfo.RFQItemsId).FirstOrDefault();
+					if (remotitem != null)
+					{
+						remotitem.ItemId = mPRItemInfo.Itemid;
+						context.SaveChanges();
+					}
+					return "true";
+				}
+				catch (DbEntityValidationException e)
+				{
+					string errmsg = "";
+					foreach (var eve in e.EntityValidationErrors)
+					{
+						Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+							eve.Entry.Entity.GetType().Name, eve.Entry.State);
+						foreach (var ve in eve.ValidationErrors)
+						{
+							errmsg = ve.PropertyName + ve.ErrorMessage;
+						}
+					}
+					log.ErrorMessage("MPRController", "updateItemId", errmsg);
+					return errmsg;
+
+
+				}
+			}
 		}
 
 		/*Name of Function : <<GeneratePassword>>  Author :<<Prasanna>>  

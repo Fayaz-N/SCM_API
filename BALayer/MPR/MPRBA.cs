@@ -117,6 +117,10 @@ namespace BALayer.MPR
 		{
 			return this._mprDataAcess.deleteMPR(deleteMprInfo);
 		}
+		public string updateItemId(materialUpdate mPRItemInfo)
+		{
+			return this._mprDataAcess.updateItemId(mPRItemInfo);
 
+		}
 	}
 }

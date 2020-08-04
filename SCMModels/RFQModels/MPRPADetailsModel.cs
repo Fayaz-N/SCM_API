@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SCMModels.MPRMasterModels;
+using SCMModels.SCMModels;
 
 namespace SCMModels.RFQModels
 {
@@ -22,8 +23,10 @@ namespace SCMModels.RFQModels
             TermId = new List<int>();
             documents = new List<PADocumentsmodel>();
             request = new List<parequestedanddeletemodel>();
-        }
-        public int PAId { get; set; }
+			TokuchuRequest = new TokuchuRequest();
+
+		}
+		public int PAId { get; set; }
         public string RequestedBy { get; set; }
         public Nullable<System.DateTime> RequestedOn { get; set; }
         public Nullable<byte> DepartmentID { get; set; }
@@ -70,7 +73,9 @@ namespace SCMModels.RFQModels
         public List<RFQTermsModel> RfqTerms { get; set; }
         public List<RfqItemInfoModel> ItemInfo { get; set; }
         public List<parequestedanddeletemodel> request { get; set; }
-    }
+		public TokuchuRequest TokuchuRequest { get; set; }
+		public int TokuchRequestid { get; set; }
+	}
     public class PADocumentsmodel
     {
         public string filename { get; set; }

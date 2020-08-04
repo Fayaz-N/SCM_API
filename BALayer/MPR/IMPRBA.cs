@@ -36,6 +36,7 @@ namespace BALayer.MPR
         List<UserPermission> getAccessList(int RoleId);
         bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
 		 bool deleteMPR(DeleteMpr deleteMprInfo);
+		string updateItemId(materialUpdate mPRItemInfo);
 	}
 
 }

@@ -23,7 +23,7 @@ using DALayer.Common;
 namespace DALayer.Emails
 {
 
-	
+
 	/*Name of Class : <<EmailTemplateDA>>  Author :<<Prasanna>>  
     Date of Creation <<01-12-2019>>
     Purpose : <<email template preparation to send emails>
@@ -400,7 +400,7 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("EmailTemplate", "sendMailtoVendor", ex.Message + "; " +  ex.StackTrace.ToString());
+				log.ErrorMessage("EmailTemplate", "sendMailtoVendor", ex.Message + "; " + ex.StackTrace.ToString());
 				//throw ex;
 			}
 			return true;
@@ -435,11 +435,65 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("EmailTemplate", "mailtoRequestor", ex.Message +"; "+ ex.StackTrace.ToString());
+				log.ErrorMessage("EmailTemplate", "mailtoRequestor", ex.Message + "; " + ex.StackTrace.ToString());
 				//throw ex;
 			}
 			return true;
 		}
+
+		public bool prepareAribaTemplate(int tokuchureqId, string FrmEmailId, string ToMailId, string typeOfUser, int revisionId)
+		{
+			try
+			{
+				using (var db = new YSCMEntities()) //ok
+				{
+
+					var UI_Ipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
+					MPRRevisionDetail mprrevisionDetails = db.MPRRevisionDetails.Where(li => li.RevisionId == revisionId).FirstOrDefault<MPRRevisionDetail>();
+					string ipaddress = UI_Ipaddress + "SCM/MPRForm/" + mprrevisionDetails.RevisionId + "";
+					string tkaddress = UI_Ipaddress + "SCM/TokochuRequest/" + tokuchureqId + "";
+					var issueOfPurpose = mprrevisionDetails.IssuePurposeId == 1 ? "For Enquiry" : "For Issuing PO";
+					EmailSend emlSndngList = new EmailSend();
+					Employee frmEmail = db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>();
+					emlSndngList.FrmEmailId = frmEmail.EMail;
+					emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToMailId).FirstOrDefault<Employee>()).EMail;
+					if (typeOfUser == "Verifier" || typeOfUser == "PreVerifier")
+					{
+						//send mail to requestor
+						emlSndngList.Subject = "Tokuchu Request Verfied - " + mprrevisionDetails.DocumentNo + "";
+						emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Tokuchu request data has been verified.</div><br/><div><b>Tokuchu URL: </b>&nbsp<a href='" + tkaddress + "'>" + tkaddress + "</a></div></div><br/><table border='1' class='table table-bordered table-sm'><tr><td><b>MPR Number</b></td><td>" + mprrevisionDetails.DocumentNo + "</td><td><b>Document Description</b></td><td>" + mprrevisionDetails.DocumentDescription + "</td><td><b>Purpose of Iussing MPR</b></td><td>" + issueOfPurpose + "</td></tr><tr><td><b>Department</b></td><td>" + mprrevisionDetails.DepartmentName + "</td><td><b>Project Manager</td></td><td>" + mprrevisionDetails.ProjectManagerName + "</td><td><b>Job Code</b></td><td>" + mprrevisionDetails.JobCode + "</td></tr><tr><td><b>Client Name</b></td><td>" + mprrevisionDetails.ClientName + "</td><td><b>Job Name</b></td><td>" + mprrevisionDetails.JobName + "</td><td><b>Buyer Group</b></td><td>" + mprrevisionDetails.BuyerGroupName + "</td></tr><tr><td><b>Checker Name</b></td><td>" + mprrevisionDetails.CheckedName + "</td><td><b>Checker Status</b></td><td>" + mprrevisionDetails.CheckStatus + "</td><td><b>Checker Remarks</b></td><td>" + mprrevisionDetails.CheckerRemarks + "</td></tr><tr><td><b>Approver Name</b></td><td>" + mprrevisionDetails.ApproverName + "</td><td><b>Approver Status</b></td><td>" + mprrevisionDetails.ApprovalStatus + "</td><td><b>Approver Remarks</b></td><td>" + mprrevisionDetails.ApproverRemarks + "</td></tr></table><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
+
+						if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+							this.sendEmail(emlSndngList);
+
+						if (typeOfUser == "PreVerifier")
+						{
+							//send mail to ariba
+							emlSndngList.Subject = "Tokuchu request for ariba approval";
+							emlSndngList.Body = "<html><head></head><body><div>Tokuchu request for ariba approval</div><br/><div>Tokuchu request data has been verified.</div><br/><div><b>Tokuchu URL: </b>&nbsp<a href='" + tkaddress + "'>" + tkaddress + "</a></div></body></html>";
+							emlSndngList.ToEmailId = ConfigurationManager.AppSettings["AribaMailId"];
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+					}
+					if (typeOfUser == "Requestor")
+					{
+						//send mail to verifier
+						emlSndngList.Subject = "Tokuchu request for  verification- " + mprrevisionDetails.DocumentNo + "";
+						emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Please verify the data for Ariba.</div><br/><div><b>Tokuchu URL: </b>&nbsp<a href='" + tkaddress + "'>" + tkaddress + "</a></div></div><br/><table border='1' class='table table-bordered table-sm'><tr><td><b>MPR Number</b></td><td>" + mprrevisionDetails.DocumentNo + "</td><td><b>Document Description</b></td><td>" + mprrevisionDetails.DocumentDescription + "</td><td><b>Purpose of Iussing MPR</b></td><td>" + issueOfPurpose + "</td></tr><tr><td><b>Department</b></td><td>" + mprrevisionDetails.DepartmentName + "</td><td><b>Project Manager</td></td><td>" + mprrevisionDetails.ProjectManagerName + "</td><td><b>Job Code</b></td><td>" + mprrevisionDetails.JobCode + "</td></tr><tr><td><b>Client Name</b></td><td>" + mprrevisionDetails.ClientName + "</td><td><b>Job Name</b></td><td>" + mprrevisionDetails.JobName + "</td><td><b>Buyer Group</b></td><td>" + mprrevisionDetails.BuyerGroupName + "</td></tr><tr><td><b>Checker Name</b></td><td>" + mprrevisionDetails.CheckedName + "</td><td><b>Checker Status</b></td><td>" + mprrevisionDetails.CheckStatus + "</td><td><b>Checker Remarks</b></td><td>" + mprrevisionDetails.CheckerRemarks + "</td></tr><tr><td><b>Approver Name</b></td><td>" + mprrevisionDetails.ApproverName + "</td><td><b>Approver Status</b></td><td>" + mprrevisionDetails.ApprovalStatus + "</td><td><b>Approver Remarks</b></td><td>" + mprrevisionDetails.ApproverRemarks + "</td></tr></table><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
+						if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+							this.sendEmail(emlSndngList);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("EmailTemplate", "mailtoRequestor", ex.Message + "; " + ex.StackTrace.ToString());
+				//throw ex;
+			}
+			return true;
+		}
+
 
 		/*Name of Function : <<sendEmail>>  Author :<<Prasanna>>  
 		  Date of Creation <<01-12-2019>>

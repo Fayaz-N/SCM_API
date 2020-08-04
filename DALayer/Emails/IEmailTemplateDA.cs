@@ -14,7 +14,7 @@ namespace DALayer.Emails
         bool prepareMPRStatusEmail(string FrmEmailId, string ToEmailId, string type, int revisionid);
         bool sendMailtoVendor(sendMailObj mailObj);
 		bool mailtoRequestor(int revisionId, string FrmEmailId);
-
+		bool prepareAribaTemplate(int PaId, string FrmEmailId, string ToMailId, string typeOfUser, int revisionId);
 		bool sendEmail(EmailSend emlSndngList);
 
     }

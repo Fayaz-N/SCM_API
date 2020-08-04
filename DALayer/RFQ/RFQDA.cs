@@ -499,7 +499,7 @@ namespace DALayer.RFQ
 								SGSTPercentage = data.SGSTPercentage,
 								MfgModelNo = data.MfgModelNo,
 								MfgPartNo = data.MfgPartNo,
-
+								ManufacturerName = data.ManufacturerName,
 								RequestRemarks = data.RequestRemarks,
 								ItemName = data.ItemName,
 								ItemDescription = data.ItemDescription,
@@ -525,6 +525,7 @@ namespace DALayer.RFQ
 							rfqItemdata.SGSTPercentage = data.SGSTPercentage;
 							rfqItemdata.MfgModelNo = data.MfgModelNo;
 							rfqItemdata.MfgPartNo = data.MfgPartNo;
+							rfqItemdata.ManufacturerName = data.ManufacturerName;
 							rfqItemdata.RequestRemarks = data.RequestRemarks;
 							rfqItemdata.ItemName = data.ItemName;
 							rfqItemdata.ItemDescription = data.ItemDescription;
@@ -777,6 +778,7 @@ namespace DALayer.RFQ
 										SGSTPercentage = data.SGSTPercentage,
 										MfgModelNo = data.MfgModelNo,
 										MfgPartNo = data.MfgPartNo,
+										ManufacturerName = data.ManufacturerName,
 										RequestRemarks = data.RequestRemarks,
 										DeleteFlag = false
 									};
@@ -811,6 +813,7 @@ namespace DALayer.RFQ
 									rfqitemLocal.SGSTPercentage = data.SGSTPercentage;
 									rfqitemLocal.MfgModelNo = data.MfgModelNo;
 									rfqitemLocal.MfgPartNo = data.MfgPartNo;
+									rfqitemLocal.ManufacturerName = data.ManufacturerName;
 									rfqitemLocal.RequestRemarks = data.RequestRemarks;
 
 									obj.SaveChanges();
@@ -2932,6 +2935,7 @@ namespace DALayer.RFQ
 						rfqitems.HSNCode = item.HSNCode;
 						rfqitems.MfgModelNo = item.MfgModelNo;
 						rfqitems.MfgPartNo = item.MfgPartNo;
+						rfqitems.ManufacturerName = item.ManufacturerName;
 						rfqitems.RequestRemarks = item.RequestRemarks;
 						rfqitems.RfqVendorBOM = obj.RfqVendorBOMs.Where(li => li.RfqItemsId == rfqitems.RFQItemsId).ToList();
 						if (item.ItemId != null)

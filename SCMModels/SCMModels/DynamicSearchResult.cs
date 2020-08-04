@@ -106,7 +106,7 @@ namespace SCMModels
 		public int RevisionId { get; set; }
 	}
 
-	public  class MPRRFQDocument
+	public class MPRRFQDocument
 	{
 		public int MprDocId { get; set; }
 		public int RevisionId { get; set; }
@@ -121,5 +121,21 @@ namespace SCMModels
 		public bool Deleteflag { get; set; }
 
 
+	}
+	public class tokuchuFilterParams
+	{
+		public string FromDate { get; set; }
+		public string ToDate { get; set; }
+		public string Paid { get; set; }
+		public string PreparedBY { get; set; }
+		public string VerifiedBy { get; set; }
+
+	}
+	public class materialUpdate
+	{
+		public int Itemdetailsid { get; set; }
+		public Nullable<int> RevisionId { get; set; }
+		public string Itemid { get; set; }
+		public int RFQItemsId { get; set; }
 	}
 }
