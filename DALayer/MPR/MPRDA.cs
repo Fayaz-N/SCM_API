@@ -1034,10 +1034,10 @@ Review Date :<<>>   Reviewed By :<<>>
 			{
 				try
 				{
-					var item = context.MPRItemInfoes.Where(li => li.Itemdetailsid == mPRItemInfo.Itemdetailsid).FirstOrDefault();
-					if (item == null)
+					var mprItem = context.MPRItemInfoes.Where(li => li.Itemdetailsid == mPRItemInfo.Itemdetailsid).FirstOrDefault();
+					if (mprItem == null)
 					{
-
+						MPRItemInfo item = new MPRItemInfo();
 						item.Itemid = mPRItemInfo.Itemid;
 						item.RevisionId = mPRItemInfo.RevisionId;
 						item.ItemDescription = mPRItemInfo.ItemDescription;
@@ -1054,7 +1054,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					}
 					else
 					{
-						item.Itemid = mPRItemInfo.Itemid;
+						mprItem.Itemid = mPRItemInfo.Itemid;
 						context.SaveChanges();
 					}
 					return "true";

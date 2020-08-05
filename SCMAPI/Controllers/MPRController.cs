@@ -329,7 +329,8 @@ namespace SCMAPI.Controllers
 			}
 			catch (Exception e)
 			{
-				throw;
+				log.ErrorMessage("MPRController", "UploadFile", e.Message.ToString());
+				return Ok(e);
 			}
 
 		}
@@ -460,7 +461,8 @@ namespace SCMAPI.Controllers
 				}
 				catch (Exception e)
 				{
-					throw e;
+					log.ErrorMessage("MPRController", "UploadFile", e.Message.ToString());
+					return Ok(e);
 				}
 			}
 			return Ok(parsedFileName);
