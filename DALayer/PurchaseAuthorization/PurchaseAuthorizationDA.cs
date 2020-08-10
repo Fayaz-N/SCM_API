@@ -2038,7 +2038,15 @@ namespace DALayer.PurchaseAuthorization
 						tokuchureq.VerifiedOn = tokuchudata.VerifiedOn;
 						tokuchureq.VerifiedStatus = tokuchudata.VerifiedStatus;
 						tokuchureq.VerifiedRemarks = tokuchudata.VerifiedRemarks;
-						tokuchureq.TokuchuProcessTracks = tokuchudata.TokuchuProcessTracks;
+						tokuchureq.TokuchuProcessTracks = tokuchudata.TokuchuProcessTracks.Select(x => new TokuchuProcessTrack()
+						{
+							TokuchProcessTrackid=x.TokuchProcessTrackid,
+							TokuchRequestid=x.TokuchRequestid,
+							Statusby=obj.Employees.Where(li=>li.EmployeeNo==x.Statusby).FirstOrDefault().Name,
+							Status=x.Status,
+							StatusDate=x.StatusDate,
+							Remarks=x.Remarks,
+						}).ToList();
 						model.TokuchuRequest = tokuchureq;
 						if (model.TokuchuRequest.TokuchRequestid != null)
 							tokuchuRequestid = model.TokuchuRequest.TokuchRequestid;

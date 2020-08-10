@@ -1254,7 +1254,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					//completed,pending
 					if (mprfilterparams.mprStatusListId.Count == 2)
 					{
-						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)";//completed and pending}
+						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25)";//completed and pending}
 
 					}
 					//completed
@@ -1265,7 +1265,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					//pending
 					if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId[0] == "2")
 					{
-						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,13,14,16,17,18,20,21)";
+						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,13,14,16,17,18,20,21,22,23,24,25)";
 					}
 
 				}
