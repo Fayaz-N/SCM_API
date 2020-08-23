@@ -37,6 +37,8 @@ namespace BALayer.MPR
         bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
 		 bool deleteMPR(DeleteMpr deleteMprInfo);
 		string updateItemId(materialUpdate mPRItemInfo);
-	}
+        List<loadloction> Loadstoragelocationsbydepartment();
+        SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
+    }
 
 }

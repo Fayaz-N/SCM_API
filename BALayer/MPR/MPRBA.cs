@@ -122,5 +122,15 @@ namespace BALayer.MPR
 			return this._mprDataAcess.updateItemId(mPRItemInfo);
 
 		}
-	}
+
+        public List<loadloction> Loadstoragelocationsbydepartment()
+        {
+            return this._mprDataAcess.Loadstoragelocationsbydepartment();
+        }
+
+        public SaleorderDetail LoadJobCodesbysaleorder(string saleorder)
+        {
+            return this._mprDataAcess.LoadJobCodesbysaleorder(saleorder);
+        }
+    }
 }

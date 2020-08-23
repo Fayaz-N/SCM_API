@@ -40,6 +40,8 @@ namespace DALayer.MPR
 		void updateMprstatusTrack(MPRStatusTrack mprStatusTrackDetails);
 		bool deleteMPR(DeleteMpr deleteMprInfo);
 		string updateItemId(materialUpdate mPRItemInfo);
+        List<loadloction> Loadstoragelocationsbydepartment();
+        SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
 
-	}
+    }
 }

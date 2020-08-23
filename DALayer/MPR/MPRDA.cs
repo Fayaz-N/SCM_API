@@ -390,8 +390,15 @@ Review Date :<<>>   Reviewed By :<<>>
 						mprRevisionDetails.ClientName = mpr.ClientName;
 						mprRevisionDetails.PlantLocation = mpr.PlantLocation;
 						mprRevisionDetails.BuyerGroupId = mpr.BuyerGroupId;
+                        mprRevisionDetails.StorageLocation = mpr.StorageLocation;
+                        mprRevisionDetails.soldtoparty = mpr.soldtoparty;
+                        mprRevisionDetails.shiptoparty = mpr.shiptoparty;
+                        mprRevisionDetails.Enduser = mpr.Enduser;
+                        mprRevisionDetails.soldtopartyname = mpr.soldtopartyname;
+                        mprRevisionDetails.shiptopartyname = mpr.shiptopartyname;
+                        mprRevisionDetails.Endusername = mpr.Endusername;
 
-						mprRevisionDetails.TargetedSpendRemarks = mpr.TargetedSpendRemarks;
+                        mprRevisionDetails.TargetedSpendRemarks = mpr.TargetedSpendRemarks;
 						mprRevisionDetails.PurchaseTypeId = mpr.PurchaseTypeId;
 						mprRevisionDetails.PreferredVendorTypeId = mpr.PreferredVendorTypeId;
 						mprRevisionDetails.JustificationForSinglePreferredVendor = mpr.JustificationForSinglePreferredVendor;
@@ -1887,7 +1894,34 @@ Review Date :<<>>   Reviewed By :<<>>
 			return string.Join(null, password);
 		}
 
+        public List<loadloction> Loadstoragelocationsbydepartment()
+        {
+            List<loadloction> result = new List<loadloction>();
+            try
+            {
+                var sqlquery = "";
+                sqlquery = "select * from loadloctions ";
+                result = DB.Database.SqlQuery<loadloction>(sqlquery).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public SaleorderDetail LoadJobCodesbysaleorder(string saleorder)
+        {
+            SaleorderDetail detail = new SaleorderDetail();
+            try
+            {
+               detail = DB.SaleorderDetails.Where(x => x.SalesDocumentNo == saleorder).FirstOrDefault();
+                return detail;
+            }
+            catch (Exception ex)
+            {
 
-
-	}
+                throw;
+            }
+        }
+    }
 }

@@ -372,7 +372,7 @@ namespace SCMAPI.Controllers
 				string sheet = schemaRow["TABLE_NAME"].ToString();
 				if (!sheet.EndsWith("_"))
 				{
-					string query = "SELECT  * FROM [Sheet1$A4:J]";
+					string query = "SELECT  * FROM [Sheet1$A4:M]";
 					OleDbDataAdapter daexcel = new OleDbDataAdapter(query, conn);
 					dtexcel.Locale = CultureInfo.CurrentCulture;
 					daexcel.Fill(dtexcel);
@@ -410,7 +410,15 @@ namespace SCMAPI.Controllers
 								mprIteminfos.MfgModelNo = row[7].ToString();
 							if (!string.IsNullOrEmpty(row[8].ToString()))
 								mprIteminfos.ReferenceDocNo = row[8].ToString();
-							if (data != null)
+                            if (!string.IsNullOrEmpty(row[9].ToString()))
+                                mprIteminfos.YGSMaterialCode = row[9].ToString();
+                            if (!string.IsNullOrEmpty(row[11].ToString()))
+                                mprIteminfos.WBS = row[11].ToString();
+                            if (!string.IsNullOrEmpty(row[10].ToString()))
+                                mprIteminfos.ProjectDefinition = row[10].ToString();
+                            if (!string.IsNullOrEmpty(row[12].ToString()))
+                                mprIteminfos.SystemModel = row[12].ToString();
+                            if (data != null)
 								mprIteminfos.UnitId = data.UnitId;
 							if (row[9].ToString() == "")
 								mprIteminfos.Itemid = "NewItem";
@@ -468,8 +476,19 @@ namespace SCMAPI.Controllers
 			return Ok(parsedFileName);
 
 		}
-
-		private static string ToValidFileName(string fileName)
+        [HttpGet]
+        [Route("Loadstoragelocationsbydepartment")]
+        public IHttpActionResult Loadstoragelocationsbydepartment()
+        {
+            return Ok(this._mprBusenessAcess.Loadstoragelocationsbydepartment());
+        }
+        [HttpGet]
+        [Route("LoadJobCodesbysaleorder/{saleorder}")]
+        public IHttpActionResult LoadJobCodesbysaleorder(string saleorder)
+        {
+            return Ok(this._mprBusenessAcess.LoadJobCodesbysaleorder(saleorder));
+        }
+        private static string ToValidFileName(string fileName)
 		{
 			fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+", "_");
 			return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
