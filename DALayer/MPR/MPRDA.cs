@@ -14,6 +14,7 @@ using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
@@ -1178,129 +1179,258 @@ Review Date :<<>>   Reviewed By :<<>>
 		}
 
 
-		/*Name of Function : <<getMPRList>>  Author :<<Prasanna>>  
+        /*Name of Function : <<getMPRList>>  Author :<<Prasanna>>  
 		Date of Creation <<06-12-2019>>
 		Purpose : <<get mpr List based on filter parameters>>
 		Review Date :<<>>   Reviewed By :<<>>*/
-		public DataTable getMPRList(mprFilterParams mprfilterparams)
-		{
-			DataTable table = new DataTable();
-			using (YSCMEntities Context = new YSCMEntities())
-			{
-				var query = default(string);
-				//var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
-				//var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");A
-				string viewName = "left join  MPR_GetAssignEmployeList mprasgn on mprasgn.MprRevisionId = mpr.RevisionId";
-				if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
-					viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
+        //public DataTable getMPRList(mprFilterParams mprfilterparams)
+        //{
+        //	DataTable table = new DataTable();
+        //	using (YSCMEntities Context = new YSCMEntities())
+        //	{
+        //		var query = default(string);
+        //		//var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
+        //		//var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");A
+        //		string viewName = "left join  MPR_GetAssignEmployeList mprasgn on mprasgn.MprRevisionId = mpr.RevisionId";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
+        //			viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
 
-				if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-				{
-					if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
-					{
-						viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
-						query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
-					}
-					else
-						query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
-				}
-				else
-				{
-					if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
-					{
-						viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
-					}
-					query = "Select distinct RevisionId,mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
-				}
-				//query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
-				if (!string.IsNullOrEmpty(mprfilterparams.ToDate))
-					query += " and PreparedOn <= '" + mprfilterparams.ToDate + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.FromDate))
-					query += "  and PreparedOn >= '" + mprfilterparams.FromDate + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
-					query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
-				if (mprfilterparams.ListType != "MPRPendingList" && !string.IsNullOrEmpty(mprfilterparams.PreparedBy))
-					query += "  or RevisionId in (select RevisionId from  MPRIncharges where incharge = " + mprfilterparams.PreparedBy + ")";
-				if (mprfilterparams.ListType == "MPRPendingList")
-					query += " and CheckedBy ='-'";
-				if (mprfilterparams.ListType == "MPRSingleVendorList")
-					query += " and PurchaseTypeId =1 and  CheckStatus='Approved' and ApprovalStatus='Approved' and(SecondApprover = '" + mprfilterparams.SecOrThirdApprover + "' and SecondApproversStatus = 'Pending') or (ThirdApprover = '" + mprfilterparams.SecOrThirdApprover + "' and ThirdApproverStatus = 'Pending' and SecondApproversStatus='Approved')";
-				if (!string.IsNullOrEmpty(mprfilterparams.DocumentNo))
-					query += " and DocumentNo='" + mprfilterparams.DocumentNo + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.DocumentDescription))
-					query += " and DocumentDescription='" + mprfilterparams.DocumentDescription + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
-					query += " and CheckedBy=" + mprfilterparams.CheckedBy + " and CheckStatus='" + mprfilterparams.Status + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
-					query += " and ApprovedBy=" + mprfilterparams.ApprovedBy + " and ApprovalStatus='" + mprfilterparams.Status + "'";
+        //		if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+        //		{
+        //			if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+        //			{
+        //				viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+        //				query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+        //			}
+        //			else
+        //				query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
+        //		}
+        //		else
+        //		{
+        //			if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+        //			{
+        //				viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+        //			}
+        //			query = "Select distinct RevisionId,mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+        //		}
+        //		//query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.ToDate))
+        //			query += " and PreparedOn <= '" + mprfilterparams.ToDate + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.FromDate))
+        //			query += "  and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+        //			query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
+        //		if (mprfilterparams.ListType != "MPRPendingList" && !string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+        //			query += "  or RevisionId in (select RevisionId from  MPRIncharges where incharge = " + mprfilterparams.PreparedBy + ")";
+        //		if (mprfilterparams.ListType == "MPRPendingList")
+        //			query += " and CheckedBy ='-'";
+        //		if (mprfilterparams.ListType == "MPRSingleVendorList")
+        //			query += " and PurchaseTypeId =1 and  CheckStatus='Approved' and ApprovalStatus='Approved' and(SecondApprover = '" + mprfilterparams.SecOrThirdApprover + "' and SecondApproversStatus = 'Pending') or (ThirdApprover = '" + mprfilterparams.SecOrThirdApprover + "' and ThirdApproverStatus = 'Pending' and SecondApproversStatus='Approved')";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.DocumentNo))
+        //			query += " and DocumentNo='" + mprfilterparams.DocumentNo + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.DocumentDescription))
+        //			query += " and DocumentDescription='" + mprfilterparams.DocumentDescription + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
+        //			query += " and CheckedBy=" + mprfilterparams.CheckedBy + " and CheckStatus='" + mprfilterparams.Status + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
+        //			query += " and ApprovedBy=" + mprfilterparams.ApprovedBy + " and ApprovalStatus='" + mprfilterparams.Status + "'";
 
-				if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
-					query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.ORgDepartmentid))
-					query += " and ORgDepartmentid='" + mprfilterparams.ORgDepartmentid + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.JobCode))
-					query += " and JobCode='" + mprfilterparams.JobCode + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.IssuePurposeId))
-					query += " and IssuePurposeId='" + mprfilterparams.IssuePurposeId + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-					query += " and ItemDescription='" + mprfilterparams.ItemDescription + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.GEPSApprovalId))
-					query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
-					query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.MPRStatusId))
-					query += " and MPRStatusId='" + mprfilterparams.MPRStatusId + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.PurchaseTypeId))
-					query += " and PurchaseTypeId='" + mprfilterparams.PurchaseTypeId + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.PONO))
-					query += " and PONO='" + mprfilterparams.PONO + "'";
-				if (!string.IsNullOrEmpty(mprfilterparams.PAID))
-					query += " and PAID='" + mprfilterparams.PAID + "'";
-				if (mprfilterparams.mprStatusListId != null && mprfilterparams.mprStatusListId.Count > 0)
-				{
-					//completed,pending
-					if (mprfilterparams.mprStatusListId.Count == 2)
-					{
-						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25)";//completed and pending}
+        //		if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
+        //			query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.ORgDepartmentid))
+        //			query += " and ORgDepartmentid='" + mprfilterparams.ORgDepartmentid + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.JobCode))
+        //			query += " and JobCode='" + mprfilterparams.JobCode + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.IssuePurposeId))
+        //			query += " and IssuePurposeId='" + mprfilterparams.IssuePurposeId + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+        //			query += " and ItemDescription='" + mprfilterparams.ItemDescription + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.GEPSApprovalId))
+        //			query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
+        //			query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.MPRStatusId))
+        //			query += " and MPRStatusId='" + mprfilterparams.MPRStatusId + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.PurchaseTypeId))
+        //			query += " and PurchaseTypeId='" + mprfilterparams.PurchaseTypeId + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.PONO))
+        //			query += " and PONO='" + mprfilterparams.PONO + "'";
+        //		if (!string.IsNullOrEmpty(mprfilterparams.PAID))
+        //			query += " and PAID='" + mprfilterparams.PAID + "'";
+        //		if (mprfilterparams.mprStatusListId != null && mprfilterparams.mprStatusListId.Count > 0)
+        //		{
+        //			//completed,pending
+        //			if (mprfilterparams.mprStatusListId.Count == 2)
+        //			{
+        //				query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25)";//completed and pending}
 
-					}
-					//completed
-					else if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId[0] == "1")//PO Released,MPR Rejected,  MPR Closed
-					{
-						query += " and MPRStatusId in (12,15,19)";
-					}
-					//pending
-					if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId[0] == "2")
-					{
-						query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,13,14,16,17,18,20,21,22,23,24,25)";
-					}
+        //			}
+        //			//completed
+        //			else if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId[0] == "1")//PO Released,MPR Rejected,  MPR Closed
+        //			{
+        //				query += " and MPRStatusId in (12,15,19)";
+        //			}
+        //			//pending
+        //			if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId[0] == "2")
+        //			{
+        //				query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,13,14,16,17,18,20,21,22,23,24,25)";
+        //			}
 
-				}
-				query += " order by RevisionId desc ";
-				//if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
-				//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
-				//else if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
-				//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.ApprovedBy == mprfilterparams.ApprovedBy) && (li.ApprovalStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
-				//else
-				//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).OrderBy(li => li.PreparedOn).ToList();
-				//mprRevisionDetails.ForEach(a => a.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == a.RequisitionId).FirstOrDefault());
-				var cmd = Context.Database.Connection.CreateCommand();
-				cmd.CommandText = query;
+        //		}
+        //		query += " order by RevisionId desc ";
+        //		//if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
+        //		//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
+        //		//else if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
+        //		//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.ApprovedBy == mprfilterparams.ApprovedBy) && (li.ApprovalStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
+        //		//else
+        //		//	mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).OrderBy(li => li.PreparedOn).ToList();
+        //		//mprRevisionDetails.ForEach(a => a.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == a.RequisitionId).FirstOrDefault());
+        //		var cmd = Context.Database.Connection.CreateCommand();
+        //		cmd.CommandText = query;
 
-				cmd.Connection.Open();
-				table.Load(cmd.ExecuteReader());
-				cmd.Connection.Close();
-				//return Context.Database.SqlQuery<DataTable>(query);
-			}
-			return table;
+        //		cmd.Connection.Open();
+        //		table.Load(cmd.ExecuteReader());
+        //		cmd.Connection.Close();
+        //		//return Context.Database.SqlQuery<DataTable>(query);
+        //	}
+        //	return table;
 
-		}
+        //}
+        public DataTable getMPRList(mprFilterParams mprfilterparams)
+        {
+            DataTable table = new DataTable();
+            using (YSCMEntities Context = new YSCMEntities())
+            {
+                var query = default(string);
+                //var frmDate = mprfilterparams.FromDate.ToString("yyyy-MM-dd");
+                //var toDate = mprfilterparams.ToDate.ToString("yyyy-MM-dd");A
+                string viewName = "left join  MPR_GetAssignEmployeList mprasgn on mprasgn.MprRevisionId = mpr.RevisionId";
+                if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
+                    viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
 
-		/*Name of Function : <<getSavingsReport>>  Author :<<Prasanna>>  
+                if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+                {
+                    if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+                    {
+                        viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+                        query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+                    }
+                    else
+                        query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+                    {
+                        viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+                    }
+                    query = "Select distinct RevisionId,mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+                }
+                //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
+                if (!string.IsNullOrEmpty(mprfilterparams.ToDate))
+                    query += " and PreparedOn <= '" + mprfilterparams.ToDate + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.FromDate))
+                    query += "  and PreparedOn >= '" + mprfilterparams.FromDate + "'";
+
+                if (mprfilterparams.ListType != "MPRPendingList" && !string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+                {
+                    query += " and (PreparedBy = '" + mprfilterparams.PreparedBy + "'";
+                    query += "  or RevisionId in (select RevisionId from  MPRIncharges where incharge = " + mprfilterparams.PreparedBy + "))";
+                }
+                else if (!string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+                {
+                    query += " and PreparedBy = '" + mprfilterparams.PreparedBy + "'";
+                }
+                //if (mprfilterparams.ListType != "MPRPendingList" && !string.IsNullOrEmpty(mprfilterparams.PreparedBy))
+                //            query += "  or RevisionId in (select RevisionId from  MPRIncharges where incharge = " + mprfilterparams.PreparedBy + ")";
+                if (mprfilterparams.ListType == "MPRPendingList")
+                    query += " and CheckedBy ='-'";
+                if (mprfilterparams.ListType == "MPRSingleVendorList")
+                    query += " and PurchaseTypeId =1 and  CheckStatus='Approved' and ApprovalStatus='Approved' and(SecondApprover = '" + mprfilterparams.SecOrThirdApprover + "' and SecondApproversStatus = 'Pending') or (ThirdApprover = '" + mprfilterparams.SecOrThirdApprover + "' and ThirdApproverStatus = 'Pending' and SecondApproversStatus='Approved')";
+                if (!string.IsNullOrEmpty(mprfilterparams.DocumentNo))
+                    query += " and DocumentNo='" + mprfilterparams.DocumentNo + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.DocumentDescription))
+                    query += " and DocumentDescription='" + mprfilterparams.DocumentDescription + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
+                    query += " and CheckedBy=" + mprfilterparams.CheckedBy + " and CheckStatus='" + mprfilterparams.Status + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
+                    query += " and ApprovedBy=" + mprfilterparams.ApprovedBy + " and ApprovalStatus='" + mprfilterparams.Status + "'";
+
+                if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
+                    query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.ORgDepartmentid))
+                    query += " and ORgDepartmentid='" + mprfilterparams.ORgDepartmentid + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.JobCode))
+                    query += " and JobCode='" + mprfilterparams.JobCode + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.IssuePurposeId))
+                    query += " and IssuePurposeId='" + mprfilterparams.IssuePurposeId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+                    query += " and ItemDescription='" + mprfilterparams.ItemDescription + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.GEPSApprovalId))
+                    query += " and GEPSApprovalId='" + mprfilterparams.JobCode + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.BuyerGroupId))
+                    query += " and BuyerGroupId='" + mprfilterparams.BuyerGroupId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.MPRStatusId))
+                    query += " and MPRStatusId='" + mprfilterparams.MPRStatusId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.PurchaseTypeId))
+                    query += " and PurchaseTypeId='" + mprfilterparams.PurchaseTypeId + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.PONO))
+                    query += " and PONO='" + mprfilterparams.PONO + "'";
+                if (!string.IsNullOrEmpty(mprfilterparams.PAID))
+                    query += " and PAID='" + mprfilterparams.PAID + "'";
+                if (mprfilterparams.mprStatusListId != null && mprfilterparams.mprStatusListId.Count > 0)
+                {
+                    //completed,pending
+                    //if (mprfilterparams.mprStatusListId.Count == 2)
+                    //{
+                    //            query += " and MPRStatusId in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25)";//completed and pending}
+
+                    //}
+                    //completed
+                    string statusids = string.Empty;
+                    if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId.Contains("1"))//PO Released,MPR Rejected,  MPR Closed
+                    {
+                        statusids = ConfigurationManager.AppSettings["MPRCompletedStatus"];
+                        //            query += " and MPRStatusId in ("+ ConfigurationManager.AppSettings["MPRCompletedStatus"]  + ")";
+                    }
+                    //pending
+                    if (!string.IsNullOrEmpty(mprfilterparams.mprStatusListId[0]) && mprfilterparams.mprStatusListId.Contains("2"))
+                    {
+                        if (statusids.Length > 0)
+                            statusids += ",";
+                        //query += " and MPRStatusId in (" + ConfigurationManager.AppSettings["MPRPendingStatus"] + ")";
+                        statusids += ConfigurationManager.AppSettings["MPRPendingStatus"];
+
+                    }
+                    if (statusids.Length > 0)
+                        query += " and MPRStatusId in (" + statusids + ")";
+                }
+                query += " order by RevisionId desc ";
+                //if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
+                //            mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.CheckedBy == mprfilterparams.CheckedBy) && (li.CheckStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
+                //else if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
+                //            mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate) && (li.ApprovedBy == mprfilterparams.ApprovedBy) && (li.ApprovalStatus == mprfilterparams.Status)).OrderBy(li => li.PreparedOn).ToList();
+                //else
+                //            mprRevisionDetails = DB.MPRRevisionDetails.Where(li => li.BoolValidRevision == true && (li.PreparedOn <= mprfilterparams.ToDate && li.PreparedOn >= mprfilterparams.FromDate)).OrderBy(li => li.PreparedOn).ToList();
+                //mprRevisionDetails.ForEach(a => a.MPRDetail = DB.MPRDetails.Where(li => li.RequisitionId == a.RequisitionId).FirstOrDefault());
+                var cmd = Context.Database.Connection.CreateCommand();
+                cmd.CommandText = query;
+
+                cmd.Connection.Open();
+                table.Load(cmd.ExecuteReader());
+                cmd.Connection.Close();
+                //return Context.Database.SqlQuery<DataTable>(query);
+            }
+            return table;
+
+        }
+
+
+        /*Name of Function : <<getSavingsReport>>  Author :<<Prasanna>>  
 		Date of Creation <<06-12-2019>>
 		Purpose : <<getSavingsReport>>
 		Review Date :<<>>   Reviewed By :<<>>*/
-		public DataTable getSavingsReport(mprFilterParams mprfilterparams)
+        public DataTable getSavingsReport(mprFilterParams mprfilterparams)
 		{
 			DataTable table = new DataTable();
 			using (YSCMEntities Context = new YSCMEntities())
