@@ -202,6 +202,19 @@ namespace SCMAPI.Controllers
 			return Ok(this._mprBusenessAcess.updateItemId(mprIteminfos));
 		}
 
+		[HttpPost]
+		[Route("updateVendorRegProcess/{typeOfuser}")]
+		public IHttpActionResult updateVendorRegProcess([FromBody] VendorRegApprovalProcessData model, string typeOfuser)
+		{
+			return Ok(this._mprBusenessAcess.updateVendorRegProcess(model, typeOfuser));
+		}
+		[HttpPost]
+		[Route("getVendorReqList")]
+		public IHttpActionResult getVendorReqList(vendorRegfilters vendorRegfilters)
+		{
+			return Ok(this._mprBusenessAcess.getVendorReqList(vendorRegfilters));
+		}
+
 		[Route("UploadFile")]
 		[HttpPost]
 		public IHttpActionResult UploadFile()

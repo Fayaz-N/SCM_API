@@ -42,6 +42,11 @@ namespace DALayer.MPR
 		string updateItemId(materialUpdate mPRItemInfo);
         List<loadloction> Loadstoragelocationsbydepartment();
         SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
+		VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser);
 
-    }
+		List<VendorRegProcessView> getVendorReqList(vendorRegfilters vendorRegfilters);
+
+
+
+	}
 }

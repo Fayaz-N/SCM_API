@@ -495,6 +495,120 @@ namespace DALayer.Emails
 		}
 
 
+		public bool prepareVendRegTemplate(string typeOfUser, int VendorId)
+		{
+			try
+			{
+				var vscm = new VSCMEntities();
+
+				using (var db = new YSCMEntities()) //ok
+				{
+					VendorRegApprovalProcess vendorProcessDetails = db.VendorRegApprovalProcesses.Where(li => li.Vendorid == VendorId).FirstOrDefault();
+					var Vendoripaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+					var Scmipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
+					Scmipaddress = Scmipaddress + "SCM/VendorRegInitiate/" + VendorId + "";
+					EmailSend emlSndngList = new EmailSend();
+
+					if (typeOfUser == "Buyer")
+					{
+						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.IntiatedBy).FirstOrDefault<Employee>()).EMail;
+						var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
+						if (vendor != null)
+						{
+							emlSndngList.Subject = "Registration Initiated";
+							emlSndngList.ToEmailId = vendorProcessDetails.VendorEmailId;
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have initiated  registration from Yokogawa</div><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+
+					}
+					if (typeOfUser == "Checker")
+					{
+						//if (vendorProcessDetails.CheckerStatus == "Approved")
+						//{
+						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
+						//mail to Approver
+						if (!string.IsNullOrEmpty(vendorProcessDetails.ApprovedBy))
+						{
+							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus;
+							Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.ApprovedBy).FirstOrDefault<Employee>();
+							emlSndngList.ToEmailId = toemail.EMail;
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Scmipaddress + "'>" + Scmipaddress + "</a></b></div></body></html>";
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+						//}
+					}
+					if (typeOfUser == "Approver")
+					{
+						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.ApprovedBy).FirstOrDefault<Employee>()).EMail;
+
+						//mail to checker
+						if (!string.IsNullOrEmpty(vendorProcessDetails.CheckedBy))
+						{
+							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus + " ; " + "Approver Status: " + vendorProcessDetails.ApprovalStatus;
+							Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.CheckedBy).FirstOrDefault<Employee>();
+							emlSndngList.ToEmailId = toemail.EMail;
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Scmipaddress + "'>" + Scmipaddress + "</a></b></div></body></html>";
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+						//mail to second approver
+						if (vendorProcessDetails.ApprovalStatus == "Approved")
+						{
+							if (!string.IsNullOrEmpty(vendorProcessDetails.Verifier1))
+							{
+								emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus + " ; " + "Approver Status: " + vendorProcessDetails.ApprovalStatus;
+								Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.Verifier1).FirstOrDefault<Employee>();
+								emlSndngList.ToEmailId = toemail.EMail;
+								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Scmipaddress + "'>" + Scmipaddress + "</a></b></div></body></html>";
+								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+									this.sendEmail(emlSndngList);
+								Employee toemail2 = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.Verifier2).FirstOrDefault<Employee>();
+								emlSndngList.ToEmailId = toemail2.EMail;
+								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+									this.sendEmail(emlSndngList);
+							}
+						}
+					}
+					if (typeOfUser == "Verfier")
+					{
+						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.VerifiedBy).FirstOrDefault<Employee>()).EMail;
+
+						//mail to checker
+						if (!string.IsNullOrEmpty(vendorProcessDetails.CheckedBy))
+						{
+							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus + " ; " + "Approver Status: " + vendorProcessDetails.ApprovalStatus;
+							Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.CheckedBy).FirstOrDefault<Employee>();
+							emlSndngList.ToEmailId = toemail.EMail;
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Scmipaddress + "'>" + Scmipaddress + "</a></b></div></body></html>";
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+						//mail to Approver
+						if (!string.IsNullOrEmpty(vendorProcessDetails.ApprovedBy))
+						{
+							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus + " ; " + "Approver Status: " + vendorProcessDetails.ApprovalStatus + " ; " + "Second Approval Status: " + vendorProcessDetails.VerifiedStatus;
+							Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.ApprovedBy).FirstOrDefault<Employee>();
+							emlSndngList.ToEmailId = toemail.EMail;
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Scmipaddress + "'>" + Scmipaddress + "</a></b></div></body></html>";
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+
+					}
+
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("EmailTemplate", "mailtoRequestor", ex.Message + "; " + ex.StackTrace.ToString());
+				//throw ex;
+			}
+			return true;
+		}
+
 		/*Name of Function : <<sendEmail>>  Author :<<Prasanna>>  
 		  Date of Creation <<01-12-2019>>
 		  Purpose : <<Sending mail method>>

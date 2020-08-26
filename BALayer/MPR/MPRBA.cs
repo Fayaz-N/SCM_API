@@ -132,5 +132,13 @@ namespace BALayer.MPR
         {
             return this._mprDataAcess.LoadJobCodesbysaleorder(saleorder);
         }
-    }
+		public VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser)
+		{
+			return this._mprDataAcess.updateVendorRegProcess(model, typeOfuser);
+		}
+		public List<VendorRegProcessView> getVendorReqList(vendorRegfilters getVendorReqList)
+		{
+			return this._mprDataAcess.getVendorReqList(getVendorReqList);
+		}
+	}
 }
