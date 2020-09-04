@@ -1109,6 +1109,12 @@ namespace DALayer.PurchaseAuthorization
 						PODate = x.PODate.ToString(),
 						RFQNo = x.RFQNo,
 						HSNCode = x.HSNCode,
+                        TotalPFAmount=x.pfamounts,
+                        FreightAmount=x.FreightAmount,
+                        FreightPercentage=x.FreightPercentage,
+                        PFAmount=x.PFAmount,
+                        PFPercentage=x.PFPercentage,
+                        TotalFreightAmount=x.freightamounts,
 						MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
 					}).ToList();
 					var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
@@ -2038,6 +2044,14 @@ namespace DALayer.PurchaseAuthorization
 						tokuchureq.VerifiedOn = tokuchudata.VerifiedOn;
 						tokuchureq.VerifiedStatus = tokuchudata.VerifiedStatus;
 						tokuchureq.VerifiedRemarks = tokuchudata.VerifiedRemarks;
+                        //Added on 26082020 by Senthil - Start
+						tokuchureq.CompletedStatus = tokuchudata.CompletedStatus;
+						tokuchureq.CompletedOn = tokuchudata.CompletedOn;
+						tokuchureq.DownloadedBy = tokuchudata.DownloadedBy;
+						tokuchureq.DownloadedOn = tokuchudata.DownloadedOn;
+						//Added on 26082020 by Senthil - End 
+ 
+
 						tokuchureq.TokuchuProcessTracks = tokuchudata.TokuchuProcessTracks.Select(x => new TokuchuProcessTrack()
 						{
 							TokuchProcessTrackid=x.TokuchProcessTrackid,
@@ -2083,7 +2097,8 @@ namespace DALayer.PurchaseAuthorization
 						ManufacturerName = x.ManufacturerName,
 						MPRRevisionId = Convert.ToInt32(x.MPRRevisionId),
 						Tklineitemid = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault()?.Tklineitemid,
-						StandardLeadtime = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().StandardLeadtime : null,
+                        TokuchuNo = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().TokuchuNo : null,
+                        StandardLeadtime = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().StandardLeadtime : null,
 						ProductCategorylevel2id = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().ProductCategorylevel2id : null,
 					}).ToList();
 					return model;
@@ -2167,10 +2182,14 @@ namespace DALayer.PurchaseAuthorization
 				}
 				if (typeOfuser == "Verifier")
 				{
-					//mail to requestor
-					if (tokuchuRequest.VerifiedStatus == "Approved")
-						this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, tokuchuRequest.PreparedBY, typeOfuser, revisionId);
-				}
+                    //mail to requestor
+                    if (tokuchuRequest.VerifiedStatus == "Approved")
+                    {
+                        this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, tokuchuRequest.PreparedBY, typeOfuser, revisionId);
+                        string mprpreparedby = obj.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault().PreparedBy;
+                        this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, mprpreparedby, "MPRRequestor", revisionId);
+                    }
+                }
 			}
 			return tokuchureqid;
 		}

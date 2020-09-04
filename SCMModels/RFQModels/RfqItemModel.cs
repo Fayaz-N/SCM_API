@@ -47,7 +47,9 @@ namespace SCMModels.RFQModels
 		public Nullable<decimal> FreightAmount { get; set; }
 		public Nullable<decimal> PFPercentage { get; set; }
 		public Nullable<decimal> PFAmount { get; set; }
-		public Nullable<decimal> TotalTaxAmount { get; set; }
+        public Nullable<decimal> TotalPFAmount { get; set; }
+        public Nullable<decimal> TotalFreightAmount { get; set; }
+        public Nullable<decimal> TotalTaxAmount { get; set; }
 		public Nullable<decimal> IGSTPercentage { get; set; }
 		public Nullable<decimal> CGSTPercentage { get; set; }
 		public string MfgPartNo { get; set; }
@@ -84,8 +86,8 @@ namespace SCMModels.RFQModels
 		public List<RfqVendorBOM> RfqVendorBOM { get; set; }
 		public MPRPADetailsModel mprpa { get; set; }
 		public Nullable<int> Tklineitemid { get; set; }
-		
-		public Nullable<int> StandardLeadtime { get; set; }
+        public string TokuchuNo { get; set; }
+        public Nullable<int> StandardLeadtime { get; set; }
 		public Nullable<int> ProductCategorylevel2id { get; set; }
 		public TokuchuLIneItem TokuchuLIneItems { get; set; }
 

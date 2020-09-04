@@ -454,10 +454,14 @@ namespace DALayer.Emails
 					string tkaddress = UI_Ipaddress + "SCM/TokochuRequest/" + tokuchureqId + "";
 					var issueOfPurpose = mprrevisionDetails.IssuePurposeId == 1 ? "For Enquiry" : "For Issuing PO";
 					EmailSend emlSndngList = new EmailSend();
-					Employee frmEmail = db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>();
+                    string deparments = string.Empty;
+                    deparments = ConfigurationManager.AppSettings["Departments"];
+                    var intList = deparments.Split(',').Select(int.Parse).ToList();
+                    Employee frmEmail = db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>();
 					emlSndngList.FrmEmailId = frmEmail.EMail;
 					emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToMailId).FirstOrDefault<Employee>()).EMail;
-					if (typeOfUser == "Verifier" || typeOfUser == "PreVerifier")
+                    emlSndngList.BCC = ConfigurationManager.AppSettings["BCCAribaMailId"];
+                    if (typeOfUser == "Verifier" || typeOfUser == "PreVerifier")
 					{
 						//send mail to requestor
 						emlSndngList.Subject = "Tokuchu Request Verfied - " + mprrevisionDetails.DocumentNo + "";
@@ -484,7 +488,19 @@ namespace DALayer.Emails
 						if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 							this.sendEmail(emlSndngList);
 					}
-				}
+                    //added by senthil on 26/08/2020 for sending email to MPR Requester to add the tokuchu informaiton to Sale order for base orders and service department.
+                    if (typeOfUser == "MPRRequestor")
+                    {
+                        if (intList.Contains(Convert.ToInt32(mprrevisionDetails.DepartmentId)))
+                        {
+                            emlSndngList.Subject = "ARIBA tokuchu nos creation is completed for  - " + mprrevisionDetails.DocumentNo + "";
+
+                            emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Please update the ARIBA tokuchu information to respective sale order.</div></div><br/><table border='1' class='table table-bordered table-sm'><tr><td><b>MPR Number</b></td><td>" + mprrevisionDetails.DocumentNo + "</td><td><b>Document Description</b></td><td>" + mprrevisionDetails.DocumentDescription + "</td><td><b>Purpose of Iussing MPR</b></td><td>" + issueOfPurpose + "</td></tr><tr><td><b>Department</b></td><td>" + mprrevisionDetails.DepartmentName + "</td><td><b>Project Manager</td></td><td>" + mprrevisionDetails.ProjectManagerName + "</td><td><b>Job Code</b></td><td>" + mprrevisionDetails.JobCode + " - " + mprrevisionDetails.SaleOrderNo + "</td></tr><tr><td><b>Client Name</b></td><td>" + mprrevisionDetails.ClientName + "</td><td><b>Job Name</b></td><td>" + mprrevisionDetails.JobName + "</td><td><b>Buyer Group</b></td><td>" + mprrevisionDetails.BuyerGroupName + "</td></tr><tr><td><b>Checker Name</b></td><td>" + mprrevisionDetails.CheckedName + "</td><td><b>Checker Status</b></td><td>" + mprrevisionDetails.CheckStatus + "</td><td><b>Checker Remarks</b></td><td>" + mprrevisionDetails.CheckerRemarks + "</td></tr><tr><td><b>Approver Name</b></td><td>" + mprrevisionDetails.ApproverName + "</td><td><b>Approver Status</b></td><td>" + mprrevisionDetails.ApprovalStatus + "</td><td><b>Approver Remarks</b></td><td>" + mprrevisionDetails.ApproverRemarks + "</td></tr></table><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
+                            if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+                                this.sendEmail(emlSndngList);
+                        }
+                    }
+                }
 			}
 			catch (Exception ex)
 			{
@@ -661,7 +677,7 @@ namespace DALayer.Emails
 				//SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
 				//mailClient.EnableSsl = true;
 				mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-				mailClient.Send(mailMessage);
+				//mailClient.Send(mailMessage);
 			}
 			return true;
 		}
