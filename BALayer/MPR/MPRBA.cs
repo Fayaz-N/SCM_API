@@ -1,5 +1,6 @@
 ﻿using DALayer.MPR;
 using SCMModels;
+using SCMModels.RemoteModel;
 using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
@@ -41,7 +42,7 @@ namespace BALayer.MPR
 		}
 		public MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder, bool revise)
 		{
-			return this._mprDataAcess.copyMprRevision(mpr, repeatOrder,  revise);
+			return this._mprDataAcess.copyMprRevision(mpr, repeatOrder, revise);
 		}
 		public int addNewVendor(VendormasterModel vendor)
 		{
@@ -123,15 +124,15 @@ namespace BALayer.MPR
 
 		}
 
-        public List<loadloction> Loadstoragelocationsbydepartment()
-        {
-            return this._mprDataAcess.Loadstoragelocationsbydepartment();
-        }
+		public List<loadloction> Loadstoragelocationsbydepartment()
+		{
+			return this._mprDataAcess.Loadstoragelocationsbydepartment();
+		}
 
-        public SaleorderDetail LoadJobCodesbysaleorder(string saleorder)
-        {
-            return this._mprDataAcess.LoadJobCodesbysaleorder(saleorder);
-        }
+		public SaleorderDetail LoadJobCodesbysaleorder(string saleorder)
+		{
+			return this._mprDataAcess.LoadJobCodesbysaleorder(saleorder);
+		}
 		public VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser)
 		{
 			return this._mprDataAcess.updateVendorRegProcess(model, typeOfuser);
@@ -140,5 +141,34 @@ namespace BALayer.MPR
 		{
 			return this._mprDataAcess.getVendorReqList(getVendorReqList);
 		}
+
+		public List<RemoteStateMaster> StateNameList()
+		{
+			return this._mprDataAcess.StateNameList();
+		}
+		public List<VendorRegisterDocumenetMaster> DocumentMasterList()
+		{
+			return this._mprDataAcess.DocumentMasterList();
+		}
+		public List<NatureOfBusinessMaster> natureOfBusinessesList()
+		{
+			return this._mprDataAcess.natureOfBusinessesList();
+		}
+		public VendorRegistrationModel GetVendorDetails(int vendorId)
+		{
+			return this._mprDataAcess.GetVendorDetails(vendorId);
+		}
+
+		public bool SaveVendorDetails(VendorRegistrationModel model)
+		{
+			return this._mprDataAcess.SaveVendorDetails(model);
+		}
+
+		public bool DeletefileAttached(VendorRegisterDocumentDetail model)
+		{
+			return this._mprDataAcess.DeletefileAttached(model);
+		}
+
+
 	}
 }

@@ -185,4 +185,74 @@ namespace SCMModels
 		public Nullable<bool> PerformanceVerificationRequired { get; set; }
 
 	}
+
+	public partial class VendorRegistrationModel
+	{
+		public Nullable<int> VendorId { get; set; }
+		public string VendorCode { get; set; }
+		public int UniqueId { get; set; }
+		public Boolean Onetimevendor { get; set; }
+		public Boolean EvaluationRequired { get; set; }
+		public bool PerformanceVerificationRequired { get; set; }
+		public bool MSMERequired { get; set; }
+
+		public string VendorNoInSAP { get; set; }
+		public DateTime? RequestedOn { get; set; }
+		public string VendorName { get; set; }
+		public string VendorAddress { get; set; }
+		public string PostalCode { get; set; }
+		public string City { get; set; }
+		public string State { get; set; }
+		public string LocalBranchOffice { get; set; }
+		public string PhoneAndExtn { get; set; }
+		public string Fax { get; set; }
+		public string ContactPerson { get; set; }
+		public string Phone { get; set; }
+		public string ContactPersonForSales { get; set; }
+		public string PhoneNumberForSales { get; set; }
+		public string EmailIdForSales { get; set; }
+		public string AltEmailidForSales { get; set; }
+		public string ContactPersonForOperations { get; set; }
+		public string PhoneNumberForOperations { get; set; }
+		public string EmailIdForOperations { get; set; }
+		public string AltEmailidForOperations { get; set; }
+		public string ContactPersonForLogistics { get; set; }
+		public string PhoneNumberForLogistics { get; set; }
+		public string EmailIdForLogistics { get; set; }
+		public string AltEmailidForLogistics { get; set; }
+		public string ContactPersonForAccounts { get; set; }
+		public string PhoneNumberForAccounts { get; set; }
+		public string EmailIdForAccounts { get; set; }
+		public string AltEmailidForAccounts { get; set; }
+		public string GSTNo { get; set; }
+		public int? NatureofBusiness { get; set; }
+		public string SpecifyNatureOfBusiness { get; set; }
+		public string PANNo { get; set; }
+		public string CINNo { get; set; }
+		public string TanNo { get; set; }
+		public string PaymentTerms { get; set; }
+		public Nullable<int> PaymentTermId { get; set; }
+		public string Street { get; set; }
+
+		public string Location { get; set; }
+		public string BusinessArea { get; set; }
+		public string Mobile { get; set; }
+		public string Email { get; set; }
+		public string AltEmail { get; set; }
+		public string contPhone { get; set; }
+		public string BankDetails { get; set; }
+		public string BankerName { get; set; }
+		public string LocationOrBranch { get; set; }
+		public string AccNo { get; set; }
+		public string IFSCCode { get; set; }
+		public string AccountHolderName { get; set; }
+		public string PhysicalPath { get; set; }
+		public int DocumentationTypeId { get; set; }
+		public int StateId { get; set; }
+		public string fileattach1 { get; set; }
+
+		public List<VendorRegisterDocumentDetail> DocDetailsLists = new List<VendorRegisterDocumentDetail>();
+
+
+	}
 }
