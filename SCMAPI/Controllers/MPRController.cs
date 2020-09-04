@@ -215,6 +215,43 @@ namespace SCMAPI.Controllers
 			return Ok(this._mprBusenessAcess.getVendorReqList(vendorRegfilters));
 		}
 
+		[HttpGet]
+		[Route("GetStateList")]
+		public IHttpActionResult GetStateNameList()
+		{
+			return Ok(this._mprBusenessAcess.StateNameList());
+		}
+		[HttpGet]
+		[Route("GetDocumentTypeList")]
+		public IHttpActionResult GetDocumentsList()
+		{
+			return Ok(this._mprBusenessAcess.DocumentMasterList());
+		}
+		[HttpGet]
+		[Route("GetNaturOfBusiness")]
+		public IHttpActionResult GetNatureOfBusiness()
+		{
+			return Ok(this._mprBusenessAcess.natureOfBusinessesList());
+		}
+		[HttpGet]
+		[Route("Getvendordetails/{vendorid}")]
+		public IHttpActionResult getvendordetails(int vendorid)
+		{
+			return Ok(this._mprBusenessAcess.GetVendorDetails(vendorid));
+		}
+		[HttpPost]
+		[Route("SaveVendorDetails")]
+		public IHttpActionResult SaveVendorData(VendorRegistrationModel model)
+		{
+			return Ok(this._mprBusenessAcess.SaveVendorDetails(model));
+		}
+		[HttpPost]
+		[Route("deleteRegAttachedfile")]
+		public IHttpActionResult deleteRegAttachedfile(VendorRegisterDocumentDetail model)
+		{
+			return Ok(this._mprBusenessAcess.DeletefileAttached(model));
+		}
+
 		[Route("UploadFile")]
 		[HttpPost]
 		public IHttpActionResult UploadFile()

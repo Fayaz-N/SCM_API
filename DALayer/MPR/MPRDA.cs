@@ -1146,7 +1146,8 @@ Review Date :<<>>   Reviewed By :<<>>
 
 				//mprRevisionDetails.MPRScope = DB.MPRScopes.Where(li => li.ScopeId == mprRevisionDetails.ScopeId).FirstOrDefault<MPRScope>();
 				mprRevisionDetails.MPRBuyerGroup = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprRevisionDetails.BuyerGroupId).FirstOrDefault<MPRBuyerGroup>();
-				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.DeleteFlag != true).OrderBy(li => li.Itemdetailsid).Include(li => li.PAItems).ToList();
+
+				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.DeleteFlag != true).OrderBy(li => li.Itemdetailsid).ToList();
 				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.Deleteflag != true).ToList();
 				mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.MPRDocumentationDescription).ToList();
 				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.RemoveFlag != true).Include(li => li.VendorMaster).ToList();
@@ -1156,10 +1157,10 @@ Review Date :<<>>   Reviewed By :<<>>
 				mprRevisionDetails.MPRCommunications = DB.MPRCommunications.Where(x => x.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.Employee).Include(li => li.MPRReminderTrackings).ToList();
 				mprRevisionDetails.MPR_Assignment = DB.MPR_Assignment.Where(li => li.MprRevisionId == mprRevisionDetails.RevisionId).ToList();
 			}
-			//foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
-			//{
-			//	item.PAItems = DB.PAItems.Where(li => li.MPRItemDetailsId == item.Itemdetailsid).ToList();
-			//}
+			foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
+			{
+				item.PAItems = DB.PAItems.Where(li => li.MPRItemDetailsId == item.Itemdetailsid).Include(li => li.TokuchuLIneItems).ToList();
+			}
 			//foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
 			//{
 			//	item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
@@ -2296,6 +2297,399 @@ Review Date :<<>>   Reviewed By :<<>>
 
 			return vendorregDetails;
 		}
+		public List<RemoteStateMaster> StateNameList()
+		{
+			VSCMEntities vscm = new VSCMEntities();
+			return vscm.RemoteStateMasters.Where(li => li.Status == true).ToList();
+		}
+		public List<VendorRegisterDocumenetMaster> DocumentMasterList()
+		{
+			return DB.VendorRegisterDocumenetMasters.Where(li => li.IsNewRegister == true).ToList();
+		}
+		public List<NatureOfBusinessMaster> natureOfBusinessesList()
+		{
+			return DB.NatureOfBusinessMasters.Where(li => li.Status == true).ToList();
+		}
+		public VendorRegistrationModel GetVendorDetails(int vendorId)
+		{
+			VendorRegistrationModel listobj = new VendorRegistrationModel();
+			VendorRegisterMaster getdata = DB.VendorRegisterMasters.Where(li => li.Vendorid == vendorId).FirstOrDefault();
+			if (getdata != null)
+			{
+				//listobj.UniqueId = getdata.Id;
+				listobj.VendorId = getdata.Vendorid;
+				listobj.Onetimevendor = Convert.ToBoolean(getdata.Onetimevendor);
+				listobj.MSMERequired = Convert.ToBoolean(getdata.MSMERequired);
+				listobj.PerformanceVerificationRequired = Convert.ToBoolean(getdata.PerformanceVerificationRequired);
+				listobj.EvaluationRequired = Convert.ToBoolean(getdata.EvaluationRequired);
+				listobj.BusinessArea = getdata.BusinessArea;
+				listobj.VendorNoInSAP = getdata.VendorNoInSAP;
+				listobj.VendorName = getdata.VendorName;
+				listobj.Street = getdata.Street;
+				listobj.City = getdata.City;
+				listobj.PostalCode = getdata.PostalCode;
+				listobj.StateId = Convert.ToInt32(getdata.StateId);
+				listobj.State = getdata.State;
+				listobj.PaymentTermId = getdata.PaymentTermId;
+				listobj.PaymentTerms = getdata.PaymentTerms;
+				listobj.PhoneAndExtn = getdata.PhoneAndExtn;
+				listobj.LocalBranchOffice = getdata.LocalBranchOffice;
+				listobj.Mobile = getdata.Mobile;
+				listobj.Email = getdata.Email;
+				listobj.AltEmail = getdata.AltEmail;
+				listobj.Fax = getdata.Fax;
+				//listobj.ContactPerson = getdata.ContactPerson;
+				//listobj.Phone = getdata.Phone;
+				listobj.ContactPersonForSales = getdata.ContactPersonForSales;
+				listobj.PhoneNumberForSales = getdata.PhoneNumberForSales;
+				listobj.EmailIdForSales = getdata.EmailIdForSales;
+				listobj.AltEmailidForSales = getdata.AltEmailidForSales;
+
+				listobj.ContactPersonForOperations = getdata.ContactPersonForOperations;
+				listobj.PhoneNumberForOperations = getdata.PhoneNumberForOperations;
+				listobj.EmailIdForOperations = getdata.EmailIdForOperations;
+				listobj.AltEmailidForOperations = getdata.AltEmailidForOperations;
+
+				listobj.ContactPersonForLogistics = getdata.ContactPersonForLogistics;
+				listobj.PhoneNumberForLogistics = getdata.PhoneNumberForLogistics;
+				listobj.EmailIdForLogistics = getdata.EmailIdForLogistics;
+				listobj.AltEmailidForLogistics = getdata.AltEmailidForLogistics;
+
+				listobj.ContactPersonForAccounts = getdata.ContactPersonForLogistics;
+				listobj.PhoneNumberForAccounts = getdata.PhoneNumberForAccounts;
+				listobj.EmailIdForAccounts = getdata.EmailIdForAccounts;
+				listobj.AltEmailidForAccounts = getdata.AltEmailidForAccounts;
+				listobj.GSTNo = getdata.GSTNo;
+				listobj.NatureofBusiness = getdata.NatureofBusiness;
+				listobj.SpecifyNatureOfBusiness = getdata.SpecifyNatureOfBusiness;
+				listobj.PANNo = getdata.PANNo;
+				listobj.CINNo = getdata.CINNo;
+				listobj.TanNo = getdata.TanNo;
+				listobj.PaymentTerms = getdata.PaymentTerms;
+
+				BankDetailsForVendor bankData = DB.BankDetailsForVendors.Where(li => li.VendorId == vendorId).FirstOrDefault();
+				if (bankData != null)
+				{
+					listobj.BankDetails = bankData.BankDetails;
+					listobj.BankerName = bankData.BankerName;
+					listobj.IFSCCode = bankData.IFSCCode;
+					listobj.AccountHolderName = bankData.AccountHolderName;
+					listobj.LocationOrBranch = bankData.LocationOrBranch;
+					listobj.AccNo = bankData.AccNo;
+				}
+
+
+				listobj.DocDetailsLists = DB.VendorRegisterDocumentDetails.Where(li => li.VendorId == vendorId && li.Deleteflag == false).ToList();
+			}
+
+			return listobj;
+		}
+
+		public bool SaveVendorDetails(VendorRegistrationModel model)
+		{
+
+			VSCMEntities vscm = new VSCMEntities();
+			int vendorid = 0;
+			int bankdetailsid = 0;
+			int regId = 0;
+			try
+			{
+				if (model != null)
+				{
+					if (model.VendorId != 0)
+					{
+						RemoteVendorRegisterMaster Remotedata = vscm.RemoteVendorRegisterMasters.Where(li => li.Vendorid == model.VendorId).FirstOrDefault<RemoteVendorRegisterMaster>();
+						if (Remotedata != null)
+						{
+							// Remotedata.Id = model.UniqueId;
+							Remotedata.Onetimevendor = model.Onetimevendor;
+							Remotedata.EvaluationRequired = model.EvaluationRequired;
+							Remotedata.PerformanceVerificationRequired = model.PerformanceVerificationRequired;
+							Remotedata.MSMERequired = model.MSMERequired;
+							Remotedata.BusinessArea = model.BusinessArea;
+							//Remotedata.VendorNoInSAP = model.VendorNoInSAP;
+							Remotedata.VendorName = model.VendorName;
+							Remotedata.Street = model.Street;
+							Remotedata.PostalCode = model.PostalCode;
+							Remotedata.City = model.City;
+							Remotedata.State = model.State;
+							Remotedata.StateId = model.StateId;
+							Remotedata.LocalBranchOffice = model.LocalBranchOffice;
+							Remotedata.PhoneAndExtn = model.PhoneAndExtn;
+							Remotedata.Mobile = model.Mobile;
+							Remotedata.Email = model.Email;
+							Remotedata.AltEmail = model.AltEmail;
+							Remotedata.Fax = model.Fax;
+							Remotedata.PaymentTermId = model.PaymentTermId;
+							Remotedata.PaymentTerms = model.PaymentTerms;
+							Remotedata.ContactPersonForSales = model.ContactPersonForSales;
+							Remotedata.PhoneNumberForSales = model.PhoneNumberForSales;
+							Remotedata.EmailIdForSales = model.EmailIdForSales;
+							Remotedata.AltEmailidForSales = model.AltEmailidForSales;
+
+							Remotedata.ContactPersonForOperations = model.ContactPersonForOperations;
+							Remotedata.PhoneNumberForOperations = model.PhoneNumberForOperations;
+							Remotedata.EmailIdForOperations = model.EmailIdForOperations;
+							Remotedata.AltEmailidForOperations = model.AltEmailidForOperations;
+
+							Remotedata.ContactPersonForLogistics = model.ContactPersonForLogistics;
+							Remotedata.PhoneNumberForLogistics = model.PhoneNumberForLogistics;
+							Remotedata.EmailIdForLogistics = model.EmailIdForLogistics;
+							Remotedata.AltEmailidForLogistics = model.AltEmailidForLogistics;
+
+							Remotedata.ContactPersonForAccounts = model.ContactPersonForLogistics;
+							Remotedata.PhoneNumberForAccounts = model.PhoneNumberForAccounts;
+							Remotedata.EmailIdForAccounts = model.EmailIdForAccounts;
+							Remotedata.AltEmailidForAccounts = model.AltEmailidForAccounts;
+
+							Remotedata.Phone = model.Phone;
+							Remotedata.GSTNo = model.GSTNo;
+							Remotedata.PANNo = model.PANNo;
+							Remotedata.CINNo = model.CINNo;
+							Remotedata.TanNo = model.TanNo;
+							Remotedata.NatureofBusiness = model.NatureofBusiness;
+							Remotedata.SpecifyNatureOfBusiness = model.SpecifyNatureOfBusiness;
+							Remotedata.RequestedOn = DateTime.Now;
+
+							vscm.SaveChanges();
+							vendorid = Remotedata.Vendorid;
+							regId = Remotedata.Id;
+						}
+
+
+						if (vendorid != 0)
+						{
+
+							//var remotedataforbankdetails = new RemoteBankDetailsForVendor();
+							RemoteBankDetailsForVendor remotedataforbankdetail = vscm.RemoteBankDetailsForVendors.Where(li => li.VendorId == vendorid).FirstOrDefault<RemoteBankDetailsForVendor>();
+							if (remotedataforbankdetail != null)
+							{
+								//var remotedataforbankdetail = new RemoteBankDetailsForVendor();
+								remotedataforbankdetail.IFSCCode = model.IFSCCode;
+								remotedataforbankdetail.BankDetails = model.BankDetails;
+								remotedataforbankdetail.BankerName = model.BankerName;
+								remotedataforbankdetail.AccNo = model.AccNo;
+								remotedataforbankdetail.AccountHolderName = model.AccountHolderName;
+								remotedataforbankdetail.VendorId = vendorid;
+								remotedataforbankdetail.LocationOrBranch = model.LocationOrBranch;
+								// vscm.RemoteBankDetailsForVendors.Add(remotedataforbankdetails);
+								vscm.SaveChanges();
+								bankdetailsid = remotedataforbankdetail.Id;
+							}
+
+						}
+
+						//yscm
+
+
+						if (model.VendorId != 0)
+						{
+							VendorRegisterMaster yscmdata = DB.VendorRegisterMasters.Where(li => li.Vendorid == model.VendorId).FirstOrDefault<VendorRegisterMaster>();
+							yscmdata.Id = regId;
+							yscmdata.Onetimevendor = model.Onetimevendor;
+							yscmdata.EvaluationRequired = model.EvaluationRequired;
+							yscmdata.PerformanceVerificationRequired = model.PerformanceVerificationRequired;
+							yscmdata.MSMERequired = model.MSMERequired;
+							yscmdata.BusinessArea = model.BusinessArea;
+							//yscmdata.VendorNoInSAP = model.VendorNoInSAP;
+							yscmdata.VendorName = model.VendorName;
+							yscmdata.Street = model.Street;
+							yscmdata.PostalCode = model.PostalCode;
+							yscmdata.City = model.City;
+							yscmdata.State = model.State;
+							yscmdata.StateId = model.StateId;
+							yscmdata.LocalBranchOffice = model.LocalBranchOffice;
+							yscmdata.PhoneAndExtn = model.PhoneAndExtn;
+							yscmdata.Mobile = model.Mobile;
+							yscmdata.Email = model.Email;
+							yscmdata.AltEmail = model.AltEmail;
+							yscmdata.Fax = model.Fax;
+							yscmdata.PaymentTermId = model.PaymentTermId;
+							yscmdata.PaymentTerms = model.PaymentTerms;
+
+							yscmdata.ContactPersonForSales = model.ContactPersonForSales;
+							yscmdata.PhoneNumberForSales = model.PhoneNumberForSales;
+							yscmdata.EmailIdForSales = model.EmailIdForSales;
+							yscmdata.AltEmailidForSales = model.AltEmailidForSales;
+
+							yscmdata.ContactPersonForOperations = model.ContactPersonForOperations;
+							yscmdata.PhoneNumberForOperations = model.PhoneNumberForOperations;
+							yscmdata.EmailIdForOperations = model.EmailIdForOperations;
+							yscmdata.AltEmailidForOperations = model.AltEmailidForOperations;
+
+							yscmdata.ContactPersonForLogistics = model.ContactPersonForLogistics;
+							yscmdata.PhoneNumberForLogistics = model.PhoneNumberForLogistics;
+							yscmdata.EmailIdForLogistics = model.EmailIdForLogistics;
+							yscmdata.AltEmailidForLogistics = model.AltEmailidForLogistics;
+
+							yscmdata.ContactPersonForAccounts = model.ContactPersonForLogistics;
+							yscmdata.PhoneNumberForAccounts = model.PhoneNumberForAccounts;
+							yscmdata.EmailIdForAccounts = model.EmailIdForAccounts;
+							yscmdata.AltEmailidForAccounts = model.AltEmailidForAccounts;
+							yscmdata.GSTNo = model.GSTNo;
+							yscmdata.NatureofBusiness = model.NatureofBusiness;
+							yscmdata.SpecifyNatureOfBusiness = model.SpecifyNatureOfBusiness;
+							yscmdata.PANNo = model.PANNo;
+							yscmdata.CINNo = model.CINNo;
+							yscmdata.TanNo = model.TanNo;
+							yscmdata.RequestedOn = DateTime.Now;
+							//yscmdata.PaymentTerms = model.PaymentTerms;
+
+							DB.SaveChanges();
+							//id = yscmdata.Id;
+							//objid.UniqueId = yscmdata.Id;
+							//RegistrationModelobj.Add(objid);
+						}
+
+
+						if (vendorid != 0)
+						{
+
+							//var remotedataforbankdetails = new RemoteBankDetailsForVendor();
+							BankDetailsForVendor yscmdataforbankdetail = DB.BankDetailsForVendors.Where(li => li.VendorId == model.VendorId).FirstOrDefault<BankDetailsForVendor>();
+							if (yscmdataforbankdetail != null)
+							{
+								//var remotedataforbankdetail = new RemoteBankDetailsForVendor();
+								yscmdataforbankdetail.IFSCCode = model.IFSCCode;
+								yscmdataforbankdetail.BankDetails = model.BankDetails;
+								yscmdataforbankdetail.BankerName = model.BankerName;
+								yscmdataforbankdetail.AccNo = model.AccNo;
+								yscmdataforbankdetail.AccountHolderName = model.AccountHolderName;
+								yscmdataforbankdetail.VendorId = vendorid;
+								yscmdataforbankdetail.LocationOrBranch = model.LocationOrBranch;
+								// vscm.RemoteBankDetailsForVendors.Add(remotedataforbankdetails);
+								vscm.SaveChanges();
+							}
+
+							this.InsertVendorDocuments(model.DocDetailsLists);
+
+						}
+
+
+					}				
+				}
+				return true;
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+		}
+
+		public void InsertVendorDocuments(List<VendorRegisterDocumentDetail> model)
+		{
+			VSCMEntities vscm = new VSCMEntities();
+			int vendorid = Convert.ToInt32(model[0].VendorId);
+			List<VendorRegisterDocumentDetail> Listobj = new List<VendorRegisterDocumentDetail>();
+			var eachobj = new VendorRegisterDocumentDetail();
+			try
+			{
+
+				if (model != null)
+				{
+
+					foreach (var item in model)
+					{
+
+						RemoteVendorRegisterDocumentDetail remotedataforDocumentDetails = vscm.RemoteVendorRegisterDocumentDetails.Where(li => li.VendorId == vendorid && li.Id == item.Id).FirstOrDefault<RemoteVendorRegisterDocumentDetail>();
+						if (remotedataforDocumentDetails == null)
+						{
+							var remotedataforDocumentDetail = new RemoteVendorRegisterDocumentDetail();
+							remotedataforDocumentDetail.VendorId = item.VendorId;
+							remotedataforDocumentDetail.DocumentName = item.DocumentName;
+							remotedataforDocumentDetail.PhysicalPath = item.PhysicalPath;
+							remotedataforDocumentDetail.UploadedBy = item.UploadedBy;
+							remotedataforDocumentDetail.UploadedOn = DateTime.Now;
+							//remotedataforDocumentDetail.Status = false;
+							remotedataforDocumentDetail.Deleteflag = false;
+							remotedataforDocumentDetail.DocumentationTypeId = item.DocumentationTypeId;
+							vscm.RemoteVendorRegisterDocumentDetails.Add(remotedataforDocumentDetail);
+							vscm.SaveChanges();
+						}
+						else
+						{
+							remotedataforDocumentDetails.VendorId = item.VendorId;
+							remotedataforDocumentDetails.DocumentName = item.DocumentName;
+							remotedataforDocumentDetails.PhysicalPath = item.PhysicalPath;
+							remotedataforDocumentDetails.UploadedBy = item.UploadedBy;
+							remotedataforDocumentDetails.UploadedOn = DateTime.Now;
+							//remotedataforDocumentDetails.Status = false;
+							remotedataforDocumentDetails.Deleteflag = false;
+							remotedataforDocumentDetails.DocumentationTypeId = item.DocumentationTypeId;
+							vscm.SaveChanges();
+						}
+
+					}
+					var DataforDocumentDetailsRemote = vscm.RemoteVendorRegisterDocumentDetails.Where(li => li.VendorId == vendorid).ToList();
+					foreach (var data in DataforDocumentDetailsRemote)
+					{
+						var rfqredDocLocal = DB.VendorRegisterDocumentDetails.Where(li => li.Id == data.Id).FirstOrDefault();
+						if (rfqredDocLocal == null)
+						{
+							var localdataforDocumentDetail = new VendorRegisterDocumentDetail();
+							localdataforDocumentDetail.Id = data.Id;
+							localdataforDocumentDetail.VendorId = vendorid;
+							localdataforDocumentDetail.DocumentName = data.DocumentName;
+							localdataforDocumentDetail.PhysicalPath = data.PhysicalPath;
+							localdataforDocumentDetail.UploadedBy = data.UploadedBy;
+							localdataforDocumentDetail.UploadedOn = data.UploadedOn;
+							//localdataforDocumentDetail.Status = data.Status;
+							localdataforDocumentDetail.Deleteflag = data.Deleteflag;
+							localdataforDocumentDetail.DocumentationTypeId = data.DocumentationTypeId;
+							DB.VendorRegisterDocumentDetails.Add(localdataforDocumentDetail);
+							DB.SaveChanges();
+						}
+						else
+						{
+							rfqredDocLocal.VendorId = vendorid;
+							rfqredDocLocal.DocumentName = data.DocumentName;
+							rfqredDocLocal.PhysicalPath = data.PhysicalPath;
+							rfqredDocLocal.UploadedBy = data.UploadedBy;
+							rfqredDocLocal.UploadedOn = data.UploadedOn;
+							//rfqredDocLocal.Status = data.Status;
+							rfqredDocLocal.Deleteflag = data.Deleteflag;
+							rfqredDocLocal.DocumentationTypeId = data.DocumentationTypeId;
+							DB.SaveChanges();
+
+						}
+
+					}
+				}
+			}
+			catch (Exception e)
+			{
+
+			}
+			//return vscm.RemoteVendorRegisterDocumentDetails.Where(li => li.VendorId == vendorid && li.Deleteflag == false).ToList();
+		}
+		public bool DeletefileAttached(VendorRegisterDocumentDetail model)
+		{
+			VSCMEntities vscm = new VSCMEntities();
+			Boolean deletestatus = false;
+			RemoteVendorRegisterDocumentDetail remotedatafordelete = vscm.RemoteVendorRegisterDocumentDetails.Where(li => li.VendorId == model.VendorId && li.Id == model.Id).FirstOrDefault<RemoteVendorRegisterDocumentDetail>();
+			if (remotedatafordelete != null)
+			{
+				remotedatafordelete.Deleteflag = true;
+				vscm.SaveChanges();
+				deletestatus = true;
+			}
+			else
+			{
+				deletestatus = false;
+			}
+			using (YSCMEntities Context = new YSCMEntities())
+			{
+				VendorRegisterDocumentDetail deptDelete = Context.VendorRegisterDocumentDetails.Where(li => li.VendorId == model.VendorId && li.Id == model.Id).FirstOrDefault();
+				if (deptDelete != null)
+				{
+					deptDelete.Deleteflag = true;
+					//Context.MPRDocuments.Remove(deptDelete);
+					Context.SaveChanges();
+				}
+			}
+			return true;
+		}
+
 
 	}
 }

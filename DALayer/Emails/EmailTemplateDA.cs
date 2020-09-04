@@ -504,7 +504,7 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("EmailTemplate", "mailtoRequestor", ex.Message + "; " + ex.StackTrace.ToString());
+				log.ErrorMessage("EmailTemplate", "prepareAribaTemplate", ex.Message + "; " + ex.StackTrace.ToString());
 				//throw ex;
 			}
 			return true;

@@ -1,4 +1,5 @@
 ﻿using SCMModels;
+using SCMModels.RemoteModel;
 using SCMModels.RFQModels;
 using SCMModels.SCMModels;
 using System;
@@ -42,9 +43,15 @@ namespace DALayer.MPR
 		string updateItemId(materialUpdate mPRItemInfo);
         List<loadloction> Loadstoragelocationsbydepartment();
         SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
-		VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser);
 
+		VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser);
 		List<VendorRegProcessView> getVendorReqList(vendorRegfilters vendorRegfilters);
+		List<RemoteStateMaster> StateNameList();
+		List<VendorRegisterDocumenetMaster> DocumentMasterList();
+		List<NatureOfBusinessMaster> natureOfBusinessesList();
+		VendorRegistrationModel GetVendorDetails(int vendorId);
+		bool SaveVendorDetails(VendorRegistrationModel model);
+		bool DeletefileAttached(VendorRegisterDocumentDetail model);
 
 
 
