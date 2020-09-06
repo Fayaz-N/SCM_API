@@ -47,8 +47,8 @@ namespace SCMModels.RFQModels
 		public Nullable<decimal> FreightAmount { get; set; }
 		public Nullable<decimal> PFPercentage { get; set; }
 		public Nullable<decimal> PFAmount { get; set; }
-        public Nullable<decimal> TotalPFAmount { get; set; }
-        public Nullable<decimal> TotalFreightAmount { get; set; }
+        public Nullable<double> TotalPFAmount { get; set; }
+        public Nullable<double> TotalFreightAmount { get; set; }
         public Nullable<decimal> TotalTaxAmount { get; set; }
 		public Nullable<decimal> IGSTPercentage { get; set; }
 		public Nullable<decimal> CGSTPercentage { get; set; }
