@@ -677,7 +677,7 @@ namespace DALayer.Emails
 				//SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
 				//mailClient.EnableSsl = true;
 				mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-				//mailClient.Send(mailMessage);
+				mailClient.Send(mailMessage);
 			}
 			return true;
 		}
