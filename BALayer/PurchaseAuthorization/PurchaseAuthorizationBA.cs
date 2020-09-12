@@ -265,5 +265,9 @@ namespace BALayer.PurchaseAuthorization
 			return _purchaseDataAcess.getTokuchuReqList(tokuchuFilterParams);
 		}
 
-	}
+        public List<mprstatuspivot> Getmprstatus()
+        {
+            return _purchaseDataAcess.Getmprstatus();
+        }
+    }
 }

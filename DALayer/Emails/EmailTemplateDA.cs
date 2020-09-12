@@ -460,7 +460,7 @@ namespace DALayer.Emails
                     Employee frmEmail = db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>();
 					emlSndngList.FrmEmailId = frmEmail.EMail;
 					emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToMailId).FirstOrDefault<Employee>()).EMail;
-                    emlSndngList.BCC = ConfigurationManager.AppSettings["BCCAribaMailId"];
+                    emlSndngList.BCC = ConfigurationManager.AppSettings["BCCAribaMailId"]; 
                     if (typeOfUser == "Verifier" || typeOfUser == "PreVerifier")
 					{
 						//send mail to requestor
@@ -677,7 +677,7 @@ namespace DALayer.Emails
 				//SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
 				//mailClient.EnableSsl = true;
 				mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-				//mailClient.Send(mailMessage);
+				mailClient.Send(mailMessage);
 			}
 			return true;
 		}

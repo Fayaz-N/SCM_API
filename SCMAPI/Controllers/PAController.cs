@@ -628,6 +628,11 @@ namespace SCMAPI.Controllers
 			return Ok(this._paBusenessAcess.updateTokuchuRequest(Result, typeOfuser, revisionId));
 		}
 
-
-	}
+        [HttpPost]
+        [Route("Getmprstatus")]
+        public IHttpActionResult Getmprstatus()
+        {
+            return Ok(this._paBusenessAcess.Getmprstatus());
+        }
+    }
 }

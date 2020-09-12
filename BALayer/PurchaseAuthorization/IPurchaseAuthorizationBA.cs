@@ -67,5 +67,7 @@ namespace BALayer.PurchaseAuthorization
 		MPRPADetailsModel GetTokuchuDetailsByPAID(int? PID, int ?TokuchRequestid);
 		int updateTokuchuRequest(TokuchuRequest tokuchuRequest, string typeOfuser, int revisionId);
 		List<GetTokuchuDetail> getTokuchuReqList(tokuchuFilterParams tkparameters);
-	}
+        List<mprstatuspivot> Getmprstatus();
+
+    }
 }

@@ -224,7 +224,10 @@ Review Date :<<>>   Reviewed By :<<>>
 									item.MfgPartNo = mPRItemInfo.MfgPartNo;
 									item.TargetSpend = mPRItemInfo.TargetSpend;
 									item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
-								}
+                                    item.ProjectDefinition = mPRItemInfo.ProjectDefinition;
+                                    item.WBS = mPRItemInfo.WBS;
+                                    item.SystemModel = mPRItemInfo.SystemModel;
+                                }
 							}
 							DB.SaveChanges();
 						}
@@ -1047,7 +1050,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					{
 						MPRItemInfo item = new MPRItemInfo();
 						item.Itemid = mPRItemInfo.Itemid;
-						item.RevisionId = mPRItemInfo.RevisionId;
+						item.RevisionId = mPRItemInfo.RevisionId; 
 						item.ItemDescription = mPRItemInfo.ItemDescription;
 						item.Quantity = mPRItemInfo.Quantity;
 						item.UnitId = mPRItemInfo.UnitId;
@@ -1057,6 +1060,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						item.MfgPartNo = mPRItemInfo.MfgPartNo;
 						item.TargetSpend = mPRItemInfo.TargetSpend;
 						item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
+                        item.ProjectDefinition = mPRItemInfo.ProjectDefinition;
+                        item.WBS = mPRItemInfo.WBS;
+                        item.SystemModel = mPRItemInfo.SystemModel;
 						context.MPRItemInfoes.Add(item);
 						context.SaveChanges();
 					}
@@ -1148,6 +1154,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				mprRevisionDetails.MPRBuyerGroup = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprRevisionDetails.BuyerGroupId).FirstOrDefault<MPRBuyerGroup>();
 
 				mprRevisionDetails.MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.DeleteFlag != true).OrderBy(li => li.Itemdetailsid).ToList();
+
 				mprRevisionDetails.MPRDocuments = DB.MPRDocuments.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.Deleteflag != true).ToList();
 				mprRevisionDetails.MPRDocumentations = DB.MPRDocumentations.Where(li => li.RevisionId == mprRevisionDetails.RevisionId).Include(li => li.MPRDocumentationDescription).ToList();
 				mprRevisionDetails.MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == mprRevisionDetails.RevisionId && li.RemoveFlag != true).Include(li => li.VendorMaster).ToList();
@@ -1583,7 +1590,11 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 2;
 								if (mprStatus.status == "Sent for Modification")
-									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                {
+                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                    mprrevision.CheckStatus = "Pending";
+                                }
+									
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 
@@ -1614,7 +1625,12 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 3;
 								if (mprStatus.status == "Sent for Modification")
-									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                {
+                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                    mprrevision.CheckStatus = "Pending";
+                                    mprrevision.ApprovalStatus = "Pending";
+                                }
+									
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 							if (mprrevision.IssuePurposeId == 2)//update oapprover
@@ -1643,7 +1659,13 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 22;
 								if (mprStatus.status == "Sent for Modification")
-									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                {
+                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                    mprrevision.CheckStatus = "Pending";
+                                    mprrevision.SecondApproversStatus = "Pending";
+                                    mprrevision.ApprovalStatus = "Pending";
+                                }
+									
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 
@@ -1674,7 +1696,14 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 24;
 								if (mprStatus.status == "Sent for Modification")
-									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                {
+                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+                                    mprrevision.CheckStatus = "Pending";
+                                    mprrevision.SecondApproversStatus = "Pending";
+                                    mprrevision.ApprovalStatus = "Pending";
+                                    mprrevision.ThirdApproverStatus = "Pending";
+                                }
+									
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 							if (mprrevision.IssuePurposeId == 2)//update osecond approver
@@ -1729,8 +1758,9 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
 							mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
 						}
-						else if (mprStatus.typeOfuser == "Requestor")
-						{
+						else if (mprStatus.typeOfuser == "Requestor") 
+
+                        {
 							this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mprrevision.RevisionId, mprrevision.PreparedBy, mprrevision.CheckedBy, "");
 						}
 						mprrevision.StatusId = Convert.ToByte(statusId);

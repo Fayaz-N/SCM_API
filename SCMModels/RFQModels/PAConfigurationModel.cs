@@ -19,5 +19,6 @@ namespace SCMModels.RFQModels
         public string PaymentTermCode { get; set; }
         public List<int> MPRItemDetailsid { get; set; }
         public string MPRItemDetailsid1 { get; set; }
+        public int BuyerGroupId { get; set; }
     }
 }

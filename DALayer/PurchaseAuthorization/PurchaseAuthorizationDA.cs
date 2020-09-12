@@ -460,7 +460,8 @@ namespace DALayer.PurchaseAuthorization
 				Param[2] = new SqlParameter("@TargetSpend", model.TargetSpend);
 				Param[3] = new SqlParameter("@creditdays", Termscode);
 				Param[4] = new SqlParameter("@departmentid", model.DeptId);
-				string spname = "PAApprovers";
+                //Param[5]=new SqlParameter("@departmentid", model.BuyerGroupId);
+                string spname = "PAApprovers";
 				SqlCommand cmd = new SqlCommand();
 				SqlDataAdapter Adp = new SqlDataAdapter();
 				cmd = new SqlCommand();
@@ -2186,7 +2187,7 @@ namespace DALayer.PurchaseAuthorization
                     if (tokuchuRequest.VerifiedStatus == "Approved")
                     {
                         this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, tokuchuRequest.PreparedBY, typeOfuser, revisionId);
-                        string mprpreparedby = obj.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault().PreparedBy;
+                        string mprpreparedby = obj.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault().CheckedBy;
                         this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, mprpreparedby, "MPRRequestor", revisionId);
                     }
                 }
@@ -2215,5 +2216,21 @@ namespace DALayer.PurchaseAuthorization
 			}
 			return tokuchuDetails;
 		}
+        public List<mprstatuspivot> Getmprstatus()
+        {
+            List<mprstatuspivot> data = new List<mprstatuspivot>();
+            try
+            {
+                var query = "";
+                query = "select * from mprstatuspivot";
+                data = obj.mprstatuspivots.SqlQuery(query).ToList<mprstatuspivot>();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 	}
 }
