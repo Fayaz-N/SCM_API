@@ -588,7 +588,7 @@ namespace DALayer.Emails
 							}
 						}
 					}
-					if (typeOfUser == "Verfier")
+					if (typeOfUser == "Verifier")
 					{
 						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.VerifiedBy).FirstOrDefault<Employee>()).EMail;
 

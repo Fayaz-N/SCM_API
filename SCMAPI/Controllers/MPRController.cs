@@ -460,15 +460,15 @@ namespace SCMAPI.Controllers
 								mprIteminfos.MfgModelNo = row[7].ToString();
 							if (!string.IsNullOrEmpty(row[8].ToString()))
 								mprIteminfos.ReferenceDocNo = row[8].ToString();
-                            if (!string.IsNullOrEmpty(row[9].ToString()))
-                                mprIteminfos.YGSMaterialCode = row[9].ToString();
-                            if (!string.IsNullOrEmpty(row[11].ToString()))
-                                mprIteminfos.WBS = row[11].ToString();
-                            if (!string.IsNullOrEmpty(row[10].ToString()))
-                                mprIteminfos.ProjectDefinition = row[10].ToString();
-                            if (!string.IsNullOrEmpty(row[12].ToString()))
-                                mprIteminfos.SystemModel = row[12].ToString();
-                            if (data != null)
+							if (!string.IsNullOrEmpty(row[9].ToString()))
+								mprIteminfos.YGSMaterialCode = row[9].ToString();
+							if (!string.IsNullOrEmpty(row[11].ToString()))
+								mprIteminfos.WBS = row[11].ToString();
+							if (!string.IsNullOrEmpty(row[10].ToString()))
+								mprIteminfos.ProjectDefinition = row[10].ToString();
+							if (!string.IsNullOrEmpty(row[12].ToString()))
+								mprIteminfos.SystemModel = row[12].ToString();
+							if (data != null)
 								mprIteminfos.UnitId = data.UnitId;
 							if (row[9].ToString() == "")
 								mprIteminfos.Itemid = "NewItem";
@@ -526,23 +526,121 @@ namespace SCMAPI.Controllers
 			return Ok(parsedFileName);
 
 		}
-        [HttpGet]
-        [Route("Loadstoragelocationsbydepartment")]
-        public IHttpActionResult Loadstoragelocationsbydepartment()
-        {
-            return Ok(this._mprBusenessAcess.Loadstoragelocationsbydepartment());
-        }
-        [HttpGet]
-        [Route("LoadJobCodesbysaleorder/{saleorder}")]
-        public IHttpActionResult LoadJobCodesbysaleorder(string saleorder)
-        {
-            return Ok(this._mprBusenessAcess.LoadJobCodesbysaleorder(saleorder));
-        }
-        private static string ToValidFileName(string fileName)
+		[HttpGet]
+		[Route("Loadstoragelocationsbydepartment")]
+		public IHttpActionResult Loadstoragelocationsbydepartment()
+		{
+			return Ok(this._mprBusenessAcess.Loadstoragelocationsbydepartment());
+		}
+		[HttpGet]
+		[Route("LoadJobCodesbysaleorder/{saleorder}")]
+		public IHttpActionResult LoadJobCodesbysaleorder(string saleorder)
+		{
+			return Ok(this._mprBusenessAcess.LoadJobCodesbysaleorder(saleorder));
+		}
+		private static string ToValidFileName(string fileName)
 		{
 			fileName = fileName.ToLower().Replace(" ", "_").Replace("(", "_").Replace(")", "_").Replace("&", "_").Replace("*", "_").Replace("-", "_").Replace("+", "_");
 			return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
 		}
+
+
+		//api methods to save files from vendor portal
+		[Route("UploadVscmFile")]
+		[HttpPost]
+		public IHttpActionResult UploadVscmFile()
+		{
+			log.ErrorMessage("MPRController", "UploadVscmFile", "SCM Api called");
+			var filePath = "";
+			string dbfilePath = "";
+			try
+			{
+				var httpRequest = HttpContext.Current.Request;
+				var serverPath = HttpContext.Current.Server.MapPath("~/SCMDocs");
+				if (httpRequest.Files.Count > 0)
+				{
+					string filename = string.Empty;
+					string[] listdata;
+					string VUniqueId, docid, vendorid, docType;
+					foreach (string file in httpRequest.Files)
+					{
+						filename = file;
+						break;
+					}
+					listdata = filename.Split('_');
+					VUniqueId = listdata[0];
+					vendorid = listdata[1];
+					docid = listdata[2];
+					docType = listdata[3];
+					for (int i = 0; i <= httpRequest.Files.Count - 1; i++)
+					{
+						var postedFile = httpRequest.Files[i];
+						filePath = serverPath + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM") + "\\" + VUniqueId + "_" + vendorid + "_" + docid + "_" + docType);
+						if (!Directory.Exists(filePath))
+							Directory.CreateDirectory(filePath);
+						filePath = Path.Combine(filePath, ToValidFileName(postedFile.FileName));
+						postedFile.SaveAs(filePath);
+
+
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				log.ErrorMessage("MPRController", "UploadVscmFile", e.Message.ToString());
+				return Ok(e);
+			}
+			return Ok(true);
+		}
+
+
+		[Route("InsertVscmVendorQuoteDocument")]
+		[HttpPost]
+		public IHttpActionResult InsertVscmVendorQuoteDocument()
+		{
+			log.ErrorMessage("MPRController", "InsertVscmVendorQuoteDocument", "SCM Api called");
+			var filePath = "";
+			var fileserverpath = "";
+			var httpRequest = HttpContext.Current.Request;
+			try
+			{
+				if (httpRequest.Files.Count > 0)
+				{
+					string filename = string.Empty;
+					string[] listdata;
+					string RFQRevId, RFQItemId, updatedBy, updatedRevisionId, pageType;
+					foreach (string file in httpRequest.Files)
+					{
+						filename = file;
+						break;
+					}
+
+					listdata = filename.Split('_');
+					RFQRevId = listdata[0];
+					RFQItemId = listdata[1];
+					updatedBy = listdata[2];
+					pageType = listdata[3];
+
+					for (int i = 0; i <= httpRequest.Files.Count - 1; i++)
+					{
+						var postedFile = httpRequest.Files[i];
+						filePath = HttpContext.Current.Server.MapPath("~/SCMDocs") + string.Format("\\" + DateTime.Now.Year.ToString() + "\\" + DateTime.Now.ToString("MMM")) + "\\" + RFQRevId + "_" + RFQItemId + "_" + updatedBy + "_" + pageType;
+						if (!Directory.Exists(filePath))
+							Directory.CreateDirectory(filePath);
+						filePath = Path.Combine(filePath, ToValidFileName(postedFile.FileName));
+						postedFile.SaveAs(filePath);
+					}
+
+				}
+			}
+			catch (Exception e)
+			{
+				log.ErrorMessage("MPRController", "InsertVscmVendorQuoteDocument", e.Message.ToString());
+				return Ok(e);
+			}
+			return Ok(true);
+		}
+
 
 	}
 
