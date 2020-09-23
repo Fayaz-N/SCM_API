@@ -122,7 +122,11 @@ namespace DALayer.PurchaseAuthorization
 					mapping.FunctionalRoleId = model.FunctionalRoleId;
 					mapping.CreatedBY = model.CreatedBY;
 					mapping.CreatedDate = System.DateTime.Now;
-					mapping.Employeeid = model.Employeeid;
+                    //mapping.Employeeid = model.Employeeid;
+                    foreach (var item in model.Employeeid)
+                    {
+                        mapping.Employeeid = item.EmployeeNo;
+                    }
 					mapping.LessBudget = model.LessBudget;
 					mapping.MoreBudget = model.MoreBudget;
 					mapping.DeletedBy = model.DeletedBy;
@@ -147,7 +151,7 @@ namespace DALayer.PurchaseAuthorization
 				var authdata = obj.PAAuthorizationLimits.Where(x => x.Authid == limit.Authid && x.MinPAValue >= limit.MinPAValue && x.MaxPAValue <= limit.MaxPAValue).FirstOrDefault();
 				var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == authdata.Authid && x.DeleteFlag == false).FirstOrDefault();
 				var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).FirstOrDefault();
-				model.Employeeid = mappingdata.Employeeid;
+				//model.Employeeid = mappingdata.Employeeid;
 				model.Employeename = employeedata.Name;
 				return model;
 			}
@@ -1756,7 +1760,7 @@ namespace DALayer.PurchaseAuthorization
 		}
 
 		//getting the all palist and also go by filetrs like mprno or vendor or buyergroup or rfqno or paid or postatus or pastatus or fromdate and todate
-		public async Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
+		public async Task<List<NewGetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
 		{
 			int mprno = 0;
 			int rfqno = 0;
@@ -1784,17 +1788,17 @@ namespace DALayer.PurchaseAuthorization
 					model.rfqnumber = null;
 				}
 			}
-			List<GetMprPaDetailsByFilter> filter = new List<GetMprPaDetailsByFilter>();
+			List<NewGetMprPaDetailsByFilter> filter = new List<NewGetMprPaDetailsByFilter>();
 			try
 			{
 				var sqlquery = "";
-				sqlquery = "select * from GetMprPaDetailsByFilters  where PAStatus in ('Pending','rejected','Approved') and DeleteFlag=0 ";
+				sqlquery = "select * from NewGetMprPaDetailsByFilters  where PAStatus in ('Pending','rejected','Approved','Submitted') and DeleteFlag=0 ";
 				if (model.DocumentNumber != null && model.DocumentNumber != "")
 					sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
 				if (model.DepartmentId != 0)
 					sqlquery += " and DepartmentId='" + model.DepartmentId + "'";
 				if (model.PONO != null)
-					sqlquery += " and PONO='" + model.PONO + "'";
+					sqlquery += " and PONO like '%" + model.PONO + "%'";
 				if (model.Paid != 0)
 					sqlquery += " and PAId='" + model.Paid + "'";
 				if (model.POdate != null)
@@ -1821,7 +1825,7 @@ namespace DALayer.PurchaseAuthorization
 				//if (model.FromDate != null && model.ToDate != null)
 				//    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 
-				filter = obj.Database.SqlQuery<GetMprPaDetailsByFilter>(sqlquery).ToList();
+				filter = obj.Database.SqlQuery<NewGetMprPaDetailsByFilter>(sqlquery).ToList();
 				return filter;
 			}
 			catch (Exception ex)
@@ -2232,5 +2236,189 @@ namespace DALayer.PurchaseAuthorization
                 throw;
             }
         }
-	}
+        public DataSet GetMprstatuswisereport(string spName, SqlParameter[] paramArr)
+        {
+            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+            EmployeModel employee = new EmployeModel();
+            DataSet Ds = new DataSet();
+            try
+            {
+              
+                SqlCommand cmd = new SqlCommand();
+                SqlDataAdapter Adp = new SqlDataAdapter();
+                cmd = new SqlCommand();
+                cmd.Connection = Conn1;
+                cmd.CommandText = spName;
+                cmd.CommandTimeout = 0;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                if (paramArr != null)
+                {
+                    foreach (SqlParameter sqlParam in paramArr)
+                    {
+                        cmd.Parameters.Add(sqlParam);
+                    }
+                }
+
+                Adp = new SqlDataAdapter(cmd);
+                Ds = new DataSet();
+
+                Adp.Fill(Ds);
+                cmd.Parameters.Clear();
+                //Ds.Clear();
+                return Ds;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public DataSet GetmprstatusReport(string spName, SqlParameter[] paramArr)
+        {
+            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+            EmployeModel employee = new EmployeModel();
+            DataSet Ds = new DataSet();
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                SqlDataAdapter Adp = new SqlDataAdapter();
+                cmd = new SqlCommand();
+                cmd.Connection = Conn1;
+                cmd.CommandText = spName;
+                cmd.CommandTimeout = 0;
+                cmd.CommandType = CommandType.StoredProcedure;
+                if (paramArr != null)
+                {
+                    foreach (SqlParameter sqlParam in paramArr)
+                    {
+                        cmd.Parameters.Add(sqlParam);
+                    }
+                }
+
+                Adp = new SqlDataAdapter(cmd);
+                Ds = new DataSet();
+
+                Adp.Fill(Ds);
+                cmd.Parameters.Clear();
+                return Ds;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input)
+        {
+            List<RequisitionReport> data = new List<RequisitionReport>();
+            try
+            {
+                int mprno = 0;
+                if (!string.IsNullOrEmpty(input.DocumentNo))
+                {
+                    if (input.DocumentNo.StartsWith("MPR", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        input.DocumentNo = input.DocumentNo;
+                    }
+                    else
+                    {
+                        mprno = Convert.ToInt32(input.DocumentNo);
+                        input.DocumentNo = null;
+                    }
+                }
+                var query = "";
+                query = "select * from RequisitionReport where revisionid!=0 ";
+                if (input.status == null)
+                {
+                    if (!string.IsNullOrEmpty(input.DocumentNo))
+                        query += " and documentno='" + input.DocumentNo + "'";
+                    if (!string.IsNullOrEmpty(input.jobcode))
+                        query += " and documentno='" + input.jobcode + "'";
+                    if (!string.IsNullOrEmpty(input.preparedby))
+                        query += " and preparedby='" + input.preparedby + "'";
+                    if (!string.IsNullOrEmpty(input.Checked))
+                        query += " and Checker='" + input.Checked + "'";
+                    if (!string.IsNullOrEmpty(input.ApprovedBy))
+                        query += " and Approver='" + input.ApprovedBy + "'";
+                    if (!string.IsNullOrEmpty(input.checkerstatus))
+                        query += " and checkstatus='" + input.checkerstatus + "'";
+                    if (!string.IsNullOrEmpty(input.finalApproverstatus))
+                        query += " and approvalstatus='" + input.finalApproverstatus + "'";
+                    if (!string.IsNullOrEmpty(input.Fromdate))
+                        query += " and preparedon>='" + input.Fromdate + "'";
+                    if (!string.IsNullOrEmpty(input.Todate))
+                        query += " and preparedon<='" + input.Todate + "'";
+                    if (input.RequisitionId != 0)
+                        query += " and requisitionid='" + input.RequisitionId + "'";
+                    if (input.revisionId != 0)
+                        query += " and revisionid='" + input.revisionId + "'";
+                    if (input.BuyerGroupId != 0)
+                        query += " and Buyergroupid='" + input.BuyerGroupId + "'";
+                    if (input.DepartmentId != 0)
+                        query += " and departmentid='" + input.DepartmentId + "'";
+                    if (input.DepartmentId != 0)
+                        query += " and departmentid='" + input.DepartmentId + "'";
+                }
+                else
+                {
+                    if (input.status == "Completed")
+                        query += " and statusid in (12,15,19) ";
+                    if (input.status == "Pending")
+                        query += " and statusid not in (12,15,19) ";
+                    if (input.status == "Submitted")
+                        query += " and statusid not in (12,15,19) ";
+                    if (input.BuyerGroupId != 0)
+                        query += " and Buyergroupid='" + input.BuyerGroupId + "'";
+                    if (input.DepartmentId != 0)
+                        query += " and departmentid='" + input.DepartmentId + "'";
+                }
+                data = obj.RequisitionReports.SqlQuery(query).ToList<RequisitionReport>();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public ReportFilterModel GetmprRequisitionfilters()
+        {
+            ReportFilterModel filter = new ReportFilterModel();
+            try
+            {
+                filter.jobcode = obj.MPRRevisions.Select(x => x.JobCode).Distinct().ToArray();
+                //filter.jobcode = data1;
+                var data = obj.MPRIssuePurposes.Where(x => x.BoolInUse == true).ToList();
+                filter.purposetype = data.Select(x => new IssuepurposeType()
+                {
+                    Issuepurpose = x.IssuePurpose,
+                    Issuepurposeid = x.IssuePurposeId
+                }).ToList();
+
+                var checkers = obj.Loadmprcheckers.ToList();
+                filter.mprcheckedby = checkers.Select(x => new MprCheckers()
+                {
+                    checker = x.CheckedBy,
+                    checkername = x.Name
+                }).ToList();
+                var prepare = obj.Loadmprprepares.ToList();
+                filter.mprprepares = prepare.Select(x => new Mprprepare()
+                {
+                    Preparedby = x.PreparedBy,
+                    preparedname = x.Name
+                }).ToList();
+                var approvers = obj.Loadmprapprovers.ToList();
+                filter.mprApprovedby = approvers.Select(x => new MprApprovers()
+                {
+                     approvedby= x.ApprovedBy,
+                    approvername = x.Name
+                }).ToList();
+                return filter;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+    }
 }

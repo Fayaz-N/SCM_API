@@ -10,7 +10,7 @@ namespace SCMModels.RFQModels
     {
         public int PAmapid { get; set; }
         public int Authid { get; set; }
-        public string Employeeid { get; set; }
+        public List<employymapping> Employeeid { get; set; }
         public string Employeename { get; set; }
         public string FunctionalRoleId { get; set; }
         public bool LessBudget { get; set; }
@@ -23,5 +23,10 @@ namespace SCMModels.RFQModels
         public Nullable<System.DateTime> DeletedDate { get; set; }
         public  PAAuthorizationLimitModel PAAuthorizationLimit { get; set; }
         public PAFunctionalRolesModel mpaiing { get; set; }
+    }
+    public class employymapping
+    {
+        public string Name { get; set; }
+        public string EmployeeNo { get; set; }
     }
 }

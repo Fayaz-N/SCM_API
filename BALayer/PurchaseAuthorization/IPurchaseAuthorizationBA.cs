@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using SCMModels;
-
+using System.Data.SqlClient;
 
 namespace BALayer.PurchaseAuthorization
 {
@@ -57,7 +57,7 @@ namespace BALayer.PurchaseAuthorization
         Task<statuscheckmodel> InsertPaitems(List<ItemsViewModel> paitem);
         Task<List<GetMappedSlab>> GetAllMappedSlabs();
         Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model);
-        Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);
+        Task<List<NewGetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);
         Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model);
         Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model);
         Task<statuscheckmodel> DeletePAByPAid(padeletemodel model);
@@ -68,6 +68,9 @@ namespace BALayer.PurchaseAuthorization
 		int updateTokuchuRequest(TokuchuRequest tokuchuRequest, string typeOfuser, int revisionId);
 		List<GetTokuchuDetail> getTokuchuReqList(tokuchuFilterParams tkparameters);
         List<mprstatuspivot> Getmprstatus();
-
+        DataSet GetMprstatuswisereport(string spName, SqlParameter[] paramArr);
+        DataSet GetmprstatusReport(string spName, SqlParameter[] paramArr);
+        List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input);
+        ReportFilterModel GetmprRequisitionfilters();
     }
 }

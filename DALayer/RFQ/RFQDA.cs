@@ -3021,8 +3021,6 @@ namespace DALayer.RFQ
 			}
 			catch (Exception ex)
 			{
-
-
 				throw;
 			}
 			return revision;
@@ -4590,7 +4588,7 @@ namespace DALayer.RFQ
 					mapping.FunctionalRoleId = model.FunctionalRoleId;
 					mapping.CreatedBY = model.CreatedBY;
 					mapping.CreatedDate = System.DateTime.Now;
-					mapping.Employeeid = model.Employeeid;
+					//mapping.Employeeid = model.Employeeid;
 					mapping.LessBudget = model.LessBudget;
 					mapping.MoreBudget = model.MoreBudget;
 					mapping.DeletedBy = model.DeletedBy;
@@ -4615,7 +4613,7 @@ namespace DALayer.RFQ
 				var authdata = obj.PAAuthorizationLimits.Where(x => x.Authid == limit.Authid && x.MinPAValue >= limit.MinPAValue && x.MaxPAValue <= limit.MaxPAValue).FirstOrDefault();
 				var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == authdata.Authid && x.DeleteFlag == false).FirstOrDefault();
 				var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).FirstOrDefault();
-				model.Employeeid = mappingdata.Employeeid;
+				//model.Employeeid = mappingdata.Employeeid;
 				model.Employeename = employeedata.Name;
 				return model;
 			}
@@ -5146,7 +5144,7 @@ namespace DALayer.RFQ
 			List<EmployeModel> model = new List<EmployeModel>();
 			try
 			{
-				var data = obj.Employees.ToList();
+				var data = obj.Employees.Where(x=>x.DOL ==null).ToList();
 				if (data != null)
 				{
 					model = data.Select(x => new EmployeModel()

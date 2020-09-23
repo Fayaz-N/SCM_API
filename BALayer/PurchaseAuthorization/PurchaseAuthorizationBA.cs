@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using SCMModels;
+using System.Data.SqlClient;
 
 namespace BALayer.PurchaseAuthorization
 {
@@ -219,7 +220,7 @@ namespace BALayer.PurchaseAuthorization
 			return await _purchaseDataAcess.RemoveMappedSlab(model);
 		}
 
-		public async Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
+		public async Task<List<NewGetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
 		{
 			return await _purchaseDataAcess.getMprPaDetailsBySearch(model);
 		}
@@ -268,6 +269,26 @@ namespace BALayer.PurchaseAuthorization
         public List<mprstatuspivot> Getmprstatus()
         {
             return _purchaseDataAcess.Getmprstatus();
+        }
+
+        public DataSet GetMprstatuswisereport(string spName, SqlParameter[] paramArr)
+        {
+            return _purchaseDataAcess.GetMprstatuswisereport(spName,paramArr);
+        }
+
+        public DataSet GetmprstatusReport(string spName, SqlParameter[] paramArr)
+        {
+            return _purchaseDataAcess.GetmprstatusReport(spName, paramArr);
+        }
+
+        public List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input)
+        {
+            return _purchaseDataAcess.GetmprRequisitionReport(input);
+        }
+
+        public ReportFilterModel GetmprRequisitionfilters()
+        {
+            return _purchaseDataAcess.GetmprRequisitionfilters();
         }
     }
 }

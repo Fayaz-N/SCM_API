@@ -1166,8 +1166,12 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
 			{
-				item.PAItems = DB.PAItems.Where(li => li.MPRItemDetailsId == item.Itemdetailsid).Include(li => li.TokuchuLIneItems).ToList();
-			}
+				item.PAItems = DB.PAItems.Include(li => li.TokuchuLIneItems).Include(li=>li.MPRPADetail).Where(li => li.MPRItemDetailsId == item.Itemdetailsid && li.MPRPADetail.DeleteFlag==false).ToList();
+                //item.PAItems = (from x in DB.PAItems join y in DB.TokuchuLIneItems on x.PAItemID equals (int?) y.PAItemID 
+                //           join z in DB.MPRPADetails on x.PAID equals z.PAId 
+                //           where x.MPRItemDetailsId == item.Itemdetailsid && z.DeleteFlag!=true && x.MPRItemDetailsId==item.Itemdetailsid  select x).ToList();
+
+            }
 			//foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
 			//{
 			//	item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
@@ -1362,7 +1366,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
 					query += " and CheckedBy=" + mprfilterparams.CheckedBy + " and CheckStatus='" + mprfilterparams.Status + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
-					query += " and ApprovedBy=" + mprfilterparams.ApprovedBy + " and ApprovalStatus='" + mprfilterparams.Status + "'";
+					query += "and CheckStatus = 'Approved' and ApprovedBy =" + mprfilterparams.ApprovedBy + " and ApprovalStatus='" + mprfilterparams.Status + "'";
 
 				if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
 					query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";

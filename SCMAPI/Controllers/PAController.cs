@@ -14,6 +14,7 @@ using System.IO;
 using System.Data.OleDb;
 using System.Globalization;
 using System.Net.Http;
+using System.Data.SqlClient;
 
 namespace SCMAPI.Controllers
 {
@@ -395,10 +396,10 @@ namespace SCMAPI.Controllers
 		}
 		[HttpPost]
 		[Route("getMprPaDetailsBySearch")]
-		[ResponseType(typeof(List<GetMprPaDetailsByFilter>))]
+		[ResponseType(typeof(List<NewGetMprPaDetailsByFilter>))]
 		public async Task<IHttpActionResult> getMprPaDetailsBySearch(PADetailsModel model)
 		{
-			List<GetMprPaDetailsByFilter> filter = new List<GetMprPaDetailsByFilter>();
+			List<NewGetMprPaDetailsByFilter> filter = new List<NewGetMprPaDetailsByFilter>();
 			filter = await _paBusenessAcess.getMprPaDetailsBySearch(model);
 			return Ok(filter);
 		}
@@ -634,5 +635,68 @@ namespace SCMAPI.Controllers
         {
             return Ok(this._paBusenessAcess.Getmprstatus());
         }
+
+        [HttpPost]
+        [Route("GetmprstatusReport")]
+        [ResponseType(typeof(DataSet))]
+        public DataSet GetmprstatusReport(ReportInputModel model)
+        {
+            DataSet ds = new DataSet();
+            SqlParameter[] Param = new SqlParameter[3];
+
+            if (model.BuyerGroupId ==0)
+            {
+                Param[0] = new SqlParameter("buyergroupid", SqlDbType.VarChar);
+                Param[0].Value = DBNull.Value;
+                Param[1] = new SqlParameter("@fromdate", model.Fromdate);
+                Param[2] = new SqlParameter("@todate", model.Todate);
+            }
+            else
+            {
+                //string region = (string.Join(",", model.multiregion.Select(x => x.Region.ToString()).ToArray()));
+                Param[0] = new SqlParameter("@BuyerGroupId", model.BuyerGroupId);
+                Param[1] = new SqlParameter("@fromdate", model.Fromdate);
+                Param[2] = new SqlParameter("@todate", model.Todate);
+            }
+            ds = _paBusenessAcess.GetmprstatusReport("mprstatuareport", Param);
+            return ds;
+        }
+        [HttpPost]
+        [Route("GetMprstatuswisereport")]
+        [ResponseType(typeof(DataSet))]
+        public DataSet GetMprstatuswisereport(ReportInputModel model)
+        {
+            DataSet ds = new DataSet();
+            SqlParameter[] Param = new SqlParameter[1];
+
+            if (model.BuyerGroup == null)
+            {
+                Param[0] = new SqlParameter("buyergroupid", SqlDbType.VarChar);
+                Param[0].Value = DBNull.Value;
+            }
+            else
+            {
+                //string region = (string.Join(",", model.multiregion.Select(x => x.Region.ToString()).ToArray()));
+                Param[0] = new SqlParameter("@buyergroupid", model.BuyerGroupId);
+            }
+            ds = _paBusenessAcess.GetMprstatuswisereport("Mprwisereport",Param);
+            return ds;
+        }
+        [HttpPost]
+        [Route("GetmprRequisitionReport")]
+        public IHttpActionResult GetmprRequisitionReport(ReportInputModel input)
+        {
+            return Ok(this._paBusenessAcess.GetmprRequisitionReport(input));
+        }
+        [HttpGet]
+        [Route("GetmprRequisitionfilters")]
+        [ResponseType(typeof(ReportFilterModel))]
+        public IHttpActionResult GetmprRequisitionfilters()
+        {
+            ReportFilterModel status = new ReportFilterModel();
+            status =  _paBusenessAcess.GetmprRequisitionfilters();
+            return Ok(status);
+        }
+
     }
 }
