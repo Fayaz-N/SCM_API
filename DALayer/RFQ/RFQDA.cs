@@ -131,7 +131,7 @@ namespace DALayer.RFQ
 						rfqModel.rfqmaster.VendorVisibility = item.VendorVisibility;
 						rfqModel.rfqmaster.CreatedBy = item.CreatedBy;
 						rfqModel.rfqmaster.Created = DateTime.Now;
-						rfqModel.CreatedBy = Convert.ToInt32(item.CreatedBy);
+						rfqModel.CreatedBy =item.CreatedBy;
 						rfqModel.CreatedDate = DateTime.Now;
 						rfqModel.RfqValidDate = Convert.ToDateTime(item.RFQValidDate);
 						rfqModel.PackingForwading = item.PackingForwarding;
@@ -163,10 +163,10 @@ namespace DALayer.RFQ
 						}
 						rfqModel.RFQTerms = rfqList;
 						rfqModel.RfqDocuments = mprfqDocs;
-						CreateRfQ(rfqModel, true);
+						Task<RfqRevisionModel> rfqrevisionData =CreateRfQ(rfqModel, true);
 
 						if (item.sendemail == true)
-							this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId);
+							this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId, rfqrevisionData.Result.rfqmaster.RFQNo);
 					}
 				}
 			}
@@ -199,8 +199,8 @@ namespace DALayer.RFQ
 		{
 			using (YSCMEntities Context = new YSCMEntities())
 			{
-				MPRRfqItem mprItem = Context.MPRRfqItems.Where(li => li.RfqItemsid == mrRfqitems.RfqItemsid && li.MPRRevisionId== mrRfqitems.MPRRevisionId && li.MPRItemDetailsid== mrRfqitems.MPRItemDetailsid).FirstOrDefault();
-				if (mprItem == null && mrRfqitems.RfqItemsid!=0)
+				MPRRfqItem mprItem = Context.MPRRfqItems.Where(li => li.RfqItemsid == mrRfqitems.RfqItemsid && li.MPRRevisionId == mrRfqitems.MPRRevisionId && li.MPRItemDetailsid == mrRfqitems.MPRItemDetailsid).FirstOrDefault();
+				if (mprItem == null && mrRfqitems.RfqItemsid != 0)
 				{
 					mprItem = new MPRRfqItem();
 					mprItem.MPRRevisionId = mrRfqitems.MPRRevisionId;
@@ -212,7 +212,7 @@ namespace DALayer.RFQ
 				foreach (MPRRfqItemInfo item in mrRfqitems.MPRRfqItemInfos)
 				{
 					MPRRfqItemInfo mprItemInfo = Context.MPRRfqItemInfos.Where(li => li.rfqsplititemid == item.rfqsplititemid && li.MPRRFQitemId == item.MPRRFQitemId).FirstOrDefault();
-					if (mprItem!=null && mprItemInfo == null)
+					if (mprItem != null && mprItemInfo == null)
 					{
 						mprItemInfo = new MPRRfqItemInfo();
 						mprItemInfo.MPRRFQitemId = mprItem.MPRRFQitemId;
@@ -380,7 +380,7 @@ namespace DALayer.RFQ
 						}
 						catch (Exception ex)
 						{
-							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());						
+							log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
 
@@ -942,7 +942,7 @@ namespace DALayer.RFQ
 					foreach (var ve in eve.ValidationErrors)
 					{
 						log.ErrorMessage("RFQController", "CreateRfQ", ve.ErrorMessage.ToString());
-						
+
 					}
 				}
 				throw;
@@ -1235,7 +1235,7 @@ namespace DALayer.RFQ
 
 			catch (Exception ex)
 			{
-				
+
 				throw;
 			}
 
@@ -2618,7 +2618,7 @@ namespace DALayer.RFQ
 					//update rfqsplit item id in mprrfqitem
 
 					MPRRfqItem mprItem = obj.MPRRfqItems.Where(li => li.RfqItemsid == model.RFQItemsId).FirstOrDefault();
-					if (mprItem!=null)
+					if (mprItem != null)
 					{
 						MPRRfqItemInfo mprItemInfo = obj.MPRRfqItemInfos.Where(li => li.rfqsplititemid == remoteinfo.RFQSplitItemId && li.MPRRFQitemId == mprItem.MPRRFQitemId).FirstOrDefault();
 						if (mprItemInfo == null)
@@ -2640,7 +2640,7 @@ namespace DALayer.RFQ
 			catch (Exception ex)
 			{
 				log.ErrorMessage("RFQController", "InsertRfqItemInfo", ex.Message + "; " + ex.StackTrace.ToString());
-				RfqRevisionModel rq= new RfqRevisionModel();
+				RfqRevisionModel rq = new RfqRevisionModel();
 				return rq;
 				//throw;
 			}
@@ -2673,7 +2673,7 @@ namespace DALayer.RFQ
 					status.Sid = Localdata.RFQItemsId;
 				}
 				var mprrfqitem = obj.MPRRfqItemInfos.Where(li => li.rfqsplititemid == id).FirstOrDefault();
-				if(mprrfqitem!=null)
+				if (mprrfqitem != null)
 				{
 					mprrfqitem.Deleteflag = true;
 					obj.SaveChanges();
@@ -2875,7 +2875,7 @@ namespace DALayer.RFQ
 					revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
 					revision.StatusId = localrevision.StatusId;
 					revision.RFQStatus = obj.RFQStatus.Where(li => li.RfqRevisionId == revisionId).ToList();
-
+					revision.RFQDocs = obj.RFQDocuments.Where(li => li.rfqRevisionId == revisionId && li.rfqItemsid == null).ToList();
 					var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
 					var masters = new RFQMasterModel();
 					foreach (var item in rfqmasters)
@@ -5144,7 +5144,7 @@ namespace DALayer.RFQ
 			List<EmployeModel> model = new List<EmployeModel>();
 			try
 			{
-				var data = obj.Employees.Where(x=>x.DOL ==null).ToList();
+				var data = obj.Employees.Where(x => x.DOL == null).ToList();
 				if (data != null)
 				{
 					model = data.Select(x => new EmployeModel()

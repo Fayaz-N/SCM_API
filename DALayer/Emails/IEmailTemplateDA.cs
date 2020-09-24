@@ -10,7 +10,7 @@ namespace DALayer.Emails
 	public interface IEmailTemplateDA
 	{
 		bool prepareMPREmailTemplate(string typeOfuser,int revisionId, string FrmEmailId, string ToEmailId, string Remarks);
-        bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId);
+        bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId,string rfqno);
         bool prepareMPRStatusEmail(string FrmEmailId, string ToEmailId, string type, int revisionid);
         bool sendMailtoVendor(sendMailObj mailObj);
 		bool mailtoRequestor(int revisionId, string FrmEmailId);

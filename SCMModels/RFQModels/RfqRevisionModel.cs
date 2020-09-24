@@ -26,7 +26,7 @@ namespace SCMModels.RFQModels
 		public string RFQType { get; set; }
 		public Nullable<System.DateTime> QuoteValidFrom { get; set; }
 		public Nullable<System.DateTime> QuoteValidTo { get; set; }
-		public int CreatedBy { get; set; }
+		public string CreatedBy { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public DateTime RfqValidDate { get; set; }
 		public string PackingForwading { get; set; }
@@ -53,6 +53,7 @@ namespace SCMModels.RFQModels
 		public List<MPRIncharge> mprIncharges { get; set; }
 		public List<RFQCommunication> rfqCommunications { get; set; }
 		public List<MPRRFQDocument> RfqDocuments { get; set; }
+		public List<RFQDocument> RFQDocs { get; set; }
 		public Nullable<byte> StatusId { get; set; }
 
 	}

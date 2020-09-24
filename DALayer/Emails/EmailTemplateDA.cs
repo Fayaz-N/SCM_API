@@ -275,7 +275,7 @@ namespace DALayer.Emails
 		  Date of Creation <<01-12-2019>>
 		  Purpose : <<Emial template when rfq generated>>
 		  Review Date :<<>>   Reviewed By :<<>>*/
-		public bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId)
+		public bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId, string rfqno)
 		{
 			try
 			{
@@ -285,11 +285,11 @@ namespace DALayer.Emails
 					var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
 					if (vendor != null)
 					{
+						var mailData = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>());
 						var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
 						EmailSend emlSndngList = new EmailSend();
-						emlSndngList.Subject = "New RFQ Generated From YOKOGAWA";
-						emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
-						var mailData = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>());
+						emlSndngList.Subject = "New RFQ Generated From YOKOGAWA for RFQNo:" + rfqno + "";
+						emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 						if (mailData != null)
 							emlSndngList.FrmEmailId = mailData.EMail;
 						//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
@@ -454,14 +454,14 @@ namespace DALayer.Emails
 					string tkaddress = UI_Ipaddress + "SCM/TokochuRequest/" + tokuchureqId + "";
 					var issueOfPurpose = mprrevisionDetails.IssuePurposeId == 1 ? "For Enquiry" : "For Issuing PO";
 					EmailSend emlSndngList = new EmailSend();
-                    string deparments = string.Empty;
-                    deparments = ConfigurationManager.AppSettings["Departments"];
-                    var intList = deparments.Split(',').Select(int.Parse).ToList();
-                    Employee frmEmail = db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>();
+					string deparments = string.Empty;
+					deparments = ConfigurationManager.AppSettings["Departments"];
+					var intList = deparments.Split(',').Select(int.Parse).ToList();
+					Employee frmEmail = db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>();
 					emlSndngList.FrmEmailId = frmEmail.EMail;
 					emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToMailId).FirstOrDefault<Employee>()).EMail;
-                    emlSndngList.BCC = ConfigurationManager.AppSettings["BCCAribaMailId"]; 
-                    if (typeOfUser == "Verifier" || typeOfUser == "PreVerifier")
+					emlSndngList.BCC = ConfigurationManager.AppSettings["BCCAribaMailId"];
+					if (typeOfUser == "Verifier" || typeOfUser == "PreVerifier")
 					{
 						//send mail to requestor
 						emlSndngList.Subject = "Tokuchu Request Verfied - " + mprrevisionDetails.DocumentNo + "";
@@ -488,19 +488,19 @@ namespace DALayer.Emails
 						if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 							this.sendEmail(emlSndngList);
 					}
-                    //added by senthil on 26/08/2020 for sending email to MPR Requester to add the tokuchu informaiton to Sale order for base orders and service department.
-                    if (typeOfUser == "MPRRequestor")
-                    {
-                        if (intList.Contains(Convert.ToInt32(mprrevisionDetails.DepartmentId)))
-                        {
-                            emlSndngList.Subject = "ARIBA tokuchu nos creation is completed for  - " + mprrevisionDetails.DocumentNo + "";
+					//added by senthil on 26/08/2020 for sending email to MPR Requester to add the tokuchu informaiton to Sale order for base orders and service department.
+					if (typeOfUser == "MPRRequestor")
+					{
+						if (intList.Contains(Convert.ToInt32(mprrevisionDetails.DepartmentId)))
+						{
+							emlSndngList.Subject = "ARIBA tokuchu nos creation is completed for  - " + mprrevisionDetails.DocumentNo + "";
 
-                            emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Please update the ARIBA tokuchu information to respective sale order.</div></div><br/><table border='1' class='table table-bordered table-sm'><tr><td><b>MPR Number</b></td><td>" + mprrevisionDetails.DocumentNo + "</td><td><b>Document Description</b></td><td>" + mprrevisionDetails.DocumentDescription + "</td><td><b>Purpose of Iussing MPR</b></td><td>" + issueOfPurpose + "</td></tr><tr><td><b>Department</b></td><td>" + mprrevisionDetails.DepartmentName + "</td><td><b>Project Manager</td></td><td>" + mprrevisionDetails.ProjectManagerName + "</td><td><b>Job Code</b></td><td>" + mprrevisionDetails.JobCode + " - " + mprrevisionDetails.SaleOrderNo + "</td></tr><tr><td><b>Client Name</b></td><td>" + mprrevisionDetails.ClientName + "</td><td><b>Job Name</b></td><td>" + mprrevisionDetails.JobName + "</td><td><b>Buyer Group</b></td><td>" + mprrevisionDetails.BuyerGroupName + "</td></tr><tr><td><b>Checker Name</b></td><td>" + mprrevisionDetails.CheckedName + "</td><td><b>Checker Status</b></td><td>" + mprrevisionDetails.CheckStatus + "</td><td><b>Checker Remarks</b></td><td>" + mprrevisionDetails.CheckerRemarks + "</td></tr><tr><td><b>Approver Name</b></td><td>" + mprrevisionDetails.ApproverName + "</td><td><b>Approver Status</b></td><td>" + mprrevisionDetails.ApprovalStatus + "</td><td><b>Approver Remarks</b></td><td>" + mprrevisionDetails.ApproverRemarks + "</td></tr></table><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
-                            if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
-                                this.sendEmail(emlSndngList);
-                        }
-                    }
-                }
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Please update the ARIBA tokuchu information to respective sale order.</div></div><br/><table border='1' class='table table-bordered table-sm'><tr><td><b>MPR Number</b></td><td>" + mprrevisionDetails.DocumentNo + "</td><td><b>Document Description</b></td><td>" + mprrevisionDetails.DocumentDescription + "</td><td><b>Purpose of Iussing MPR</b></td><td>" + issueOfPurpose + "</td></tr><tr><td><b>Department</b></td><td>" + mprrevisionDetails.DepartmentName + "</td><td><b>Project Manager</td></td><td>" + mprrevisionDetails.ProjectManagerName + "</td><td><b>Job Code</b></td><td>" + mprrevisionDetails.JobCode + " - " + mprrevisionDetails.SaleOrderNo + "</td></tr><tr><td><b>Client Name</b></td><td>" + mprrevisionDetails.ClientName + "</td><td><b>Job Name</b></td><td>" + mprrevisionDetails.JobName + "</td><td><b>Buyer Group</b></td><td>" + mprrevisionDetails.BuyerGroupName + "</td></tr><tr><td><b>Checker Name</b></td><td>" + mprrevisionDetails.CheckedName + "</td><td><b>Checker Status</b></td><td>" + mprrevisionDetails.CheckStatus + "</td><td><b>Checker Remarks</b></td><td>" + mprrevisionDetails.CheckerRemarks + "</td></tr><tr><td><b>Approver Name</b></td><td>" + mprrevisionDetails.ApproverName + "</td><td><b>Approver Status</b></td><td>" + mprrevisionDetails.ApprovalStatus + "</td><td><b>Approver Remarks</b></td><td>" + mprrevisionDetails.ApproverRemarks + "</td></tr></table><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+					}
+				}
 			}
 			catch (Exception ex)
 			{
