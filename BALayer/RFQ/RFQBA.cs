@@ -594,5 +594,9 @@ namespace BALayer.RFQ
         {
             return _rfqDataAcess.PreviouPriceUpdate(previousprice);
         }
-    }
+		public bool updateHandlingCharges(List<RFQItems_N> rfqItems)
+		{
+			return _rfqDataAcess.updateHandlingCharges(rfqItems);
+		}
+	}
 }

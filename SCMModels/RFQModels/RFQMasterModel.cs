@@ -21,7 +21,9 @@ namespace SCMModels.RFQModels
         public string CreatedBy { get; set; }
         public DateTime Created { get; set; }
         public VendormasterModel Vendor { get; set; }
-        public List<RfqRevisionModel> Revision { get; set; }
+		public Nullable<byte> ProcurementSourceId { get; set; }
+
+		public List<RfqRevisionModel> Revision { get; set; }
     }
     public class RFQMasterDataModel
     {

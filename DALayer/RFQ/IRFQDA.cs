@@ -135,5 +135,6 @@ namespace DALayer.RFQ
         Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model);
         Task<List<GetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);
         bool PreviouPriceUpdate(MPRItemInfo previousprice);
-    }
+		bool updateHandlingCharges(List<RFQItems_N> rfqItems);
+	}
 }

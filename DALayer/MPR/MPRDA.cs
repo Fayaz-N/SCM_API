@@ -1366,8 +1366,8 @@ Review Date :<<>>   Reviewed By :<<>>
 				if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
 					query += " and CheckedBy=" + mprfilterparams.CheckedBy + " and CheckStatus='" + mprfilterparams.Status + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
-					query += "and CheckStatus = 'Approved' and ApprovedBy =" + mprfilterparams.ApprovedBy + " and ApprovalStatus='" + mprfilterparams.Status + "'";
-
+					//query += "and CheckStatus = 'Approved' and (ApprovedBy =" + mprfilterparams.ApprovedBy + " OR SecondApprover  =" + mprfilterparams.ApprovedBy + " OR ThirdApprover=" + mprfilterparams.ApprovedBy + ") and ApprovalStatus='" + mprfilterparams.Status + "'";
+					query += " and (ApprovedBy =" + mprfilterparams.ApprovedBy + " OR SecondApprover  =" + mprfilterparams.ApprovedBy + " OR ThirdApprover=" + mprfilterparams.ApprovedBy + ") and ApprovalStatus='" + mprfilterparams.Status + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
 					query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.ORgDepartmentid))

@@ -131,7 +131,7 @@ namespace DALayer.RFQ
 						rfqModel.rfqmaster.VendorVisibility = item.VendorVisibility;
 						rfqModel.rfqmaster.CreatedBy = item.CreatedBy;
 						rfqModel.rfqmaster.Created = DateTime.Now;
-						rfqModel.CreatedBy =item.CreatedBy;
+						rfqModel.CreatedBy = item.CreatedBy;
 						rfqModel.CreatedDate = DateTime.Now;
 						rfqModel.RfqValidDate = Convert.ToDateTime(item.RFQValidDate);
 						rfqModel.PackingForwading = item.PackingForwarding;
@@ -163,7 +163,7 @@ namespace DALayer.RFQ
 						}
 						rfqModel.RFQTerms = rfqList;
 						rfqModel.RfqDocuments = mprfqDocs;
-						Task<RfqRevisionModel> rfqrevisionData =CreateRfQ(rfqModel, true);
+						Task<RfqRevisionModel> rfqrevisionData = CreateRfQ(rfqModel, true);
 
 						if (item.sendemail == true)
 							this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId, rfqrevisionData.Result.rfqmaster.RFQNo);
@@ -2891,7 +2891,10 @@ namespace DALayer.RFQ
 						masters.Vendor.VendorName = vendorMaster.VendorName;
 						masters.Vendor.Emailid = vendorMaster.Emailid;
 						if (item.MPRRevisionId != null)
+						{
 							masters.MPRRevisionId = (int)item.MPRRevisionId;
+							masters.ProcurementSourceId = obj.MPRRevisions.Where(li => li.RevisionId == masters.MPRRevisionId).FirstOrDefault().ProcurementSourceId;
+						}
 						masters.CreatedBy = item.CreatedBy;
 					}
 					revision.mprIncharges = obj.MPRIncharges.Where(li => li.RevisionId == masters.MPRRevisionId).ToList();
@@ -2937,6 +2940,10 @@ namespace DALayer.RFQ
 						rfqitems.MfgPartNo = item.MfgPartNo;
 						rfqitems.ManufacturerName = item.ManufacturerName;
 						rfqitems.RequestRemarks = item.RequestRemarks;
+						rfqitems.HandlingPercentage = item.HandlingPercentage;
+						rfqitems.ImportFreightPercentage = item.ImportFreightPercentage;
+						rfqitems.InsurancePercentage = item.InsurancePercentage;
+						rfqitems.DutyPercentage = item.DutyPercentage;
 						rfqitems.RfqVendorBOM = obj.RfqVendorBOMs.Where(li => li.RfqItemsId == rfqitems.RFQItemsId).ToList();
 						if (item.ItemId != null)
 						{
@@ -2986,6 +2993,7 @@ namespace DALayer.RFQ
 							rfqDocs.RfqDocumentId = items.RfqDocId;
 							rfqDocs.RfqRevisionId = items.rfqRevisionId;
 							rfqDocs.RfqItemsId = items.rfqItemsid;
+							rfqDocs.DocumentType = items.DocumentType;
 							rfqDocs.DocumentName = items.DocumentName;
 							rfqDocs.Path = items.Path;
 							rfqDocs.UploadedBy = items.UploadedBy;
@@ -5906,6 +5914,28 @@ namespace DALayer.RFQ
 			mpritem.POPrice = previousprice.POPrice;
 			mpritem.PORemarks = previousprice.PORemarks;
 			obj.SaveChanges();
+			return true;
+		}
+
+		/*Name of Function : <<updateHandlingCharges>>  Author :<<Prasanna>>  
+		  Date of Creation <<25-09-2020>>
+		  Purpose : <<Insert and update rfq status details>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
+		public bool updateHandlingCharges(List<RFQItems_N> rfqItems)
+		{
+
+			foreach (RFQItems_N rfqItem in rfqItems)
+			{
+				if (rfqItem != null)
+				{
+					RFQItems_N newRfqItem = obj.RFQItems_N.Where(li => li.RFQItemsId == rfqItem.RFQItemsId).FirstOrDefault();
+					newRfqItem.HandlingPercentage = rfqItem.HandlingPercentage;
+					newRfqItem.ImportFreightPercentage = rfqItem.ImportFreightPercentage;
+					newRfqItem.InsurancePercentage = rfqItem.InsurancePercentage;
+					newRfqItem.DutyPercentage = rfqItem.DutyPercentage;
+					obj.SaveChanges();
+				}
+			}
 			return true;
 		}
 

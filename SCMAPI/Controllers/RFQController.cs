@@ -400,5 +400,11 @@ namespace SCMAPI.Controllers
 		{
 			return Ok(await _rfqBusenessAcess.GetRfqByVendorId(VendorId));
 		}
+		[HttpPost]
+		[Route("updateHandlingCharges")]
+		public IHttpActionResult updateHandlingCharges(List<RFQItems_N> rfqItems)
+		{
+			return Ok(this._rfqBusenessAcess.updateHandlingCharges(rfqItems));
+		}
 	}
 }
