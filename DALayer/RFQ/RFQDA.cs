@@ -5923,18 +5923,24 @@ namespace DALayer.RFQ
 		  Review Date :<<>>   Reviewed By :<<>>*/
 		public bool updateHandlingCharges(List<RFQItems_N> rfqItems)
 		{
-
-			foreach (RFQItems_N rfqItem in rfqItems)
+			try
 			{
-				if (rfqItem != null)
+				foreach (RFQItems_N rfqItem in rfqItems)
 				{
-					RFQItems_N newRfqItem = obj.RFQItems_N.Where(li => li.RFQItemsId == rfqItem.RFQItemsId).FirstOrDefault();
-					newRfqItem.HandlingPercentage = rfqItem.HandlingPercentage;
-					newRfqItem.ImportFreightPercentage = rfqItem.ImportFreightPercentage;
-					newRfqItem.InsurancePercentage = rfqItem.InsurancePercentage;
-					newRfqItem.DutyPercentage = rfqItem.DutyPercentage;
-					obj.SaveChanges();
+					if (rfqItem != null)
+					{
+						RFQItems_N newRfqItem = obj.RFQItems_N.Where(li => li.RFQItemsId == rfqItem.RFQItemsId).FirstOrDefault();
+						newRfqItem.HandlingPercentage = rfqItem.HandlingPercentage;
+						newRfqItem.ImportFreightPercentage = rfqItem.ImportFreightPercentage;
+						newRfqItem.InsurancePercentage = rfqItem.InsurancePercentage;
+						newRfqItem.DutyPercentage = rfqItem.DutyPercentage;
+						obj.SaveChanges();
+					}
 				}
+			}
+			catch (Exception errmsg)
+			{
+				log.ErrorMessage("RFQController", "updateHandlingCharges", errmsg.Message.ToString());
 			}
 			return true;
 		}
