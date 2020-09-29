@@ -642,7 +642,7 @@ namespace SCMAPI.Controllers
         public DataSet GetmprstatusReport(ReportInputModel model)
         {
             DataSet ds = new DataSet();
-            SqlParameter[] Param = new SqlParameter[3];
+            SqlParameter[] Param = new SqlParameter[4];
 
             if (model.BuyerGroupId ==0)
             {
@@ -650,6 +650,7 @@ namespace SCMAPI.Controllers
                 Param[0].Value = DBNull.Value;
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
+                Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
             }
             else
             {
@@ -657,6 +658,7 @@ namespace SCMAPI.Controllers
                 Param[0] = new SqlParameter("@BuyerGroupId", model.BuyerGroupId);
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
+                Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
             }
             ds = _paBusenessAcess.GetmprstatusReport("mprstatuareport", Param);
             return ds;
@@ -697,6 +699,11 @@ namespace SCMAPI.Controllers
             status =  _paBusenessAcess.GetmprRequisitionfilters();
             return Ok(status);
         }
-
+        [HttpGet]
+        [Route("Loadprojectmanagersforreport")]
+        public IHttpActionResult Loadprojectmanagersforreport()
+        {
+            return Ok(this._paBusenessAcess.Loadprojectmanagersforreport());
+        }
     }
 }

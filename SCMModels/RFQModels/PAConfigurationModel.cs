@@ -52,8 +52,9 @@ namespace SCMModels.RFQModels
             mprcheckedby = new List<MprCheckers>();
             mprApprovedby = new List<MprApprovers>();
             purposetype = new List<IssuepurposeType>();
+            jobcode = new List<jobcodes>();
         }
-        public string[] jobcode { get; set; }
+        public List<jobcodes> jobcode { get; set; }
         public DateTime Fromdate { get; set; }
         public DateTime Todate { get; set; }
         public List<Mprprepare> mprprepares { get; set; }
@@ -80,5 +81,10 @@ namespace SCMModels.RFQModels
     {
         public string approvedby { get; set; }
         public string approvername { get; set; }
+    }
+    public class jobcodes
+    {
+        public string Jobcode { get; set; }
+        public int ID { get; set; }
     }
 }

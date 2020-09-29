@@ -290,5 +290,10 @@ namespace BALayer.PurchaseAuthorization
         {
             return _purchaseDataAcess.GetmprRequisitionfilters();
         }
+
+        public List<loadprojectmangersforreport> Loadprojectmanagersforreport()
+        {
+            return _purchaseDataAcess.Loadprojectmanagersforreport();
+        }
     }
 }

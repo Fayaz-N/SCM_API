@@ -73,5 +73,6 @@ namespace DALayer.PurchaseAuthorization
         DataSet GetmprstatusReport(string spName, SqlParameter[] paramArr);
         List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input);
         ReportFilterModel GetmprRequisitionfilters();
+        List<loadprojectmangersforreport> Loadprojectmanagersforreport();
     }
 }
