@@ -169,6 +169,28 @@ namespace BALayer.MPR
 			return this._mprDataAcess.DeletefileAttached(model);
 		}
 
+		public List<YILTermsGroup> GetYILTermGroups()
+		{
+			return this._mprDataAcess.GetYILTermGroups();
+		}
+
+		public bool UpdateYILTermsGroup(YILTermsGroup yilTermGroups)
+		{
+			return this._mprDataAcess.UpdateYILTermsGroup(yilTermGroups);
+		}
+		public bool UpdateYILTermsAndConditions(YILTermsandCondition yilTermandconditions)
+		{
+			return this._mprDataAcess.UpdateYILTermsAndConditions(yilTermandconditions);
+		}
+		public bool DeleteTermGroup(int TermGroupId, string DeletedBy)
+		{
+			return this._mprDataAcess.DeleteTermGroup(TermGroupId, DeletedBy);
+		}
+		public bool DeleteTermsAndConditions(int TermId, string DeletedBy)
+		{
+			return this._mprDataAcess.DeleteTermsAndConditions(TermId, DeletedBy);
+		}
+
 
 	}
 }

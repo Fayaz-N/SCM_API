@@ -252,6 +252,38 @@ namespace SCMAPI.Controllers
 			return Ok(this._mprBusenessAcess.DeletefileAttached(model));
 		}
 
+
+		[HttpGet]
+		[Route("GetYILTermGroups")]
+		public IHttpActionResult GetYILTermGroups()
+		{
+			return Ok(this._mprBusenessAcess.GetYILTermGroups());
+		}
+		[HttpPost]
+		[Route("UpdateYILTermsGroup")]
+		public IHttpActionResult UpdateYILTermsGroup(YILTermsGroup model)
+		{
+			return Ok(this._mprBusenessAcess.UpdateYILTermsGroup(model));
+		}
+		[HttpPost]
+		[Route("UpdateYILTermsAndConditions")]
+		public IHttpActionResult UpdateYILTermsAndConditions(YILTermsandCondition model)
+		{
+			return Ok(this._mprBusenessAcess.UpdateYILTermsAndConditions(model));
+		}
+		[HttpGet]
+		[Route("DeleteTermGroup/{TermGroupId}/{DeletedBy}")]
+		public IHttpActionResult DeleteTermGroup(int TermGroupId, string DeletedBy)
+		{
+			return Ok(this._mprBusenessAcess.DeleteTermGroup(TermGroupId,  DeletedBy));
+		}
+		[HttpGet]
+		[Route("DeleteTermsAndConditions/{TermId}/{DeletedBy}")]
+		public IHttpActionResult DeleteTermsAndConditions(int TermId, string DeletedBy)
+		{
+			return Ok(this._mprBusenessAcess.DeleteTermsAndConditions(TermId, DeletedBy));
+		}
+
 		[Route("UploadFile")]
 		[HttpPost]
 		public IHttpActionResult UploadFile()

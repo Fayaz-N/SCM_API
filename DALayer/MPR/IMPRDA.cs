@@ -52,8 +52,11 @@ namespace DALayer.MPR
 		VendorRegistrationModel GetVendorDetails(int vendorId);
 		bool SaveVendorDetails(VendorRegistrationModel model);
 		bool DeletefileAttached(VendorRegisterDocumentDetail model);
+		List<YILTermsGroup> GetYILTermGroups();
 
-
-
+		bool UpdateYILTermsGroup(YILTermsGroup yilTermGroups);
+		bool UpdateYILTermsAndConditions(YILTermsandCondition yilTermandconditions);
+		bool DeleteTermGroup(int TermGroupId, string DeletedBy);
+		bool DeleteTermsAndConditions(int TermId, string DeletedBy);
 	}
 }

@@ -17,10 +17,10 @@ namespace BALayer.MPR
 		bool addDataToDBMasters(DynamicSearchResult Result);
 		bool updateDataToDBMasters(DynamicSearchResult Result);
 		MPRRevision updateMPR(MPRRevision mpr);
-        MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder, bool revise);
-        
-        int addNewVendor(VendormasterModel vendor);
-        DataTable GetListItems(DynamicSearchResult Result);
+		MPRRevision copyMprRevision(MPRRevision mpr, bool repeatOrder, bool revise);
+
+		int addNewVendor(VendormasterModel vendor);
+		DataTable GetListItems(DynamicSearchResult Result);
 		bool deleteMPRDocument(MPRDocument mprDocument);
 		bool deleteMPRItemInfo(MPRItemInfo mprItemInfo);
 		string addMprItemInfo(MPRItemInfo mPRItemInfo);
@@ -28,18 +28,18 @@ namespace BALayer.MPR
 		bool deleteMPRDocumentation(MPRDocumentation MPRDocumentation);
 		MPRRevision getMPRRevisionDetails(int RevisionId);
 		DataTable getMPRList(mprFilterParams mprfilterparams);
-        DataTable getSavingsReport(mprFilterParams mprfilterparams);      
-        int getMPRPendingListCnt(string preparedBy);
-        List<Employee> getEmployeeList();
+		DataTable getSavingsReport(mprFilterParams mprfilterparams);
+		int getMPRPendingListCnt(string preparedBy);
+		List<Employee> getEmployeeList();
 		List<MPRRevisionDetails_woItems> getMPRRevisionList(int RequisitionId);
 		MPRRevision statusUpdate(MPRStatusUpdate mprStatus);
 		List<SCMStatu> getStatusList();
-        List<UserPermission> getAccessList(int RoleId);
-        bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
-		 bool deleteMPR(DeleteMpr deleteMprInfo);
+		List<UserPermission> getAccessList(int RoleId);
+		bool updateMPRVendor(List<MPRVendorDetail> MPRVendorDetails, int RevisionId);
+		bool deleteMPR(DeleteMpr deleteMprInfo);
 		string updateItemId(materialUpdate mPRItemInfo);
-        List<loadloction> Loadstoragelocationsbydepartment();
-        SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
+		List<loadloction> Loadstoragelocationsbydepartment();
+		SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
 
 		VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser);
 		List<VendorRegProcessView> getVendorReqList(vendorRegfilters getVendorReqList);
@@ -49,6 +49,12 @@ namespace BALayer.MPR
 		VendorRegistrationModel GetVendorDetails(int vendorId);
 		bool SaveVendorDetails(VendorRegistrationModel model);
 		bool DeletefileAttached(VendorRegisterDocumentDetail model);
+
+		List<YILTermsGroup> GetYILTermGroups();
+		bool UpdateYILTermsGroup(YILTermsGroup yilTermGroups);
+		bool UpdateYILTermsAndConditions(YILTermsandCondition yilTermandconditions);
+		bool DeleteTermGroup(int TermGroupId, string DeletedBy);
+		bool DeleteTermsAndConditions(int TermId, string DeletedBy);
 	}
 
 }

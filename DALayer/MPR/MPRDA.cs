@@ -224,10 +224,10 @@ Review Date :<<>>   Reviewed By :<<>>
 									item.MfgPartNo = mPRItemInfo.MfgPartNo;
 									item.TargetSpend = mPRItemInfo.TargetSpend;
 									item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
-                                    item.ProjectDefinition = mPRItemInfo.ProjectDefinition;
-                                    item.WBS = mPRItemInfo.WBS;
-                                    item.SystemModel = mPRItemInfo.SystemModel;
-                                }
+									item.ProjectDefinition = mPRItemInfo.ProjectDefinition;
+									item.WBS = mPRItemInfo.WBS;
+									item.SystemModel = mPRItemInfo.SystemModel;
+								}
 							}
 							DB.SaveChanges();
 						}
@@ -1050,7 +1050,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					{
 						MPRItemInfo item = new MPRItemInfo();
 						item.Itemid = mPRItemInfo.Itemid;
-						item.RevisionId = mPRItemInfo.RevisionId; 
+						item.RevisionId = mPRItemInfo.RevisionId;
 						item.ItemDescription = mPRItemInfo.ItemDescription;
 						item.Quantity = mPRItemInfo.Quantity;
 						item.UnitId = mPRItemInfo.UnitId;
@@ -1060,9 +1060,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						item.MfgPartNo = mPRItemInfo.MfgPartNo;
 						item.TargetSpend = mPRItemInfo.TargetSpend;
 						item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
-                        item.ProjectDefinition = mPRItemInfo.ProjectDefinition;
-                        item.WBS = mPRItemInfo.WBS;
-                        item.SystemModel = mPRItemInfo.SystemModel;
+						item.ProjectDefinition = mPRItemInfo.ProjectDefinition;
+						item.WBS = mPRItemInfo.WBS;
+						item.SystemModel = mPRItemInfo.SystemModel;
 						context.MPRItemInfoes.Add(item);
 						context.SaveChanges();
 					}
@@ -1166,12 +1166,12 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
 			{
-				item.PAItems = DB.PAItems.Include(li => li.TokuchuLIneItems).Include(li=>li.MPRPADetail).Where(li => li.MPRItemDetailsId == item.Itemdetailsid && li.MPRPADetail.DeleteFlag==false).ToList();
-                //item.PAItems = (from x in DB.PAItems join y in DB.TokuchuLIneItems on x.PAItemID equals (int?) y.PAItemID 
-                //           join z in DB.MPRPADetails on x.PAID equals z.PAId 
-                //           where x.MPRItemDetailsId == item.Itemdetailsid && z.DeleteFlag!=true && x.MPRItemDetailsId==item.Itemdetailsid  select x).ToList();
+				item.PAItems = DB.PAItems.Include(li => li.TokuchuLIneItems).Include(li => li.MPRPADetail).Where(li => li.MPRItemDetailsId == item.Itemdetailsid && li.MPRPADetail.DeleteFlag == false).ToList();
+				//item.PAItems = (from x in DB.PAItems join y in DB.TokuchuLIneItems on x.PAItemID equals (int?) y.PAItemID 
+				//           join z in DB.MPRPADetails on x.PAID equals z.PAId 
+				//           where x.MPRItemDetailsId == item.Itemdetailsid && z.DeleteFlag!=true && x.MPRItemDetailsId==item.Itemdetailsid  select x).ToList();
 
-            }
+			}
 			//foreach (MPRVendorDetail item in mprRevisionDetails.MPRVendorDetails)
 			//{
 			//	item.VendorMaster = DB.VendorMasters.Where(li => li.Vendorid == item.Vendorid).FirstOrDefault();
@@ -1594,11 +1594,11 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 2;
 								if (mprStatus.status == "Sent for Modification")
-                                {
-                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
-                                    mprrevision.CheckStatus = "Pending";
-                                }
-									
+								{
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+									mprrevision.CheckStatus = "Pending";
+								}
+
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 
@@ -1629,12 +1629,12 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 3;
 								if (mprStatus.status == "Sent for Modification")
-                                {
-                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
-                                    mprrevision.CheckStatus = "Pending";
-                                    mprrevision.ApprovalStatus = "Pending";
-                                }
-									
+								{
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+									mprrevision.CheckStatus = "Pending";
+									mprrevision.ApprovalStatus = "Pending";
+								}
+
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 							if (mprrevision.IssuePurposeId == 2)//update oapprover
@@ -1663,13 +1663,13 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 22;
 								if (mprStatus.status == "Sent for Modification")
-                                {
-                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
-                                    mprrevision.CheckStatus = "Pending";
-                                    mprrevision.SecondApproversStatus = "Pending";
-                                    mprrevision.ApprovalStatus = "Pending";
-                                }
-									
+								{
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+									mprrevision.CheckStatus = "Pending";
+									mprrevision.SecondApproversStatus = "Pending";
+									mprrevision.ApprovalStatus = "Pending";
+								}
+
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 
@@ -1700,14 +1700,14 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								statusId = mPRStatusTrackDetails.StatusId = 24;
 								if (mprStatus.status == "Sent for Modification")
-                                {
-                                    statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
-                                    mprrevision.CheckStatus = "Pending";
-                                    mprrevision.SecondApproversStatus = "Pending";
-                                    mprrevision.ApprovalStatus = "Pending";
-                                    mprrevision.ThirdApproverStatus = "Pending";
-                                }
-									
+								{
+									statusId = mPRStatusTrackDetails.StatusId = 20;//mpr send for modification
+									mprrevision.CheckStatus = "Pending";
+									mprrevision.SecondApproversStatus = "Pending";
+									mprrevision.ApprovalStatus = "Pending";
+									mprrevision.ThirdApproverStatus = "Pending";
+								}
+
 								updateMprstatusTrack(mPRStatusTrackDetails);
 							}
 							if (mprrevision.IssuePurposeId == 2)//update osecond approver
@@ -1762,9 +1762,9 @@ Review Date :<<>>   Reviewed By :<<>>
 							mprrevision.OThirdApproverRemarks = mprStatus.Remarks;
 							mprrevision.OThirdApproverStatusChangedOn = DateTime.Now;
 						}
-						else if (mprStatus.typeOfuser == "Requestor") 
+						else if (mprStatus.typeOfuser == "Requestor")
 
-                        {
+						{
 							this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mprrevision.RevisionId, mprrevision.PreparedBy, mprrevision.CheckedBy, "");
 						}
 						mprrevision.StatusId = Convert.ToByte(statusId);
@@ -2600,7 +2600,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						}
 
 
-					}				
+					}
 				}
 				return true;
 			}
@@ -2720,6 +2720,134 @@ Review Date :<<>>   Reviewed By :<<>>
 					//Context.MPRDocuments.Remove(deptDelete);
 					Context.SaveChanges();
 				}
+			}
+			return true;
+		}
+
+		public List<YILTermsGroup> GetYILTermGroups()
+		{
+			List<YILTermsGroup> YILTermsGroupList = new List<YILTermsGroup>();
+			try
+			{
+
+
+				YILTermsGroupList = DB.YILTermsGroups.Where(x => x.DeleteFlag == false).OrderBy(x => x.TermGroupId).ToList();
+				foreach (var item in YILTermsGroupList)
+				{
+					item.YILTermsandConditions = DB.YILTermsandConditions.Where(li => li.TermGroupId == item.TermGroupId).OrderBy(x => x.TermId).ToList();
+					item.YILTermsandConditions = item.YILTermsandConditions.Where(li => li.DeleteFlag == false).ToList();
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("MPRController", "GetYILTermGroups", ex.Message.ToString());
+			}
+			return YILTermsGroupList;
+		}
+
+		public bool UpdateYILTermsGroup(YILTermsGroup yilTermGroups)
+		{
+			try
+			{
+				YILTermsGroup yilTermGrp = DB.YILTermsGroups.Where(li => li.TermGroupId == yilTermGroups.TermGroupId).FirstOrDefault();
+				if (yilTermGrp == null)
+				{
+					YILTermsGroup termGrp = new YILTermsGroup();
+					termGrp.TermGroup = yilTermGroups.TermGroup;
+					termGrp.CreatedBy = yilTermGroups.CreatedBy;
+					termGrp.CreatedDate = DateTime.Now;
+					termGrp.DeleteFlag = false;
+					DB.YILTermsGroups.Add(termGrp);
+					DB.SaveChanges();
+				}
+				else
+				{
+					yilTermGrp.TermGroup = yilTermGroups.TermGroup;
+					yilTermGrp.CreatedBy = yilTermGroups.CreatedBy;
+					yilTermGrp.CreatedDate = DateTime.Now;
+					yilTermGrp.DeleteFlag = false;
+					DB.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("MPRController", "UpdateYILTermsGroup", ex.Message.ToString());
+			}
+			return true;
+		}
+		public bool UpdateYILTermsAndConditions(YILTermsandCondition yilTermandconditions)
+		{
+			try
+			{
+				YILTermsandCondition yilTermsConditions = DB.YILTermsandConditions.Where(li => li.TermId == yilTermandconditions.TermId).FirstOrDefault();
+				if (yilTermsConditions == null)
+				{
+					YILTermsandCondition termCond = new YILTermsandCondition();
+					termCond.Terms = yilTermandconditions.Terms;
+					termCond.TermGroupId = yilTermandconditions.TermGroupId;
+					termCond.BuyerGroupId = yilTermandconditions.BuyerGroupId;
+					termCond.DefaultSelect = yilTermandconditions.DefaultSelect;
+					termCond.CreatedBy = yilTermandconditions.CreatedBy;
+					termCond.CreatedDate = DateTime.Now;
+					termCond.DeleteFlag = false;
+					DB.YILTermsandConditions.Add(termCond);
+					DB.SaveChanges();
+				}
+				else
+				{
+					yilTermsConditions.Terms = yilTermandconditions.Terms;
+					yilTermsConditions.TermGroupId = yilTermandconditions.TermGroupId;
+					yilTermsConditions.BuyerGroupId = yilTermandconditions.BuyerGroupId;
+					yilTermsConditions.DefaultSelect = yilTermandconditions.DefaultSelect;
+					yilTermsConditions.CreatedBy = yilTermandconditions.CreatedBy;
+					yilTermsConditions.CreatedDate = DateTime.Now;
+					yilTermsConditions.DeleteFlag = false;
+					DB.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("MPRController", "UpdateYILTermsAndConditions", ex.Message.ToString());
+			}
+			return true;
+		}
+		public bool DeleteTermGroup(int TermGroupId, string DeletedBy)
+		{
+			try
+			{
+				YILTermsGroup yilTermGrp = DB.YILTermsGroups.Where(li => li.TermGroupId == TermGroupId).FirstOrDefault();
+				if (yilTermGrp != null)
+				{
+
+					yilTermGrp.DeletedBy = DeletedBy;
+					yilTermGrp.DeletedDate = DateTime.Now;
+					yilTermGrp.DeleteFlag = true;
+					DB.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("MPRController", "UpdateYILTermsAndConditions", ex.Message.ToString());
+			}
+			return true;
+		}
+		public bool DeleteTermsAndConditions(int TermId, string DeletedBy)
+		{
+			try
+			{
+				YILTermsandCondition YILTermsandCondition = DB.YILTermsandConditions.Where(li => li.TermId == TermId).FirstOrDefault();
+				if (YILTermsandCondition != null)
+				{
+
+					YILTermsandCondition.DeletedBy = DeletedBy;
+					YILTermsandCondition.DeletedDate = DateTime.Now;
+					YILTermsandCondition.DeleteFlag = true;
+					DB.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("MPRController", "UpdateYILTermsAndConditions", ex.Message.ToString());
 			}
 			return true;
 		}

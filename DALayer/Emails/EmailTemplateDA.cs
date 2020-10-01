@@ -293,6 +293,8 @@ namespace DALayer.Emails
 						if (mailData != null)
 							emlSndngList.FrmEmailId = mailData.EMail;
 						//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
+						if (!string.IsNullOrEmpty(emlSndngList.FrmEmailId))
+							emlSndngList.BCC = emlSndngList.FrmEmailId;
 						string emails = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
 						List<string> emailList = emails.Split(',').ToList();
 						foreach (var item in emailList)
