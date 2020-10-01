@@ -684,7 +684,7 @@ namespace SCMAPI.Controllers
                 Param[0] = new SqlParameter("@BuyerGroupId", model.BuyerGroupId);
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
-                Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
+                Param[3] = new SqlParameter("@ProjectManager", model.ProjectManager);
             }
             ds = _paBusenessAcess.GetMprstatuswisereport("Mprwisereport",Param);
             return ds;
