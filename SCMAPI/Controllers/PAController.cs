@@ -669,17 +669,22 @@ namespace SCMAPI.Controllers
         public DataSet GetMprstatuswisereport(ReportInputModel model)
         {
             DataSet ds = new DataSet();
-            SqlParameter[] Param = new SqlParameter[1];
-
-            if (model.BuyerGroup == null)
+            SqlParameter[] Param = new SqlParameter[4];
+            if (model.BuyerGroupId == 0)
             {
                 Param[0] = new SqlParameter("buyergroupid", SqlDbType.VarChar);
                 Param[0].Value = DBNull.Value;
+                Param[1] = new SqlParameter("@fromdate", model.Fromdate);
+                Param[2] = new SqlParameter("@todate", model.Todate);
+                Param[3] = new SqlParameter("@ProjectManager", model.ProjectManager);
             }
             else
             {
                 //string region = (string.Join(",", model.multiregion.Select(x => x.Region.ToString()).ToArray()));
-                Param[0] = new SqlParameter("@buyergroupid", model.BuyerGroupId);
+                Param[0] = new SqlParameter("@BuyerGroupId", model.BuyerGroupId);
+                Param[1] = new SqlParameter("@fromdate", model.Fromdate);
+                Param[2] = new SqlParameter("@todate", model.Todate);
+                Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
             }
             ds = _paBusenessAcess.GetMprstatuswisereport("Mprwisereport",Param);
             return ds;

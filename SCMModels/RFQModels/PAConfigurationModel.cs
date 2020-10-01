@@ -42,6 +42,7 @@ namespace SCMModels.RFQModels
         public int totalcount { get; set; }
         public string status { get; set; }
         public bool ShowAllrevisions { get; set; }
+        public string ProjectManager { get; set; }
     }
 
     public class ReportFilterModel
