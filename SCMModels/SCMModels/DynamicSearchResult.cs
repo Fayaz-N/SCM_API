@@ -250,7 +250,9 @@ namespace SCMModels
 		public int DocumentationTypeId { get; set; }
 		public int StateId { get; set; }
 		public string fileattach1 { get; set; }
-
+		public string SwiftCode { get; set; }
+		public Nullable<int> CurrencyId { get; set; }
+		public string CurrencyName { get; set; }
 		public List<VendorRegisterDocumentDetail> DocDetailsLists = new List<VendorRegisterDocumentDetail>();
 
 

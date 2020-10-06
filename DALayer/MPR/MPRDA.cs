@@ -2400,7 +2400,9 @@ Review Date :<<>>   Reviewed By :<<>>
 				listobj.CINNo = getdata.CINNo;
 				listobj.TanNo = getdata.TanNo;
 				listobj.PaymentTerms = getdata.PaymentTerms;
-
+				listobj.SwiftCode = getdata.SwiftCode;
+				listobj.CurrencyId = Convert.ToInt32(getdata.CurrencyId);
+				listobj.CurrencyName = getdata.CurrencyName;
 				BankDetailsForVendor bankData = DB.BankDetailsForVendors.Where(li => li.VendorId == vendorId).FirstOrDefault();
 				if (bankData != null)
 				{
@@ -2476,6 +2478,9 @@ Review Date :<<>>   Reviewed By :<<>>
 							Remotedata.EmailIdForAccounts = model.EmailIdForAccounts;
 							Remotedata.AltEmailidForAccounts = model.AltEmailidForAccounts;
 
+							Remotedata.SwiftCode = model.SwiftCode;
+							Remotedata.CurrencyId = model.CurrencyId;
+							Remotedata.CurrencyName = model.CurrencyName;
 							Remotedata.Phone = model.Phone;
 							Remotedata.GSTNo = model.GSTNo;
 							Remotedata.PANNo = model.PANNo;
@@ -2563,6 +2568,10 @@ Review Date :<<>>   Reviewed By :<<>>
 							yscmdata.GSTNo = model.GSTNo;
 							yscmdata.NatureofBusiness = model.NatureofBusiness;
 							yscmdata.SpecifyNatureOfBusiness = model.SpecifyNatureOfBusiness;
+
+							yscmdata.SwiftCode = model.SwiftCode;
+							yscmdata.CurrencyId = model.CurrencyId;
+							yscmdata.CurrencyName = model.CurrencyName;
 							yscmdata.PANNo = model.PANNo;
 							yscmdata.CINNo = model.CINNo;
 							yscmdata.TanNo = model.TanNo;
