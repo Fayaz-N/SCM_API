@@ -24,8 +24,8 @@ namespace SCMModels.RFQModels
             documents = new List<PADocumentsmodel>();
             request = new List<parequestedanddeletemodel>();
 			TokuchuRequest = new TokuchuRequest();
-
-		}
+            //additionaltaxes = new List<Additionaltaxes>();
+        }
 		public int PAId { get; set; }
         public string RequestedBy { get; set; }
         public Nullable<System.DateTime> RequestedOn { get; set; }
@@ -75,7 +75,8 @@ namespace SCMModels.RFQModels
         public List<parequestedanddeletemodel> request { get; set; }
 		public TokuchuRequest TokuchuRequest { get; set; }
 		public int TokuchRequestid { get; set; }
-	}
+        //public List<Additionaltaxes> additionaltaxes { get; set; }
+    }
     public class PADocumentsmodel
     {
         public string filename { get; set; }
@@ -110,4 +111,11 @@ namespace SCMModels.RFQModels
         public string padeleted { get; set; }
         public string Remarks { get; set; }
     }
+    //public class Additionaltaxes
+    //{
+    //    public Nullable<double> InsuranceAmount { get; set; }
+    //    public Nullable<double> ImportFreightAmount { get; set; }
+    //    public Nullable<double> DutyAmount { get; set; }
+    //    public Nullable<double> HandlingAmount { get; set; }
+    //}
 }

@@ -498,8 +498,10 @@ Purpose : <<getting configured employee based on total pa value,target spend and
 Review Date :<<>>   Reviewed By :<<>>*/
         public DataSet GetEmployeeMappings1(PAConfigurationModel model)
 		{
-			SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
-			EmployeModel employee = new EmployeModel();
+            string con = obj.Database.Connection.ConnectionString;
+            //SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+            SqlConnection Conn1 = new SqlConnection(con);
+            EmployeModel employee = new EmployeModel();
 			DataSet Ds = new DataSet();
 			string data = string.Join(",", model.MPRItemDetailsid);
 			model.PAValue = model.UnitPrice;
@@ -508,14 +510,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				model.LessBudget = false;
 			else
 				model.LessBudget = true;
-
 			if (model.PaymentTermCode != null && model.Creditdays == 0)
 				Termscode = Convert.ToInt32(model.PaymentTermCode.Substring(model.PaymentTermCode.Length - 3, 3));
 			else if (model.Creditdays != 0)
 				Termscode = Convert.ToInt32(model.Creditdays);
 			else
 				Termscode = 0;
-
 			try
 			{
 				SqlParameter[] Param = new SqlParameter[5];
@@ -524,7 +524,6 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				Param[2] = new SqlParameter("@TargetSpend", model.TargetSpend);
 				Param[3] = new SqlParameter("@creditdays", Termscode);
 				Param[4] = new SqlParameter("@departmentid", model.DeptId);
-                //Param[5]=new SqlParameter("@departmentid", model.BuyerGroupId);
                 string spname = "PAApprovers";
 				SqlCommand cmd = new SqlCommand();
 				SqlDataAdapter Adp = new SqlDataAdapter();
@@ -667,7 +666,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 		//}
 
 		//getting approved items and also go by filters to get approved items
-		public List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters)
+		public List<loadtaxesbyitemwise> GetItemsByMasterIDs(PADetailsModel masters)
 		{
 			//List<LoadItemsByID> view = new List<LoadItemsByID>();
 			try
@@ -675,7 +674,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				using (YSCMEntities yscm = new YSCMEntities())
 				{
 					var sqlquery = "";
-					sqlquery = "select * from LoadItemsByID where itemstatus='Approved' and Mprrfqsplititemid not in(select Mprrfqsplititemid  from PAItem inner join MPRPADetails on PAItem.PAID = MPRPADetails.PAId and(DeleteFlag = 0 or DeleteFlag is null)  and Mprrfqsplititemid is not null) ";
+					sqlquery = "select * from loadtaxesbyitemwise where itemstatus='Approved' and Mprrfqsplititemid not in(select Mprrfqsplititemid  from PAItem inner join MPRPADetails on PAItem.PAID = MPRPADetails.PAId and(DeleteFlag = 0 or DeleteFlag is null)  and Mprrfqsplititemid is not null) ";
 					if (masters.venderid != 0)
 						sqlquery += " and VendorId='" + masters.venderid + "'";
 					if (masters.RevisionId != 0)
@@ -695,7 +694,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					if (masters.vendorProjectManager != null && masters.vendorProjectManager != "")
 						sqlquery += " and ProjectManager='" + masters.vendorProjectManager + "'";
 
-					return yscm.Database.SqlQuery<LoadItemsByID>(sqlquery).ToList();
+					return yscm.Database.SqlQuery<loadtaxesbyitemwise>(sqlquery).ToList();
 				}
 
 			}
@@ -1179,7 +1178,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					model.SuppliersReference = data.SuppliersReference;
 					model.Deleteflag = data.DeleteFlag;
 
-					var statusdata = obj.LoadItemsByPAIDs.Where(x => x.itemstatus == "Approved" && x.PAId == PID).ToList();
+					var statusdata = obj.ShowAdditionalcharges.Where(x => x.itemstatus == "Approved" && x.PAId == PID).ToList();
 					model.Item = statusdata.Select(x => new RfqItemModel()
 					{
 						ItemDescription = x.ItemDescription,
@@ -1208,8 +1207,20 @@ Review Date :<<>>   Reviewed By :<<>>*/
                         PFAmount=x.PFAmount,
                         PFPercentage=x.PFPercentage,
                         TotalFreightAmount=x.freightamounts,
-						MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
+                        HandlingAmount = x.HandlingAmount,
+                        ImportFreightAmount = x.ImportFreightAmount,
+                        DutyAmount = x.DutyAmount,
+                        InsuranceAmount = x.InsuranceAmount,
+                        MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
 					}).ToList();
+                    //var taxes = obj.ShowAdditionalcharges.Where(x => x.PAId == PID).ToList();
+                    //model.additionaltaxes = taxes.Select(x => new Additionaltaxes()
+                    //{
+                    //    HandlingAmount=x.HandlingAmount,
+                    //    ImportFreightAmount=x.ImportFreightAmount,
+                    //    DutyAmount=x.DutyAmount,
+                    //    InsuranceAmount=x.InsuranceAmount
+                    //}).ToList();
 					var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
 					model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
 					{
