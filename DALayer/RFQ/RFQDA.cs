@@ -3430,44 +3430,76 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
-		public async Task<statuscheckmodel> UpdateNewCurrencyMaster(CurrencyMasterModel model)
+		public List<CurrencyMaster> UpdateNewCurrencyMaster(CurrencyMaster model)
 		{
-			statuscheckmodel status = new statuscheckmodel();
 			try
 			{
+				byte currenyid =0;
 				obj.Database.Connection.Open();
-				var data = obj.CurrencyMasters.Where(x => x.CurrencyId == model.CurrenyId && x.DeleteFlag == false).FirstOrDefault();
-				if (model != null)
+				var data = obj.CurrencyMasters.Where(x => x.CurrencyId == model.CurrencyId && x.DeleteFlag == false).FirstOrDefault();
+				if (data == null)
+				{
+					var currency = new CurrencyMaster();
+					currency.CurrencyName = model.CurrencyName;
+					currency.CurrencyCode = model.CurrencyCode;
+					currency.UpdatedBy = model.UpdatedBy;
+					currency.updateddate = DateTime.Now;
+					currency.DeletedBy = model.DeletedBy;
+					currency.DeletedDate = DateTime.Now;
+					currency.DeleteFlag = false;
+					obj.CurrencyMasters.Add(currency);
+					obj.SaveChanges();
+					 currenyid = currency.CurrencyId;
+				}
+				if (data != null)
 				{
 					data.CurrencyName = model.CurrencyName;
 					data.CurrencyCode = model.CurrencyCode;
 					data.UpdatedBy = model.UpdatedBy;
-					data.updateddate = model.updateddate;
+					data.updateddate = DateTime.Now;
 					data.DeletedBy = model.DeletedBy;
-					data.DeletedDate = model.DeletedDate;
+					data.DeletedDate = DateTime.Now;
 					data.DeleteFlag = false;
+					obj.SaveChanges();
+					currenyid = data.CurrencyId;
 				}
-				obj.CurrencyMasters.Add(data);
-				obj.SaveChanges();
-				Byte currenyid = data.CurrencyId;
+
+
+
+				
 				obj.Database.Connection.Close();
-				var remotedata = new RemoteCurrencyMaster();
+
 				vscm.Database.Connection.Open();
-				if (model != null)
+				var RemoteCurrencyMasters = vscm.RemoteCurrencyMasters.Where(x => x.CurrencyId == model.CurrencyId && x.DeleteFlag == false).FirstOrDefault();
+				if (RemoteCurrencyMasters == null)
 				{
-					remotedata.CurrencyId = currenyid;
-					remotedata.CurrencyCode = model.CurrencyCode;
-					remotedata.CurrencyName = model.CurrencyName;
-					remotedata.UpdatedBy = model.UpdatedBy;
-					remotedata.updateddate = model.updateddate;
-					remotedata.DeletedBy = model.DeletedBy;
-					remotedata.DeletedDate = model.DeletedDate;
-					remotedata.DeleteFlag = false;
+					var remCurrency = new RemoteCurrencyMaster();
+					remCurrency.CurrencyId = currenyid;
+					remCurrency.CurrencyCode = model.CurrencyCode;
+					remCurrency.CurrencyName = model.CurrencyName;
+					remCurrency.UpdatedBy = model.UpdatedBy;
+					remCurrency.updateddate = DateTime.Now;
+					remCurrency.DeletedBy = model.DeletedBy;
+					remCurrency.DeletedDate = DateTime.Now;
+					remCurrency.DeleteFlag = false;
+					vscm.RemoteCurrencyMasters.Add(remCurrency);
+					vscm.SaveChanges();
 				}
-				vscm.RemoteCurrencyMasters.Add(remotedata);
-				vscm.SaveChanges();
-				status.Sid = currenyid;
-				return status;
+				if (RemoteCurrencyMasters != null)
+				{
+					RemoteCurrencyMasters.CurrencyId = currenyid;
+					RemoteCurrencyMasters.CurrencyCode = model.CurrencyCode;
+					RemoteCurrencyMasters.CurrencyName = model.CurrencyName;
+					RemoteCurrencyMasters.UpdatedBy = model.UpdatedBy;
+					RemoteCurrencyMasters.updateddate = DateTime.Now;
+					RemoteCurrencyMasters.DeletedBy = model.DeletedBy;
+					RemoteCurrencyMasters.DeletedDate = DateTime.Now;
+					RemoteCurrencyMasters.DeleteFlag = false;
+					vscm.SaveChanges();
+				}
+
+
+				return obj.CurrencyMasters.Where(li => li.DeleteFlag == false).ToList();
 			}
 			catch (Exception ex)
 			{
@@ -3564,23 +3596,12 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
-		public async Task<List<CurrencyMasterModel>> GetAllMasterCurrency()
+		public  List<CurrencyMaster> GetAllMasterCurrency()
 		{
-			List<CurrencyMasterModel> model = new List<CurrencyMasterModel>();
 			try
 			{
-				var currencydata = obj.CurrencyMasters.Where(x => x.DeleteFlag == false).ToList();
-				model = currencydata.Select(x => new CurrencyMasterModel()
-				{
-					CurrencyCode = x.CurrencyCode,
-					CurrencyName = x.CurrencyName,
-					CurrenyId = x.CurrencyId,
-					UpdatedBy = x.UpdatedBy,
-					updateddate = x.updateddate,
-					DeletedBy = x.DeletedBy,
-					DeletedDate = x.DeletedDate
-				}).ToList();
-				return model;
+				var currencydata = obj.CurrencyMasters.Where(x => x.DeleteFlag == false).ToList();			
+				return currencydata;
 			}
 			catch (Exception ex)
 			{
@@ -3606,14 +3627,16 @@ namespace DALayer.RFQ
 				throw;
 			}
 		}
-		public async Task<statuscheckmodel> RemoveMasterCurrencyById(int currencyId)
+		public List<CurrencyMaster> RemoveMasterCurrencyById(int currencyId,string DeletedBy)
 		{
-			statuscheckmodel status = new statuscheckmodel();
+			
 			try
 			{
 				var currencydata = obj.CurrencyMasters.Where(x => x.CurrencyId == currencyId && x.DeleteFlag == false).FirstOrDefault<CurrencyMaster>();
 				if (currencydata != null)
 				{
+					currencydata.DeletedBy = DeletedBy;
+					currencydata.DeletedDate = DateTime.Now;
 					currencydata.DeleteFlag = true;
 					obj.SaveChanges();
 
@@ -3624,9 +3647,24 @@ namespace DALayer.RFQ
 						obj.SaveChanges();
 					}
 				}
-				int id = currencydata.CurrencyId;
-				status.Sid = id;
-				return status;
+
+				var Remotecurrencydata = vscm.RemoteCurrencyMasters.Where(x => x.CurrencyId == currencyId && x.DeleteFlag == false).FirstOrDefault<RemoteCurrencyMaster>();
+				if (Remotecurrencydata != null)
+				{
+					Remotecurrencydata.DeletedBy = DeletedBy;
+					Remotecurrencydata.DeletedDate = DateTime.Now;
+					Remotecurrencydata.DeleteFlag = true;
+					vscm.SaveChanges();
+
+					var remotehistorydata = vscm.RemoteCurrencyHistories.Where(x => x.CurrencyId == Remotecurrencydata.CurrencyId).FirstOrDefault<RemoteCurrencyHistory>();
+					if (remotehistorydata != null)
+					{
+						remotehistorydata.IsActive = false;
+						vscm.SaveChanges();
+					}
+				}
+
+				return obj.CurrencyMasters.Where(li => li.DeleteFlag == false).ToList();
 			}
 			catch (Exception ex)
 			{

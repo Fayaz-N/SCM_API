@@ -12,7 +12,7 @@ namespace SCMModels.RFQModels
         {
             currencyHistory = new List<CurrencyHistoryModel>();
         }
-        public byte CurrenyId { get; set; }
+        public byte CurrencyId { get; set; }
         public string CurrencyName { get; set; }
         public string CurrencyCode { get; set; }
         public string UpdatedBy { get; set; }

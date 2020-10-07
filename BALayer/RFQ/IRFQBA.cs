@@ -58,13 +58,13 @@ namespace BALayer.RFQ
         Task<RfqVendorTermModel> getRfqVendorById(int id);
         Task<statuscheckmodel> RemoveRfqVendorTermsById(int id);
         Task<statuscheckmodel> RemoveVendorRfqByid(int id);
-        Task<statuscheckmodel> InsertNewCurrencyMaster(CurrencyMasterModel model);
-        Task<statuscheckmodel> UpdateNewCurrencyMaster(CurrencyMasterModel model);
+      
+		List<CurrencyMaster> UpdateNewCurrencyMaster(CurrencyMaster model);
         Task<statuscheckmodel> InsertCurrentCurrencyHistory(CurrencyHistoryModel model);
         Task<statuscheckmodel> UpdateCurrentCurrencyHistory(CurrencyHistoryModel model);
-        Task<List<CurrencyMasterModel>> GetAllMasterCurrency();
+		List<CurrencyMaster> GetAllMasterCurrency();
         Task<CurrencyMasterModel> GetMasterCurrencyById(int currencyId);
-        Task<statuscheckmodel> RemoveMasterCurrencyById(int currencyId);
+		List<CurrencyMaster> RemoveMasterCurrencyById(int currencyId,string DeletedBy);
         Task<CurrencyHistoryModel> GetcurrencyHistoryById(int currencyId);
         Task<MPRBuyerGroupModel> GetMPRBuyerGroupsById(int id);
         Task<List<MPRBuyerGroupModel>> GetAllMPRBuyerGroups();

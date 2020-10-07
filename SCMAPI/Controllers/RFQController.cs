@@ -406,5 +406,17 @@ namespace SCMAPI.Controllers
 		{
 			return Ok(this._rfqBusenessAcess.updateHandlingCharges(rfqItems));
 		}
+		[HttpPost]
+		[Route("UpdateNewCurrencyMaster")]
+		public IHttpActionResult UpdateNewCurrencyMaster(CurrencyMaster currencyMaster)
+		{
+			return Ok(this._rfqBusenessAcess.UpdateNewCurrencyMaster(currencyMaster));
+		}
+		[HttpGet]
+		[Route("RemoveMasterCurrencyById/{currencyId}/{DeletedBy}")]
+		public IHttpActionResult RemoveMasterCurrencyById(int currencyId,string DeletedBy)
+		{
+			return Ok(this._rfqBusenessAcess.RemoveMasterCurrencyById(currencyId, DeletedBy));
+		}
 	}
 }

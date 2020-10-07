@@ -243,14 +243,10 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.RemoveVendorRfqByid(id);
         }
 
-        public async Task<statuscheckmodel> InsertNewCurrencyMaster(CurrencyMasterModel model)
+     
+        public  List<CurrencyMaster> UpdateNewCurrencyMaster(CurrencyMaster model)
         {
-            return await _rfqDataAcess.InsertNewCurrencyMaster(model);
-        }
-
-        public async Task<statuscheckmodel> UpdateNewCurrencyMaster(CurrencyMasterModel model)
-        {
-            return await _rfqDataAcess.UpdateNewCurrencyMaster(model);
+            return  _rfqDataAcess.UpdateNewCurrencyMaster(model);
         }
 
         public async Task<statuscheckmodel> InsertCurrentCurrencyHistory(CurrencyHistoryModel model)
@@ -263,9 +259,9 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.UpdateCurrentCurrencyHistory(model);
         }
 
-        public async Task<List<CurrencyMasterModel>> GetAllMasterCurrency()
+        public  List<CurrencyMaster> GetAllMasterCurrency()
         {
-            return await _rfqDataAcess.GetAllMasterCurrency();
+            return  _rfqDataAcess.GetAllMasterCurrency();
         }
 
         public async Task<CurrencyMasterModel> GetMasterCurrencyById(int currencyId)
@@ -273,9 +269,9 @@ namespace BALayer.RFQ
             return await _rfqDataAcess.GetMasterCurrencyById(currencyId);
         }
 
-        public async Task<statuscheckmodel> RemoveMasterCurrencyById(int currencyId)
+        public List<CurrencyMaster> RemoveMasterCurrencyById(int currencyId,string DeletedBy)
         {
-            return await _rfqDataAcess.RemoveMasterCurrencyById(currencyId);
+            return  _rfqDataAcess.RemoveMasterCurrencyById(currencyId, DeletedBy);
         }
 
         public async Task<CurrencyHistoryModel> GetcurrencyHistoryById(int currencyId)
