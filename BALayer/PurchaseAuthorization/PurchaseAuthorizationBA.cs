@@ -94,7 +94,7 @@ namespace BALayer.PurchaseAuthorization
 			return await _purchaseDataAcess.RemovePurchaseApprover(model);
 		}
 
-		public List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters)
+		public List<loadtaxesbyitemwise> GetItemsByMasterIDs(PADetailsModel masters)
 		{
 			return _purchaseDataAcess.GetItemsByMasterIDs(masters);
 		}

@@ -31,7 +31,7 @@ namespace DALayer.PurchaseAuthorization
         DataSet GetEmployeeMappings1(PAConfigurationModel model);
 
         //Task<List<LoadItemsByID>> GetItemsByMasterIDs(PADetailsModel masters);
-        List<LoadItemsByID> GetItemsByMasterIDs(PADetailsModel masters);
+        List<loadtaxesbyitemwise> GetItemsByMasterIDs(PADetailsModel masters);
         Task<List<DepartmentModel>> GetAllDepartments();
         Task<List<PAAuthorizationLimitModel>> GetSlabsByDepartmentID(int DeptID);
         Task<List<EmployeModel>> GetAllEmployee();

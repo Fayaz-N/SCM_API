@@ -72,7 +72,11 @@ namespace SCMModels.RFQModels
 		public Nullable<decimal> ImportFreightPercentage { get; set; }
 		public Nullable<decimal> InsurancePercentage { get; set; }
 		public Nullable<decimal> DutyPercentage { get; set; }
-		public bool IsDeleted { get; set; }
+        public Nullable<double> InsuranceAmount { get; set; }
+        public Nullable<double> ImportFreightAmount { get; set; }
+        public Nullable<double> DutyAmount { get; set; }
+        public Nullable<double> HandlingAmount { get; set; }
+        public bool IsDeleted { get; set; }
 		public int paid { get; set; }
 		public int paitemid { get; set; }
 		public string PONO { get; set; }

@@ -155,7 +155,7 @@ namespace SCMAPI.Controllers
 		//}
 		[HttpPost]
 		[Route("GetItemsByMasterIDs")]
-		[ResponseType(typeof(List<LoadItemsByID>))]
+		[ResponseType(typeof(List<loadtaxesbyitemwise>))]
 		public IHttpActionResult GetItemsByMasterIDs(PADetailsModel masters)
 		{
 			return Ok(this._paBusenessAcess.GetItemsByMasterIDs(masters));
