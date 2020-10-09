@@ -582,7 +582,7 @@ namespace SCMAPI.Controllers
 		[HttpPost]
 		public IHttpActionResult UploadVscmFile()
 		{
-			log.ErrorMessage("MPRController", "UploadVscmFile", "SCM Api called");
+			//log.ErrorMessage("MPRController", "UploadVscmFile", "SCM Api called");
 			var filePath = "";
 			string dbfilePath = "";
 			try
@@ -630,7 +630,7 @@ namespace SCMAPI.Controllers
 		[HttpPost]
 		public IHttpActionResult InsertVscmVendorQuoteDocument()
 		{
-			log.ErrorMessage("MPRController", "InsertVscmVendorQuoteDocument", "SCM Api called");
+			//log.ErrorMessage("MPRController", "InsertVscmVendorQuoteDocument", "SCM Api called");
 			var filePath = "";
 			var fileserverpath = "";
 			var httpRequest = HttpContext.Current.Request;
