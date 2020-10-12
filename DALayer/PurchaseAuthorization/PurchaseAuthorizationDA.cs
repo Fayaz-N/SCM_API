@@ -1191,7 +1191,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						PaymentTermCode = x.PaymentTermCode,
 						VendorName = x.VendorName,
 						DepartmentId = x.DepartmentId,
-						MRPItemsDetailsID = Convert.ToInt16(x.MPRItemDetailsid),
+						MRPItemsDetailsID = Convert.ToInt32(x.MPRItemDetailsid),
 						RFQRevisionId = x.rfqRevisionId,
 						paid = x.PAId,
 						paitemid = x.PAItemID,
