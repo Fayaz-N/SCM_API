@@ -710,5 +710,20 @@ namespace SCMAPI.Controllers
         {
             return Ok(this._paBusenessAcess.Loadprojectmanagersforreport());
         }
+        [HttpPost]
+        [Route("Loadprojectcodewisereport")]
+        [ResponseType(typeof(Reportbyprojectcode))]
+        public IHttpActionResult Loadprojectcodewisereport(ReportInputModel model)
+        {
+           List<Reportbyprojectcode> status = new List<Reportbyprojectcode>();
+            status = _paBusenessAcess.Loadprojectcodewisereport(model);
+            return Ok(status);
+        }
+        [HttpGet]
+        [Route("Loadjobcodes")]
+        public IHttpActionResult Loadjobcodes()
+        {
+            return Ok(this._paBusenessAcess.Loadjobcodes());
+        }
     }
 }

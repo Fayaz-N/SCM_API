@@ -295,5 +295,15 @@ namespace BALayer.PurchaseAuthorization
         {
             return _purchaseDataAcess.Loadprojectmanagersforreport();
         }
+
+        public List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel model)
+        {
+            return _purchaseDataAcess.Loadprojectcodewisereport(model);
+        }
+
+        public List<jobcodes> Loadjobcodes()
+        {
+            return _purchaseDataAcess.Loadjobcodes();
+        }
     }
 }

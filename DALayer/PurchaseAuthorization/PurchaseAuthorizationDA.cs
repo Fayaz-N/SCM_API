@@ -2586,7 +2586,6 @@ Review Date :<<>>   Reviewed By :<<>>*/
                 {
                     Jobcode = x.JobCode
                 }).Distinct().ToList();
-                //filter.jobcode = data1;
                 var data = obj.MPRIssuePurposes.Where(x => x.BoolInUse == true).ToList();
                 filter.purposetype = data.Select(x => new IssuepurposeType()
                 {
@@ -2626,6 +2625,37 @@ Review Date :<<>>   Reviewed By :<<>>*/
             var sqlquery = "";
             sqlquery = "select * from loadprojectmangersforreport ";
             report = obj.loadprojectmangersforreports.SqlQuery(sqlquery).ToList<loadprojectmangersforreport>();
+            return report;
+        }
+        public List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel input)
+        {
+            List<Reportbyprojectcode> report = new List<Reportbyprojectcode>();
+            var query = "";
+            query = "select * from Reportbyprojectcode where documentno is not null ";
+            if (!string.IsNullOrEmpty(input.jobcode))
+                query += " and JobCode='" + input.jobcode + "'";
+            if (input.BuyerGroupId!=0)
+                query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
+            if (!string.IsNullOrEmpty(input.ProjectManager))
+                query += " and ProjectManager='" + input.ProjectManager + "'";
+            //if (!string.IsNullOrEmpty(input.ApprovedBy))
+            //    query += " and Approver='" + input.ApprovedBy + "'";
+            if (!string.IsNullOrEmpty(input.Fromdate))
+                query += " and approveddate>='" + input.Fromdate + "'";
+            if (!string.IsNullOrEmpty(input.ApprovedBy))
+                query += " and approveddate<='" + input.Todate + "'";
+
+            report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
+            return report;
+        }
+        public List<jobcodes> Loadjobcodes()
+        {
+            List<jobcodes> report = new List<jobcodes>();
+            var data = obj.MPRRevisions.Where(x => x.JobCode != null).Distinct().ToList();
+            report = data.Select(x => new jobcodes()
+            {
+                Jobcode=x.JobCode
+            }).ToList();
             return report;
         }
     }

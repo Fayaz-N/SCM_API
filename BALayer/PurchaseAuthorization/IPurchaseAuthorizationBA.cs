@@ -73,5 +73,7 @@ namespace BALayer.PurchaseAuthorization
         List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input);
         ReportFilterModel GetmprRequisitionfilters();
         List<loadprojectmangersforreport> Loadprojectmanagersforreport();
+        List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel model);
+        List<jobcodes> Loadjobcodes();
     }
 }
