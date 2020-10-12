@@ -1364,10 +1364,25 @@ Review Date :<<>>   Reviewed By :<<>>
 				if (!string.IsNullOrEmpty(mprfilterparams.DocumentDescription))
 					query += " and DocumentDescription='" + mprfilterparams.DocumentDescription + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.CheckedBy))
-					query += " and CheckedBy=" + mprfilterparams.CheckedBy + " and CheckStatus='" + mprfilterparams.Status + "'";
+				{
+					query += " and CheckedBy=" + mprfilterparams.CheckedBy + "";
+					if (!string.IsNullOrEmpty(mprfilterparams.Status) && mprfilterparams.ListType != "MPRApproverList")
+						query += " and CheckStatus ='" + mprfilterparams.Status + "'";
+				}
 				if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
-					query += "and CheckStatus = 'Approved' and (ApprovedBy =" + mprfilterparams.ApprovedBy + " OR SecondApprover  =" + mprfilterparams.ApprovedBy + " OR ThirdApprover=" + mprfilterparams.ApprovedBy + ") and ApprovalStatus='" + mprfilterparams.Status + "'";
-					//query += " and (ApprovedBy =" + mprfilterparams.ApprovedBy + " OR SecondApprover  =" + mprfilterparams.ApprovedBy + " OR ThirdApprover=" + mprfilterparams.ApprovedBy + ") and ApprovalStatus='" + mprfilterparams.Status + "'";
+				{
+					if (!string.IsNullOrEmpty(mprfilterparams.Status) && mprfilterparams.ListType== "MPRApproverList")
+					{
+						query += " and CheckStatus = 'Approved' and (ApprovedBy =" + mprfilterparams.ApprovedBy + ") and ApprovalStatus='" + mprfilterparams.Status + "'";
+					}
+					else
+					{
+						query += " and ApprovedBy =" + mprfilterparams.ApprovedBy + " ";
+						if (!string.IsNullOrEmpty(mprfilterparams.Status) && mprfilterparams.ListType == "MPRApproverList")
+							query += " and ApprovalStatus='" + mprfilterparams.Status + "'";
+					}
+				}
+				//query += " and (ApprovedBy =" + mprfilterparams.ApprovedBy + " OR SecondApprover  =" + mprfilterparams.ApprovedBy + " OR ThirdApprover=" + mprfilterparams.ApprovedBy + ") and ApprovalStatus='" + mprfilterparams.Status + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.DepartmentId))
 					query += " and DepartmentId='" + mprfilterparams.DepartmentId + "'";
 				if (!string.IsNullOrEmpty(mprfilterparams.ORgDepartmentid))
