@@ -1166,6 +1166,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
 			{
+				item.Materialdescription = DB.MaterialMasterYGS.Where(li => li.Material == item.Itemid).FirstOrDefault().Materialdescription;
 				item.PAItems = DB.PAItems.Include(li => li.TokuchuLIneItems).Include(li => li.MPRPADetail).Where(li => li.MPRItemDetailsId == item.Itemdetailsid && li.MPRPADetail.DeleteFlag == false).ToList();
 				//item.PAItems = (from x in DB.PAItems join y in DB.TokuchuLIneItems on x.PAItemID equals (int?) y.PAItemID 
 				//           join z in DB.MPRPADetails on x.PAID equals z.PAId 

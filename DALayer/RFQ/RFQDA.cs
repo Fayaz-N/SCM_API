@@ -153,13 +153,17 @@ namespace DALayer.RFQ
 						var itemList = RFQQuoteViewList.Where(li => li.VendorId == item.VendorId).ToList();
 						foreach (RFQQuoteView sitem in itemList)
 						{
-							RfqItemModel rfqitem = new RfqItemModel();
-							rfqitem.MRPItemsDetailsID = Convert.ToInt32(sitem.MPRItemDetailsid);
-							rfqitem.ItemId = sitem.Itemid;
-							rfqitem.ItemName = sitem.ItemName;
-							rfqitem.ItemDescription = sitem.ItemDescription;
-							rfqitem.QuotationQty = Convert.ToDouble(sitem.QuotationQty);
-							rfqModel.rfqitem.Add(rfqitem);
+							int MPRItemDetailsid = Convert.ToInt32(sitem.MPRItemDetailsid);
+							if (rfqModel.rfqitem.Where(li => li.MPRItemDetailsid == MPRItemDetailsid).Count() == 0)
+							{
+								RfqItemModel rfqitem = new RfqItemModel();
+								rfqitem.MRPItemsDetailsID = MPRItemDetailsid;
+								rfqitem.ItemId = sitem.Itemid;
+								rfqitem.ItemName = sitem.ItemName;
+								rfqitem.ItemDescription = sitem.ItemDescription;
+								rfqitem.QuotationQty = Convert.ToDouble(sitem.QuotationQty);
+								rfqModel.rfqitem.Add(rfqitem);
+							}
 						}
 						rfqModel.RFQTerms = rfqList;
 						rfqModel.RfqDocuments = mprfqDocs;
@@ -244,7 +248,7 @@ namespace DALayer.RFQ
 
 				//string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, * from RFQQuoteView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQQuoteView.MPRRevisionId where (Status not like '%Approved%' or Status is null) and MPRRevisionId=" + RevisionId + "";
 				// string query = "select mprdet.DocumentNo,mprdet.DocumentDescription,mprdet.IssuePurposeId,mprdet.DepartmentName,mprdet.ProjectManagerName,mprdet.JobCode,mprdet.JobName,mprdet.GEPSApprovalId,mprdet.SaleOrderNo,mprdet.ClientName,mprdet.PlantLocation,mprdet.BuyerGroupName, RFQCompareView.* from RFQCompareView inner join MPRRevisionDetails mprdet on mprdet.RevisionId = RFQCompareView.MPRRevisionId where  MPRRevisionId=" + RevisionId + " and RFQCompareView.RowNumber=1 and mprdet.RowNumber=1";
-				string query = "select * from rfqcompareItemDetails where MPRRevisionId=" + RevisionId + "";
+				string query = "select * from rfqcompareItemDetails where MPRRevisionId=" + RevisionId + " Order by Itemdetailsid";
 				var cmd = Context.Database.Connection.CreateCommand();
 				cmd.CommandText = query;
 				cmd.Connection.Open();
@@ -3086,7 +3090,8 @@ namespace DALayer.RFQ
 		public bool updateRfqDocStatus(List<RFQDocument> rfqDocs)
 		{
 			int RFQRevisionId = rfqDocs[0].rfqRevisionId;
-				using (var Context = new YSCMEntities()) //ok
+			string StatusBy = rfqDocs[0].StatusBy;
+			using (var Context = new YSCMEntities()) //ok
 			{
 				foreach (RFQDocument rfqdoc in rfqDocs)
 				{
@@ -3105,8 +3110,39 @@ namespace DALayer.RFQ
 				}
 
 				//update status track as Technical Spec Approved 
+				RFQRevisions_N rfqrevisiondetails = Context.RFQRevisions_N.Where(li => li.rfqRevisionId == RFQRevisionId).FirstOrDefault<RFQRevisions_N>();
+				RFQMaster rfqmasterDetails = Context.RFQMasters.Where(li => li.RfqMasterId == rfqrevisiondetails.rfqMasterId).FirstOrDefault<RFQMaster>();
+				MPRRevisionDetails_woItems mpr = Context.MPRRevisionDetails_woItems.Where(li => li.RevisionId == rfqmasterDetails.MPRRevisionId).FirstOrDefault();
+				string Status = "";
+				var statusCnt = rfqDocs.Where(li => li.Status == "Rejected" || li.Status == "Pending").Count();
+				if (statusCnt == 0)
+					Status = "Approved";
+				else
+					Status = "Pending";
+				if (statusCnt == 0 && mpr != null)
+				{
+					MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
+					mPRStatusTrackDetails.RequisitionId = mpr.RequisitionId;
+					mPRStatusTrackDetails.RevisionId = mpr.RevisionId;
+					mPRStatusTrackDetails.StatusId = 9;
+					mPRStatusTrackDetails.UpdatedBy = StatusBy;
+					mPRStatusTrackDetails.UpdatedDate = DateTime.Now;
+					this.MPRDA.updateMprstatusTrack(mPRStatusTrackDetails);
+					MPRRevision revision1 = Context.MPRRevisions.Where(li => li.RevisionId == mpr.RevisionId).FirstOrDefault();
+					revision1.StatusId = 9;
+					Context.SaveChanges();
+				}
 				//send mail to cmm 
-				//this.emailTemplateDA.sendTechNotificationMail(RFQRevisionId);
+				//based on status
+				if (statusCnt == 0)
+					Status = "Approved";
+				else
+				{
+					var cnt = rfqDocs.Where(li => li.Status == "Rejected").Count();
+					if (cnt > 0)
+						Status = "Rejected";
+				}
+				this.emailTemplateDA.sendTechNotificationMail(RFQRevisionId, Status, StatusBy);
 			}
 			return true;
 		}
