@@ -1166,7 +1166,9 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			foreach (MPRItemInfo item in mprRevisionDetails.MPRItemInfoes)
 			{
-				item.Materialdescription = DB.MaterialMasterYGS.Where(li => li.Material == item.Itemid).FirstOrDefault().Materialdescription;
+				var mat = DB.MaterialMasterYGS.Where(li => li.Material == item.Itemid).FirstOrDefault();
+				if (mat != null)
+					item.Materialdescription = mat.Materialdescription;
 				item.PAItems = DB.PAItems.Include(li => li.TokuchuLIneItems).Include(li => li.MPRPADetail).Where(li => li.MPRItemDetailsId == item.Itemdetailsid && li.MPRPADetail.DeleteFlag == false).ToList();
 				//item.PAItems = (from x in DB.PAItems join y in DB.TokuchuLIneItems on x.PAItemID equals (int?) y.PAItemID 
 				//           join z in DB.MPRPADetails on x.PAID equals z.PAId 
@@ -1372,7 +1374,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				}
 				if (!string.IsNullOrEmpty(mprfilterparams.ApprovedBy))
 				{
-					if (!string.IsNullOrEmpty(mprfilterparams.Status) && mprfilterparams.ListType== "MPRApproverList")
+					if (!string.IsNullOrEmpty(mprfilterparams.Status) && mprfilterparams.ListType == "MPRApproverList")
 					{
 						query += " and CheckStatus = 'Approved' and (ApprovedBy =" + mprfilterparams.ApprovedBy + ") and ApprovalStatus='" + mprfilterparams.Status + "'";
 					}
@@ -2278,7 +2280,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		{
 			VSCMEntities vscmObj = new VSCMEntities();
 			VendorRegisterMaster vendorRegDetails = DB.VendorRegisterMasters.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
-			VendorMaster RemoteVendorDetails = DB.VendorMasters.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
+			RemoteVendorMaster RemoteVendorDetails = vscmObj.RemoteVendorMasters.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
 			if (vendorRegDetails != null && RemoteVendorDetails != null)
 			{
 				RemoteVendorDetails.VendorCode = vendorRegDetails.VendorNoInSAP;
