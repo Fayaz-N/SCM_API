@@ -2155,6 +2155,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					remVen.Email = model.VendorEmailId;
 					remVen.Vendorid = Vendorid;
 					remVen.VendorName = model.VendorName;
+					remVen.VendorType = model.VendorType;
 					vscmObj.RemoteVendorRegisterMasters.Add(remVen);
 					vscmObj.SaveChanges();
 				}
@@ -2219,6 +2220,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					locVen.Id = remVen.Id;
 					locVen.Email = model.VendorEmailId;
 					locVen.VendorName = model.VendorName;
+					locVen.VendorType = model.VendorType;
 					locVen.Vendorid = Vendorid;
 					DB.VendorRegisterMasters.Add(locVen);
 					DB.SaveChanges();
