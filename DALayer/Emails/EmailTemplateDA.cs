@@ -282,24 +282,26 @@ namespace DALayer.Emails
 				using (var db = new YSCMEntities()) //ok
 				{
 					var vscm = new VSCMEntities();
+					var vendorList = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).ToList();
 					var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
-					if (vendor != null)
+					foreach (var item in vendorList)
 					{
-						var mailData = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>());
-						var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
-						EmailSend emlSndngList = new EmailSend();
-						emlSndngList.Subject = "New RFQ Generated From YOKOGAWA for RFQNo:" + rfqno + "";
-						emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
-						if (mailData != null)
-							emlSndngList.FrmEmailId = mailData.EMail;
-						//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
-						if (!string.IsNullOrEmpty(emlSndngList.FrmEmailId))
-							emlSndngList.BCC = emlSndngList.FrmEmailId;
-						string emails = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
-						List<string> emailList = emails.Split(',').ToList();
-						foreach (var item in emailList)
+						if (vendor != null)
 						{
-							emlSndngList.ToEmailId = item;
+							var mailData = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>());
+							var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+							EmailSend emlSndngList = new EmailSend();
+							emlSndngList.Subject = "New RFQ Generated From YOKOGAWA for RFQNo:" + rfqno + "";
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + item.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + item.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+							if (mailData != null)
+								emlSndngList.FrmEmailId = mailData.EMail;
+							//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
+							if (!string.IsNullOrEmpty(emlSndngList.FrmEmailId))
+								emlSndngList.BCC = emlSndngList.FrmEmailId;
+							//string emails = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
+							//List<string> emailList = emails.Split(',').ToList();
+
+							emlSndngList.ToEmailId = item.Vuserid;
 							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 								this.sendEmail(emlSndngList);
 						}
@@ -529,13 +531,14 @@ namespace DALayer.Emails
 
 					if (typeOfUser == "Buyer")
 					{
-						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.IntiatedBy).FirstOrDefault<Employee>()).EMail;
+						var mailData = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.IntiatedBy).FirstOrDefault<Employee>());
+						emlSndngList.FrmEmailId = mailData.EMail;
 						var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
 						if (vendor != null)
 						{
 							emlSndngList.Subject = "Registration Initiated";
 							emlSndngList.ToEmailId = vendorProcessDetails.VendorEmailId;
-							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have initiated  registration from Yokogawa</div><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have initiated  registration from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 								this.sendEmail(emlSndngList);
 						}
@@ -646,7 +649,7 @@ namespace DALayer.Emails
 				List<MPRIncharge> mprincharges = new List<MPRIncharge>();
 				if (mprrevisionDetails != null)
 					mprincharges = db.MPRIncharges.Where(li => li.RevisionId == mprrevisionDetails.RevisionId && li.RequisitionId == mprrevisionDetails.RequisitionId && li.CanClearTechnically == true).ToList();
-				
+
 				var mpripaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
 				mpripaddress = mpripaddress + "SCM/MPRForm/" + rfqmasterDetails.MPRRevisionId + "";
 				var rfqipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];

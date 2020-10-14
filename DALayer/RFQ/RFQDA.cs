@@ -568,31 +568,31 @@ namespace DALayer.RFQ
 								}
 							}
 						}
-						else
-						{
-							List<MPRDocument> mprdocumnts = obj.MPRDocuments.Where(li => li.ItemDetailsId == data.MRPItemsDetailsID && li.ItemDetailsId != null).ToList();
-							foreach (var item in mprdocumnts)
-							{
-								RemoteRFQDocument rfqDoc = new RemoteRFQDocument();
-								rfqDoc.rfqRevisionId = revisionid;
-								rfqDoc.rfqItemsid = rfqItemdata.RFQItemsId;
-								rfqDoc.DocumentName = item.DocumentName;
-								rfqDoc.DocumentType = item.DocumentTypeid;
-								rfqDoc.Path = item.Path;
-								rfqDoc.UploadedBy = Convert.ToString(revision.CreatedBy);
-								rfqDoc.uploadedDate = DateTime.Now;
-								try
-								{
-									vscm.RemoteRFQDocuments.Add(rfqDoc);
-									vscm.SaveChanges();
-								}
-								catch (Exception ex)
-								{
+						//else
+						//{
+						//	List<MPRDocument> mprdocumnts = obj.MPRDocuments.Where(li => li.ItemDetailsId == data.MRPItemsDetailsID && li.ItemDetailsId != null).ToList();
+						//	foreach (var item in mprdocumnts)
+						//	{
+						//		RemoteRFQDocument rfqDoc = new RemoteRFQDocument();
+						//		rfqDoc.rfqRevisionId = revisionid;
+						//		rfqDoc.rfqItemsid = rfqItemdata.RFQItemsId;
+						//		rfqDoc.DocumentName = item.DocumentName;
+						//		rfqDoc.DocumentType = item.DocumentTypeid;
+						//		rfqDoc.Path = item.Path;
+						//		rfqDoc.UploadedBy = Convert.ToString(revision.CreatedBy);
+						//		rfqDoc.uploadedDate = DateTime.Now;
+						//		try
+						//		{
+						//			vscm.RemoteRFQDocuments.Add(rfqDoc);
+						//			vscm.SaveChanges();
+						//		}
+						//		catch (Exception ex)
+						//		{
 
-									log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
-								}
-							}
-						}
+						//			log.ErrorMessage("RFQController", "CreateRfQ", ex.Message + "; " + ex.StackTrace.ToString());
+						//		}
+						//	}
+						//}
 
 
 					}

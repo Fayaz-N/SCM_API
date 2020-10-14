@@ -245,6 +245,7 @@ namespace SCMModels
 		public string LocationOrBranch { get; set; }
 		public string AccNo { get; set; }
 		public string IFSCCode { get; set; }
+		public string IncoTerms { get; set; }
 		public string AccountHolderName { get; set; }
 		public string PhysicalPath { get; set; }
 		public int DocumentationTypeId { get; set; }
@@ -253,6 +254,8 @@ namespace SCMModels
 		public string SwiftCode { get; set; }
 		public Nullable<int> CurrencyId { get; set; }
 		public string CurrencyName { get; set; }
+		public Nullable<bool> VendorType { get; set; }
+		public string Country { get; set; }
 		public List<VendorRegisterDocumentDetail> DocDetailsLists = new List<VendorRegisterDocumentDetail>();
 
 

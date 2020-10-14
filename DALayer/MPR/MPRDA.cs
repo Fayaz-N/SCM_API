@@ -2421,12 +2421,16 @@ Review Date :<<>>   Reviewed By :<<>>
 				listobj.SwiftCode = getdata.SwiftCode;
 				listobj.CurrencyId = Convert.ToInt32(getdata.CurrencyId);
 				listobj.CurrencyName = getdata.CurrencyName;
+				listobj.VendorType = getdata.VendorType;
+				listobj.Country = getdata.Country;
+
 				BankDetailsForVendor bankData = DB.BankDetailsForVendors.Where(li => li.VendorId == vendorId).FirstOrDefault();
 				if (bankData != null)
 				{
 					listobj.BankDetails = bankData.BankDetails;
 					listobj.BankerName = bankData.BankerName;
 					listobj.IFSCCode = bankData.IFSCCode;
+					listobj.IncoTerms = bankData.IncoTerms;
 					listobj.AccountHolderName = bankData.AccountHolderName;
 					listobj.LocationOrBranch = bankData.LocationOrBranch;
 					listobj.AccNo = bankData.AccNo;
@@ -2499,6 +2503,9 @@ Review Date :<<>>   Reviewed By :<<>>
 							Remotedata.SwiftCode = model.SwiftCode;
 							Remotedata.CurrencyId = model.CurrencyId;
 							Remotedata.CurrencyName = model.CurrencyName;
+							Remotedata.VendorType = model.VendorType;
+							Remotedata.Country = model.Country;
+
 							Remotedata.Phone = model.Phone;
 							Remotedata.GSTNo = model.GSTNo;
 							Remotedata.PANNo = model.PANNo;
@@ -2523,6 +2530,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								//var remotedataforbankdetail = new RemoteBankDetailsForVendor();
 								remotedataforbankdetail.IFSCCode = model.IFSCCode;
+								remotedataforbankdetail.IncoTerms = model.IncoTerms;
 								remotedataforbankdetail.BankDetails = model.BankDetails;
 								remotedataforbankdetail.BankerName = model.BankerName;
 								remotedataforbankdetail.AccNo = model.AccNo;
@@ -2590,6 +2598,9 @@ Review Date :<<>>   Reviewed By :<<>>
 							yscmdata.SwiftCode = model.SwiftCode;
 							yscmdata.CurrencyId = model.CurrencyId;
 							yscmdata.CurrencyName = model.CurrencyName;
+							yscmdata.VendorType = model.VendorType;
+							yscmdata.Country = model.Country;
+
 							yscmdata.PANNo = model.PANNo;
 							yscmdata.CINNo = model.CINNo;
 							yscmdata.TanNo = model.TanNo;
@@ -2612,6 +2623,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							{
 								//var remotedataforbankdetail = new RemoteBankDetailsForVendor();
 								yscmdataforbankdetail.IFSCCode = model.IFSCCode;
+								yscmdataforbankdetail.IncoTerms = model.IncoTerms;
 								yscmdataforbankdetail.BankDetails = model.BankDetails;
 								yscmdataforbankdetail.BankerName = model.BankerName;
 								yscmdataforbankdetail.AccNo = model.AccNo;
