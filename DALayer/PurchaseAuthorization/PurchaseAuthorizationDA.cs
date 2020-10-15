@@ -1989,9 +1989,9 @@ Review Date :<<>>   Reviewed By :<<>>*/
 Date of Creation <<>>
 Purpose : <<GetPaStatusReports>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model)
+        public async Task<List<PAReport>> GetPaStatusReports(PAReportInputModel model)
 		{
-			List<MPRDate> report = new List<MPRDate>();
+			List<PAReport> report = new List<PAReport>();
 			//DateTime? fromdate= model.FromDate;
 			string fromdate = model.FromDate?.ToString("yyyy-MM-dd");
 			string todate = model.ToDate?.ToString("yyyy-MM-dd");
@@ -1999,14 +1999,14 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			try
 			{
 				var sqlquery = "";
-				//sqlquery = "select * from pareports where PreparedOn between '" + fromdate + "' and '" + todate + "'";
-				sqlquery = "select * from MPRDates where mprrevisionid!=0 ";
+				sqlquery = "select * from pareports where RevisionId!=0 ";
+				//sqlquery = "select * from MPRDates where mprrevisionid!=0 ";
 				if (fromdate != null && todate != null)
-					sqlquery += " and preparedon between '" + fromdate + "' and '" + todate + "' ";
+					sqlquery += " and PreparedOn between '" + fromdate + "' and '" + todate + "' ";
 				if (model.MPRRevisionId != 0)
-					sqlquery += " and mprrevisionid='" + model.MPRRevisionId + "'";
+					sqlquery += " and RevisionId='" + model.MPRRevisionId + "'";
 				//sqlquery = " select * from (select ms.Status, ms.StatusId, mr.RevisionId, mst.UpdatedDate, mr.ApprovalStatus, mr.ApprovedOn, mr.SecondApproversStatus, mr.ThirdApproverStatus, mr.SecondApprovedOn from MPRStatusTrack mst inner join MPRRevisions mr on mr.RevisionId = mst.RevisionId inner join MPRStatus ms on ms.StatusId = mst.StatusId) t pivot(count(statusid) for status in (submitted, Checked, approved, rejected, Acknowledged,[Clarification to End User],[RFQ Generated],[RFQ Responded],[Technical Spec Approved],[Quote Finalized],[PA Generated],[PO Released],[Raising PO Checked],[Raising PO Approved],[MPR Rejected],[MPR On Hold],[RFQ Finalized],[PA Approved],[MPR Closed])) as pivot_table ";
-				report = obj.Database.SqlQuery<MPRDate>(sqlquery).ToList();
+				report = obj.Database.SqlQuery<PAReport>(sqlquery).ToList();
 				return report;
 			}
 			catch (Exception ex)
@@ -2646,6 +2646,27 @@ Review Date :<<>>   Reviewed By :<<>>*/
                 query += " and approveddate<='" + input.Todate + "'";
 
             report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
+            return report;
+        }
+        public List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel input)
+        {
+            List<ReportbyprojectDuration> report = new List<ReportbyprojectDuration>();
+            var query = "";
+            query = "select * from ReportbyprojectDuration where documentno is not null ";
+            if (!string.IsNullOrEmpty(input.jobcode))
+                query += " and JobCode='" + input.jobcode + "'";
+            if (input.BuyerGroupId != 0)
+                query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
+            if (!string.IsNullOrEmpty(input.ProjectManager))
+                query += " and ProjectManager='" + input.ProjectManager + "'";
+            //if (!string.IsNullOrEmpty(input.ApprovedBy))
+            //    query += " and Approver='" + input.ApprovedBy + "'";
+            if (!string.IsNullOrEmpty(input.Fromdate))
+                query += " and approveddate>='" + input.Fromdate + "'";
+            if (!string.IsNullOrEmpty(input.ApprovedBy))
+                query += " and approveddate<='" + input.Todate + "'";
+
+            report = obj.ReportbyprojectDurations.SqlQuery(query).ToList<ReportbyprojectDuration>();
             return report;
         }
         public List<jobcodes> Loadjobcodes()

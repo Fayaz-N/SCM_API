@@ -58,7 +58,7 @@ namespace DALayer.PurchaseAuthorization
         Task<List<GetMappedSlab>> GetAllMappedSlabs();
         Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model);
         Task<List<NewGetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model);
-        Task<List<MPRDate>> GetPaStatusReports(PAReportInputModel model);
+        Task<List<PAReport>> GetPaStatusReports(PAReportInputModel model);
         Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model);
         Task<statuscheckmodel> DeletePAByPAid(padeletemodel model);
         Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model);
@@ -75,6 +75,7 @@ namespace DALayer.PurchaseAuthorization
         ReportFilterModel GetmprRequisitionfilters();
         List<loadprojectmangersforreport> Loadprojectmanagersforreport();
         List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel model);
+        List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel model);
         List<jobcodes> Loadjobcodes();
     }
 }

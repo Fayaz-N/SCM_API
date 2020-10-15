@@ -405,10 +405,10 @@ namespace SCMAPI.Controllers
 		}
 		[HttpPost]
 		[Route("GetPaStatusReports")]
-		[ResponseType(typeof(List<MPRDate>))]
+		[ResponseType(typeof(List<PAReport>))]
 		public async Task<IHttpActionResult> GetPaStatusReports(PAReportInputModel model)
 		{
-			List<MPRDate> filter = new List<MPRDate>();
+			List<PAReport> filter = new List<PAReport>();
 			filter = await _paBusenessAcess.GetPaStatusReports(model);
 			return Ok(filter);
 		}
@@ -717,6 +717,15 @@ namespace SCMAPI.Controllers
         {
            List<Reportbyprojectcode> status = new List<Reportbyprojectcode>();
             status = _paBusenessAcess.Loadprojectcodewisereport(model);
+            return Ok(status);
+        }
+        [HttpPost]
+        [Route("LoadprojectDurationwisereport")]
+        [ResponseType(typeof(ReportbyprojectDuration))]
+        public IHttpActionResult LoadprojectDurationwisereport(ReportInputModel model)
+        {
+            List<ReportbyprojectDuration> status = new List<ReportbyprojectDuration>();
+            status = _paBusenessAcess.LoadprojectDurationwisereport(model);
             return Ok(status);
         }
         [HttpGet]
