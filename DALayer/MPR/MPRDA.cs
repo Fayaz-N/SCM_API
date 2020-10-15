@@ -625,7 +625,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					//mprRevisionDetails.CheckedBy = mpr.CheckedBy;
 
 					DB.SaveChanges();
-					List<MPRItemInfo> MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == revisionId).ToList();
+					List<MPRItemInfo> MPRItemInfoes = DB.MPRItemInfoes.Where(li => li.RevisionId == revisionId && li.DeleteFlag != true).ToList();
 					if (repeatOrder == true)
 						MPRItemInfoes = mpr.MPRItemInfoes.ToList();
 					if (MPRItemInfoes.Count > 0)
@@ -650,7 +650,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						}
 
 					}
-					List<MPRDocument> mprdocuments = DB.MPRDocuments.Where(li => li.RevisionId == revisionId).ToList();
+					List<MPRDocument> mprdocuments = DB.MPRDocuments.Where(li => li.RevisionId == revisionId && li.Deleteflag != true).ToList();
 					if (mprdocuments.Count > 0)
 					{
 						foreach (MPRDocument mprdoc in mprdocuments)
@@ -670,7 +670,7 @@ Review Date :<<>>   Reviewed By :<<>>
 
 
 					}
-					List<MPRVendorDetail> MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == revisionId).ToList();
+					List<MPRVendorDetail> MPRVendorDetails = DB.MPRVendorDetails.Where(li => li.RevisionId == revisionId && li.RemoveFlag != true).ToList();
 
 					if (MPRVendorDetails.Count > 0)
 					{
@@ -703,7 +703,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						}
 
 					}
-					List<MPRIncharge> MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == revisionId).ToList();
+					List<MPRIncharge> MPRIncharges = DB.MPRIncharges.Where(li => li.RevisionId == revisionId && li.DeleteFlag != true).ToList();
 
 					if (MPRIncharges.Count > 0)
 					{
