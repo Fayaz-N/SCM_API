@@ -183,6 +183,7 @@ namespace SCMModels
 		public Nullable<bool> Onetimevendor { get; set; }
 		public Nullable<bool> EvaluationRequired { get; set; }
 		public Nullable<bool> PerformanceVerificationRequired { get; set; }
+		public Nullable<bool> VendorType { get; set; }
 
 	}
 
