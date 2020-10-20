@@ -2551,11 +2551,13 @@ Review Date :<<>>   Reviewed By :<<>>*/
                 else
                 {
                     if (input.status == "Completed")
-                        query += " and statusid in (12,15,19)  and departmentid='" + input.DepartmentId + "'";
+                        query += " and CheckStatus  in('Approved') and statusid in (12,15,19)  and departmentid='" + input.DepartmentId + "'";
                     if (input.status == "Pending")
-                        query += " and statusid not in (12,15,19) and departmentid='" + input.DepartmentId + "'";
+                        query += " and CheckStatus  in('Approved') and statusid not in (12,15,19) and departmentid='" + input.DepartmentId + "'";
                     if (input.status == "submitted")
-                        query += " and departmentid='" + input.DepartmentId + "'";
+                        query += " and CheckStatus  in('Approved') and approveddate is not null and departmentid='" + input.DepartmentId + "'";
+                    //if (input.DepartmentId !=0)
+                    //    query += " and departmentid='" + input.DepartmentId + "'";
                     if (input.BuyerGroupId != 0) 
                         query += " and Buyergroupid='" + input.BuyerGroupId + "'";
                     //if (input.DepartmentId != 0)
@@ -2563,7 +2565,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
                     if (!string.IsNullOrEmpty(input.Fromdate))
                         query += " and approvedate>='" + input.Fromdate + "'";
                     if (!string.IsNullOrEmpty(input.Todate))
-                        query += " and approvedate<='" + input.Todate + "'";
+                        query += " and approvedate < DATEADD(day, 1, '"+ input.Todate + "') ";
                 }
                 data = obj.RequisitionReports.SqlQuery(query).ToList<RequisitionReport>();
                 return data;
