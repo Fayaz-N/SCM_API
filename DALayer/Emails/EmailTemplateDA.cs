@@ -527,11 +527,11 @@ namespace DALayer.Emails
 					var Vendoripaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
 					var Scmipaddress = ConfigurationManager.AppSettings["UI_IpAddress"];
 					Scmipaddress = Scmipaddress + "SCM/VendorRegInitiate/" + VendorId + "";
+					var mailData = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.IntiatedBy).FirstOrDefault<Employee>());
 					EmailSend emlSndngList = new EmailSend();
 
 					if (typeOfUser == "Buyer")
 					{
-						var mailData = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.IntiatedBy).FirstOrDefault<Employee>());
 						emlSndngList.FrmEmailId = mailData.EMail;
 						var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
 						if (vendor != null)
@@ -546,9 +546,23 @@ namespace DALayer.Emails
 					}
 					if (typeOfUser == "Checker")
 					{
+						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
+						//mail to vendor if rejected or sent for modification
+						if (vendorProcessDetails.CheckerStatus == "Rejected" || vendorProcessDetails.CheckerStatus == "Sent for Modification")
+						{
+							var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
+							if (vendor != null)
+							{
+								emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Status: " + vendorProcessDetails.CheckerStatus;
+								emlSndngList.ToEmailId = vendorProcessDetails.VendorEmailId;
+								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>" + vendorProcessDetails.CheckerRemarks + "</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+									this.sendEmail(emlSndngList);
+							}
+						}
 						//if (vendorProcessDetails.CheckerStatus == "Approved")
 						//{
-						emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
+
 						//mail to Approver
 						if (!string.IsNullOrEmpty(vendorProcessDetails.ApprovedBy))
 						{
@@ -618,13 +632,30 @@ namespace DALayer.Emails
 								this.sendEmail(emlSndngList);
 						}
 
+						//send mail to vendor if verifier status approved
+						if (vendorProcessDetails.VerifiedStatus == "Approved")
+						{
+							var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
+							VendorRegisterMaster vendorReg = db.VendorRegisterMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault();
+
+							if (vendor != null)
+							{
+								emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Status: " + vendorProcessDetails.VerifiedStatus;
+								emlSndngList.CC = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
+								emlSndngList.ToEmailId = vendorProcessDetails.VendorEmailId;
+								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div><span>Vendor Code:" + vendorReg.VendorNoInSAP + "</div><br/><div>" + vendorProcessDetails.VerifierRemarks + "</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+									this.sendEmail(emlSndngList);
+							}
+
+						}
 					}
 
 				}
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("EmailTemplate", "mailtoRequestor", ex.Message + "; " + ex.StackTrace.ToString());
+				log.ErrorMessage("EmailTemplate", "prepareVendRegTemplate", ex.Message + "; " + ex.StackTrace.ToString());
 				//throw ex;
 			}
 			return true;
