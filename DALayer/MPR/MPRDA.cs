@@ -2191,6 +2191,12 @@ Review Date :<<>>   Reviewed By :<<>>
 					}
 					if (typeOfuser == "Verifier")
 					{
+						if (model.VerifiedStatus != "Approved")
+						{
+							RegApprovalProcessdetails.CheckerStatus = "Pending";
+							RegApprovalProcessdetails.ApprovalStatus = "Pending";
+
+						}
 						//RegApprovalProcessdetails.Verifier = model.Verifier;
 						RegApprovalProcessdetails.VerifiedOn = DateTime.Now;
 						RegApprovalProcessdetails.VerifiedStatus = model.VerifiedStatus;
@@ -2257,6 +2263,12 @@ Review Date :<<>>   Reviewed By :<<>>
 					}
 					if (typeOfuser == "Verifier")
 					{
+						if(model.VerifiedStatus!= "Approved")
+						{
+							LocalRegApprovalProcessDetails.CheckerStatus = "Pending";
+							LocalRegApprovalProcessDetails.ApprovalStatus = "Pending";
+
+						}
 						LocalRegApprovalProcessDetails.VerifiedBy = model.VerifiedBy;
 						LocalRegApprovalProcessDetails.VerifiedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.VerifiedStatus = model.VerifiedStatus;
