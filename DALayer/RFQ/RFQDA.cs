@@ -998,8 +998,8 @@ namespace DALayer.RFQ
 				revision.DeliveryMinWeeks = Remtoterevision.DeliveryMinWeeks;
 				revision.RFqType = Remtoterevision.RFqType;
 				revision.BuyergroupEmail = Remtoterevision.BuyergroupEmail;
-				revision.StatusId = Remtoterevision.StatusId;
-
+				revision.StatusId = 7;
+				revision.DeleteFlag = false;
 				vscm.RemoteRFQRevisions_N.Add(revision);
 				vscm.SaveChanges();
 
@@ -1100,7 +1100,7 @@ namespace DALayer.RFQ
 				Localrevision.DeliveryMinWeeks = Localmodel.DeliveryMinWeeks;
 				Localrevision.RFQType = Localmodel.RFqType;
 				Localrevision.BuyergroupEmail = Localmodel.BuyergroupEmail;
-				Localrevision.StatusId = Localmodel.StatusId;
+				Localrevision.StatusId = 7;
 				Localrevision.DeleteFlag = false;
 
 				try
