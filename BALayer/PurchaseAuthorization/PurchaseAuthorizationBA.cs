@@ -310,5 +310,10 @@ namespace BALayer.PurchaseAuthorization
         {
             return _purchaseDataAcess.LoadprojectDurationwisereport(model);
         }
+
+        public DataTable GETApprovernamesbydepartmentid(int departmentid)
+        {
+            return _purchaseDataAcess.GETApprovernamesbydepartmentid(departmentid);
+        }
     }
 }

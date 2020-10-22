@@ -1912,6 +1912,13 @@ Purpose : <<getting the all palist and also go by filetrs like mprno or vendor o
 Review Date :<<>>   Reviewed By :<<>>*/
         public async Task<List<NewGetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
 		{
+            string data = "";
+            if (model.OrgDepartmentId != 0)
+            {
+                List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == model.OrgDepartmentId).Select(x =>(int)x.DepartmentId).ToList();
+                data= string.Join(" ',' ", departments);
+            }
+               
 			int mprno = 0;
 			int rfqno = 0;
 			if (model.DocumentNumber != null && model.DocumentNumber != "")
@@ -1945,8 +1952,8 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				sqlquery = "select * from NewGetMprPaDetailsByFilters  where PAStatus in ('Pending','rejected','Approved','Submitted') and DeleteFlag=0 ";
 				if (model.DocumentNumber != null && model.DocumentNumber != "")
 					sqlquery += " and  DocumentNo='" + model.DocumentNumber + "'";
-				if (model.DepartmentId != 0)
-					sqlquery += " and DepartmentId='" + model.DepartmentId + "'";
+				if (model.OrgDepartmentId != 0)
+					sqlquery += " and DepartmentId in ('" + data + "')";
 				if (model.PONO != null)
 					sqlquery += " and PONO like '%" + model.PONO + "%'";
 				if (model.Paid != 0)
@@ -1969,9 +1976,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					sqlquery += " and RFQNo ='" + model.rfqnumber + "'";
 				if (rfqno != 0)
 					sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
+                if (!string.IsNullOrEmpty(model.Approvername))
+                    sqlquery += " and approvers1 like '% " + model.Approvername + "%'";
 
 
-				sqlquery += " order by PAId desc ";
+                sqlquery += " order by PAId desc ";
 				//if (model.FromDate != null && model.ToDate != null)
 				//    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 
@@ -2522,7 +2531,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
                     if (!string.IsNullOrEmpty(input.DocumentNo))
                         query += " and documentno='" + input.DocumentNo + "'";
                     if (!string.IsNullOrEmpty(input.jobcode))
-                        query += " and documentno='" + input.jobcode + "'";
+                        query += " and jobcode='" + input.jobcode + "'";
                     if (!string.IsNullOrEmpty(input.preparedby))
                         query += " and preparedby='" + input.preparedby + "'";
                     if (!string.IsNullOrEmpty(input.Checked))
@@ -2680,6 +2689,41 @@ Review Date :<<>>   Reviewed By :<<>>*/
                 Jobcode=x.JobCode
             }).ToList();
             return report;
+        }
+        public DataTable GETApprovernamesbydepartmentid(int departmentid)
+        {
+            string con = obj.Database.Connection.ConnectionString;
+            SqlConnection Conn1 = new SqlConnection(con);
+            DataTable Ds = new DataTable();
+            try
+            {
+                SqlParameter[] Param = new SqlParameter[1];
+                Param[0] = new SqlParameter("@departmentid", departmentid);
+                string spname = "loadDepartmentwiseapprovers";
+                SqlCommand cmd = new SqlCommand();
+                SqlDataAdapter Adp = new SqlDataAdapter();
+                cmd = new SqlCommand();
+                cmd.Connection = Conn1;
+                cmd.CommandText = spname;
+                cmd.CommandTimeout = 0;
+                cmd.CommandType = CommandType.StoredProcedure;
+                if (Param != null)
+                {
+                    foreach (SqlParameter sqlParam in Param)
+                    {
+                        cmd.Parameters.Add(sqlParam);
+                    }
+                }
+                Adp = new SqlDataAdapter(cmd);
+                Ds = new DataTable();
+                Adp.Fill(Ds);
+                cmd.Parameters.Clear();
+                return Ds;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

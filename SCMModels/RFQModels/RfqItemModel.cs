@@ -113,7 +113,7 @@ namespace SCMModels.RFQModels
 		public int BuyerGroupId { get; set; }
 		public string SaleOrderNo { get; set; }
 		public int DeptID { get; set; }
-		public string vendorProjectManager { get; set; }
+        public string vendorProjectManager { get; set; }
 		public string POItemNo { get; set; }
 		public string POdate { get; set; }
 		public string PONO { get; set; }
@@ -124,7 +124,9 @@ namespace SCMModels.RFQModels
 		public string fromDate { get; set; }
 		public string toDate { get; set; }
 		public int Paid { get; set; }
-	}
+        public int OrgDepartmentId { get; set; }
+        public string Approvername { get; set; }
+    }
 
 	public class ItemsViewModel
 	{

@@ -734,5 +734,14 @@ namespace SCMAPI.Controllers
         {
             return Ok(this._paBusenessAcess.Loadjobcodes());
         }
+        [HttpGet]
+        [Route("GETApprovernamesbydepartmentid/{departmentid}")]
+        [ResponseType(typeof(DataTable))]
+        public DataTable GETApprovernamesbydepartmentid(int departmentid)
+        {
+            DataTable ds = new DataTable();
+            ds = _paBusenessAcess.GETApprovernamesbydepartmentid(departmentid);
+            return ds;
+        }
     }
 }

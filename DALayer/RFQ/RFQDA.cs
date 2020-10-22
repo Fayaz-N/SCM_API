@@ -4204,16 +4204,19 @@ namespace DALayer.RFQ
 			List<MPRDepartmentModel> model = new List<MPRDepartmentModel>();
 			try
 			{
-				var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments where  BoolInUse=1 order by Department");
-				model = data.Select(x => new MPRDepartmentModel()
-				{
-					DepartmentId = x.DepartmentId,
-					Department = x.Department,
-					SecondApprover = x.SecondApprover,
-					ThirdApprover = x.ThirdApprover
-				}).ToList();
-				return model;
-			}
+                var data = obj.loadorgdepartments.ToList();
+                //var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments mpr inner join OrgDepartments org on org.OrgDepartmentId=mpr.ORgDepartmentid  where  mpr.BoolInUse=1 order by Department");
+                model = data.Select(x => new MPRDepartmentModel()
+                {
+                    DepartmentId = x.DepartmentId,
+                    Department = x.Department,
+                    //SecondApprover = x.SecondApprover,
+                    //ThirdApprover = x.ThirdApprover,
+                    ORgDepartmentid = x.OrgDepartmentId,
+                    OrgDepartment = x.OrgDepartment
+                }).ToList();
+                return model;
+            }
 			catch (Exception ex)
 			{
 				throw;
