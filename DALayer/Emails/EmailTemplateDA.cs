@@ -740,7 +740,8 @@ namespace DALayer.Emails
 				string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
 				foreach (string ToEMailId in ToMuliId)
 				{
-					mailMessage.To.Add(new MailAddress(ToEMailId)); //adding multiple TO Email Id
+					if (!string.IsNullOrEmpty(ToEMailId))
+						mailMessage.To.Add(new MailAddress(ToEMailId)); //adding multiple TO Email Id
 				}
 				SmtpClient client = new SmtpClient();
 				if (!string.IsNullOrEmpty(emlSndngList.Subject))
@@ -752,7 +753,8 @@ namespace DALayer.Emails
 
 					foreach (string CCEmail in CCId)
 					{
-						mailMessage.CC.Add(new MailAddress(CCEmail)); //Adding Multiple CC email Id
+						if (!string.IsNullOrEmpty(CCEmail))
+							mailMessage.CC.Add(new MailAddress(CCEmail)); //Adding Multiple CC email Id
 					}
 				}
 
@@ -763,7 +765,8 @@ namespace DALayer.Emails
 
 					foreach (string bccEmailId in bccid)
 					{
-						mailMessage.Bcc.Add(new MailAddress(bccEmailId)); //Adding Multiple BCC email Id
+						if (!string.IsNullOrEmpty(bccEmailId))
+							mailMessage.Bcc.Add(new MailAddress(bccEmailId)); //Adding Multiple BCC email Id
 					}
 				}
 

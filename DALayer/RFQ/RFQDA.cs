@@ -1028,6 +1028,7 @@ namespace DALayer.RFQ
 					vscm.RemoteRFQItems_N.Add(rfqRemoteitem);
 					vscm.SaveChanges();
 
+
 					var remoteRfqdocumnts = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId).ToList();
 
 					foreach (var item in remoteRfqdocumnts)
@@ -2149,6 +2150,7 @@ namespace DALayer.RFQ
 				communication.Remarks = model.Remarks;
 				communication.RfqItemsId = model.RfqItem.RFQItemID;
 				communication.RfqRevisionId = model.RfqRevision.RfqRevisionId;
+				communication.RfqMasterId = revision.rfqMasterId;
 
 				obj.RFQCommunications.Add(communication);
 				obj.SaveChanges();
@@ -2163,10 +2165,13 @@ namespace DALayer.RFQ
 			try
 			{
 				vscm.Database.Connection.Open();
+				int RfqMasterId = obj.RFQRevisions_N.Where(li => li.rfqRevisionId == model.RfqRevisionId).FirstOrDefault().rfqMasterId;
+
 				RemoteRFQCommunication remotecomm = new RemoteRFQCommunication();
 				if (model != null)
 				{
 					remotecomm.RfqRevisionId = model.RfqRevisionId;
+					remotecomm.RfqMasterId = RfqMasterId;
 					remotecomm.RemarksFrom = model.RemarksFrom;
 					remotecomm.RemarksTo = model.RemarksTo;
 					remotecomm.SendEmail = model.SendEmail;
@@ -2186,6 +2191,7 @@ namespace DALayer.RFQ
 				{
 					localcomm.RfqCCid = cid;
 					localcomm.RfqRevisionId = model.RfqRevisionId;
+					localcomm.RfqMasterId = RfqMasterId;
 					localcomm.RemarksFrom = model.RemarksFrom;
 					localcomm.RemarksTo = model.RemarksTo;
 					localcomm.SendEmail = model.SendEmail;
@@ -4204,19 +4210,19 @@ namespace DALayer.RFQ
 			List<MPRDepartmentModel> model = new List<MPRDepartmentModel>();
 			try
 			{
-                var data = obj.loadorgdepartments.ToList();
-                //var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments mpr inner join OrgDepartments org on org.OrgDepartmentId=mpr.ORgDepartmentid  where  mpr.BoolInUse=1 order by Department");
-                model = data.Select(x => new MPRDepartmentModel()
-                {
-                    DepartmentId = x.DepartmentId,
-                    Department = x.Department,
-                    //SecondApprover = x.SecondApprover,
-                    //ThirdApprover = x.ThirdApprover,
-                    ORgDepartmentid = x.OrgDepartmentId,
-                    OrgDepartment = x.OrgDepartment
-                }).ToList();
-                return model;
-            }
+				var data = obj.loadorgdepartments.ToList();
+				//var data = obj.MPRDepartments.SqlQuery("select * from  MPRDepartments mpr inner join OrgDepartments org on org.OrgDepartmentId=mpr.ORgDepartmentid  where  mpr.BoolInUse=1 order by Department");
+				model = data.Select(x => new MPRDepartmentModel()
+				{
+					DepartmentId = x.DepartmentId,
+					Department = x.Department,
+					//SecondApprover = x.SecondApprover,
+					//ThirdApprover = x.ThirdApprover,
+					ORgDepartmentid = x.OrgDepartmentId,
+					OrgDepartment = x.OrgDepartment
+				}).ToList();
+				return model;
+			}
 			catch (Exception ex)
 			{
 				throw;
@@ -5850,6 +5856,7 @@ namespace DALayer.RFQ
 			{
 				if (model != null)
 				{
+					int RfqMasterId = obj.RFQRevisions_N.Where(li => li.rfqRevisionId == model.RfqRevisionId).FirstOrDefault().rfqMasterId;
 
 					int rfqccid = 0;
 					var remotedataforvendorcomm = new RemoteRFQCommunication();
@@ -5858,6 +5865,7 @@ namespace DALayer.RFQ
 					remotedataforvendorcomm.RemarksDate = System.DateTime.Now;
 					remotedataforvendorcomm.RfqItemsId = model.RfqItemId;
 					remotedataforvendorcomm.RfqRevisionId = model.RfqRevisionId;
+					remotedataforvendorcomm.RfqMasterId = RfqMasterId;
 					remotedataforvendorcomm.RemarksFrom = model.RemarksFrom;
 					vscm.RemoteRFQCommunications.Add(remotedataforvendorcomm);
 					vscm.SaveChanges();
@@ -5868,6 +5876,7 @@ namespace DALayer.RFQ
 					remotedataforvendorcommyscm.RemarksDate = System.DateTime.Now;
 					remotedataforvendorcommyscm.RfqItemsId = model.RfqItemId;
 					remotedataforvendorcommyscm.RfqRevisionId = model.RfqRevisionId;
+					remotedataforvendorcommyscm.RfqMasterId = RfqMasterId;
 					remotedataforvendorcommyscm.RemarksFrom = model.RemarksFrom;
 					remotedataforvendorcommyscm.RfqCCid = rfqccid;
 					obj.RFQCommunications.Add(remotedataforvendorcommyscm);
@@ -5902,7 +5911,7 @@ namespace DALayer.RFQ
 			}
 			catch (Exception e)
 			{
-				throw;
+				log.ErrorMessage("RFQDA", "UpdateVendorCommunication", e.Message.ToString());
 			}
 
 			return msg;
