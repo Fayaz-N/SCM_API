@@ -1028,15 +1028,14 @@ namespace DALayer.RFQ
 					vscm.RemoteRFQItems_N.Add(rfqRemoteitem);
 					vscm.SaveChanges();
 
-
-					var remoteRfqdocumnts = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId).ToList();
+					var remoteRfqdocumnts = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid== rfitems.RFQItemsId).ToList();
 
 					foreach (var item in remoteRfqdocumnts)
 					{
 
 						RemoteRFQDocument rfqDoc = new RemoteRFQDocument();
 						rfqDoc.rfqRevisionId = revision.rfqRevisionId;
-						rfqDoc.rfqItemsid = item.rfqItemsid;
+						rfqDoc.rfqItemsid = rfqRemoteitem.RFQItemsId;
 						rfqDoc.DocumentName = item.DocumentName;
 						rfqDoc.DocumentType = item.DocumentType;
 						rfqDoc.Path = item.Path;
@@ -1075,6 +1074,33 @@ namespace DALayer.RFQ
 						vscm.SaveChanges();
 					}
 				}
+
+				//add remoterfqdocuments where revisionid is null
+				var remoteRfqdocumnts1 = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid == null).ToList();
+
+				foreach (var item in remoteRfqdocumnts1)
+				{
+
+					RemoteRFQDocument rfqDoc = new RemoteRFQDocument();
+					rfqDoc.rfqRevisionId = revision.rfqRevisionId;
+					rfqDoc.rfqItemsid = item.rfqItemsid;
+					rfqDoc.DocumentName = item.DocumentName;
+					rfqDoc.DocumentType = item.DocumentType;
+					rfqDoc.Path = item.Path;
+					rfqDoc.UploadedBy = item.UploadedBy;
+					rfqDoc.uploadedDate = DateTime.Now;
+					try
+					{
+						vscm.RemoteRFQDocuments.Add(rfqDoc);
+						vscm.SaveChanges();
+					}
+					catch (Exception ex)
+					{
+
+						log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
+					}
+				}
+
 
 				RFQRevisions_N mprLastRecord1 = obj.RFQRevisions_N.OrderByDescending(p => p.rfqRevisionId).Where(li => li.rfqRevisionId == rfqRevisionId).FirstOrDefault<RFQRevisions_N>();
 				mprLastRecord1.ActiveRevision = false;
@@ -1153,7 +1179,7 @@ namespace DALayer.RFQ
 								RFQDocument rfqDoc = new RFQDocument();
 								rfqDoc.RfqDocId = item.RfqDocId;
 								rfqDoc.rfqRevisionId = item.rfqRevisionId;
-								rfqDoc.rfqItemsid = localRfitem.RFQItemsId;
+								rfqDoc.rfqItemsid = item.rfqItemsid;
 								rfqDoc.DocumentName = item.DocumentName;
 								rfqDoc.DocumentType = item.DocumentType;
 								rfqDoc.Path = item.Path;
