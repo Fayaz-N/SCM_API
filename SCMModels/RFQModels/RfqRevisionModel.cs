@@ -18,6 +18,7 @@ namespace SCMModels.RFQModels
 			mprIncharges = new List<MPRIncharge>();
 			rfqCommunications = new List<RFQCommunication>();
 			RfqDocuments = new List<MPRRFQDocument>();
+			RFQStatusTrackDetails = new List<RFQStatusTrackDetail>();
 
 		}
 		public int RfqRevisionId { get; set; }
@@ -55,6 +56,7 @@ namespace SCMModels.RFQModels
 		public List<MPRRFQDocument> RfqDocuments { get; set; }
 		public List<RFQDocument> RFQDocs { get; set; }
 		public Nullable<byte> StatusId { get; set; }
+		public List<RFQStatusTrackDetail> RFQStatusTrackDetails { get; set; }
 
 	}
 }
