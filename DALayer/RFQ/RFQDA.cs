@@ -563,7 +563,7 @@ namespace DALayer.RFQ
 											vscm.SaveChanges();
 										}
 									}
-									if(rfqDoc.rfqItemsid == null)
+									if (rfqDoc.rfqItemsid == null)
 									{
 										if (vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == revisionid && li.DocumentName == item.DocumentName).Count() == 0)
 
@@ -1028,7 +1028,7 @@ namespace DALayer.RFQ
 					vscm.RemoteRFQItems_N.Add(rfqRemoteitem);
 					vscm.SaveChanges();
 
-					var remoteRfqdocumnts = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid== rfitems.RFQItemsId).ToList();
+					var remoteRfqdocumnts = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid == rfitems.RFQItemsId).ToList();
 
 					foreach (var item in remoteRfqdocumnts)
 					{
@@ -2973,7 +2973,7 @@ namespace DALayer.RFQ
 					revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
 					revision.StatusId = localrevision.StatusId;
 					revision.RFQStatus = obj.RFQStatus.Where(li => li.RfqRevisionId == revisionId).ToList();
-					revision.RFQDocs = obj.RFQDocuments.Where(li => li.rfqRevisionId == revisionId && li.rfqItemsid == null).ToList();
+					revision.RFQDocs = obj.RFQDocuments.Where(li => li.rfqRevisionId == revisionId && li.rfqItemsid == null && li.DeleteFlag!=true).ToList();
 					var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
 					var masters = new RFQMasterModel();
 					foreach (var item in rfqmasters)
@@ -3083,7 +3083,7 @@ namespace DALayer.RFQ
 							}
 						}
 
-						var scmRfqdocs = obj.RFQDocuments.Where(li => li.rfqItemsid == item.RFQItemsId).ToList();
+						var scmRfqdocs = obj.RFQDocuments.Where(li => li.rfqItemsid == item.RFQItemsId && li.DeleteFlag != true).ToList();
 
 						foreach (var items in scmRfqdocs)
 						{
@@ -3123,6 +3123,7 @@ namespace DALayer.RFQ
 						item.Employee = obj.VendorEmployeeViews.Where(li => li.EmployeeNo == item.RemarksFrom).FirstOrDefault();
 
 					}
+					revision.RFQStatusTrackDetails = obj.RFQStatusTrackDetails.Where(li => li.RfqMasterId == localrevision.rfqMasterId).ToList();
 				}
 			}
 			catch (Exception ex)
@@ -6132,6 +6133,8 @@ namespace DALayer.RFQ
 		{
 			//add in remote table
 			var rfqstatusId = 0;
+			int RfqMasterId = vscm.RemoteRFQRevisions_N.Where(li => li.rfqRevisionId == model.RfqRevisionId).FirstOrDefault().rfqMasterId;
+
 			using (VSCMEntities vscmContext = new VSCMEntities())
 			{
 				RemoteRFQStatu rfqStatuss = vscmContext.RemoteRFQStatus.Where(li => li.RfqRevisionId == model.RfqRevisionId && li.StatusId == model.StatusId).FirstOrDefault();
@@ -6140,6 +6143,7 @@ namespace DALayer.RFQ
 				{
 					RemoteRFQStatu rfqStatus = new RemoteRFQStatu();
 					rfqStatus.RfqRevisionId = model.RfqRevisionId;
+					rfqStatus.RfqMasterId = RfqMasterId;
 					rfqStatus.StatusId = model.StatusId;
 					rfqStatus.Remarks = model.Remarks;
 					rfqStatus.updatedby = model.updatedby;
@@ -6158,6 +6162,7 @@ namespace DALayer.RFQ
 					RFQStatu locrfqStatus = new RFQStatu();
 					locrfqStatus.RfqStatusId = rfqstatusId;
 					locrfqStatus.RfqRevisionId = model.RfqRevisionId;
+					locrfqStatus.RfqMasterId = RfqMasterId;
 					locrfqStatus.StatusId = model.StatusId;
 					locrfqStatus.Remarks = model.Remarks;
 					locrfqStatus.updatedby = model.updatedby;
