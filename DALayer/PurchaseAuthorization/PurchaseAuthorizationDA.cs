@@ -2556,6 +2556,10 @@ Review Date :<<>>   Reviewed By :<<>>*/
                         query += " and departmentid='" + input.DepartmentId + "'";
                     if (!string.IsNullOrEmpty(input.jobcode))
                         query += " and jobcode='" + input.jobcode + "'";
+                    if (input.ShowAllrevisions == false)
+                        query += " and BoolValidRevision='" + 1 + "'";
+                    if (input.ShowAllrevisions == true)
+                        query += " and BoolValidRevision is not null";
                 }
                 else
                 {
