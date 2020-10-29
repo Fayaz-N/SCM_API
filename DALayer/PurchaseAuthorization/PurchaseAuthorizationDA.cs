@@ -2545,7 +2545,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
                     if (!string.IsNullOrEmpty(input.Fromdate))
                         query += " and preparedon>='" + input.Fromdate + "'";
                     if (!string.IsNullOrEmpty(input.Todate))
-                        query += " and preparedon<='" + input.Todate + "'";
+                        query += " and preparedon < DATEADD(day, 1, '" + input.Todate + "')";
                     if (input.RequisitionId != 0)
                         query += " and requisitionid='" + input.RequisitionId + "'";
                     if (input.revisionId != 0)
@@ -2568,7 +2568,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
                     if (input.status == "Pending")
                         query += " and CheckStatus  in('Approved') and statusid not in (12,15,19) and departmentid='" + input.DepartmentId + "'";
                     if (input.status == "submitted")
-                        query += " and CheckStatus  in('Approved') and approveddate is not null and departmentid='" + input.DepartmentId + "'";
+                        query += " and CheckStatus  in('Approved') and approvedate is not null and departmentid='" + input.DepartmentId + "'";
                     //if (input.DepartmentId !=0)
                     //    query += " and departmentid='" + input.DepartmentId + "'";
                     if (input.BuyerGroupId != 0) 
@@ -2579,6 +2579,8 @@ Review Date :<<>>   Reviewed By :<<>>*/
                         query += " and approvedate>='" + input.Fromdate + "'";
                     if (!string.IsNullOrEmpty(input.Todate))
                         query += " and approvedate < DATEADD(day, 1, '"+ input.Todate + "') ";
+                    if (input.ShowAllrevisions == false)
+                        query += " and BoolValidRevision='" + 1 + "'";
                 }
                 data = obj.RequisitionReports.SqlQuery(query).ToList<RequisitionReport>();
                 return data;
@@ -2658,7 +2660,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
             if (!string.IsNullOrEmpty(input.Fromdate))
                 query += " and approveddate>='" + input.Fromdate + "'";
             if (!string.IsNullOrEmpty(input.ApprovedBy))
-                query += " and approveddate<='" + input.Todate + "'";
+                query += " and approveddate < DATEADD(day, 1, '" + input.Todate + "')";
 
             report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
             return report;
@@ -2679,7 +2681,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
             if (!string.IsNullOrEmpty(input.Fromdate))
                 query += " and approveddate>='" + input.Fromdate + "'";
             if (!string.IsNullOrEmpty(input.ApprovedBy))
-                query += " and approveddate<='" + input.Todate + "'";
+                query += " and approveddate< DATEADD(day, 1, '" + input.Todate + "')";
 
             report = obj.ReportbyprojectDurations.SqlQuery(query).ToList<ReportbyprojectDuration>();
             return report;

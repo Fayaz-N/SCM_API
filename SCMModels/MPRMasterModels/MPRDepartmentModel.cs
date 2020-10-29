@@ -13,6 +13,8 @@ namespace SCMModels.MPRMasterModels
         public string SecondApprover { get; set; }
         public string ThirdApprover { get; set; }
         public bool BoolInUse { get; set; }
+        public Nullable<short> ORgDepartmentid { get; set; }
+        public string OrgDepartment { get; set; }
         //public virtual ICollection<MPRRevision> MPRRevisions { get; set; }
     }
 }
