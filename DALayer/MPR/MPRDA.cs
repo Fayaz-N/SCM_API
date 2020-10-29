@@ -2112,7 +2112,8 @@ Review Date :<<>>   Reviewed By :<<>>
 		//vendor registration process
 		public VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser)
 		{
-			VendorRegApprovalProcess result = new VendorRegApprovalProcess();
+			VendorRegStatusTrack statusTrack = new VendorRegStatusTrack();
+			VendorRegApprovalProcess result = new VendorRegApprovalProcess();			
 			try
 			{
 				VSCMEntities vscmObj = new VSCMEntities();
@@ -2147,6 +2148,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					RegApprovalProcess.ApprovedBy = ConfigurationManager.AppSettings["VendorReg_Approver"];
 					RegApprovalProcess.Verifier1 = ConfigurationManager.AppSettings["VendorReg_Verifier1"];
 					RegApprovalProcess.Verifier2 = ConfigurationManager.AppSettings["VendorReg_Verifier2"];
+					RegApprovalProcess.CheckerStatus= RegApprovalProcess.ApprovalStatus = RegApprovalProcess.VerifiedStatus = "Pending";
 					vscmObj.RemoteVendorRegApprovalProcesses.Add(RegApprovalProcess);
 					RegApprovalProcess.VendorEmailId = model.VendorEmailId;
 					vscmObj.SaveChanges();
@@ -2158,6 +2160,8 @@ Review Date :<<>>   Reviewed By :<<>>
 					remVen.VendorType = model.VendorType;
 					vscmObj.RemoteVendorRegisterMasters.Add(remVen);
 					vscmObj.SaveChanges();
+					statusTrack.Status = "Submitted";
+					statusTrack.UpdatedBy= model.IntiatedBy;
 				}
 				else
 				{
@@ -2181,6 +2185,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						RegApprovalProcessdetails.CheckedOn = DateTime.Now;
 						RegApprovalProcessdetails.CheckerStatus = model.CheckerStatus;
 						RegApprovalProcessdetails.CheckerRemarks = model.CheckerRemarks;
+						statusTrack.Status = model.CheckerStatus +" From Checker";
+						statusTrack.Remarks = model.CheckerRemarks;
+						statusTrack.UpdatedBy = RegApprovalProcessdetails.CheckedBy;
 					}
 					if (typeOfuser == "Approver")
 					{
@@ -2188,6 +2195,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						RegApprovalProcessdetails.ApprovedOn = DateTime.Now;
 						RegApprovalProcessdetails.ApprovalStatus = model.ApprovalStatus;
 						RegApprovalProcessdetails.ApproverRemarks = model.ApproverRemarks;
+						statusTrack.Status = model.ApprovalStatus + " From Approver";
+						statusTrack.Remarks = model.ApproverRemarks;
+						statusTrack.UpdatedBy = RegApprovalProcessdetails.ApprovedBy;
 					}
 					if (typeOfuser == "Verifier")
 					{
@@ -2201,6 +2211,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						RegApprovalProcessdetails.VerifiedOn = DateTime.Now;
 						RegApprovalProcessdetails.VerifiedStatus = model.VerifiedStatus;
 						RegApprovalProcessdetails.VerifierRemarks = model.VerifierRemarks;
+						statusTrack.Status = model.VerifiedStatus + " From Verifier";
+						statusTrack.Remarks = model.VerifierRemarks;
+						statusTrack.UpdatedBy = model.VerifiedBy;
 					}
 
 					processId = RegApprovalProcessdetails.ProceesId;
@@ -2222,6 +2235,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					LocalRegApprovalProcess.ApprovedBy = ConfigurationManager.AppSettings["VendorReg_Approver"];
 					LocalRegApprovalProcess.Verifier1 = ConfigurationManager.AppSettings["VendorReg_Verifier1"];
 					LocalRegApprovalProcess.Verifier2 = ConfigurationManager.AppSettings["VendorReg_Verifier2"];
+					LocalRegApprovalProcess.CheckerStatus = LocalRegApprovalProcess.ApprovalStatus = LocalRegApprovalProcess.VerifiedStatus = "Pending";
 					DB.VendorRegApprovalProcesses.Add(LocalRegApprovalProcess);
 					VendorRegisterMaster locVen = new VendorRegisterMaster();
 					locVen.Id = remVen.Id;
@@ -2283,6 +2297,13 @@ Review Date :<<>>   Reviewed By :<<>>
 					//update details in vendormaster table
 					updateVendorMaster(Vendorid);
 				}
+
+				//update vendor registration status track 
+				
+				statusTrack.VendorId = Vendorid;
+				statusTrack.UpdatedOn = DateTime.Now;
+				DB.VendorRegStatusTracks.Add(statusTrack);
+				DB.SaveChanges();
 				this.emailTemplateDA.prepareVendRegTemplate(typeOfuser, Vendorid);
 				result = DB.VendorRegApprovalProcesses.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
 			}
@@ -2347,10 +2368,17 @@ Review Date :<<>>   Reviewed By :<<>>
 						query += "  and IntiatedBy = '" + vendorRegfilters.IntiatedBy + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.CheckedBy))
 						query += "  and CheckedBy = '" + vendorRegfilters.CheckedBy + "'";
+					if (!string.IsNullOrEmpty(vendorRegfilters.CheckerStatus))
+						query += "  and CheckerStatus = '" + vendorRegfilters.CheckerStatus + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.ApprovedBy))
 						query += "  and ApprovedBy = '" + vendorRegfilters.ApprovedBy + "'";
+					if (!string.IsNullOrEmpty(vendorRegfilters.ApprovalStatus))
+						query += "  and ApprovalStatus = '" + vendorRegfilters.ApprovalStatus + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.VerifiedBy))
 						query += "  and VerifiedBy = '" + vendorRegfilters.VerifiedBy + "'";
+					if (!string.IsNullOrEmpty(vendorRegfilters.VerifiedStatus))
+						query += "  and VerifiedStatus = '" + vendorRegfilters.VerifiedStatus + "'";
+					
 					query += " order by ProceesId desc ";
 					vendorregDetails = Context.VendorRegProcessViews.SqlQuery(query).ToList<VendorRegProcessView>();
 				}

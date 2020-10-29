@@ -1101,6 +1101,26 @@ namespace DALayer.RFQ
 					}
 				}
 
+				//add Remote RFQStatus 
+
+				RemoteRFQStatu rfqstatus = new RemoteRFQStatu();
+				rfqstatus.RfqRevisionId = revision.rfqRevisionId;
+				rfqstatus.RfqMasterId = revision.rfqMasterId;
+				rfqstatus.StatusId = 7;
+				rfqstatus.updatedby = Remtoterevision.CreatedBy;
+				rfqstatus.updatedDate = DateTime.Now;
+				try
+				{
+					vscm.RemoteRFQStatus.Add(rfqstatus);
+					vscm.SaveChanges();
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
+				}
+
+
 
 				RFQRevisions_N mprLastRecord1 = obj.RFQRevisions_N.OrderByDescending(p => p.rfqRevisionId).Where(li => li.rfqRevisionId == rfqRevisionId).FirstOrDefault<RFQRevisions_N>();
 				mprLastRecord1.ActiveRevision = false;
@@ -1223,6 +1243,23 @@ namespace DALayer.RFQ
 
 						log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 					}
+				}
+
+				RFQStatu rfqstatusLocal = new RFQStatu();
+				rfqstatusLocal.RfqRevisionId = revision.rfqRevisionId;
+				rfqstatusLocal.RfqMasterId = revision.rfqMasterId;
+				rfqstatusLocal.StatusId = 7;
+				rfqstatusLocal.updatedby = Remtoterevision.CreatedBy;
+				rfqstatusLocal.updatedDate = DateTime.Now;
+				try
+				{
+					obj.RFQStatus.Add(rfqstatusLocal);
+					obj.SaveChanges();
+				}
+				catch (Exception ex)
+				{
+
+					log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 				}
 
 				var RFQTerms = vscm.RemoteRfqTerms.Where(li => li.RfqRevisionId == rfqRevisionId).ToList();
@@ -2973,7 +3010,7 @@ namespace DALayer.RFQ
 					revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
 					revision.StatusId = localrevision.StatusId;
 					revision.RFQStatus = obj.RFQStatus.Where(li => li.RfqRevisionId == revisionId).ToList();
-					revision.RFQDocs = obj.RFQDocuments.Where(li => li.rfqRevisionId == revisionId && li.rfqItemsid == null && li.DeleteFlag!=true).ToList();
+					revision.RFQDocs = obj.RFQDocuments.Where(li => li.rfqRevisionId == revisionId && li.rfqItemsid == null && li.DeleteFlag != true).ToList();
 					var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
 					var masters = new RFQMasterModel();
 					foreach (var item in rfqmasters)

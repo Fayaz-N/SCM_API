@@ -150,8 +150,9 @@ namespace SCMModels
 		public string VerifiedBy { get; set; }
 		public string SecondApprover { get; set; }
 		public string ThirdApprover { get; set; }
-
-
+		public string CheckerStatus { get; set; }
+		public string ApprovalStatus { get; set; }
+		public string VerifiedStatus { get; set; }
 	}
 
 	public partial class VendorRegApprovalProcessData
