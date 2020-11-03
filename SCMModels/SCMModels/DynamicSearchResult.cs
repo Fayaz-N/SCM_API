@@ -63,6 +63,7 @@ namespace SCMModels
 		public List<string> mprStatusListId { get; set; }
 		public string PONO { get; set; }
 		public string PAID { get; set; }
+		public string typeOfUser { get; set; }
 	}
 	public class rfqFilterParams
 	{
@@ -178,6 +179,8 @@ namespace SCMModels
 		public string VerifiedStatus { get; set; }
 		public string VerifierRemarks { get; set; }
 		public string VendorNoInSAP { get; set; }
+		public string Street { get; set; }
+		public string City { get; set; }
 		public Nullable<int> PaymentTermId { get; set; }
 		public string PaymentTerms { get; set; }
 		
@@ -185,6 +188,8 @@ namespace SCMModels
 		public Nullable<bool> EvaluationRequired { get; set; }
 		public Nullable<bool> PerformanceVerificationRequired { get; set; }
 		public Nullable<bool> VendorType { get; set; }
+		public Nullable<bool> IsExistVendor { get; set; }
+		public string ChangesFor { get; set; }
 
 	}
 

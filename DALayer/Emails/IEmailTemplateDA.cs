@@ -16,7 +16,7 @@ namespace DALayer.Emails
 		bool mailtoRequestor(int revisionId, string FrmEmailId);
 		bool prepareAribaTemplate(int PaId, string FrmEmailId, string ToMailId, string typeOfUser, int revisionId);
 		bool sendEmail(EmailSend emlSndngList);
-		bool prepareVendRegTemplate(string typeOfUser,  int VendorId);
+		bool prepareVendRegTemplate(string typeOfUser,  int VendorId, bool isexistvendor);
 		bool sendTechNotificationMail(int RFQRevisionId, string status,string StatusBy);
 
 

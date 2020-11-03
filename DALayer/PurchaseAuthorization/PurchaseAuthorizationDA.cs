@@ -2226,6 +2226,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						var tokuchureq = new TokuchuRequest();
 						tokuchureq.TokuchRequestid = tokuchudata.TokuchRequestid;
 						tokuchureq.PreparedBY = tokuchudata.PreparedBY;
+						tokuchureq.Preparedon = tokuchudata.Preparedon;
 						tokuchureq.PAId = tokuchudata.PAId;
 						tokuchureq.PreVerfiedBY = tokuchudata.PreVerfiedBY;
 						tokuchureq.PreVerifiedOn = tokuchudata.PreVerifiedOn;
