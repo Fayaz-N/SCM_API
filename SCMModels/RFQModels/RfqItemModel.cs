@@ -126,6 +126,7 @@ namespace SCMModels.RFQModels
 		public int Paid { get; set; }
         public int OrgDepartmentId { get; set; }
         public string Approvername { get; set; }
+        public string Approverstatus { get; set; }
     }
 
 	public class ItemsViewModel

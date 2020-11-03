@@ -1978,7 +1978,8 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
                 if (!string.IsNullOrEmpty(model.Approvername))
                     sqlquery += " and approvers1 like '% " + model.Approvername + "%'";
-
+                if (!string.IsNullOrEmpty(model.Approverstatus))
+                    sqlquery += " and ApprovalStatus like '% " + model.Approverstatus + "%'";
 
                 sqlquery += " order by PAId desc ";
 				//if (model.FromDate != null && model.ToDate != null)
