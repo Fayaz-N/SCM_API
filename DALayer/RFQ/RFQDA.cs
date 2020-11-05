@@ -169,7 +169,7 @@ namespace DALayer.RFQ
 						rfqModel.RfqDocuments = mprfqDocs;
 						Task<RfqRevisionModel> rfqrevisionData = CreateRfQ(rfqModel, true);
 
-						if (item.sendemail == true)
+						if (item.VendorVisibility == true)
 							this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId, rfqrevisionData.Result.rfqmaster.RFQNo);
 					}
 				}
