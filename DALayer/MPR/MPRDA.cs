@@ -1795,7 +1795,8 @@ Review Date :<<>>   Reviewed By :<<>>
 						{
 							this.emailTemplateDA.prepareMPREmailTemplate("Requestor", mprrevision.RevisionId, mprrevision.PreparedBy, mprrevision.CheckedBy, "");
 						}
-						mprrevision.StatusId = Convert.ToByte(statusId);
+						if (statusId != null && statusId > 0)
+							mprrevision.StatusId = Convert.ToByte(statusId);
 						Context.SaveChanges();
 					}
 					Context.SaveChanges();
