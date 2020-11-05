@@ -2983,6 +2983,7 @@ namespace DALayer.RFQ
 		public async Task<RfqRevisionModel> GetRfqDetailsById(int revisionId)
 		{
 			obj.Configuration.ProxyCreationEnabled = false;
+			obj.Configuration.LazyLoadingEnabled = false;
 			RfqRevisionModel revision = new RfqRevisionModel();
 			try
 			{
@@ -3009,7 +3010,7 @@ namespace DALayer.RFQ
 					revision.DeliveryMaxWeeks = localrevision.DeliveryMaxWeeks;
 					revision.DeliveryMinWeeks = localrevision.DeliveryMinWeeks;
 					revision.StatusId = localrevision.StatusId;
-					revision.RFQStatus = obj.RFQStatus.Where(li => li.RfqRevisionId == revisionId).ToList();
+					//revision.RFQStatus = obj.RFQStatus.Where(li => li.RfqRevisionId == revisionId).ToList();
 					revision.RFQDocs = obj.RFQDocuments.Where(li => li.rfqRevisionId == revisionId && li.rfqItemsid == null && li.DeleteFlag != true).ToList();
 					var rfqmasters = from x in obj.RFQMasters where x.RfqMasterId == localrevision.rfqMasterId select x;
 					var masters = new RFQMasterModel();
@@ -3154,12 +3155,8 @@ namespace DALayer.RFQ
 
 						revision.RFQTerms.Add(terms);
 					}
-					revision.rfqCommunications = obj.RFQCommunications.Where(li => li.RfqRevisionId == revisionId).ToList();
-					foreach (RFQCommunication item in revision.rfqCommunications)
-					{
-						item.Employee = obj.VendorEmployeeViews.Where(li => li.EmployeeNo == item.RemarksFrom).FirstOrDefault();
+					//revision.rfqCommunications = obj.RFQCommunicationsDetails.Where(li => li.RfqRevisionId == revisionId).ToList();
 
-					}
 					revision.RFQStatusTrackDetails = obj.RFQStatusTrackDetails.Where(li => li.RfqMasterId == localrevision.rfqMasterId).ToList();
 				}
 			}

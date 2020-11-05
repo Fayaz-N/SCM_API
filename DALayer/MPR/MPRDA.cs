@@ -2146,7 +2146,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				//update VSCM tables
 				//check exist vendor or not
 				RemoteVendorRegisterMaster remVen = new RemoteVendorRegisterMaster();
-				if (model.IsExistVendor == true && typeOfuser == "Buyer" && Vendorid != 0)
+				if (typeOfuser == "Buyer" && Vendorid != 0)
 				{
 					//update vendor registration table
 
@@ -2161,15 +2161,18 @@ Review Date :<<>>   Reviewed By :<<>>
 						remVen.VendorType = model.VendorType;
 						remVen.IsExistVendor = model.IsExistVendor;
 						remVen.ChangesFor = model.ChangesFor;
-						remVen.VendorNoInSAP = vendorRegDetails.VendorCode;
 						remVen.Email = model.VendorEmailId;
-						remVen.Street = vendorRegDetails.Street;
-						remVen.City = vendorRegDetails.City;
-						remVen.PostalCode = vendorRegDetails.PostalCode;
-						remVen.Mobile = vendorRegDetails.PhoneNo;
-						remVen.Fax = vendorRegDetails.FaxNo;
-						//RemoteVendorDetails.PaymentTermCode = vendorRegDetails.PaymentTerms;
-						remVen.Mobile = vendorRegDetails.ContactNo;
+						if (model.IsExistVendor == true && vendorRegDetails != null)
+						{
+							remVen.VendorNoInSAP = vendorRegDetails.VendorCode;
+							remVen.Street = vendorRegDetails.Street;
+							remVen.City = vendorRegDetails.City;
+							remVen.PostalCode = vendorRegDetails.PostalCode;
+							remVen.Mobile = vendorRegDetails.PhoneNo;
+							remVen.Fax = vendorRegDetails.FaxNo;
+							//RemoteVendorDetails.PaymentTermCode = vendorRegDetails.PaymentTerms;
+							remVen.Mobile = vendorRegDetails.ContactNo;
+						}
 						vscmObj.RemoteVendorRegisterMasters.Add(remVen);
 					}
 					else
@@ -2271,7 +2274,7 @@ Review Date :<<>>   Reviewed By :<<>>
 				//update  SCM tables
 
 				//check exist vendor or not
-				if (model.IsExistVendor == true && typeOfuser == "Buyer" && Vendorid != 0)
+				if (typeOfuser == "Buyer" && Vendorid != 0)
 				{
 					VendorRegisterMaster locVen = new VendorRegisterMaster();
 					var vendorRegMaster = DB.VendorRegisterMasters.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
@@ -2285,14 +2288,17 @@ Review Date :<<>>   Reviewed By :<<>>
 						locVen.Vendorid = Vendorid;
 						locVen.IsExistVendor = model.IsExistVendor;
 						locVen.ChangesFor = model.ChangesFor;
-						locVen.VendorNoInSAP = vendorRegDetails.VendorCode;
-						locVen.Email = model.VendorEmailId;
-						locVen.Street = vendorRegDetails.Street;
-						locVen.City = vendorRegDetails.City;
-						locVen.PostalCode = vendorRegDetails.PostalCode;
-						locVen.Mobile = vendorRegDetails.PhoneNo;
-						locVen.Fax = vendorRegDetails.FaxNo;
-						locVen.Mobile = vendorRegDetails.ContactNo;
+						if (model.IsExistVendor == true && vendorRegDetails != null)
+						{
+							locVen.VendorNoInSAP = vendorRegDetails.VendorCode;
+							locVen.Email = model.VendorEmailId;
+							locVen.Street = vendorRegDetails.Street;
+							locVen.City = vendorRegDetails.City;
+							locVen.PostalCode = vendorRegDetails.PostalCode;
+							locVen.Mobile = vendorRegDetails.PhoneNo;
+							locVen.Fax = vendorRegDetails.FaxNo;
+							locVen.Mobile = vendorRegDetails.ContactNo;
+						}
 						DB.VendorRegisterMasters.Add(locVen);
 					}
 					else
