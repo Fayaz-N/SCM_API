@@ -1979,7 +1979,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
                 if (!string.IsNullOrEmpty(model.Approvername))
                     sqlquery += " and approvers1 like '% " + model.Approvername + "%'";
                 if (!string.IsNullOrEmpty(model.Approverstatus))
-                    sqlquery += " and ApprovalStatus like '% " + model.Approverstatus + "%'";
+                    sqlquery += " and PAStatus not in ('Rejected') and DeleteFlag=0 and ApprovalStatus like '% " + model.Approverstatus + "%'";
 
                 sqlquery += " order by PAId desc ";
 				//if (model.FromDate != null && model.ToDate != null)
@@ -2559,7 +2559,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
                     if (!string.IsNullOrEmpty(input.jobcode))
                         query += " and jobcode='" + input.jobcode + "'";
                     if (input.ShowAllrevisions == false)
-                        query += " and BoolValidRevision='" + 1 + "'";
+                        query += " and BoolValidRevision='" + 1 + "' and ApprovalStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and SecondApproversStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and ThirdApproverStatus not in ('Pending','Rejected','Sent for Modification','Submitted') ";
                     if (input.ShowAllrevisions == true)
                         query += " and BoolValidRevision is not null";
                 }
