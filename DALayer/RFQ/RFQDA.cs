@@ -170,7 +170,7 @@ namespace DALayer.RFQ
 						Task<RfqRevisionModel> rfqrevisionData = CreateRfQ(rfqModel, true);
 
 						if (item.VendorVisibility == true)
-							this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId, rfqrevisionData.Result.rfqmaster.RFQNo);
+							this.emailTemplateDA.prepareRFQGeneratedEmail(rfqModel.rfqmaster.CreatedBy, item.VendorId, rfqrevisionData.Result.rfqmaster.RFQNo, false);
 					}
 				}
 			}
@@ -3126,7 +3126,7 @@ namespace DALayer.RFQ
 						foreach (var items in scmRfqdocs)
 						{
 							RfqDocumentsModel rfqDocs = new RfqDocumentsModel();
-							rfqDocs.RfqDocumentId = items.RfqDocId;
+							rfqDocs.RfqDocId = items.RfqDocId;
 							rfqDocs.RfqRevisionId = items.rfqRevisionId;
 							rfqDocs.RfqItemsId = items.rfqItemsid;
 							rfqDocs.DocumentType = items.DocumentType;
@@ -3174,17 +3174,28 @@ namespace DALayer.RFQ
 			{
 				foreach (RFQDocument rfqdoc in rfqDocs)
 				{
-					List<RFQDocument> rfqDocs1 = Context.RFQDocuments.Where(li => li.rfqItemsid == rfqdoc.rfqItemsid).ToList();
+					List<RFQDocument> rfqDocs1 = new List<RFQDocument>();
+					if (rfqdoc.rfqItemsid == null)
+						rfqDocs1 = Context.RFQDocuments.Where(li => li.RfqDocId == rfqdoc.RfqDocId).ToList();
+					else
+						rfqDocs1 = Context.RFQDocuments.Where(li => li.rfqItemsid == rfqdoc.rfqItemsid).ToList();
 
 					foreach (RFQDocument item in rfqDocs1)
 					{
-						item.Status = rfqdoc.Status;
-						item.StatusRemarks = rfqdoc.StatusRemarks;
-						item.StatusBy = rfqdoc.StatusBy;
-						item.StatusDate = rfqdoc.StatusDate;
-						//string query = "update RFQDocuments set Status = '" + rfqdoc.Status + "', StatusRemarks = '" + rfqdoc.StatusRemarks + "',StatusBy = '" + rfqdoc.StatusBy + "',StatusDate = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where rfqItemsid = " + rfqdoc.rfqItemsid + " ";
-						//Context.Database.SqlQuery<bool>(query);
-						Context.SaveChanges();
+						if (!string.IsNullOrEmpty(rfqdoc.Status))
+						{
+							item.Status = rfqdoc.Status;
+							item.StatusRemarks = rfqdoc.StatusRemarks;
+							item.StatusBy = rfqdoc.StatusBy;
+							if (rfqdoc.StatusDate!=null)
+							{
+								DateTime databaseUtcTime = Convert.ToDateTime(rfqdoc.StatusDate);
+								item.StatusDate = TimeZoneInfo.ConvertTimeFromUtc(databaseUtcTime, TimeZoneInfo.Local);
+							}
+								//string query = "update RFQDocuments set Status = '" + rfqdoc.Status + "', StatusRemarks = '" + rfqdoc.StatusRemarks + "',StatusBy = '" + rfqdoc.StatusBy + "',StatusDate = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where rfqItemsid = " + rfqdoc.rfqItemsid + " ";
+							//Context.Database.SqlQuery<bool>(query);
+							Context.SaveChanges();
+						}
 					}
 				}
 
@@ -3193,7 +3204,7 @@ namespace DALayer.RFQ
 				RFQMaster rfqmasterDetails = Context.RFQMasters.Where(li => li.RfqMasterId == rfqrevisiondetails.rfqMasterId).FirstOrDefault<RFQMaster>();
 				MPRRevisionDetails_woItems mpr = Context.MPRRevisionDetails_woItems.Where(li => li.RevisionId == rfqmasterDetails.MPRRevisionId).FirstOrDefault();
 				string Status = "";
-				var statusCnt = rfqDocs.Where(li => li.Status == "Rejected" || li.Status == "Pending").Count();
+				var statusCnt = rfqDocs.Where(li => li.Status == null || li.Status == "Rejected" || li.Status == "Pending").Count();
 				if (statusCnt == 0)
 					Status = "Approved";
 				else

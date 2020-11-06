@@ -1,4 +1,5 @@
 ﻿using BALayer.RFQ;
+using DALayer.Emails;
 using SCMModels;
 using SCMModels.MPRMasterModels;
 using SCMModels.RFQModels;
@@ -14,9 +15,11 @@ namespace SCMAPI.Controllers
 	public class RFQController : ApiController
 	{
 		private readonly IRFQBA _rfqBusenessAcess;
-		public RFQController(IRFQBA rfqBA)
+		private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
+		public RFQController(IRFQBA rfqBA, IEmailTemplateDA EmailTemplateDA)
 		{
 			this._rfqBusenessAcess = rfqBA;
+			this.emailTemplateDA = EmailTemplateDA;
 		}
 		[HttpGet]
 		[Route("getRFQItems/{MPRRevisionId}")]
@@ -418,5 +421,13 @@ namespace SCMAPI.Controllers
 		{
 			return Ok(this._rfqBusenessAcess.RemoveMasterCurrencyById(currencyId, DeletedBy));
 		}
+
+		[HttpPost]
+		[Route("SendRFQGeneratedEmail")]
+		public IHttpActionResult SendRFQGeneratedEmail(RFQGenerateReminderMaster Remindermaster)
+		{
+			return Ok(this.emailTemplateDA.prepareRFQGeneratedEmail(Remindermaster.FrmEmailId, Remindermaster.VendorId, Remindermaster.rfqno, Remindermaster.Reminder));
+		}
+
 	}
 }

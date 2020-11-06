@@ -444,7 +444,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						mprRevisionDetails.ApprovedBy = mpr.ApprovedBy;
 						int cnt = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == mpr.RequisitionId && li.RevisionId == mpr.RevisionId && li.StatusId == 1).Count();//checking mpr generated already or not 
 						if (!string.IsNullOrEmpty(mpr.CheckedBy))
-						{
+						{							
 							if (cnt == 0)
 							{
 								MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
@@ -777,220 +777,241 @@ Review Date :<<>>   Reviewed By :<<>>
 		public int addNewVendor(VendormasterModel model)
 		{
 			int vendorid = model.Vendorid;
-			VSCMEntities vscm = new VSCMEntities();
-			RemoteVendorMaster vendor = new RemoteVendorMaster();
-			if (model.Vendorid == 0 || model.Vendorid == null)
+			try
 			{
-				vendor.AutoAssignmentofRFQ = true;
-				vendor.Deleteflag = true;
-				vendor.VendorCode = model.VendorCode;
-				vendor.VendorName = model.VendorName;
-				vendor.OldVendorCode = model.OldVendorCode;
-				vendor.Street = model.Street;
-				vendor.City = model.City;
-				//vendor.RegionCode = model.RegionCode;
-				vendor.PostalCode = model.PostalCode;
-				vendor.PhoneNo = model.ContactNumber;
-				vendor.FaxNo = null;
-				vendor.AuGr = null;
-				vendor.PaymentTermCode = null;
-				vendor.Blocked = null;
-				vendor.AutoAssignmentofRFQ = true;
-				vendor.Emailid = model.Emailid;
-				vendor.Deleteflag = true;
-				vscm.RemoteVendorMasters.Add(vendor);
-				vscm.SaveChanges();
-				vendorid = vendor.Vendorid;
-			}
-			else
-			{
-				var vendordata = vscm.RemoteVendorMasters.Where(x => x.Vendorid == model.Vendorid).FirstOrDefault();
-				vendordata.VendorCode = vendordata.VendorCode;
-				vendordata.VendorName = vendordata.VendorName;
-				vendordata.OldVendorCode = vendordata.OldVendorCode;
-				vendordata.Street = vendordata.Street;
-				vendordata.City = vendordata.City;
-				//vendordata.RegionCode = model.RegionCode;
-				vendordata.PostalCode = vendordata.PostalCode;
-				vendordata.PhoneNo = vendordata.ContactNo;
-				vendordata.FaxNo = null;
-				vendordata.AuGr = null;
-				vendordata.PaymentTermCode = null;
-				vendordata.Blocked = null;
-				vendordata.AutoAssignmentofRFQ = vendordata.AutoAssignmentofRFQ;
-				vendordata.Emailid = model.Emailid;
-				vendordata.Deleteflag = true;
-				vscm.SaveChanges();
-				vendorid = vendordata.Vendorid;
-			}
-			List<string> EmailList = model.Emailid.Split(new char[] { ',' }).ToList();
-			foreach (var item in EmailList)
-			{
-				Int32 sequenceNo = 0;
-				string password = "";
-				var value = "";
-				RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item).FirstOrDefault();
-
-				//need to implement vUniqueId value
-				if (vendorUsermaster == null && !string.IsNullOrEmpty(item))
+				VSCMEntities vscm = new VSCMEntities();
+				RemoteVendorMaster vendor = new RemoteVendorMaster();
+				if (model.Vendorid == 0 || model.Vendorid == null)
 				{
-					RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
-					sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
-					if (sequenceNo == null || sequenceNo == 0)
-						sequenceNo = 1;
-					else
-					{
-						sequenceNo = sequenceNo + 1;
-					}
-					value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
-					vendorUsermasters.VuniqueId = "C" + value;
-					vendorUsermasters.SequenceNo = sequenceNo;
-					vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
-					password = GeneratePassword();
-					vendorUsermasters.pwd = password;
-					vendorUsermasters.ContactNumber = model.ContactNumber;
-					vendorUsermasters.ContactPerson = model.ContactPerson;
-					vendorUsermasters.VendorId = vendorid;
-					vendorUsermasters.Active = true;
-					vendorUsermasters.SuperUser = true;
-					vscm.RemoteVendorUserMasters.Add(vendorUsermasters);
+					vendor.AutoAssignmentofRFQ = true;
+					vendor.Deleteflag = true;
+					vendor.VendorCode = model.VendorCode;
+					vendor.VendorName = model.VendorName;
+					vendor.OldVendorCode = model.OldVendorCode;
+					vendor.Street = model.Street;
+					vendor.City = model.City;
+					//vendor.RegionCode = model.RegionCode;
+					vendor.PostalCode = model.PostalCode;
+					vendor.PhoneNo = model.ContactNumber;
+					vendor.FaxNo = null;
+					vendor.AuGr = null;
+					vendor.PaymentTermCode = null;
+					vendor.Blocked = null;
+					vendor.AutoAssignmentofRFQ = true;
+					vendor.Emailid = model.Emailid;
+					vendor.Deleteflag = true;
+					vendor.UpdatedBy = model.UpdatedBy;
+					vendor.UpdatedOn = DateTime.Now;
+					vscm.RemoteVendorMasters.Add(vendor);
 					vscm.SaveChanges();
+					vendorid = vendor.Vendorid;
 				}
-
 				else
 				{
-					if (vendorUsermaster != null && !string.IsNullOrEmpty(item))
+					var vendordata = vscm.RemoteVendorMasters.Where(x => x.Vendorid == model.Vendorid).FirstOrDefault();
+					vendordata.VendorCode = vendordata.VendorCode;
+					vendordata.VendorName = vendordata.VendorName;
+					vendordata.OldVendorCode = vendordata.OldVendorCode;
+					vendordata.Street = vendordata.Street;
+					vendordata.City = vendordata.City;
+					//vendordata.RegionCode = model.RegionCode;
+					vendordata.PostalCode = vendordata.PostalCode;
+					vendordata.PhoneNo = vendordata.ContactNo;
+					vendordata.FaxNo = null;
+					vendordata.AuGr = null;
+					vendordata.PaymentTermCode = null;
+					vendordata.Blocked = null;
+					vendordata.AutoAssignmentofRFQ = vendordata.AutoAssignmentofRFQ;
+					vendordata.Emailid = model.Emailid;
+					vendordata.Deleteflag = true;
+					vendordata.UpdatedBy = model.UpdatedBy;
+					vendordata.UpdatedOn = DateTime.Now;
+					vscm.SaveChanges();
+					vendorid = vendordata.Vendorid;
+				}
+				List<string> EmailList = model.Emailid.Split(new char[] { ',' }).ToList();
+				foreach (var item in EmailList)
+				{
+					Int32 sequenceNo = 0;
+					string password = "";
+					var value = "";
+					RemoteVendorUserMaster vendorUsermaster = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item && li.VendorId == vendorid).FirstOrDefault();
+
+					//need to implement vUniqueId value
+					if (vendorUsermaster == null && !string.IsNullOrEmpty(item))
 					{
-						//vendorUsermaster.Vuserid = model.Emailid;
-						// vendorUsermaster.pwd = GeneratePassword();
-						//vendorUsermaster.VendorId = vendorid;
+						RemoteVendorUserMaster vendorUsermasters = new RemoteVendorUserMaster();
+						sequenceNo = Convert.ToInt32(vscm.RemoteVendorUserMasters.Max(li => li.SequenceNo));
+						if (sequenceNo == null || sequenceNo == 0)
+							sequenceNo = 1;
+						else
+						{
+							sequenceNo = sequenceNo + 1;
+						}
+						value = DB.SP_sequenceNumber(sequenceNo).FirstOrDefault();
+						vendorUsermasters.VuniqueId = "C" + value;
+						vendorUsermasters.SequenceNo = sequenceNo;
+						vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
+						password = GeneratePassword();
+						vendorUsermasters.pwd = password;
+						vendorUsermasters.ContactNumber = model.ContactNumber;
+						vendorUsermasters.ContactPerson = model.ContactPerson;
+						vendorUsermasters.VendorId = vendorid;
+						vendorUsermasters.Active = true;
+						vendorUsermasters.SuperUser = true;
+						vendorUsermasters.UpdatedBy = model.UpdatedBy;
+						vendorUsermasters.UpdatedOn = DateTime.Now;
+						vscm.RemoteVendorUserMasters.Add(vendorUsermasters);
 						vscm.SaveChanges();
 					}
 
-				}
-				YSCMEntities Context1 = new YSCMEntities();
-				VendorUserMaster venmaster = Context1.VendorUserMasters.Where(li => li.Vuserid == item).FirstOrDefault<VendorUserMaster>();
-				if (venmaster == null && !string.IsNullOrEmpty(item))
-				{
-					VendorUserMaster vendorUsermasters = new VendorUserMaster();
-					vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
-					vendorUsermasters.pwd = password;
-					vendorUsermasters.VendorId = vendorid;
-					vendorUsermasters.ContactNumber = model.ContactNumber;
-					vendorUsermasters.ContactPerson = model.ContactPerson;
-					vendorUsermasters.Active = true;
-					vendorUsermasters.SuperUser = true;
-					vendorUsermasters.VuniqueId = "C" + value;
-					vendorUsermasters.SequenceNo = sequenceNo;
-					Context1.VendorUserMasters.Add(vendorUsermasters);
-					Context1.SaveChanges();
+					else
+					{
+						if (vendorUsermaster != null && !string.IsNullOrEmpty(item))
+						{
+							//vendorUsermaster.Vuserid = model.Emailid;
+							// vendorUsermaster.pwd = GeneratePassword();
+							//vendorUsermaster.VendorId = vendorid;
+							vscm.SaveChanges();
+						}
+
+					}
+					YSCMEntities Context1 = new YSCMEntities();
+					VendorUserMaster venmaster = Context1.VendorUserMasters.Where(li => li.Vuserid == item && li.VendorId == vendorid).FirstOrDefault<VendorUserMaster>();
+					if (venmaster == null && !string.IsNullOrEmpty(item))
+					{
+						VendorUserMaster vendorUsermasters = new VendorUserMaster();
+						vendorUsermasters.Vuserid = item.Replace(" ", String.Empty);
+						vendorUsermasters.pwd = password;
+						vendorUsermasters.VendorId = vendorid;
+						vendorUsermasters.ContactNumber = model.ContactNumber;
+						vendorUsermasters.ContactPerson = model.ContactPerson;
+						vendorUsermasters.Active = true;
+						vendorUsermasters.SuperUser = true;
+						vendorUsermasters.VuniqueId = "C" + value;
+						vendorUsermasters.SequenceNo = sequenceNo;
+						vendorUsermasters.UpdatedBy = model.UpdatedBy;
+						vendorUsermasters.UpdatedOn = DateTime.Now;
+						Context1.VendorUserMasters.Add(vendorUsermasters);
+						Context1.SaveChanges();
+					}
+
+					else
+					{
+						// vendorUsermaster.Vuserid = model.Emailid;
+						//venmaster.pwd = item.pwd;
+						//vendorUsermaster.VendorId = vendorid;
+						Context1.SaveChanges();
+
+					}
 				}
 
-				else
+				using (YSCMEntities Context = new YSCMEntities())
 				{
-					// vendorUsermaster.Vuserid = model.Emailid;
-					//venmaster.pwd = item.pwd;
-					//vendorUsermaster.VendorId = vendorid;
-					Context1.SaveChanges();
+					VendorMaster localvendor = new VendorMaster();
+					if (model.Vendorid == 0 || model.Vendorid == null)
+					{
+						localvendor.Vendorid = vendorid;
+						localvendor.AutoAssignmentofRFQ = true;
+						localvendor.Deleteflag = true;
+						localvendor.VendorCode = model.VendorCode;
+						localvendor.VendorName = model.VendorName;
+						localvendor.OldVendorCode = model.OldVendorCode;
+						localvendor.Street = model.Street;
+						localvendor.City = model.City;
+						//localvendor.RegionCode = model.RegionCode;
+						localvendor.PostalCode = model.PostalCode;
+						localvendor.PhoneNo = model.ContactNumber;
+						//localvendor.FaxNo = model.FaxNo;
+						//localvendor.AuGr = model.AuGr;
+						//localvendor.PaymentTermCode = model.PaymentTermCode;
+						//localvendor.Blocked = model.Blocked;
+						localvendor.Emailid = model.Emailid;
+						localvendor.AutoAssignmentofRFQ = true;
+						localvendor.Deleteflag = true;
+						localvendor.UpdatedBy = model.UpdatedBy;
+						localvendor.UpdatedOn = DateTime.Now;
+						Context.VendorMasters.Add(localvendor);
+						Context.SaveChanges();
+						vendorid = localvendor.Vendorid;
+					}
+					else
+					{
+						VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == vendorid).FirstOrDefault();
+						vendormaster.VendorCode = vendormaster.VendorCode;
+						vendormaster.VendorName = vendormaster.VendorName;
+						vendormaster.OldVendorCode = vendormaster.OldVendorCode;
+						vendormaster.Street = vendormaster.Street;
+						vendormaster.City = vendormaster.City;
+						//vendormaster.RegionCode = model.RegionCode;
+						vendormaster.PostalCode = vendormaster.PostalCode;
+						vendormaster.PhoneNo = model.ContactNumber;
+						//vendormaster.FaxNo = model.FaxNo;
+						//vendormaster.AuGr = model.AuGr;
+						//vendormaster.PaymentTermCode = model.PaymentTermCode;
+						//vendormaster.Blocked = model.Blocked;
+						vendormaster.Emailid = model.Emailid;
+						vendormaster.Deleteflag = true;
+						vendormaster.AutoAssignmentofRFQ = true;
+						vendormaster.UpdatedBy = model.UpdatedBy;
+						vendormaster.UpdatedOn = DateTime.Now;
+						Context.SaveChanges();
+						vendorid = vendormaster.Vendorid;
 
+					}
+					//List<RemoteVendorUserMaster> remoteVendorUsermaster = vscm.RemoteVendorUserMasters.ToList();
+					//foreach (var item in remoteVendorUsermaster)
+					//{
+					//	try
+					//	{
+
+					//		VendorUserMaster venmaster = Context.VendorUserMasters.Where(li => li.Vuserid == item.Vuserid).FirstOrDefault<VendorUserMaster>();
+					//		if (venmaster == null)
+					//		{
+					//			VendorUserMaster vendorUsermasters = new VendorUserMaster();
+					//			vendorUsermasters.Vuserid = item.Vuserid;
+					//			vendorUsermasters.pwd = item.pwd;
+					//			vendorUsermasters.VendorId = vendorid;
+					//			vendorUsermasters.ContactNumber = item.ContactNumber;
+					//			vendorUsermasters.ContactPerson = item.ContactPerson;
+					//			vendorUsermasters.Active = true;
+					//			vendorUsermasters.SuperUser = true;
+					//			vendorUsermasters.VuniqueId = item.VuniqueId;
+					//			vendorUsermasters.SequenceNo = item.SequenceNo;
+					//			Context.VendorUserMasters.Add(vendorUsermasters);
+					//			Context.SaveChanges();
+					//		}
+
+					//		else
+					//		{
+					//			// vendorUsermaster.Vuserid = model.Emailid;
+					//			venmaster.pwd = item.pwd;
+					//			//vendorUsermaster.VendorId = vendorid;
+					//			Context.SaveChanges();
+
+					//		}
+					//	}
+					//	catch (DbEntityValidationException e)
+					//	{
+					//		foreach (var eve in e.EntityValidationErrors)
+					//		{
+					//			Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+					//				eve.Entry.Entity.GetType().Name, eve.Entry.State);
+					//			foreach (var ve in eve.ValidationErrors)
+					//			{
+					//				Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+					//					ve.PropertyName, ve.ErrorMessage);
+					//			}
+					//		}
+					//	}
+					//}
+
+					return vendorid;
 				}
 			}
-
-			using (YSCMEntities Context = new YSCMEntities())
+			catch (Exception ex)
 			{
-				VendorMaster localvendor = new VendorMaster();
-				if (model.Vendorid == 0 || model.Vendorid == null)
-				{
-					localvendor.Vendorid = vendorid;
-					localvendor.AutoAssignmentofRFQ = true;
-					localvendor.Deleteflag = true;
-					localvendor.VendorCode = model.VendorCode;
-					localvendor.VendorName = model.VendorName;
-					localvendor.OldVendorCode = model.OldVendorCode;
-					localvendor.Street = model.Street;
-					localvendor.City = model.City;
-					//localvendor.RegionCode = model.RegionCode;
-					localvendor.PostalCode = model.PostalCode;
-					localvendor.PhoneNo = model.ContactNumber;
-					//localvendor.FaxNo = model.FaxNo;
-					//localvendor.AuGr = model.AuGr;
-					//localvendor.PaymentTermCode = model.PaymentTermCode;
-					//localvendor.Blocked = model.Blocked;
-					localvendor.Emailid = model.Emailid;
-					localvendor.AutoAssignmentofRFQ = true;
-					localvendor.Deleteflag = true;
-					Context.VendorMasters.Add(localvendor);
-					Context.SaveChanges();
-					vendorid = localvendor.Vendorid;
-				}
-				else
-				{
-					VendorMaster vendormaster = Context.VendorMasters.Where(li => li.Vendorid == vendorid).FirstOrDefault();
-					vendormaster.VendorCode = vendormaster.VendorCode;
-					vendormaster.VendorName = vendormaster.VendorName;
-					vendormaster.OldVendorCode = vendormaster.OldVendorCode;
-					vendormaster.Street = vendormaster.Street;
-					vendormaster.City = vendormaster.City;
-					//vendormaster.RegionCode = model.RegionCode;
-					vendormaster.PostalCode = vendormaster.PostalCode;
-					vendormaster.PhoneNo = model.ContactNumber;
-					//vendormaster.FaxNo = model.FaxNo;
-					//vendormaster.AuGr = model.AuGr;
-					//vendormaster.PaymentTermCode = model.PaymentTermCode;
-					//vendormaster.Blocked = model.Blocked;
-					vendormaster.Emailid = model.Emailid;
-					vendormaster.Deleteflag = true;
-					vendormaster.AutoAssignmentofRFQ = true;
-					Context.SaveChanges();
-					vendorid = vendormaster.Vendorid;
-
-				}
-				//List<RemoteVendorUserMaster> remoteVendorUsermaster = vscm.RemoteVendorUserMasters.ToList();
-				//foreach (var item in remoteVendorUsermaster)
-				//{
-				//	try
-				//	{
-
-				//		VendorUserMaster venmaster = Context.VendorUserMasters.Where(li => li.Vuserid == item.Vuserid).FirstOrDefault<VendorUserMaster>();
-				//		if (venmaster == null)
-				//		{
-				//			VendorUserMaster vendorUsermasters = new VendorUserMaster();
-				//			vendorUsermasters.Vuserid = item.Vuserid;
-				//			vendorUsermasters.pwd = item.pwd;
-				//			vendorUsermasters.VendorId = vendorid;
-				//			vendorUsermasters.ContactNumber = item.ContactNumber;
-				//			vendorUsermasters.ContactPerson = item.ContactPerson;
-				//			vendorUsermasters.Active = true;
-				//			vendorUsermasters.SuperUser = true;
-				//			vendorUsermasters.VuniqueId = item.VuniqueId;
-				//			vendorUsermasters.SequenceNo = item.SequenceNo;
-				//			Context.VendorUserMasters.Add(vendorUsermasters);
-				//			Context.SaveChanges();
-				//		}
-
-				//		else
-				//		{
-				//			// vendorUsermaster.Vuserid = model.Emailid;
-				//			venmaster.pwd = item.pwd;
-				//			//vendorUsermaster.VendorId = vendorid;
-				//			Context.SaveChanges();
-
-				//		}
-				//	}
-				//	catch (DbEntityValidationException e)
-				//	{
-				//		foreach (var eve in e.EntityValidationErrors)
-				//		{
-				//			Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-				//				eve.Entry.Entity.GetType().Name, eve.Entry.State);
-				//			foreach (var ve in eve.ValidationErrors)
-				//			{
-				//				Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-				//					ve.PropertyName, ve.ErrorMessage);
-				//			}
-				//		}
-				//	}
-				//}
+				log.ErrorMessage("MPRQontroller", "addNewVendor", ex.Message + "; " + ex.StackTrace.ToString());
 				return vendorid;
 			}
 		}
@@ -1589,10 +1610,12 @@ Review Date :<<>>   Reviewed By :<<>>
 									MPR_Assignment.Employeeno = item.Employeeno;
 									Context.SaveChanges();
 								}
-								mprrevision.StatusId = Convert.ToByte(statusId);
+								
 								Context.SaveChanges();
 								this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, item.Employeeno, "mprAssign", mprStatus.RevisionId);
 							}
+							if (statusId != null && statusId > 0)
+								mprrevision.StatusId = Convert.ToByte(statusId);
 
 						}
 						if (mprStatus.BuyerGroupId != null)
@@ -2140,6 +2163,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					VendormasterModel vendormastermodel = new VendormasterModel();
 					vendormastermodel.VendorName = model.VendorName;
 					vendormastermodel.Emailid = model.VendorEmailId;
+					vendormastermodel.UpdatedBy = model.IntiatedBy;
 					Vendorid = this.addNewVendor(vendormastermodel);
 				}
 
@@ -2410,7 +2434,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			if (vendorRegDetails != null && RemoteVendorDetails != null)
 			{
 				RemoteVendorDetails.VendorCode = vendorRegDetails.VendorNoInSAP;
-				RemoteVendorDetails.Emailid = vendorRegDetails.Email; ;
+				RemoteVendorDetails.Emailid = vendorRegDetails.Email;
 				RemoteVendorDetails.Street = vendorRegDetails.Street;
 				RemoteVendorDetails.City = vendorRegDetails.City;
 				RemoteVendorDetails.PostalCode = vendorRegDetails.PostalCode;

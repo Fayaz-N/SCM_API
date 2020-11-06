@@ -183,7 +183,7 @@ namespace SCMModels
 		public string City { get; set; }
 		public Nullable<int> PaymentTermId { get; set; }
 		public string PaymentTerms { get; set; }
-		
+
 		public Nullable<bool> Onetimevendor { get; set; }
 		public Nullable<bool> EvaluationRequired { get; set; }
 		public Nullable<bool> PerformanceVerificationRequired { get; set; }
@@ -267,4 +267,13 @@ namespace SCMModels
 
 
 	}
+	public partial class RFQGenerateReminderMaster
+	{
+		public string FrmEmailId { get; set; }
+		public int VendorId { get; set; }
+		public string rfqno { get; set; }
+		public bool Reminder { get; set; }
+
+	}
+
 }

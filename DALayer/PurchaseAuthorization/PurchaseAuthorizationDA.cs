@@ -20,14 +20,14 @@ using System.Threading.Tasks;
 
 namespace DALayer.PurchaseAuthorization
 {
-    /*
+	/*
 Name of Class : <<PurchaseAuthorization>>  Author :<<Akhil Kumar reddy>>  
 Date of Creation <<1-11-2019>>
 Purpose : <<to generate PA, get PA data>>
 Review Date :<<>>   Reviewed By :<<>>
 
 */
-    public class PurchaseAuthorizationDA : IPurchaseAuthorizationDA
+	public class PurchaseAuthorizationDA : IPurchaseAuthorizationDA
 	{
 		private IPAEmailDA emailDA = default(IPAEmailDA);
 		private IEmailTemplateDA emailTemplateDA = default(IEmailTemplateDA);
@@ -38,12 +38,12 @@ Review Date :<<>>   Reviewed By :<<>>
 		}
 		VSCMEntities vscm = new VSCMEntities();
 		YSCMEntities obj = new YSCMEntities();
-        //inserting pa limits
-        /*Name of Function : <<InsertPAAuthorizationLimits>>  Author :<<Prasanna>>  
+		//inserting pa limits
+		/*Name of Function : <<InsertPAAuthorizationLimits>>  Author :<<Prasanna>>  
 Date of Creation <<>>
 Purpose : <<To Insert the purchase authorization slabs to the department>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
+		public async Task<statuscheckmodel> InsertPAAuthorizationLimits(PAAuthorizationLimitModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -71,12 +71,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<BulkInsertPAAuthorizationLimits>>  Author :<<Akhil>>  
+		/*Name of Function : <<BulkInsertPAAuthorizationLimits>>  Author :<<Akhil>>  
     Date of Creation <<15-09-2019>>
     Purpose : <<Inserting multiple slabs at a timme>>
     Review Date :<<>>   Reviewed By :<<>>*/
-        //bulk insert palimits
-        public async Task<statuscheckmodel> BulkInsertPAAuthorizationLimits(List<PAAuthorizationLimitModel> model)
+		//bulk insert palimits
+		public async Task<statuscheckmodel> BulkInsertPAAuthorizationLimits(List<PAAuthorizationLimitModel> model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -102,12 +102,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //get authorization limits by deptid
-        /*Name of Function : <<GetPAAuthorizationLimitById>>  Author :<<Akhil>>  
+		//get authorization limits by deptid
+		/*Name of Function : <<GetPAAuthorizationLimitById>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<To get the pa slabs by department>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<PAAuthorizationLimitModel> GetPAAuthorizationLimitById(int deptid)
+		public async Task<PAAuthorizationLimitModel> GetPAAuthorizationLimitById(int deptid)
 		{
 			PAAuthorizationLimitModel model = new PAAuthorizationLimitModel();
 			try
@@ -128,13 +128,13 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //employee mapping to the palimits
-        //get authorization limits by deptid
-        /*Name of Function : <<CreatePAAuthirizationEmployeeMapping>>  Author :<<Akhil>>  
+		//employee mapping to the palimits
+		//get authorization limits by deptid
+		/*Name of Function : <<CreatePAAuthirizationEmployeeMapping>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Assign the pa slabs and funcyional role id to the employee>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model)
+		public async Task<statuscheckmodel> CreatePAAuthirizationEmployeeMapping(PAAuthorizationEmployeeMappingModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -146,11 +146,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					mapping.FunctionalRoleId = model.FunctionalRoleId;
 					mapping.CreatedBY = model.CreatedBY;
 					mapping.CreatedDate = System.DateTime.Now;
-                    //mapping.Employeeid = model.Employeeid;
-                    foreach (var item in model.Employeeid)
-                    {
-                        mapping.Employeeid = item.EmployeeNo;
-                    }
+					//mapping.Employeeid = model.Employeeid;
+					foreach (var item in model.Employeeid)
+					{
+						mapping.Employeeid = item.EmployeeNo;
+					}
 					mapping.LessBudget = model.LessBudget;
 					mapping.MoreBudget = model.MoreBudget;
 					mapping.DeletedBy = model.DeletedBy;
@@ -184,12 +184,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-       
-        /*Name of Function : <<CreatePACreditDaysmaster>>  Author :<<Akhil>>  
+
+		/*Name of Function : <<CreatePACreditDaysmaster>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Inserting the pa credit days to PACreditDaysMaster>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> CreatePACreditDaysmaster(PACreditDaysMasterModel model)
+		public async Task<statuscheckmodel> CreatePACreditDaysmaster(PACreditDaysMasterModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			var credit = new PACreditDaysMaster();
@@ -216,12 +216,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //get credit days by credit id
-        /*Name of Function : <<GetCreditdaysMasterByID>>  Author :<<Akhil>>  
+		//get credit days by credit id
+		/*Name of Function : <<GetCreditdaysMasterByID>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting the assigned credit days by creditdaysid>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<PACreditDaysMasterModel> GetCreditdaysMasterByID(int creditdaysid)
+		public async Task<PACreditDaysMasterModel> GetCreditdaysMasterByID(int creditdaysid)
 		{
 			PACreditDaysMasterModel model = new PACreditDaysMasterModel();
 			try
@@ -244,12 +244,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //mapping credit days to employee
-        /*Name of Function : <<AssignCreditdaysToEmployee>>  Author :<<Akhil>>  
+		//mapping credit days to employee
+		/*Name of Function : <<AssignCreditdaysToEmployee>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Assign Creditdays ToEmployee>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> AssignCreditdaysToEmployee(PACreditDaysApproverModel model)
+		public async Task<statuscheckmodel> AssignCreditdaysToEmployee(PACreditDaysApproverModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -274,12 +274,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //remove pa limits by Auth id
-        /*Name of Function : <<RemovePAAuthorizationLimitsByID>>  Author :<<Akhil>>  
+		//remove pa limits by Auth id
+		/*Name of Function : <<RemovePAAuthorizationLimitsByID>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Removing the slabs to department by authid>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid)
+		public async Task<statuscheckmodel> RemovePAAuthorizationLimitsByID(int authid)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -308,12 +308,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //removing pa creditdays by creditid
-        /*Name of Function : <<RemovePACreditDaysMaster>>  Author :<<Akhil>>  
+		//removing pa creditdays by creditid
+		/*Name of Function : <<RemovePACreditDaysMaster>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Removing the PACreditDays>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid)
+		public async Task<statuscheckmodel> RemovePACreditDaysMaster(int creditid)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -333,11 +333,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<GetPAAuthorizationLimitsByDeptId>>  Author :<<Akhil>>  
+		/*Name of Function : <<GetPAAuthorizationLimitsByDeptId>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Get PAAuthorizationLimitsByDeptId>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<PAAuthorizationLimitModel>> GetPAAuthorizationLimitsByDeptId(int departmentid)
+		public async Task<List<PAAuthorizationLimitModel>> GetPAAuthorizationLimitsByDeptId(int departmentid)
 		{
 			List<PAAuthorizationLimitModel> model = new List<PAAuthorizationLimitModel>();
 			try
@@ -355,12 +355,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //removing employee assigned to pa credit days
-        /*Name of Function : <<RemovePACreditDaysApprover>>  Author :<<Akhil>>  
+		//removing employee assigned to pa credit days
+		/*Name of Function : <<RemovePACreditDaysApprover>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Removing the assigned employee to credit days>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> RemovePACreditDaysApprover(EmployeemappingtocreditModel model)
+		public async Task<statuscheckmodel> RemovePACreditDaysApprover(EmployeemappingtocreditModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -398,12 +398,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //getting credit days approver by approval id
-        /*Name of Function : <<GetPACreditDaysApproverById>>  Author :<<Akhil>>  
+		//getting credit days approver by approval id
+		/*Name of Function : <<GetPACreditDaysApproverById>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<GetPACreditDaysApproverById>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId)
+		public async Task<PACreditDaysApproverModel> GetPACreditDaysApproverById(int ApprovalId)
 		{
 			PACreditDaysApproverModel model = new PACreditDaysApproverModel();
 			try
@@ -427,81 +427,81 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //public async Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model)
-        //{
-        //    List<EmployeModel> employee = new List<EmployeModel>();
-        //    model.PAValue = model.UnitPrice;
-        //    if (model.PAValue > model.TargetSpend)
-        //    {
-        //        model.Budgetvalue = false;
-        //    }
-        //    else
-        //    {
-        //        model.Budgetvalue = true;
-        //    }
-        //    try
-        //    {
-        //        if (model != null)
-        //        {
-        //            //var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue >= model.PAValue && x.MaxPAValue <= model.PAValue).FirstOrDefault();
-        //            var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue.CompareTo(model.PAValue) <= 0 && x.MaxPAValue.CompareTo(model.PAValue) >= 0 && x.DeptId==model.DeptId).FirstOrDefault();
-        //            if (padata != null)
-        //            {
-        //                //string.Equals(padata.AuthorizationType,"pa", StringComparison.CurrentCultureIgnoreCase);
-        //                //padata.AuthorizationType.Contains( StringComparison.CurrentCultureIgnoreCase);
-        //                if (padata.AuthorizationType.ToLower().Equals("pa"))
-        //                {
-        //                    var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == padata.Authid).FirstOrDefault();
-        //                    if (mappingdata != null)
-        //                    {
-        //                        var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).ToList();
-        //                        employee = employeedata.Select(x => new EmployeModel()
-        //                        {
-        //                            EmployeeNo = x.EmployeeNo,
-        //                            Name = x.Name
-        //                        }).ToList();
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    var creditdata = obj.PACreditDaysApprovers.Where(x => x.AuthId == padata.Authid).FirstOrDefault();
-        //                    var employeedata = obj.Employees.Where(x => x.EmployeeNo == creditdata.EmployeeNo).ToList();
-        //                    if (creditdata != null)
-        //                    {
-        //                        var creditmasterdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditdata.CreditdaysId).FirstOrDefault();
-        //                    }
-        //                    employee = employeedata.Select(x => new EmployeModel()
-        //                    {
-        //                        EmployeeNo = x.EmployeeNo,
-        //                        Name = x.Name
-        //                    }).ToList();
-        //                }
-        //            }
-        //            else
-        //            {
-        //                return employee;
-        //            }
+		//public async Task<List<EmployeModel>> GetEmployeeMappings(PAConfigurationModel model)
+		//{
+		//    List<EmployeModel> employee = new List<EmployeModel>();
+		//    model.PAValue = model.UnitPrice;
+		//    if (model.PAValue > model.TargetSpend)
+		//    {
+		//        model.Budgetvalue = false;
+		//    }
+		//    else
+		//    {
+		//        model.Budgetvalue = true;
+		//    }
+		//    try
+		//    {
+		//        if (model != null)
+		//        {
+		//            //var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue >= model.PAValue && x.MaxPAValue <= model.PAValue).FirstOrDefault();
+		//            var padata = obj.PAAuthorizationLimits.Where(x => x.MinPAValue.CompareTo(model.PAValue) <= 0 && x.MaxPAValue.CompareTo(model.PAValue) >= 0 && x.DeptId==model.DeptId).FirstOrDefault();
+		//            if (padata != null)
+		//            {
+		//                //string.Equals(padata.AuthorizationType,"pa", StringComparison.CurrentCultureIgnoreCase);
+		//                //padata.AuthorizationType.Contains( StringComparison.CurrentCultureIgnoreCase);
+		//                if (padata.AuthorizationType.ToLower().Equals("pa"))
+		//                {
+		//                    var mappingdata = obj.PAAuthorizationEmployeeMappings.Where(x => x.Authid == padata.Authid).FirstOrDefault();
+		//                    if (mappingdata != null)
+		//                    {
+		//                        var employeedata = obj.Employees.Where(x => x.EmployeeNo == mappingdata.Employeeid).ToList();
+		//                        employee = employeedata.Select(x => new EmployeModel()
+		//                        {
+		//                            EmployeeNo = x.EmployeeNo,
+		//                            Name = x.Name
+		//                        }).ToList();
+		//                    }
+		//                }
+		//                else
+		//                {
+		//                    var creditdata = obj.PACreditDaysApprovers.Where(x => x.AuthId == padata.Authid).FirstOrDefault();
+		//                    var employeedata = obj.Employees.Where(x => x.EmployeeNo == creditdata.EmployeeNo).ToList();
+		//                    if (creditdata != null)
+		//                    {
+		//                        var creditmasterdata = obj.PACreditDaysMasters.Where(x => x.CreditDaysid == creditdata.CreditdaysId).FirstOrDefault();
+		//                    }
+		//                    employee = employeedata.Select(x => new EmployeModel()
+		//                    {
+		//                        EmployeeNo = x.EmployeeNo,
+		//                        Name = x.Name
+		//                    }).ToList();
+		//                }
+		//            }
+		//            else
+		//            {
+		//                return employee;
+		//            }
 
-        //        }
-        //        return employee;
-        //    }
-        //    catch (Exception ex)  
-        //    {
-        //        throw;
-        //    }
-        //}
+		//        }
+		//        return employee;
+		//    }
+		//    catch (Exception ex)  
+		//    {
+		//        throw;
+		//    }
+		//}
 
-        //getting approvers based on toatl unitprice and target spend
-        /*Name of Function : <<GetEmployeeMappings>>  Author :<<Akhil>>  
+		//getting approvers based on toatl unitprice and target spend
+		/*Name of Function : <<GetEmployeeMappings>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting configured employee based on total pa value,target spend and credit days>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public DataSet GetEmployeeMappings1(PAConfigurationModel model)
+		public DataSet GetEmployeeMappings1(PAConfigurationModel model)
 		{
-            string con = obj.Database.Connection.ConnectionString;
-            //SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
-            SqlConnection Conn1 = new SqlConnection(con);
-            EmployeModel employee = new EmployeModel();
+			string con = obj.Database.Connection.ConnectionString;
+			//SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+			SqlConnection Conn1 = new SqlConnection(con);
+			EmployeModel employee = new EmployeModel();
 			DataSet Ds = new DataSet();
 			string data = string.Join(",", model.MPRItemDetailsid);
 			model.PAValue = model.UnitPrice;
@@ -524,7 +524,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				Param[2] = new SqlParameter("@TargetSpend", model.TargetSpend);
 				Param[3] = new SqlParameter("@creditdays", Termscode);
 				Param[4] = new SqlParameter("@departmentid", model.DeptId);
-                string spname = "PAApprovers";
+				string spname = "PAApprovers";
 				SqlCommand cmd = new SqlCommand();
 				SqlDataAdapter Adp = new SqlDataAdapter();
 				cmd = new SqlCommand();
@@ -555,11 +555,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<GetEmployeeMappings>>  Author :<<Akhil>>  
+		/*Name of Function : <<GetEmployeeMappings>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting configured employee based on total pa value,target spend and credit days>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<EmployeModel> GetEmployeeMappings(PAConfigurationModel model)
+		public async Task<EmployeModel> GetEmployeeMappings(PAConfigurationModel model)
 		{
 			EmployeModel employee = new EmployeModel();
 			model.PAValue = model.UnitPrice;
@@ -892,11 +892,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<GetAllCreditDays>>  Author :<<Akhil>>  
+		/*Name of Function : <<GetAllCreditDays>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting credt days limits>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<PACreditDaysMasterModel>> GetAllCreditDays()
+		public async Task<List<PACreditDaysMasterModel>> GetAllCreditDays()
 		{
 			List<PACreditDaysMasterModel> model = new List<PACreditDaysMasterModel>();
 			try
@@ -919,12 +919,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //getting the mpr purcahse modes
-        /*Name of Function : <<GetAllMprPAPurchaseModes>>  Author :<<Akhil>>  
+		//getting the mpr purcahse modes
+		/*Name of Function : <<GetAllMprPAPurchaseModes>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting the mpr purcahse modes>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes()
+		public async Task<List<MPRPAPurchaseModesModel>> GetAllMprPAPurchaseModes()
 		{
 			List<MPRPAPurchaseModesModel> model = new List<MPRPAPurchaseModesModel>();
 			try
@@ -944,12 +944,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //getting mpr purchase types
-        /*Name of Function : <<GetAllMprPAPurchaseTypes>>  Author :<<Akhil>>  
+		//getting mpr purchase types
+		/*Name of Function : <<GetAllMprPAPurchaseTypes>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<GetAllMprPAPurchaseTypes>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes()
+		public async Task<List<MPRPAPurchaseTypesModel>> GetAllMprPAPurchaseTypes()
 		{
 			List<MPRPAPurchaseTypesModel> model = new List<MPRPAPurchaseTypesModel>();
 			try
@@ -969,12 +969,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //generating the purchase authorization for approve ditems
-        /*Name of Function : <<InsertPurchaseAuthorization>>  Author :<<Akhil>>  
+		//generating the purchase authorization for approve ditems
+		/*Name of Function : <<InsertPurchaseAuthorization>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<InsertPurchaseAuthorization>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model)
+		public async Task<statuscheckmodel> InsertPurchaseAuthorization(MPRPADetailsModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -1080,11 +1080,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<finalpa>>  Author :<<Akhil>>  
+		/*Name of Function : <<finalpa>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Inserting approvers to the generated pa based on pa value,target spend and credit days>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> finalpa(MPRPADetailsModel model)
+		public async Task<statuscheckmodel> finalpa(MPRPADetailsModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -1130,12 +1130,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 		}
 
 
-        //getting the generated purchase authorization by pa id
-        /*Name of Function : <<GetMPRPADeatilsByPAID>>  Author :<<Akhil>>  
+		//getting the generated purchase authorization by pa id
+		/*Name of Function : <<GetMPRPADeatilsByPAID>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting pa details by paid>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID)
+		public async Task<MPRPADetailsModel> GetMPRPADeatilsByPAID(int PID)
 		{
 			MPRPADetailsModel model = new MPRPADetailsModel();
 			try
@@ -1201,26 +1201,26 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						PODate = x.PODate.ToString(),
 						RFQNo = x.RFQNo,
 						HSNCode = x.HSNCode,
-                        TotalPFAmount=x.pfamounts,
-                        FreightAmount=x.FreightAmount,
-                        FreightPercentage=x.FreightPercentage,
-                        PFAmount=x.PFAmount,
-                        PFPercentage=x.PFPercentage,
-                        TotalFreightAmount=x.freightamounts,
-                        HandlingAmount = x.HandlingAmount,
-                        ImportFreightAmount = x.ImportFreightAmount,
-                        DutyAmount = x.DutyAmount,
-                        InsuranceAmount = x.InsuranceAmount,
-                        MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
+						TotalPFAmount = x.pfamounts,
+						FreightAmount = x.FreightAmount,
+						FreightPercentage = x.FreightPercentage,
+						PFAmount = x.PFAmount,
+						PFPercentage = x.PFPercentage,
+						TotalFreightAmount = x.freightamounts,
+						HandlingAmount = x.HandlingAmount,
+						ImportFreightAmount = x.ImportFreightAmount,
+						DutyAmount = x.DutyAmount,
+						InsuranceAmount = x.InsuranceAmount,
+						MPRRevisionId = Convert.ToInt32(x.MPRRevisionId)
 					}).ToList();
-                    //var taxes = obj.ShowAdditionalcharges.Where(x => x.PAId == PID).ToList();
-                    //model.additionaltaxes = taxes.Select(x => new Additionaltaxes()
-                    //{
-                    //    HandlingAmount=x.HandlingAmount,
-                    //    ImportFreightAmount=x.ImportFreightAmount,
-                    //    DutyAmount=x.DutyAmount,
-                    //    InsuranceAmount=x.InsuranceAmount
-                    //}).ToList();
+					//var taxes = obj.ShowAdditionalcharges.Where(x => x.PAId == PID).ToList();
+					//model.additionaltaxes = taxes.Select(x => new Additionaltaxes()
+					//{
+					//    HandlingAmount=x.HandlingAmount,
+					//    ImportFreightAmount=x.ImportFreightAmount,
+					//    DutyAmount=x.DutyAmount,
+					//    InsuranceAmount=x.InsuranceAmount
+					//}).ToList();
 					var approverdata = obj.GetmprApproverdeatils.Where(x => x.PAId == PID).ToList();
 					model.ApproversList = approverdata.Select(x => new MPRPAApproversModel()
 					{
@@ -1302,12 +1302,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //getting the functinal role of approvers 
-        /*Name of Function : <<GetAllPAFunctionalRoles>>  Author :<<Akhil>>  
+		//getting the functinal role of approvers 
+		/*Name of Function : <<GetAllPAFunctionalRoles>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting functional roles like pm,UH,... >>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles()
+		public async Task<List<PAFunctionalRolesModel>> GetAllPAFunctionalRoles()
 		{
 			List<PAFunctionalRolesModel> model = new List<PAFunctionalRolesModel>();
 			try
@@ -1333,11 +1333,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<GetCreditSlabsandemployees>>  Author :<<Akhil>>  
+		/*Name of Function : <<GetCreditSlabsandemployees>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting employee based on credit days>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<EmployeemappingtocreditModel>> GetCreditSlabsandemployees()
+		public async Task<List<EmployeemappingtocreditModel>> GetCreditSlabsandemployees()
 		{
 			List<EmployeemappingtocreditModel> model = new List<EmployeemappingtocreditModel>();
 			try
@@ -1406,12 +1406,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //getting allthe project managers based on employeeno
-        /*Name of Function : <<LoadAllProjectManagers>>  Author :<<Akhil>>  
+		//getting allthe project managers based on employeeno
+		/*Name of Function : <<LoadAllProjectManagers>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting project managers from mprrevsions table>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<ProjectManagerModel>> LoadAllProjectManagers()
+		public async Task<List<ProjectManagerModel>> LoadAllProjectManagers()
 		{
 			List<ProjectManagerModel> model = new List<ProjectManagerModel>();
 			try
@@ -1433,11 +1433,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<LoadVendorByMprDetailsId>>  Author :<<Akhil>>  
+		/*Name of Function : <<LoadVendorByMprDetailsId>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting vendor by item wise>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int?> MPRItemDetailsid)
+		public async Task<List<VendormasterModel>> LoadVendorByMprDetailsId(List<int?> MPRItemDetailsid)
 		{
 			List<VendormasterModel> model = new List<VendormasterModel>();
 			try
@@ -1490,12 +1490,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //getting pa approved,pending and submitted
-        /*Name of Function : <<GetMprApproverDetailsBySearch>>  Author :<<Akhil>>  
+		//getting pa approved,pending and submitted
+		/*Name of Function : <<GetMprApproverDetailsBySearch>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting pa approved,pending and submitted>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<mprApproverdetailsview>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
+		public async Task<List<mprApproverdetailsview>> GetMprApproverDetailsBySearch(PAApproverDetailsInputModel model)
 		{
 			List<mprApproverdetailsview> details = new List<mprApproverdetailsview>();
 			int mprno = 0;
@@ -1561,12 +1561,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //updating the pa status based on paid
-        /*Name of Function : <<UpdateMprpaApproverStatus>>  Author :<<Akhil>>  
+		//updating the pa status based on paid
+		/*Name of Function : <<UpdateMprpaApproverStatus>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<updating assigned approver status after approving or rejection of pa>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model)
+		public async Task<statuscheckmodel> UpdateMprpaApproverStatus(MPRPAApproversModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -1599,12 +1599,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //continuation to above api
-        /*Name of Function : <<UpdatePAStatus>>  Author :<<Akhil>>  
+		//continuation to above api
+		/*Name of Function : <<UpdatePAStatus>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<updating the pastatus after approver approving or rejection>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public bool UpdatePAStatus(int paid, int mprrevisionid, string employeeno, string ApprovalStatus)
+		public bool UpdatePAStatus(int paid, int mprrevisionid, string employeeno, string ApprovalStatus)
 		{
 			List<approverFinalview> approver = new List<approverFinalview>();
 			int statusid = 0;
@@ -1685,11 +1685,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			//approver.approved;
 			return true;
 		}
-        /*Name of Function : <<updatepaitems>>  Author :<<Akhil>>  
+		/*Name of Function : <<updatepaitems>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<updatepaitems>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public bool updatepaitems(int mprrevisionid, int paid)
+		public bool updatepaitems(int mprrevisionid, int paid)
 		{
 			List<Updatepaitem> items = new List<Updatepaitem>();
 			try
@@ -1727,47 +1727,47 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId(int deptid)
-        //{
-        //    List<EmployeemappingtopurchaseModel> model = new List<EmployeemappingtopurchaseModel>();
-        //    try
-        //    {
-        //        var data = obj.Employeemappingtopurchases.Where(x => x.DeptId == deptid).ToList();
-        //        if (data != null)
-        //        {
-        //            model = data.Select(x => new EmployeemappingtopurchaseModel()
-        //            {
-        //                Authid = x.Authid,
-        //                AuthorizationType = x.AuthorizationType,
-        //                MaxPAValue = x.MaxPAValue,
-        //                MinPAValue = x.MinPAValue,
-        //                Employeeid = x.Employeeid,
-        //                LessBudget = x.LessBudget,
-        //                MoreBudget = x.MoreBudget,
-        //                DepartmentName = x.Department,
-        //                Name = x.Name,
-        //                FunctionalRoleId = x.FunctionalRoleId,
-        //                PAmapid = x.PAmapid
-        //            }).ToList();
-        //            return model;
-        //        }
-        //        else
-        //        {
-        //            return model;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
+		//public async Task<List<EmployeemappingtopurchaseModel>> GetPurchaseSlabsandMappedemployeesByDeptId(int deptid)
+		//{
+		//    List<EmployeemappingtopurchaseModel> model = new List<EmployeemappingtopurchaseModel>();
+		//    try
+		//    {
+		//        var data = obj.Employeemappingtopurchases.Where(x => x.DeptId == deptid).ToList();
+		//        if (data != null)
+		//        {
+		//            model = data.Select(x => new EmployeemappingtopurchaseModel()
+		//            {
+		//                Authid = x.Authid,
+		//                AuthorizationType = x.AuthorizationType,
+		//                MaxPAValue = x.MaxPAValue,
+		//                MinPAValue = x.MinPAValue,
+		//                Employeeid = x.Employeeid,
+		//                LessBudget = x.LessBudget,
+		//                MoreBudget = x.MoreBudget,
+		//                DepartmentName = x.Department,
+		//                Name = x.Name,
+		//                FunctionalRoleId = x.FunctionalRoleId,
+		//                PAmapid = x.PAmapid
+		//            }).ToList();
+		//            return model;
+		//        }
+		//        else
+		//        {
+		//            return model;
+		//        }
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        throw;
+		//    }
+		//}
 
 
-        /*Name of Function : <<GetPurchaseSlabsandMappedemployeesByDeptId>>  Author :<<Akhil>>  
+		/*Name of Function : <<GetPurchaseSlabsandMappedemployeesByDeptId>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting mapped salbs and corresponding employee based on budget or deptid or employee id>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<Employeemappingtopurchase>> GetPurchaseSlabsandMappedemployeesByDeptId(EmployeeFilterModel model)
+		public async Task<List<Employeemappingtopurchase>> GetPurchaseSlabsandMappedemployeesByDeptId(EmployeeFilterModel model)
 		{
 			List<Employeemappingtopurchase> purchase = new List<Employeemappingtopurchase>();
 			try
@@ -1793,33 +1793,33 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        //public async Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem)
-        //{
-        //    statuscheckmodel status = new statuscheckmodel();
-        //    try
-        //    {
-        //        var data = obj.PAItems.Where(x => x.PAItemID == paitem.paitemid).FirstOrDefault();
-        //        data.PONO = paitem.PONO;
-        //        data.POItemNo = paitem.POItemNo;
-        //        data.PODate = System.DateTime.Now;
-        //        data.Remarks = paitem.Remarks;
-        //        data.MPRItemDetailsId = paitem.MRPItemsDetailsID;
-        //        obj.SaveChanges();
+		//public async Task<statuscheckmodel> InsertPaitems(ItemsViewModel paitem)
+		//{
+		//    statuscheckmodel status = new statuscheckmodel();
+		//    try
+		//    {
+		//        var data = obj.PAItems.Where(x => x.PAItemID == paitem.paitemid).FirstOrDefault();
+		//        data.PONO = paitem.PONO;
+		//        data.POItemNo = paitem.POItemNo;
+		//        data.PODate = System.DateTime.Now;
+		//        data.Remarks = paitem.Remarks;
+		//        data.MPRItemDetailsId = paitem.MRPItemsDetailsID;
+		//        obj.SaveChanges();
 
-        //        return status;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
+		//        return status;
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        throw;
+		//    }
+		//}
 
-        //inserting pa items after pa approval
-        /*Name of Function : <<InsertPaitems>>  Author :<<Akhil>>  
+		//inserting pa items after pa approval
+		/*Name of Function : <<InsertPaitems>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<inserting pa items after pa approval>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> InsertPaitems(List<ItemsViewModel> paitem)
+		public async Task<statuscheckmodel> InsertPaitems(List<ItemsViewModel> paitem)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -1862,11 +1862,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<GetAllMappedSlabs>>  Author :<<Akhil>>  
+		/*Name of Function : <<GetAllMappedSlabs>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting all mapped slabs by department wise>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<GetMappedSlab>> GetAllMappedSlabs()
+		public async Task<List<GetMappedSlab>> GetAllMappedSlabs()
 		{
 			List<GetMappedSlab> slab = new List<GetMappedSlab>();
 			try
@@ -1881,12 +1881,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 
 		}
 
-        //removing mapped slabs
-        /*Name of Function : <<RemoveMappedSlab>>  Author :<<Akhil>>  
+		//removing mapped slabs
+		/*Name of Function : <<RemoveMappedSlab>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<removing mapped slabs>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model)
+		public async Task<statuscheckmodel> RemoveMappedSlab(PAAuthorizationLimitModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -1905,20 +1905,20 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //getting the all palist and also go by filetrs like mprno or vendor or buyergroup or rfqno or paid or postatus or pastatus or fromdate and todate
-        /*Name of Function : <<getMprPaDetailsBySearch>>  Author :<<Akhil>>  
+		//getting the all palist and also go by filetrs like mprno or vendor or buyergroup or rfqno or paid or postatus or pastatus or fromdate and todate
+		/*Name of Function : <<getMprPaDetailsBySearch>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting the all palist and also go by filetrs like mprno or vendor or buyergroup or rfqno or paid or postatus or pastatus or fromdate and todate which will show pending,submitted and approve pa's>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<NewGetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
+		public async Task<List<NewGetMprPaDetailsByFilter>> getMprPaDetailsBySearch(PADetailsModel model)
 		{
-            string data = "";
-            if (model.OrgDepartmentId != 0)
-            {
-                List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == model.OrgDepartmentId).Select(x =>(int)x.DepartmentId).ToList();
-                data= string.Join(" ',' ", departments);
-            }
-               
+			string data = "";
+			if (model.OrgDepartmentId != 0)
+			{
+				List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == model.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
+				data = string.Join(" ',' ", departments);
+			}
+
 			int mprno = 0;
 			int rfqno = 0;
 			if (model.DocumentNumber != null && model.DocumentNumber != "")
@@ -1976,12 +1976,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					sqlquery += " and RFQNo ='" + model.rfqnumber + "'";
 				if (rfqno != 0)
 					sqlquery += " and RFQUniqueNo ='" + rfqno + "'";
-                if (!string.IsNullOrEmpty(model.Approvername))
-                    sqlquery += " and approvers1 like '% " + model.Approvername + "%'";
-                if (!string.IsNullOrEmpty(model.Approverstatus))
-                    sqlquery += " and PAStatus not in ('Rejected') and DeleteFlag=0 and ApprovalStatus like '% " + model.Approverstatus + "%'";
+				if (!string.IsNullOrEmpty(model.Approvername))
+					sqlquery += " and approvers1 like '% " + model.Approvername + "%'";
+				if (!string.IsNullOrEmpty(model.Approverstatus))
+					sqlquery += " and PAStatus not in ('Rejected') and DeleteFlag=0 and ApprovalStatus like '% " + model.Approverstatus + "%'";
 
-                sqlquery += " order by PAId desc ";
+				sqlquery += " order by PAId desc ";
 				//if (model.FromDate != null && model.ToDate != null)
 				//    sqlquery += " and RequestedOn between '" + model.FromDate + "' and '" + model.ToDate + "'";
 
@@ -1994,12 +1994,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //getting ps status reports 
-        /*Name of Function : <<GetPaStatusReports>>  Author :<<Akhil>>  
+		//getting ps status reports 
+		/*Name of Function : <<GetPaStatusReports>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<GetPaStatusReports>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<PAReport>> GetPaStatusReports(PAReportInputModel model)
+		public async Task<List<PAReport>> GetPaStatusReports(PAReportInputModel model)
 		{
 			List<PAReport> report = new List<PAReport>();
 			//DateTime? fromdate= model.FromDate;
@@ -2025,12 +2025,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 		}
 
-        //sending email to approver that to approve pa
-        /*Name of Function : <<UpdateApproverforRequest>>  Author :<<Akhil>>  
+		//sending email to approver that to approve pa
+		/*Name of Function : <<UpdateApproverforRequest>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Sending remainder mail to the approver to approve pa>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model)
+		public async Task<statuscheckmodel> UpdateApproverforRequest(MPRPAApproversModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -2044,11 +2044,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<DeletePAByPAid>>  Author :<<Akhil>>  
+		/*Name of Function : <<DeletePAByPAid>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Delete purchase puthorization ByPAid>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> DeletePAByPAid(padeletemodel model)
+		public async Task<statuscheckmodel> DeletePAByPAid(padeletemodel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -2070,11 +2070,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<GetIncompletedPAlist>>  Author :<<Akhil>>  
+		/*Name of Function : <<GetIncompletedPAlist>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting the loist of inprogress pa list>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model)
+		public async Task<List<IncompletedPAlist>> GetIncompletedPAlist(painputmodel model)
 		{
 			List<IncompletedPAlist> filter = new List<IncompletedPAlist>();
 			try
@@ -2091,11 +2091,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<UpdatePurchaseAuthorization>>  Author :<<Akhil>>  
+		/*Name of Function : <<UpdatePurchaseAuthorization>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Updating the inprogress purchase authorization>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> UpdatePurchaseAuthorization(MPRPADetailsModel model)
+		public async Task<statuscheckmodel> UpdatePurchaseAuthorization(MPRPADetailsModel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			var dateAndTime = DateTime.Now;
@@ -2134,11 +2134,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<getrfqtermsbyrevisionsid1>>  Author :<<Akhil>>  
+		/*Name of Function : <<getrfqtermsbyrevisionsid1>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<getting the assigned vendor rfq terms by revisionid>>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
+		public DataTable getrfqtermsbyrevisionsid1(List<int> revisionid)
 		{
 			SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
 			EmployeModel employee = new EmployeModel();
@@ -2179,11 +2179,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				throw;
 			}
 		}
-        /*Name of Function : <<DeletePADocument>>  Author :<<Akhil>>  
+		/*Name of Function : <<DeletePADocument>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<To deleted the attached document to pa >>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public async Task<statuscheckmodel> DeletePADocument(PADocumentsmodel model)
+		public async Task<statuscheckmodel> DeletePADocument(PADocumentsmodel model)
 		{
 			statuscheckmodel status = new statuscheckmodel();
 			try
@@ -2237,22 +2237,22 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						tokuchureq.VerifiedOn = tokuchudata.VerifiedOn;
 						tokuchureq.VerifiedStatus = tokuchudata.VerifiedStatus;
 						tokuchureq.VerifiedRemarks = tokuchudata.VerifiedRemarks;
-                        //Added on 26082020 by Senthil - Start
+						//Added on 26082020 by Senthil - Start
 						tokuchureq.CompletedStatus = tokuchudata.CompletedStatus;
 						tokuchureq.CompletedOn = tokuchudata.CompletedOn;
 						tokuchureq.DownloadedBy = tokuchudata.DownloadedBy;
 						tokuchureq.DownloadedOn = tokuchudata.DownloadedOn;
 						//Added on 26082020 by Senthil - End 
- 
+
 
 						tokuchureq.TokuchuProcessTracks = tokuchudata.TokuchuProcessTracks.Select(x => new TokuchuProcessTrack()
 						{
-							TokuchProcessTrackid=x.TokuchProcessTrackid,
-							TokuchRequestid=x.TokuchRequestid,
-							Statusby=obj.Employees.Where(li=>li.EmployeeNo==x.Statusby).FirstOrDefault().Name,
-							Status=x.Status,
-							StatusDate=x.StatusDate,
-							Remarks=x.Remarks,
+							TokuchProcessTrackid = x.TokuchProcessTrackid,
+							TokuchRequestid = x.TokuchRequestid,
+							Statusby = obj.Employees.Where(li => li.EmployeeNo == x.Statusby).FirstOrDefault().Name,
+							Status = x.Status,
+							StatusDate = x.StatusDate,
+							Remarks = x.Remarks,
 						}).ToList();
 						model.TokuchuRequest = tokuchureq;
 						if (model.TokuchuRequest.TokuchRequestid != null)
@@ -2290,8 +2290,8 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						ManufacturerName = x.ManufacturerName,
 						MPRRevisionId = Convert.ToInt32(x.MPRRevisionId),
 						Tklineitemid = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault()?.Tklineitemid,
-                        TokuchuNo = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().TokuchuNo : null,
-                        StandardLeadtime = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().StandardLeadtime : null,
+						TokuchuNo = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().TokuchuNo : null,
+						StandardLeadtime = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().StandardLeadtime : null,
 						ProductCategorylevel2id = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().ProductCategorylevel2id : null,
 					}).ToList();
 					return model;
@@ -2326,10 +2326,12 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				else
 				{
 					request.VerifiedBy = request.PreVerfiedBY = tokuchuRequest.VerifiedBy;
-					request.PreVerifiedOn = tokuchuRequest.PreVerifiedOn;
+					if (typeOfuser == "PreVerifier")
+						request.PreVerifiedOn =DateTime.Now;
 					request.PreVerifiedStatus = tokuchuRequest.PreVerifiedStatus;
 					request.PreVerifiedRemarks = tokuchuRequest.PreVerifiedRemarks;
-					request.VerifiedOn = tokuchuRequest.VerifiedOn;
+					if (typeOfuser == "Verifier")
+						request.VerifiedOn = DateTime.Now;
 					request.VerifiedStatus = tokuchuRequest.VerifiedStatus;
 					request.VerifiedRemarks = tokuchuRequest.VerifiedRemarks;
 					Context.SaveChanges();
@@ -2375,14 +2377,14 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				}
 				if (typeOfuser == "Verifier")
 				{
-                    //mail to requestor
-                    if (tokuchuRequest.VerifiedStatus == "Approved")
-                    {
-                        this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, tokuchuRequest.PreparedBY, typeOfuser, revisionId);
-                        string mprpreparedby = obj.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault().CheckedBy;
-                        this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, mprpreparedby, "MPRRequestor", revisionId);
-                    }
-                }
+					//mail to requestor
+					if (tokuchuRequest.VerifiedStatus == "Approved")
+					{
+						this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, tokuchuRequest.PreparedBY, typeOfuser, revisionId);
+						string mprpreparedby = obj.MPRRevisions.Where(li => li.RevisionId == revisionId).FirstOrDefault().CheckedBy;
+						this.emailTemplateDA.prepareAribaTemplate(tokuchureqId, tokuchuRequest.VerifiedBy, mprpreparedby, "MPRRequestor", revisionId);
+					}
+				}
 			}
 			return tokuchureqid;
 		}
@@ -2408,330 +2410,330 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}
 			return tokuchuDetails;
 		}
-        public List<mprstatuspivot> Getmprstatus()
-        {
-            List<mprstatuspivot> data = new List<mprstatuspivot>();
-            try
-            {
-                var query = "";
-                query = "select * from mprstatuspivot";
-                data = obj.mprstatuspivots.SqlQuery(query).ToList<mprstatuspivot>();
-                return data;
-            }
-            catch (Exception)
-            {
+		public List<mprstatuspivot> Getmprstatus()
+		{
+			List<mprstatuspivot> data = new List<mprstatuspivot>();
+			try
+			{
+				var query = "";
+				query = "select * from mprstatuspivot";
+				data = obj.mprstatuspivots.SqlQuery(query).ToList<mprstatuspivot>();
+				return data;
+			}
+			catch (Exception)
+			{
 
-                throw;
-            }
-        }
-        /*Name of Function : <<GetMprstatuswisereport>>  Author :<<Akhil>>  
+				throw;
+			}
+		}
+		/*Name of Function : <<GetMprstatuswisereport>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Getting mpr status report by buyer groupid and from and to dates of mpr >>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public DataSet GetMprstatuswisereport(string spName, SqlParameter[] paramArr)
-        {
-            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
-            EmployeModel employee = new EmployeModel();
-            DataSet Ds = new DataSet();
-            try
-            {
-              
-                SqlCommand cmd = new SqlCommand();
-                SqlDataAdapter Adp = new SqlDataAdapter();
-                cmd = new SqlCommand();
-                cmd.Connection = Conn1;
-                cmd.CommandText = spName;
-                cmd.CommandTimeout = 0;
-                cmd.CommandType = CommandType.StoredProcedure;
+		public DataSet GetMprstatuswisereport(string spName, SqlParameter[] paramArr)
+		{
+			SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+			EmployeModel employee = new EmployeModel();
+			DataSet Ds = new DataSet();
+			try
+			{
 
-                if (paramArr != null)
-                {
-                    foreach (SqlParameter sqlParam in paramArr)
-                    {
-                        cmd.Parameters.Add(sqlParam);
-                    }
-                }
+				SqlCommand cmd = new SqlCommand();
+				SqlDataAdapter Adp = new SqlDataAdapter();
+				cmd = new SqlCommand();
+				cmd.Connection = Conn1;
+				cmd.CommandText = spName;
+				cmd.CommandTimeout = 0;
+				cmd.CommandType = CommandType.StoredProcedure;
 
-                Adp = new SqlDataAdapter(cmd);
-                Ds = new DataSet();
+				if (paramArr != null)
+				{
+					foreach (SqlParameter sqlParam in paramArr)
+					{
+						cmd.Parameters.Add(sqlParam);
+					}
+				}
 
-                Adp.Fill(Ds);
-                cmd.Parameters.Clear();
-                //Ds.Clear();
-                return Ds;
-            }
-            catch (Exception ex)
-            {
+				Adp = new SqlDataAdapter(cmd);
+				Ds = new DataSet();
 
-                throw;
-            }
-        }
-        /*Name of Function : <<GetmprstatusReport>>  Author :<<Akhil>>  
+				Adp.Fill(Ds);
+				cmd.Parameters.Clear();
+				//Ds.Clear();
+				return Ds;
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
+		}
+		/*Name of Function : <<GetmprstatusReport>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Getting count of pending ,submitted and approved mpr on department wise >>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public DataSet GetmprstatusReport(string spName, SqlParameter[] paramArr)
-        {
-            SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
-            EmployeModel employee = new EmployeModel();
-            DataSet Ds = new DataSet();
-            try
-            {
-                SqlCommand cmd = new SqlCommand();
-                SqlDataAdapter Adp = new SqlDataAdapter();
-                cmd = new SqlCommand();
-                cmd.Connection = Conn1;
-                cmd.CommandText = spName;
-                cmd.CommandTimeout = 0;
-                cmd.CommandType = CommandType.StoredProcedure;
-                if (paramArr != null)
-                {
-                    foreach (SqlParameter sqlParam in paramArr)
-                    {
-                        cmd.Parameters.Add(sqlParam);
-                    }
-                }
+		public DataSet GetmprstatusReport(string spName, SqlParameter[] paramArr)
+		{
+			SqlConnection Conn1 = new SqlConnection(@"Data Source=10.29.15.183;User ID=sa;Password=yil@1234;initial catalog=YSCM;Integrated Security=false;");
+			EmployeModel employee = new EmployeModel();
+			DataSet Ds = new DataSet();
+			try
+			{
+				SqlCommand cmd = new SqlCommand();
+				SqlDataAdapter Adp = new SqlDataAdapter();
+				cmd = new SqlCommand();
+				cmd.Connection = Conn1;
+				cmd.CommandText = spName;
+				cmd.CommandTimeout = 0;
+				cmd.CommandType = CommandType.StoredProcedure;
+				if (paramArr != null)
+				{
+					foreach (SqlParameter sqlParam in paramArr)
+					{
+						cmd.Parameters.Add(sqlParam);
+					}
+				}
 
-                Adp = new SqlDataAdapter(cmd);
-                Ds = new DataSet();
+				Adp = new SqlDataAdapter(cmd);
+				Ds = new DataSet();
 
-                Adp.Fill(Ds);
-                cmd.Parameters.Clear();
-                return Ds;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        /*Name of Function : <<GetmprRequisitionReport>>  Author :<<Akhil>>  
+				Adp.Fill(Ds);
+				cmd.Parameters.Clear();
+				return Ds;
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+		}
+		/*Name of Function : <<GetmprRequisitionReport>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Getting data for mpr requisition report based on serach filter >>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input)
-        {
-            List<RequisitionReport> data = new List<RequisitionReport>();
-            try
-            {
-                int mprno = 0;
-                if (!string.IsNullOrEmpty(input.DocumentNo))
-                {
-                    if (input.DocumentNo.StartsWith("MPR", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        input.DocumentNo = input.DocumentNo;
-                    }
-                    else
-                    {
-                        mprno = Convert.ToInt32(input.DocumentNo);
-                        input.DocumentNo = null;
-                    }
-                }
-                var query = "";
-                query = "select * from RequisitionReport where revisionid!=0 ";
-                if (input.status == null)
-                {
-                    if (!string.IsNullOrEmpty(input.DocumentNo))
-                        query += " and documentno='" + input.DocumentNo + "'";
-                    if (!string.IsNullOrEmpty(input.jobcode))
-                        query += " and jobcode='" + input.jobcode + "'";
-                    if (!string.IsNullOrEmpty(input.preparedby))
-                        query += " and preparedby='" + input.preparedby + "'";
-                    if (!string.IsNullOrEmpty(input.Checked))
-                        query += " and Checker='" + input.Checked + "'";
-                    if (!string.IsNullOrEmpty(input.ApprovedBy))
-                        query += " and Approver='" + input.ApprovedBy + "'";
-                    if (!string.IsNullOrEmpty(input.checkerstatus))
-                        query += " and checkstatus='" + input.checkerstatus + "'";
-                    if (!string.IsNullOrEmpty(input.finalApproverstatus))
-                        query += " and approvalstatus='" + input.finalApproverstatus + "'";
-                    if (!string.IsNullOrEmpty(input.Fromdate))
-                        query += " and preparedon>='" + input.Fromdate + "'";
-                    if (!string.IsNullOrEmpty(input.Todate))
-                        query += " and preparedon < DATEADD(day, 1, '" + input.Todate + "')";
-                    if (input.RequisitionId != 0)
-                        query += " and requisitionid='" + input.RequisitionId + "'";
-                    if (input.revisionId != 0)
-                        query += " and revisionid='" + input.revisionId + "'";
-                    if (input.BuyerGroupId != 0)
-                        query += " and Buyergroupid='" + input.BuyerGroupId + "'";
-                    if (input.DepartmentId != 0)
-                        query += " and departmentid='" + input.DepartmentId + "'";
-                    if (!string.IsNullOrEmpty(input.jobcode))
-                        query += " and jobcode='" + input.jobcode + "'";
-                    if (input.ShowAllrevisions == false)
-                        query += " and BoolValidRevision='" + 1 + "' and ApprovalStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and SecondApproversStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and ThirdApproverStatus not in ('Pending','Rejected','Sent for Modification','Submitted') ";
-                    if (input.ShowAllrevisions == true)
-                        query += " and BoolValidRevision is not null";
-                }
-                else
-                {
-                    if (input.status == "Completed")
-                        query += " and CheckStatus  in('Approved') and statusid in (12,15,19)  and departmentid='" + input.DepartmentId + "'";
-                    if (input.status == "Pending")
-                        query += " and CheckStatus  in('Approved') and statusid not in (12,15,19) and departmentid='" + input.DepartmentId + "'";
-                    if (input.status == "submitted")
-                        query += " and CheckStatus  in('Approved') and approvedate is not null and departmentid='" + input.DepartmentId + "'";
-                    //if (input.DepartmentId !=0)
-                    //    query += " and departmentid='" + input.DepartmentId + "'";
-                    if (input.BuyerGroupId != 0) 
-                        query += " and Buyergroupid='" + input.BuyerGroupId + "'";
-                    //if (input.DepartmentId != 0)
-                    //    query += " and departmentid='" + input.DepartmentId + "'";
-                    if (!string.IsNullOrEmpty(input.Fromdate))
-                        query += " and approvedate>='" + input.Fromdate + "'";
-                    if (!string.IsNullOrEmpty(input.Todate))
-                        query += " and approvedate < DATEADD(day, 1, '"+ input.Todate + "') ";
-                    if (input.ShowAllrevisions == false)
-                        query += " and BoolValidRevision='" + 1 + "'";
-                }
-                data = obj.RequisitionReports.SqlQuery(query).ToList<RequisitionReport>();
-                return data;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-        /*Name of Function : <<GetmprRequisitionfilters>>  Author :<<Akhil>>  
+		public List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input)
+		{
+			List<RequisitionReport> data = new List<RequisitionReport>();
+			try
+			{
+				int mprno = 0;
+				if (!string.IsNullOrEmpty(input.DocumentNo))
+				{
+					if (input.DocumentNo.StartsWith("MPR", StringComparison.CurrentCultureIgnoreCase))
+					{
+						input.DocumentNo = input.DocumentNo;
+					}
+					else
+					{
+						mprno = Convert.ToInt32(input.DocumentNo);
+						input.DocumentNo = null;
+					}
+				}
+				var query = "";
+				query = "select * from RequisitionReport where revisionid!=0 ";
+				if (input.status == null)
+				{
+					if (!string.IsNullOrEmpty(input.DocumentNo))
+						query += " and documentno='" + input.DocumentNo + "'";
+					if (!string.IsNullOrEmpty(input.jobcode))
+						query += " and jobcode='" + input.jobcode + "'";
+					if (!string.IsNullOrEmpty(input.preparedby))
+						query += " and preparedby='" + input.preparedby + "'";
+					if (!string.IsNullOrEmpty(input.Checked))
+						query += " and Checker='" + input.Checked + "'";
+					if (!string.IsNullOrEmpty(input.ApprovedBy))
+						query += " and Approver='" + input.ApprovedBy + "'";
+					if (!string.IsNullOrEmpty(input.checkerstatus))
+						query += " and checkstatus='" + input.checkerstatus + "'";
+					if (!string.IsNullOrEmpty(input.finalApproverstatus))
+						query += " and approvalstatus='" + input.finalApproverstatus + "'";
+					if (!string.IsNullOrEmpty(input.Fromdate))
+						query += " and preparedon>='" + input.Fromdate + "'";
+					if (!string.IsNullOrEmpty(input.Todate))
+						query += " and preparedon < DATEADD(day, 1, '" + input.Todate + "')";
+					if (input.RequisitionId != 0)
+						query += " and requisitionid='" + input.RequisitionId + "'";
+					if (input.revisionId != 0)
+						query += " and revisionid='" + input.revisionId + "'";
+					if (input.BuyerGroupId != 0)
+						query += " and Buyergroupid='" + input.BuyerGroupId + "'";
+					if (input.DepartmentId != 0)
+						query += " and departmentid='" + input.DepartmentId + "'";
+					if (!string.IsNullOrEmpty(input.jobcode))
+						query += " and jobcode='" + input.jobcode + "'";
+					if (input.ShowAllrevisions == false)
+						query += " and BoolValidRevision='" + 1 + "' and ApprovalStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and SecondApproversStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and ThirdApproverStatus not in ('Pending','Rejected','Sent for Modification','Submitted') ";
+					if (input.ShowAllrevisions == true)
+						query += " and BoolValidRevision is not null";
+				}
+				else
+				{
+					if (input.status == "Completed")
+						query += " and CheckStatus  in('Approved') and statusid in (12,15,19)  and departmentid='" + input.DepartmentId + "'";
+					if (input.status == "Pending")
+						query += " and CheckStatus  in('Approved') and statusid not in (12,15,19) and departmentid='" + input.DepartmentId + "'";
+					if (input.status == "submitted")
+						query += " and CheckStatus  in('Approved') and approvedate is not null and departmentid='" + input.DepartmentId + "'";
+					//if (input.DepartmentId !=0)
+					//    query += " and departmentid='" + input.DepartmentId + "'";
+					if (input.BuyerGroupId != 0)
+						query += " and Buyergroupid='" + input.BuyerGroupId + "'";
+					//if (input.DepartmentId != 0)
+					//    query += " and departmentid='" + input.DepartmentId + "'";
+					if (!string.IsNullOrEmpty(input.Fromdate))
+						query += " and approvedate>='" + input.Fromdate + "'";
+					if (!string.IsNullOrEmpty(input.Todate))
+						query += " and approvedate < DATEADD(day, 1, '" + input.Todate + "') ";
+					if (input.ShowAllrevisions == false)
+						query += " and BoolValidRevision='" + 1 + "'";
+				}
+				data = obj.RequisitionReports.SqlQuery(query).ToList<RequisitionReport>();
+				return data;
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+		}
+		/*Name of Function : <<GetmprRequisitionfilters>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<Getting the checker,mpr preparedby and approvers >>
 Review Date :<<>>   Reviewed By :<<>>*/
-        public ReportFilterModel GetmprRequisitionfilters()
-        {
-            ReportFilterModel filter = new ReportFilterModel();
-            try
-            {
-                filter.jobcode = obj.MPRRevisions.Where(x => x.JobCode != null).Select(x => new jobcodes()
-                {
-                    Jobcode = x.JobCode
-                }).Distinct().ToList();
-                var data = obj.MPRIssuePurposes.Where(x => x.BoolInUse == true).ToList();
-                filter.purposetype = data.Select(x => new IssuepurposeType()
-                {
-                    Issuepurpose = x.IssuePurpose,
-                    Issuepurposeid = x.IssuePurposeId
-                }).ToList();
+		public ReportFilterModel GetmprRequisitionfilters()
+		{
+			ReportFilterModel filter = new ReportFilterModel();
+			try
+			{
+				filter.jobcode = obj.MPRRevisions.Where(x => x.JobCode != null).Select(x => new jobcodes()
+				{
+					Jobcode = x.JobCode
+				}).Distinct().ToList();
+				var data = obj.MPRIssuePurposes.Where(x => x.BoolInUse == true).ToList();
+				filter.purposetype = data.Select(x => new IssuepurposeType()
+				{
+					Issuepurpose = x.IssuePurpose,
+					Issuepurposeid = x.IssuePurposeId
+				}).ToList();
 
-                var checkers = obj.Loadmprcheckers.ToList();
-                filter.mprcheckedby = checkers.Select(x => new MprCheckers()
-                {
-                    checker = x.CheckedBy,
-                    checkername = x.Name
-                }).ToList();
-                var prepare = obj.Loadmprprepares.ToList();
-                filter.mprprepares = prepare.Select(x => new Mprprepare()
-                {
-                    Preparedby = x.PreparedBy,
-                    preparedname = x.Name
-                }).ToList();
-                var approvers = obj.Loadmprapprovers.ToList();
-                filter.mprApprovedby = approvers.Select(x => new MprApprovers()
-                {
-                     approvedby= x.ApprovedBy,
-                    approvername = x.Name
-                }).ToList();
-                return filter;
-            }
-            catch (Exception)
-            {
+				var checkers = obj.Loadmprcheckers.ToList();
+				filter.mprcheckedby = checkers.Select(x => new MprCheckers()
+				{
+					checker = x.CheckedBy,
+					checkername = x.Name
+				}).ToList();
+				var prepare = obj.Loadmprprepares.ToList();
+				filter.mprprepares = prepare.Select(x => new Mprprepare()
+				{
+					Preparedby = x.PreparedBy,
+					preparedname = x.Name
+				}).ToList();
+				var approvers = obj.Loadmprapprovers.ToList();
+				filter.mprApprovedby = approvers.Select(x => new MprApprovers()
+				{
+					approvedby = x.ApprovedBy,
+					approvername = x.Name
+				}).ToList();
+				return filter;
+			}
+			catch (Exception)
+			{
 
-                throw;
-            }
-        }
-        public List<loadprojectmangersforreport> Loadprojectmanagersforreport()
-        {
-            List<loadprojectmangersforreport> report = new List<loadprojectmangersforreport>();
-            var sqlquery = "";
-            sqlquery = "select * from loadprojectmangersforreport ";
-            report = obj.loadprojectmangersforreports.SqlQuery(sqlquery).ToList<loadprojectmangersforreport>();
-            return report;
-        }
-        public List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel input)
-        {
-            List<Reportbyprojectcode> report = new List<Reportbyprojectcode>();
-            var query = "";
-            query = "select * from Reportbyprojectcode where documentno is not null ";
-            if (!string.IsNullOrEmpty(input.jobcode))
-                query += " and JobCode='" + input.jobcode + "'";
-            if (input.BuyerGroupId!=0)
-                query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-            if (!string.IsNullOrEmpty(input.ProjectManager))
-                query += " and ProjectManager='" + input.ProjectManager + "'";
-            //if (!string.IsNullOrEmpty(input.ApprovedBy))
-            //    query += " and Approver='" + input.ApprovedBy + "'";
-            if (!string.IsNullOrEmpty(input.Fromdate))
-                query += " and approveddate>='" + input.Fromdate + "'";
-            if (!string.IsNullOrEmpty(input.ApprovedBy))
-                query += " and approveddate < DATEADD(day, 1, '" + input.Todate + "')";
+				throw;
+			}
+		}
+		public List<loadprojectmangersforreport> Loadprojectmanagersforreport()
+		{
+			List<loadprojectmangersforreport> report = new List<loadprojectmangersforreport>();
+			var sqlquery = "";
+			sqlquery = "select * from loadprojectmangersforreport ";
+			report = obj.loadprojectmangersforreports.SqlQuery(sqlquery).ToList<loadprojectmangersforreport>();
+			return report;
+		}
+		public List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel input)
+		{
+			List<Reportbyprojectcode> report = new List<Reportbyprojectcode>();
+			var query = "";
+			query = "select * from Reportbyprojectcode where documentno is not null ";
+			if (!string.IsNullOrEmpty(input.jobcode))
+				query += " and JobCode='" + input.jobcode + "'";
+			if (input.BuyerGroupId != 0)
+				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
+			if (!string.IsNullOrEmpty(input.ProjectManager))
+				query += " and ProjectManager='" + input.ProjectManager + "'";
+			//if (!string.IsNullOrEmpty(input.ApprovedBy))
+			//    query += " and Approver='" + input.ApprovedBy + "'";
+			if (!string.IsNullOrEmpty(input.Fromdate))
+				query += " and approveddate>='" + input.Fromdate + "'";
+			if (!string.IsNullOrEmpty(input.ApprovedBy))
+				query += " and approveddate < DATEADD(day, 1, '" + input.Todate + "')";
 
-            report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
-            return report;
-        }
-        public List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel input)
-        {
-            List<ReportbyprojectDuration> report = new List<ReportbyprojectDuration>();
-            var query = "";
-            query = "select * from ReportbyprojectDuration where documentno is not null ";
-            if (!string.IsNullOrEmpty(input.jobcode))
-                query += " and JobCode='" + input.jobcode + "'";
-            if (input.BuyerGroupId != 0)
-                query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-            if (!string.IsNullOrEmpty(input.ProjectManager))
-                query += " and ProjectManager='" + input.ProjectManager + "'";
-            //if (!string.IsNullOrEmpty(input.ApprovedBy))
-            //    query += " and Approver='" + input.ApprovedBy + "'";
-            if (!string.IsNullOrEmpty(input.Fromdate))
-                query += " and approveddate>='" + input.Fromdate + "'";
-            if (!string.IsNullOrEmpty(input.ApprovedBy))
-                query += " and approveddate< DATEADD(day, 1, '" + input.Todate + "')";
+			report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
+			return report;
+		}
+		public List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel input)
+		{
+			List<ReportbyprojectDuration> report = new List<ReportbyprojectDuration>();
+			var query = "";
+			query = "select * from ReportbyprojectDuration where documentno is not null ";
+			if (!string.IsNullOrEmpty(input.jobcode))
+				query += " and JobCode='" + input.jobcode + "'";
+			if (input.BuyerGroupId != 0)
+				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
+			if (!string.IsNullOrEmpty(input.ProjectManager))
+				query += " and ProjectManager='" + input.ProjectManager + "'";
+			//if (!string.IsNullOrEmpty(input.ApprovedBy))
+			//    query += " and Approver='" + input.ApprovedBy + "'";
+			if (!string.IsNullOrEmpty(input.Fromdate))
+				query += " and approveddate>='" + input.Fromdate + "'";
+			if (!string.IsNullOrEmpty(input.ApprovedBy))
+				query += " and approveddate< DATEADD(day, 1, '" + input.Todate + "')";
 
-            report = obj.ReportbyprojectDurations.SqlQuery(query).ToList<ReportbyprojectDuration>();
-            return report;
-        }
-        public List<jobcodes> Loadjobcodes()
-        {
-            List<jobcodes> report = new List<jobcodes>();
-            var data = obj.MPRRevisions.Where(x => x.JobCode != null).Distinct().ToList();
-            report = data.Select(x => new jobcodes()
-            {
-                Jobcode=x.JobCode
-            }).ToList();
-            return report;
-        }
-        public DataTable GETApprovernamesbydepartmentid(int departmentid)
-        {
-            string con = obj.Database.Connection.ConnectionString;
-            SqlConnection Conn1 = new SqlConnection(con);
-            DataTable Ds = new DataTable();
-            try
-            {
-                SqlParameter[] Param = new SqlParameter[1];
-                Param[0] = new SqlParameter("@departmentid", departmentid);
-                string spname = "loadDepartmentwiseapprovers";
-                SqlCommand cmd = new SqlCommand();
-                SqlDataAdapter Adp = new SqlDataAdapter();
-                cmd = new SqlCommand();
-                cmd.Connection = Conn1;
-                cmd.CommandText = spname;
-                cmd.CommandTimeout = 0;
-                cmd.CommandType = CommandType.StoredProcedure;
-                if (Param != null)
-                {
-                    foreach (SqlParameter sqlParam in Param)
-                    {
-                        cmd.Parameters.Add(sqlParam);
-                    }
-                }
-                Adp = new SqlDataAdapter(cmd);
-                Ds = new DataTable();
-                Adp.Fill(Ds);
-                cmd.Parameters.Clear();
-                return Ds;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-    }
+			report = obj.ReportbyprojectDurations.SqlQuery(query).ToList<ReportbyprojectDuration>();
+			return report;
+		}
+		public List<jobcodes> Loadjobcodes()
+		{
+			List<jobcodes> report = new List<jobcodes>();
+			var data = obj.MPRRevisions.Where(x => x.JobCode != null).Distinct().ToList();
+			report = data.Select(x => new jobcodes()
+			{
+				Jobcode = x.JobCode
+			}).ToList();
+			return report;
+		}
+		public DataTable GETApprovernamesbydepartmentid(int departmentid)
+		{
+			string con = obj.Database.Connection.ConnectionString;
+			SqlConnection Conn1 = new SqlConnection(con);
+			DataTable Ds = new DataTable();
+			try
+			{
+				SqlParameter[] Param = new SqlParameter[1];
+				Param[0] = new SqlParameter("@departmentid", departmentid);
+				string spname = "loadDepartmentwiseapprovers";
+				SqlCommand cmd = new SqlCommand();
+				SqlDataAdapter Adp = new SqlDataAdapter();
+				cmd = new SqlCommand();
+				cmd.Connection = Conn1;
+				cmd.CommandText = spname;
+				cmd.CommandTimeout = 0;
+				cmd.CommandType = CommandType.StoredProcedure;
+				if (Param != null)
+				{
+					foreach (SqlParameter sqlParam in Param)
+					{
+						cmd.Parameters.Add(sqlParam);
+					}
+				}
+				Adp = new SqlDataAdapter(cmd);
+				Ds = new DataTable();
+				Adp.Fill(Ds);
+				cmd.Parameters.Clear();
+				return Ds;
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+		}
+	}
 }

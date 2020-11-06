@@ -16,7 +16,7 @@ namespace SCMModels.RFQModels
 			rfqvendor = new List<RfqVendorTermModel>();
 			RFQTerms = new List<RFQTermsModel>();
 			mprIncharges = new List<MPRIncharge>();
-			rfqCommunications = new List<RFQCommunication>();
+			//rfqCommunications = new List<RFQCommunicationsDetail>();
 			RfqDocuments = new List<MPRRFQDocument>();
 			RFQStatusTrackDetails = new List<RFQStatusTrackDetail>();
 
@@ -52,7 +52,7 @@ namespace SCMModels.RFQModels
 		public List<RfqVendorTermModel> rfqvendor { get; set; }
 		public List<RFQTermsModel> RFQTerms { get; set; }
 		public List<MPRIncharge> mprIncharges { get; set; }
-		public List<RFQCommunication> rfqCommunications { get; set; }
+		//public List<RFQCommunicationsDetail> rfqCommunications { get; set; }
 		public List<MPRRFQDocument> RfqDocuments { get; set; }
 		public List<RFQDocument> RFQDocs { get; set; }
 		public Nullable<byte> StatusId { get; set; }

@@ -28,5 +28,6 @@ namespace SCMModels.RFQModels
         public Nullable<bool> Deleteflag { get; set; }
         public bool AutoAssignmentofRFQ { get; set; }
         public IList<RFQMasterModel> masters { get; set; }
-    }
+		public string UpdatedBy { get; set; }
+	}
 }

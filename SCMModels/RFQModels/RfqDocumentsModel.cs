@@ -8,7 +8,7 @@ namespace SCMModels.RFQModels
 {
    public class RfqDocumentsModel
     {
-        public int RfqDocumentId { get; set; }
+        public int RfqDocId { get; set; }
         public int RfqRevisionId { get; set; }
         public Nullable<int> RfqItemsId { get; set; }
         public string DocumentName { get; set; }

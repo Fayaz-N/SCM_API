@@ -275,7 +275,7 @@ namespace DALayer.Emails
 		  Date of Creation <<01-12-2019>>
 		  Purpose : <<Emial template when rfq generated>>
 		  Review Date :<<>>   Reviewed By :<<>>*/
-		public bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId, string rfqno)
+		public bool prepareRFQGeneratedEmail(string FrmEmailId, int VendorId, string rfqno, bool Reminder)
 		{
 			try
 			{
@@ -283,24 +283,24 @@ namespace DALayer.Emails
 				{
 					var vscm = new VSCMEntities();
 					var vendorList = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).ToList();
-					var vendor = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).FirstOrDefault();
 					foreach (var item in vendorList)
 					{
+						var vendor = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item.Vuserid).FirstOrDefault();
 						if (vendor != null)
 						{
 							var mailData = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>());
 							var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
 							EmailSend emlSndngList = new EmailSend();
-							emlSndngList.Subject = "New RFQ Generated From YOKOGAWA for RFQNo:" + rfqno + "";
-							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + item.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + item.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+							if (Reminder)
+								emlSndngList.Subject = "Reminder: New RFQ Generated From YOKOGAWA for RFQNo:" + rfqno + "";
+							else
+								emlSndngList.Subject = "New RFQ Generated From YOKOGAWA for RFQNo:" + rfqno + "";
+
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + item.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + item.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 							if (mailData != null)
 								emlSndngList.FrmEmailId = mailData.EMail;
-							//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
 							if (!string.IsNullOrEmpty(emlSndngList.FrmEmailId))
 								emlSndngList.BCC = emlSndngList.FrmEmailId;
-							//string emails = (db.VendorMasters.Where(li => li.Vendorid == VendorId).FirstOrDefault<VendorMaster>()).Emailid;
-							//List<string> emailList = emails.Split(',').ToList();
-
 							emlSndngList.ToEmailId = item.Vuserid;
 							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 								this.sendEmail(emlSndngList);
@@ -390,7 +390,7 @@ namespace DALayer.Emails
 						}
 						if (mailObj.IncludeCredentials)
 						{
-							string credentials = "The required portal details and the password is given below : <br /> <br /> <b style='color:#40bfbf;'>User Name:</b> " + item.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + item.pwd + " <br />";
+							string credentials = "The required portal details and the password is given below : <br /> <br /> <b style='color:#40bfbf;'>User Name:</b> " + item.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + item.pwd + " <br />";
 							mailbody = mailbody.Replace("The required portal details and the password is given below : <br />", credentials);
 						}
 
@@ -533,14 +533,14 @@ namespace DALayer.Emails
 					if (typeOfUser == "Buyer")
 					{
 						emlSndngList.FrmEmailId = mailData.EMail;
-						var vendor = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == vendorProcessDetails.initiateVendorEmailId).FirstOrDefault();
+						var vendor = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == vendorProcessDetails.initiateVendorEmailId && li.VendorId == VendorId).FirstOrDefault();
 						if (IsExistVendor == false)
 						{
 							if (vendor != null)
 							{
 								emlSndngList.Subject = "Registration Initiated";
 								emlSndngList.ToEmailId = vendorProcessDetails.initiateVendorEmailId;
-								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have initiated  registration from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have initiated  registration from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 									this.sendEmail(emlSndngList);
 							}
@@ -551,7 +551,7 @@ namespace DALayer.Emails
 							{
 								emlSndngList.Subject = "Registration Changes";
 								emlSndngList.ToEmailId = vendorProcessDetails.initiateVendorEmailId;
-								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>Below Changes are required for registration</div><br/><div>"+ vendorProcessDetails.ChangesFor+" </div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>Below Changes are required for registration</div><br/><div>" + vendorProcessDetails.ChangesFor + " </div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 									this.sendEmail(emlSndngList);
 							}
@@ -569,7 +569,7 @@ namespace DALayer.Emails
 							{
 								emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Status: " + vendorProcessDetails.CheckerStatus;
 								emlSndngList.ToEmailId = vendorProcessDetails.initiateVendorEmailId;
-								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>" + vendorProcessDetails.CheckerRemarks + "</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>" + vendorProcessDetails.CheckerRemarks + "</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 									this.sendEmail(emlSndngList);
 							}
@@ -657,7 +657,7 @@ namespace DALayer.Emails
 								emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Status: " + vendorProcessDetails.VerifiedStatus;
 								emlSndngList.CC = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.CheckedBy).FirstOrDefault<Employee>()).EMail;
 								emlSndngList.ToEmailId = vendorProcessDetails.initiateVendorEmailId;
-								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div><span>Vendor Code:" + vendorReg.VendorNoInSAP + "</div><br/><div>" + vendorProcessDetails.VerifierRemarks + "</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.Vuserid + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div><span>Vendor Code:" + vendorReg.VendorNoInSAP + "</div><br/><div>" + vendorProcessDetails.VerifierRemarks + "</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 									this.sendEmail(emlSndngList);
 							}
