@@ -43,6 +43,7 @@ namespace SCMModels.RFQModels
         public string status { get; set; }
         public bool ShowAllrevisions { get; set; }
         public string  ProjectManager { get; set; }
+        public string SaleOrderNo { get; set; }
     }
 
     public class ReportFilterModel
@@ -86,6 +87,11 @@ namespace SCMModels.RFQModels
     public class jobcodes
     {
         public string Jobcode { get; set; }
+        public int ID { get; set; }
+    }
+    public class Saleorderno
+    {
+        public string SaleOrderNo { get; set; }
         public int ID { get; set; }
     }
 }

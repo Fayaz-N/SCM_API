@@ -315,5 +315,10 @@ namespace BALayer.PurchaseAuthorization
         {
             return _purchaseDataAcess.GETApprovernamesbydepartmentid(departmentid);
         }
+
+        public List<Saleorderno> Loadsaleorder()
+        {
+            return _purchaseDataAcess.Loadsaleorder();
+        }
     }
 }

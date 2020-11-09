@@ -78,5 +78,6 @@ namespace DALayer.PurchaseAuthorization
         List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel model);
         List<jobcodes> Loadjobcodes();
         DataTable GETApprovernamesbydepartmentid(int departmentid);
+        List<Saleorderno> Loadsaleorder();
     }
 }

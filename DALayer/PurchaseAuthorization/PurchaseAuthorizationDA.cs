@@ -1847,7 +1847,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				if (item.Count == 0)
 				{
 					var data = obj.MPRPADetails.Where(x => x.PAId == status.Sid).FirstOrDefault();
-					data.POStatus = "PORelasesd";
+					data.POStatus = "PO Released";
 					data.POStatusUpdate = System.DateTime.Now;
 					obj.SaveChanges();
 				}
@@ -2700,7 +2700,17 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			}).ToList();
 			return report;
 		}
-		public DataTable GETApprovernamesbydepartmentid(int departmentid)
+        public List<Saleorderno> Loadsaleorder()
+        {
+            List<Saleorderno> report = new List<Saleorderno>();
+            var data = obj.MPRRevisions.Where(x => x.SaleOrderNo != null).Distinct().ToList();
+            report = data.Select(x => new Saleorderno()
+            {
+                SaleOrderNo = x.SaleOrderNo
+            }).ToList();
+            return report;
+        }
+        public DataTable GETApprovernamesbydepartmentid(int departmentid)
 		{
 			string con = obj.Database.Connection.ConnectionString;
 			SqlConnection Conn1 = new SqlConnection(con);

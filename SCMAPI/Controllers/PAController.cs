@@ -669,7 +669,7 @@ namespace SCMAPI.Controllers
         public DataSet GetMprstatuswisereport(ReportInputModel model)
         {
             DataSet ds = new DataSet();
-            SqlParameter[] Param = new SqlParameter[4];
+            SqlParameter[] Param = new SqlParameter[5];
             if (model.BuyerGroupId == 0)
             {
                 Param[0] = new SqlParameter("buyergroupid", SqlDbType.VarChar);
@@ -677,6 +677,7 @@ namespace SCMAPI.Controllers
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
                 Param[3] = new SqlParameter("@ProjectManager", model.ProjectManager);
+                Param[4] = new SqlParameter("@SaleOrderNo", model.SaleOrderNo);
             }
             else
             {
@@ -685,6 +686,7 @@ namespace SCMAPI.Controllers
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
                 Param[3] = new SqlParameter("@ProjectManager", model.ProjectManager);
+                Param[4] = new SqlParameter("@SaleOrderNo", model.SaleOrderNo);
             }
             ds = _paBusenessAcess.GetMprstatuswisereport("Mprwisereport",Param);
             return ds;
@@ -742,6 +744,12 @@ namespace SCMAPI.Controllers
             DataTable ds = new DataTable();
             ds = _paBusenessAcess.GETApprovernamesbydepartmentid(departmentid);
             return ds;
+        }
+        [HttpGet]
+        [Route("Loadsaleorder")]
+        public IHttpActionResult Loadsaleorder()
+        {
+            return Ok(this._paBusenessAcess.Loadsaleorder());
         }
     }
 }
