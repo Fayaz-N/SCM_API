@@ -1011,7 +1011,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("MPRQontroller", "addNewVendor", ex.Message + "; " + ex.StackTrace.ToString());
+				log.ErrorMessage("MPRController", "addNewVendor", ex.Message + "; " + ex.StackTrace.ToString());
 				return vendorid;
 			}
 		}
