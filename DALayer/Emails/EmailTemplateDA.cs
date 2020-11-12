@@ -283,9 +283,8 @@ namespace DALayer.Emails
 				{
 					var vscm = new VSCMEntities();
 					var vendorList = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).ToList();
-					foreach (var item in vendorList)
+					foreach (var vendor in vendorList)
 					{
-						var vendor = vscm.RemoteVendorUserMasters.Where(li => li.Vuserid == item.Vuserid).FirstOrDefault();
 						if (vendor != null)
 						{
 							var mailData = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>());
@@ -296,12 +295,12 @@ namespace DALayer.Emails
 							else
 								emlSndngList.Subject = "New RFQ Generated From YOKOGAWA for RFQNo:" + rfqno + "";
 
-							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + item.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + item.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received new RFQ from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details are given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>U Name:</b> " + vendor.VuniqueId + " <br /><b style='color:#40bfbf;'>Pwd:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 							if (mailData != null)
 								emlSndngList.FrmEmailId = mailData.EMail;
 							if (!string.IsNullOrEmpty(emlSndngList.FrmEmailId))
 								emlSndngList.BCC = emlSndngList.FrmEmailId;
-							emlSndngList.ToEmailId = item.Vuserid;
+							emlSndngList.ToEmailId = vendor.Vuserid;
 							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 								this.sendEmail(emlSndngList);
 						}
@@ -578,7 +577,7 @@ namespace DALayer.Emails
 						//{
 
 						//mail to Approver
-						if (!string.IsNullOrEmpty(vendorProcessDetails.ApprovedBy))
+						if (!string.IsNullOrEmpty(vendorProcessDetails.ApprovedBy) && vendorProcessDetails.CheckerStatus == "Approved")
 						{
 							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus;
 							Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.ApprovedBy).FirstOrDefault<Employee>();
@@ -745,55 +744,63 @@ namespace DALayer.Emails
 		public bool sendEmail(EmailSend emlSndngList)
 		{
 			//bool validEmail = IsValidEmail(emlSndngList.ToEmailId);
-			if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId))
+			try
 			{
-				var BCC = ConfigurationManager.AppSettings["BCC"];
-				var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
-				MailMessage mailMessage = new MailMessage();
-				mailMessage.From = new MailAddress(emlSndngList.FrmEmailId); //From Email Id
-				string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
-				foreach (string ToEMailId in ToMuliId)
+				if (!string.IsNullOrEmpty(emlSndngList.ToEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId))
 				{
-					if (!string.IsNullOrEmpty(ToEMailId))
-						mailMessage.To.Add(new MailAddress(ToEMailId)); //adding multiple TO Email Id
-				}
-				SmtpClient client = new SmtpClient();
-				if (!string.IsNullOrEmpty(emlSndngList.Subject))
-					mailMessage.Subject = emlSndngList.Subject;
-
-				if (!string.IsNullOrEmpty(emlSndngList.CC))
-				{
-					string[] CCId = emlSndngList.CC.Split(',');
-
-					foreach (string CCEmail in CCId)
+					var BCC = ConfigurationManager.AppSettings["BCC"];
+					var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
+					MailMessage mailMessage = new MailMessage();
+					mailMessage.From = new MailAddress(emlSndngList.FrmEmailId); //From Email Id
+					string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
+					foreach (string ToEMailId in ToMuliId)
 					{
-						if (!string.IsNullOrEmpty(CCEmail))
-							mailMessage.CC.Add(new MailAddress(CCEmail)); //Adding Multiple CC email Id
+						if (!string.IsNullOrEmpty(ToEMailId))
+							mailMessage.To.Add(new MailAddress(ToEMailId)); //adding multiple TO Email Id
 					}
-				}
+					SmtpClient client = new SmtpClient();
+					if (!string.IsNullOrEmpty(emlSndngList.Subject))
+						mailMessage.Subject = emlSndngList.Subject;
 
-				if (!string.IsNullOrEmpty(emlSndngList.BCC))
-				{
-					string[] bccid = emlSndngList.BCC.Split(',');
-
-
-					foreach (string bccEmailId in bccid)
+					if (!string.IsNullOrEmpty(emlSndngList.CC))
 					{
-						if (!string.IsNullOrEmpty(bccEmailId))
-							mailMessage.Bcc.Add(new MailAddress(bccEmailId)); //Adding Multiple BCC email Id
-					}
-				}
+						string[] CCId = emlSndngList.CC.Split(',');
 
-				if (!string.IsNullOrEmpty(BCC))
-					mailMessage.Bcc.Add(new MailAddress(BCC));
-				mailMessage.Body = emlSndngList.Body;
-				mailMessage.IsBodyHtml = true;
-				mailMessage.BodyEncoding = Encoding.UTF8;
-				SmtpClient mailClient = new SmtpClient(SMTPServer, 25);
-				//SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
-				//mailClient.EnableSsl = true;
-				mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-				mailClient.Send(mailMessage);
+						foreach (string CCEmail in CCId)
+						{
+							if (!string.IsNullOrEmpty(CCEmail))
+								mailMessage.CC.Add(new MailAddress(CCEmail)); //Adding Multiple CC email Id
+						}
+					}
+
+					if (!string.IsNullOrEmpty(emlSndngList.BCC))
+					{
+						string[] bccid = emlSndngList.BCC.Split(',');
+
+
+						foreach (string bccEmailId in bccid)
+						{
+							if (!string.IsNullOrEmpty(bccEmailId))
+								mailMessage.Bcc.Add(new MailAddress(bccEmailId)); //Adding Multiple BCC email Id
+						}
+					}
+
+					if (!string.IsNullOrEmpty(BCC))
+						mailMessage.Bcc.Add(new MailAddress(BCC));
+					mailMessage.Body = emlSndngList.Body;
+					mailMessage.IsBodyHtml = true;
+					mailMessage.BodyEncoding = Encoding.UTF8;
+					SmtpClient mailClient = new SmtpClient(SMTPServer, 25);
+					//SmtpClient mailClient = new SmtpClient("10.29.15.9", 25);
+					//mailClient.EnableSsl = true;
+					mailClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+					mailClient.Send(mailMessage);
+					
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("EmailTemplate", "sendEmail", ex.ToString());
 			}
 			return true;
 		}
