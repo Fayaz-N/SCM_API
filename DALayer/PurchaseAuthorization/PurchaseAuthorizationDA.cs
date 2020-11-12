@@ -2659,11 +2659,13 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
 			if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
-			//if (!string.IsNullOrEmpty(input.ApprovedBy))
-			//    query += " and Approver='" + input.ApprovedBy + "'";
-			if (!string.IsNullOrEmpty(input.Fromdate))
+            if (!string.IsNullOrEmpty(input.SaleOrderNo))
+                query += " and SaleOrderNo='" + input.SaleOrderNo + "'";
+            //if (!string.IsNullOrEmpty(input.ApprovedBy))
+            //    query += " and Approver='" + input.ApprovedBy + "'";
+            if (!string.IsNullOrEmpty(input.Fromdate))
 				query += " and approveddate>='" + input.Fromdate + "'";
-			if (!string.IsNullOrEmpty(input.ApprovedBy))
+			if (!string.IsNullOrEmpty(input.Todate))
 				query += " and approveddate < DATEADD(day, 1, '" + input.Todate + "')";
 
 			report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
@@ -2680,11 +2682,13 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
 			if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
-			//if (!string.IsNullOrEmpty(input.ApprovedBy))
-			//    query += " and Approver='" + input.ApprovedBy + "'";
-			if (!string.IsNullOrEmpty(input.Fromdate))
+            if (!string.IsNullOrEmpty(input.SaleOrderNo))
+                query += " and SaleOrderNo='" + input.SaleOrderNo + "'";
+            //if (!string.IsNullOrEmpty(input.ApprovedBy))
+            //    query += " and Approver='" + input.ApprovedBy + "'";
+            if (!string.IsNullOrEmpty(input.Fromdate))
 				query += " and approveddate>='" + input.Fromdate + "'";
-			if (!string.IsNullOrEmpty(input.ApprovedBy))
+			if (!string.IsNullOrEmpty(input.Todate))
 				query += " and approveddate< DATEADD(day, 1, '" + input.Todate + "')";
 
 			report = obj.ReportbyprojectDurations.SqlQuery(query).ToList<ReportbyprojectDuration>();
