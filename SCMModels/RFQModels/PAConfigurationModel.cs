@@ -44,6 +44,7 @@ namespace SCMModels.RFQModels
         public bool ShowAllrevisions { get; set; }
         public string  ProjectManager { get; set; }
         public string SaleOrderNo { get; set; }
+        public int OrgDepartmentId { get; set; }
     }
 
     public class ReportFilterModel

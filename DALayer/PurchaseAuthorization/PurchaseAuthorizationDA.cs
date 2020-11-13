@@ -2650,14 +2650,22 @@ Review Date :<<>>   Reviewed By :<<>>*/
 		}
 		public List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel input)
 		{
-			List<Reportbyprojectcode> report = new List<Reportbyprojectcode>();
+            string data = "";
+            if (input.OrgDepartmentId != 0)
+            {
+                List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == input.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
+                data = string.Join(" ',' ", departments);
+            }
+            List<Reportbyprojectcode> report = new List<Reportbyprojectcode>();
 			var query = "";
 			query = "select * from Reportbyprojectcode where documentno is not null ";
 			if (!string.IsNullOrEmpty(input.jobcode))
 				query += " and JobCode='" + input.jobcode + "'";
 			if (input.BuyerGroupId != 0)
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-			if (!string.IsNullOrEmpty(input.ProjectManager))
+            if (input.DepartmentId != 0)
+                query += " and DepartmentId in ('"+ data +"')";
+            if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
             if (!string.IsNullOrEmpty(input.SaleOrderNo))
                 query += " and SaleOrderNo='" + input.SaleOrderNo + "'";
@@ -2668,19 +2676,28 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			if (!string.IsNullOrEmpty(input.Todate))
 				query += " and approveddate < DATEADD(day, 1, '" + input.Todate + "')";
 
-			report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
+            query += " order by RevisionId desc ";
+            report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
 			return report;
 		}
 		public List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel input)
 		{
-			List<ReportbyprojectDuration> report = new List<ReportbyprojectDuration>();
+            string data = "";
+            if (input.OrgDepartmentId != 0)
+            {
+                List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == input.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
+                data = string.Join(" ',' ", departments);
+            }
+            List<ReportbyprojectDuration> report = new List<ReportbyprojectDuration>();
 			var query = "";
 			query = "select * from ReportbyprojectDuration where documentno is not null ";
 			if (!string.IsNullOrEmpty(input.jobcode))
 				query += " and JobCode='" + input.jobcode + "'";
 			if (input.BuyerGroupId != 0)
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-			if (!string.IsNullOrEmpty(input.ProjectManager))
+            if (input.DepartmentId != 0)
+                query += " and DepartmentId in ('" + data + "')";
+            if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
             if (!string.IsNullOrEmpty(input.SaleOrderNo))
                 query += " and SaleOrderNo='" + input.SaleOrderNo + "'";
@@ -2691,7 +2708,8 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			if (!string.IsNullOrEmpty(input.Todate))
 				query += " and approveddate< DATEADD(day, 1, '" + input.Todate + "')";
 
-			report = obj.ReportbyprojectDurations.SqlQuery(query).ToList<ReportbyprojectDuration>();
+            query += " order by RevisionId desc ";
+            report = obj.ReportbyprojectDurations.SqlQuery(query).ToList<ReportbyprojectDuration>();
 			return report;
 		}
 		public List<jobcodes> Loadjobcodes()
