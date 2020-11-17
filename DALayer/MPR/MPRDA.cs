@@ -444,7 +444,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						mprRevisionDetails.ApprovedBy = mpr.ApprovedBy;
 						int cnt = DB.MPRStatusTrackDetails.Where(li => li.RequisitionId == mpr.RequisitionId && li.RevisionId == mpr.RevisionId && li.StatusId == 1).Count();//checking mpr generated already or not 
 						if (!string.IsNullOrEmpty(mpr.CheckedBy))
-						{							
+						{
 							if (cnt == 0)
 							{
 								MPRStatusTrack mPRStatusTrackDetails = new MPRStatusTrack();
@@ -1610,7 +1610,7 @@ Review Date :<<>>   Reviewed By :<<>>
 									MPR_Assignment.Employeeno = item.Employeeno;
 									Context.SaveChanges();
 								}
-								
+
 								Context.SaveChanges();
 								this.emailTemplateDA.prepareMPRStatusEmail(mprStatus.PreparedBy, item.Employeeno, "mprAssign", mprStatus.RevisionId);
 							}
@@ -2151,16 +2151,17 @@ Review Date :<<>>   Reviewed By :<<>>
 			try
 			{
 				VSCMEntities vscmObj = new VSCMEntities();
-
 				int Vendorid = Convert.ToInt32(model.Vendorid);
-				int processId = 0;
+
 				var vendorMaster = DB.VendorUserMasters.Where(li => li.Vuserid == model.VendorEmailId).FirstOrDefault();
-				if (vendorMaster != null)
+				if (vendorMaster != null && model.IsExistVendor == false)
 					Vendorid = vendorMaster.VendorId;
+
 				//add new vendor in vendormaster table if vendor id not exist
-				if (Vendorid == 0 || Vendorid == null)
+				if (Vendorid == 0 || Vendorid == null || vendorMaster != null && typeOfuser == "Buyer")
 				{
 					VendormasterModel vendormastermodel = new VendormasterModel();
+					vendormastermodel.Vendorid = Vendorid;
 					vendormastermodel.VendorName = model.VendorName;
 					vendormastermodel.Emailid = model.VendorEmailId;
 					vendormastermodel.UpdatedBy = model.IntiatedBy;
@@ -2210,91 +2211,21 @@ Review Date :<<>>   Reviewed By :<<>>
 					vscmObj.SaveChanges();
 				}
 
-				RemoteVendorRegApprovalProcess RegApprovalProcessdetails = vscmObj.RemoteVendorRegApprovalProcesses.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
-				if (RegApprovalProcessdetails == null)
+				RemoteVendorRegisterMaster remoteVendorRegDetails = vscmObj.RemoteVendorRegisterMasters.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
+				if (remoteVendorRegDetails != null)
 				{
-					RemoteVendorRegApprovalProcess RegApprovalProcess = new RemoteVendorRegApprovalProcess();
-					RegApprovalProcess.Vendorid = Vendorid;
-					RegApprovalProcess.VendorEmailId = model.VendorEmailId;
-					RegApprovalProcess.VendorName = model.VendorName;
-					RegApprovalProcess.IntiatedBy = model.IntiatedBy;
-					RegApprovalProcess.IntiatedOn = DateTime.Now;
-					RegApprovalProcess.CheckedBy = model.CheckedBy;
-					RegApprovalProcess.ApprovedBy = ConfigurationManager.AppSettings["VendorReg_Approver"];
-					RegApprovalProcess.Verifier1 = ConfigurationManager.AppSettings["VendorReg_Verifier1"];
-					RegApprovalProcess.Verifier2 = ConfigurationManager.AppSettings["VendorReg_Verifier2"];
-					RegApprovalProcess.CheckerStatus = RegApprovalProcess.ApprovalStatus = RegApprovalProcess.VerifiedStatus = "Pending";
-					vscmObj.RemoteVendorRegApprovalProcesses.Add(RegApprovalProcess);
-					vscmObj.SaveChanges();
-					processId = RegApprovalProcess.ProceesId;
-
+					remoteVendorRegDetails.Onetimevendor = model.Onetimevendor;
+					remoteVendorRegDetails.EvaluationRequired = model.EvaluationRequired;
+					remoteVendorRegDetails.PerformanceVerificationRequired = model.PerformanceVerificationRequired;
+					remoteVendorRegDetails.VendorNoInSAP = model.VendorNoInSAP;
+					remoteVendorRegDetails.PaymentTermId = model.PaymentTermId;
+					remoteVendorRegDetails.PaymentTerms = model.PaymentTerms;
+					remoteVendorRegDetails.VendorType = model.VendorType;
+					remoteVendorRegDetails.Email = model.VendorEmailId;
+					//remoteVendorRegDetails.ISExistVendor = model.ISExistVendor;
+					//remoteVendorRegDetails.ChangesFor = model.ChangesFor;
 				}
-				else
-				{
-					RegApprovalProcessdetails.VendorEmailId = model.VendorEmailId;
-					RemoteVendorRegisterMaster remoteVendorRegDetails = vscmObj.RemoteVendorRegisterMasters.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
-					if (remoteVendorRegDetails != null)
-					{
-						remoteVendorRegDetails.Onetimevendor = model.Onetimevendor;
-						remoteVendorRegDetails.EvaluationRequired = model.EvaluationRequired;
-						remoteVendorRegDetails.PerformanceVerificationRequired = model.PerformanceVerificationRequired;
-						remoteVendorRegDetails.VendorNoInSAP = model.VendorNoInSAP;
-						remoteVendorRegDetails.PaymentTermId = model.PaymentTermId;
-						remoteVendorRegDetails.PaymentTerms = model.PaymentTerms;
-						remoteVendorRegDetails.VendorType = model.VendorType;
-						remoteVendorRegDetails.Email = model.VendorEmailId;
-						//remoteVendorRegDetails.ISExistVendor = model.ISExistVendor;
-						//remoteVendorRegDetails.ChangesFor = model.ChangesFor;
-					}
-
-
-					if (typeOfuser == "Checker")
-					{
-						//RegApprovalProcessdetails.CheckedBy = model.CheckedBy;
-						RegApprovalProcessdetails.CheckedOn = DateTime.Now;
-						RegApprovalProcessdetails.CheckerStatus = model.CheckerStatus;
-						RegApprovalProcessdetails.CheckerRemarks = model.CheckerRemarks;
-						statusTrack.Status = model.CheckerStatus + " From Checker";
-						statusTrack.Remarks = model.CheckerRemarks;
-						statusTrack.UpdatedBy = RegApprovalProcessdetails.CheckedBy;
-					}
-					if (typeOfuser == "Approver")
-					{
-						//RegApprovalProcessdetails.ApprovedBy = model.ApprovedBy;
-						RegApprovalProcessdetails.ApprovedOn = DateTime.Now;
-						RegApprovalProcessdetails.ApprovalStatus = model.ApprovalStatus;
-						RegApprovalProcessdetails.ApproverRemarks = model.ApproverRemarks;
-						statusTrack.Status = model.ApprovalStatus + " From Approver";
-						statusTrack.Remarks = model.ApproverRemarks;
-						statusTrack.UpdatedBy = RegApprovalProcessdetails.ApprovedBy;
-					}
-					if (typeOfuser == "Verifier")
-					{
-						if (model.VerifiedStatus != "Approved")
-						{
-							RegApprovalProcessdetails.CheckerStatus = "Pending";
-							RegApprovalProcessdetails.ApprovalStatus = "Pending";
-
-						}
-						//RegApprovalProcessdetails.Verifier = model.Verifier;
-						RegApprovalProcessdetails.VerifiedOn = DateTime.Now;
-						RegApprovalProcessdetails.VerifiedStatus = model.VerifiedStatus;
-						RegApprovalProcessdetails.VerifierRemarks = model.VerifierRemarks;
-						statusTrack.Status = model.VerifiedStatus + " From Verifier";
-						statusTrack.Remarks = model.VerifierRemarks;
-						statusTrack.UpdatedBy = model.VerifiedBy;
-					}
-
-					processId = RegApprovalProcessdetails.ProceesId;
-					vscmObj.SaveChanges();
-				}
-				if (typeOfuser == "Buyer")
-				{
-					statusTrack.Status = "Initiated";
-					if (!string.IsNullOrEmpty(model.ChangesFor))
-						statusTrack.Remarks = "Changes For " + model.ChangesFor + "";
-					statusTrack.UpdatedBy = model.IntiatedBy;
-				}
+				vscmObj.SaveChanges();
 
 				//update  SCM tables
 
@@ -2334,23 +2265,33 @@ Review Date :<<>>   Reviewed By :<<>>
 					DB.SaveChanges();
 
 				}
+				if (typeOfuser == "Buyer")
+				{
+					statusTrack.Status = "Initiated";
+					if (!string.IsNullOrEmpty(model.ChangesFor))
+						statusTrack.Remarks = "Changes For " + model.ChangesFor + "";
+					statusTrack.UpdatedBy = model.IntiatedBy;
+				}
 
-				VendorRegApprovalProcess LocalRegApprovalProcessDetails = DB.VendorRegApprovalProcesses.Where(li => li.ProceesId == processId).FirstOrDefault();
+				VendorRegApprovalProcess LocalRegApprovalProcessDetails = DB.VendorRegApprovalProcesses.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
 				if (LocalRegApprovalProcessDetails == null)
 				{
 					VendorRegApprovalProcess LocalRegApprovalProcess = new VendorRegApprovalProcess();
-					LocalRegApprovalProcess.ProceesId = processId;
+					//LocalRegApprovalProcess.ProceesId = processId;
 					LocalRegApprovalProcess.Vendorid = Vendorid;
 					LocalRegApprovalProcess.VendorEmailId = model.VendorEmailId;
 					LocalRegApprovalProcess.VendorName = model.VendorName;
+					LocalRegApprovalProcess.BuyerGroupId = model.BuyerGroupId;
 					LocalRegApprovalProcess.IntiatedBy = model.IntiatedBy;
 					LocalRegApprovalProcess.IntiatedOn = DateTime.Now;
-					LocalRegApprovalProcess.CheckedBy = model.CheckedBy;
+					LocalRegApprovalProcess.CheckedBy = DB.MPRBuyerGroups.Where(li => li.BuyerGroupId == model.BuyerGroupId).FirstOrDefault().BuyerManager;
 
-					LocalRegApprovalProcess.ApprovedBy = ConfigurationManager.AppSettings["VendorReg_Approver"];
+					LocalRegApprovalProcess.ApprovedBy = ConfigurationManager.AppSettings["VendorReg_CMM_Approver"];
 					LocalRegApprovalProcess.Verifier1 = ConfigurationManager.AppSettings["VendorReg_Verifier1"];
 					LocalRegApprovalProcess.Verifier2 = ConfigurationManager.AppSettings["VendorReg_Verifier2"];
-					LocalRegApprovalProcess.CheckerStatus = LocalRegApprovalProcess.ApprovalStatus = LocalRegApprovalProcess.VerifiedStatus = "Pending";
+					LocalRegApprovalProcess.FinanceApprover = ConfigurationManager.AppSettings["VendorReg_Fin_Approver"];
+
+					LocalRegApprovalProcess.IntiatorStatus = LocalRegApprovalProcess.CheckerStatus = LocalRegApprovalProcess.ApprovalStatus = LocalRegApprovalProcess.VerifiedStatus = LocalRegApprovalProcess.FinanceApprovedStatus = "Pending";
 					DB.VendorRegApprovalProcesses.Add(LocalRegApprovalProcess);
 
 				}
@@ -2370,12 +2311,25 @@ Review Date :<<>>   Reviewed By :<<>>
 					}
 
 
+					if (typeOfuser == "Intiator")
+					{
+
+						LocalRegApprovalProcessDetails.InitiatorStatusChangedOn = DateTime.Now;
+						LocalRegApprovalProcessDetails.IntiatorStatus = model.IntiatorStatus;
+						LocalRegApprovalProcessDetails.IntiatorRemarks = model.IntiatorRemarks;
+						statusTrack.Status = model.IntiatorStatus + " From Initiator";
+						statusTrack.Remarks = model.IntiatorRemarks;
+						statusTrack.UpdatedBy = LocalRegApprovalProcessDetails.IntiatedBy;
+					}
 					if (typeOfuser == "Checker")
 					{
 						//LocalRegApprovalProcessDetails.CheckedBy = model.CheckedBy;
 						LocalRegApprovalProcessDetails.CheckedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.CheckerStatus = model.CheckerStatus;
 						LocalRegApprovalProcessDetails.CheckerRemarks = model.CheckerRemarks;
+						statusTrack.Status = model.CheckerStatus + " From Checker";
+						statusTrack.Remarks = model.CheckerRemarks;
+						statusTrack.UpdatedBy = LocalRegApprovalProcessDetails.CheckedBy;
 					}
 					if (typeOfuser == "Approver")
 					{
@@ -2383,6 +2337,9 @@ Review Date :<<>>   Reviewed By :<<>>
 						LocalRegApprovalProcessDetails.ApprovedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.ApprovalStatus = model.ApprovalStatus;
 						LocalRegApprovalProcessDetails.ApproverRemarks = model.ApproverRemarks;
+						statusTrack.Status = model.ApprovalStatus + " From Approver";
+						statusTrack.Remarks = model.ApproverRemarks;
+						statusTrack.UpdatedBy = LocalRegApprovalProcessDetails.ApprovedBy;
 					}
 					if (typeOfuser == "Verifier")
 					{
@@ -2396,11 +2353,30 @@ Review Date :<<>>   Reviewed By :<<>>
 						LocalRegApprovalProcessDetails.VerifiedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.VerifiedStatus = model.VerifiedStatus;
 						LocalRegApprovalProcessDetails.VerifierRemarks = model.VerifierRemarks;
+						statusTrack.Status = model.VerifiedStatus + " From Verifier";
+						statusTrack.Remarks = model.VerifierRemarks;
+						statusTrack.UpdatedBy = LocalRegApprovalProcessDetails.VerifiedBy;
+					}
+					if (typeOfuser == "FinanceApprover")
+					{
+						if (model.FinanceApprovedStatus != "Approved")
+						{
+							LocalRegApprovalProcessDetails.CheckerStatus = "Pending";
+							LocalRegApprovalProcessDetails.ApprovalStatus = "Pending";
+							LocalRegApprovalProcessDetails.VerifiedStatus = "Pending";
+						}
+						
+						LocalRegApprovalProcessDetails.FinanceApprovedOn = DateTime.Now;
+						LocalRegApprovalProcessDetails.FinanceApprovedStatus = model.FinanceApprovedStatus;
+						LocalRegApprovalProcessDetails.FinanceApprovedRemarks = model.FinanceApprovedRemarks;
+						statusTrack.Status = model.FinanceApprovedStatus + " From Finance Approver";
+						statusTrack.Remarks = model.FinanceApprovedRemarks;
+						statusTrack.UpdatedBy = LocalRegApprovalProcessDetails.FinanceApprover;
 					}
 
 					DB.SaveChanges();
 				}
-				if (typeOfuser == "Verifier" && model.VerifiedStatus == "Approved")
+				if (typeOfuser == "FinanceApprover" && model.VerifiedStatus == "Approved")
 				{
 
 					//update details in vendormaster table
@@ -2491,6 +2467,10 @@ Review Date :<<>>   Reviewed By :<<>>
 						query += "  and VerifiedBy = '" + vendorRegfilters.VerifiedBy + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.VerifiedStatus))
 						query += "  and VerifiedStatus = '" + vendorRegfilters.VerifiedStatus + "'";
+					if (!string.IsNullOrEmpty(vendorRegfilters.FinanceApprovedStatus))
+						query += "  and FinanceApprovedStatus = '" + vendorRegfilters.FinanceApprovedStatus + "'";
+
+
 
 					query += " order by ProceesId desc ";
 					vendorregDetails = Context.VendorRegProcessViews.SqlQuery(query).ToList<VendorRegProcessView>();

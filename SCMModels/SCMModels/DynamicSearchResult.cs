@@ -149,11 +149,13 @@ namespace SCMModels
 		public string CheckedBy { get; set; }
 		public string ApprovedBy { get; set; }
 		public string VerifiedBy { get; set; }
+		public string FinanceApprover { get; set; }
 		public string SecondApprover { get; set; }
 		public string ThirdApprover { get; set; }
 		public string CheckerStatus { get; set; }
 		public string ApprovalStatus { get; set; }
 		public string VerifiedStatus { get; set; }
+		public string FinanceApprovedStatus { get; set; }
 	}
 
 	public partial class VendorRegApprovalProcessData
@@ -162,8 +164,11 @@ namespace SCMModels
 		public string VendorName { get; set; }
 		public Nullable<int> Vendorid { get; set; }
 		public string VendorEmailId { get; set; }
+		public byte BuyerGroupId { get; set; }
 		public string IntiatedBy { get; set; }
 		public Nullable<System.DateTime> IntiatedOn { get; set; }
+		public string IntiatorStatus { get; set; }
+		public string IntiatorRemarks { get; set; }
 		public string CheckedBy { get; set; }
 		public Nullable<System.DateTime> CheckedOn { get; set; }
 		public string CheckerStatus { get; set; }
@@ -178,6 +183,10 @@ namespace SCMModels
 		public Nullable<System.DateTime> VerifiedOn { get; set; }
 		public string VerifiedStatus { get; set; }
 		public string VerifierRemarks { get; set; }
+		public string FinanceApprover { get; set; }
+		public Nullable<System.DateTime> FinanceApprovedOn { get; set; }
+		public string FinanceApprovedStatus { get; set; }
+		public string FinanceApprovedRemarks { get; set; }
 		public string VendorNoInSAP { get; set; }
 		public string Street { get; set; }
 		public string City { get; set; }
