@@ -82,7 +82,8 @@ namespace SCMModels.RFQModels
 		public string PONO { get; set; }
 		public string POItemNo { get; set; }
 		public string PODate { get; set; }
-		public string Remarks { get; set; }
+        public Nullable<System.DateTime> POStatusDate { get; set; }
+        public string Remarks { get; set; }
 		public int MPRItemDetailsid { get; set; }
 		public int Mprrfqsplititemid { get; set; }
 		public RfqRevisionModel RFQRevision { get; set; }

@@ -1198,7 +1198,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						POItemNo = x.POItemNo,
 						PONO = x.PONO,
 						Remarks = x.Remarks,
-						PODate = x.PODate.ToString(),
+                        POStatusDate = x.PODate,
 						RFQNo = x.RFQNo,
 						HSNCode = x.HSNCode,
 						TotalPFAmount = x.pfamounts,
@@ -1831,8 +1831,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					{
 						paitems.PONO = itemdata.PONO;
 						paitems.POItemNo = itemdata.POItemNo;
-						paitems.PODate = itemdata.PODate;
-						paitems.Remarks = itemdata.Remarks;
+                        //paitems.PODate = DateTime.ParseExact(itemdata.PODate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None);
+                        //paitems.PODate = Convert.ToDateTime( DateTime.ParseExact(itemdata.PODate.ToString(), "dd-MM-yyyy", CultureInfo.InvariantCulture));
+                        //paitems.PODate = DateTime.ParseExact(itemdata.PODate.ToString(), "dd/MM/yyyy", null);
+                        paitems.PODate = itemdata.PODate;
+                        paitems.Remarks = itemdata.Remarks;
 						paitems.UpdatedDate = System.DateTime.Now;
 						paitems.UpdatedBy = itemdata.EmployeeNo;
 						obj.SaveChanges();
@@ -2663,7 +2666,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				query += " and JobCode='" + input.jobcode + "'";
 			if (input.BuyerGroupId != 0)
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-            if (input.DepartmentId != 0)
+            if (input.OrgDepartmentId != 0)
                 query += " and DepartmentId in ('"+ data +"')";
             if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
@@ -2695,7 +2698,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				query += " and JobCode='" + input.jobcode + "'";
 			if (input.BuyerGroupId != 0)
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-            if (input.DepartmentId != 0)
+            if (input.OrgDepartmentId != 0)
                 query += " and DepartmentId in ('" + data + "')";
             if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
