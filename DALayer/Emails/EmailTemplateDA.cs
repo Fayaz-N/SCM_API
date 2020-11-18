@@ -852,12 +852,12 @@ namespace DALayer.Emails
 					var BCC = ConfigurationManager.AppSettings["BCC"];
 					var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
 					MailMessage mailMessage = new MailMessage();
-					mailMessage.From = new MailAddress(emlSndngList.FrmEmailId); //From Email Id
+					mailMessage.From = new MailAddress(emlSndngList.FrmEmailId.Trim(), "" ); //From Email Id
 					string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
 					foreach (string ToEMailId in ToMuliId)
 					{
 						if (!string.IsNullOrEmpty(ToEMailId))
-							mailMessage.To.Add(new MailAddress(ToEMailId)); //adding multiple TO Email Id
+							mailMessage.To.Add(new MailAddress(ToEMailId.Trim(),"")); //adding multiple TO Email Id
 					}
 					SmtpClient client = new SmtpClient();
 					if (!string.IsNullOrEmpty(emlSndngList.Subject))
@@ -870,7 +870,7 @@ namespace DALayer.Emails
 						foreach (string CCEmail in CCId)
 						{
 							if (!string.IsNullOrEmpty(CCEmail))
-								mailMessage.CC.Add(new MailAddress(CCEmail)); //Adding Multiple CC email Id
+								mailMessage.CC.Add(new MailAddress(CCEmail.Trim(),"")); //Adding Multiple CC email Id
 						}
 					}
 
@@ -882,12 +882,12 @@ namespace DALayer.Emails
 						foreach (string bccEmailId in bccid)
 						{
 							if (!string.IsNullOrEmpty(bccEmailId))
-								mailMessage.Bcc.Add(new MailAddress(bccEmailId)); //Adding Multiple BCC email Id
+								mailMessage.Bcc.Add(new MailAddress(bccEmailId.Trim(),"")); //Adding Multiple BCC email Id
 						}
 					}
 
 					if (!string.IsNullOrEmpty(BCC))
-						mailMessage.Bcc.Add(new MailAddress(BCC));
+						mailMessage.Bcc.Add(new MailAddress(BCC.Trim(),""));
 					mailMessage.Body = emlSndngList.Body;
 					mailMessage.IsBodyHtml = true;
 					mailMessage.BodyEncoding = Encoding.UTF8;

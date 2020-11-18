@@ -411,7 +411,7 @@ namespace SCMAPI.Controllers
 			}
 			catch (Exception e)
 			{
-				log.ErrorMessage("MPRController", "UploadFile", e.Message.ToString());
+				log.ErrorMessage("MPRController", "uploadVendorData", e.Message.ToString());
 				return Ok(e);
 			}
 
@@ -551,7 +551,7 @@ namespace SCMAPI.Controllers
 				}
 				catch (Exception e)
 				{
-					log.ErrorMessage("MPRController", "UploadFile", e.Message.ToString());
+					log.ErrorMessage("MPRController", "uploadExcel", e.Message.ToString());
 					return Ok(e);
 				}
 			}

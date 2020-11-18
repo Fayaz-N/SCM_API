@@ -1121,7 +1121,7 @@ namespace DALayer.RFQ
 				}
 
 
-				//local rfqrevisions
+				//local updation
 				RFQRevisions_N mprLastRecord1 = obj.RFQRevisions_N.OrderByDescending(p => p.rfqRevisionId).Where(li => li.rfqRevisionId == rfqRevisionId).FirstOrDefault<RFQRevisions_N>();
 				mprLastRecord1.ActiveRevision = false;
 				//mprLastRecord1.RevisionNo = mprLastRecord.RevisionNo + 1;
