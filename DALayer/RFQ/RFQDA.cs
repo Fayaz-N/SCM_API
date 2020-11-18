@@ -1003,7 +1003,7 @@ namespace DALayer.RFQ
 				vscm.RemoteRFQRevisions_N.Add(revision);
 				vscm.SaveChanges();
 
-				var RemoteRFQItems_N = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == rfqRevisionId).ToList();
+				var RemoteRFQItems_N = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == rfqRevisionId && li.DeleteFlag != true).ToList();
 				foreach (RemoteRFQItems_N rfitems in RemoteRFQItems_N)
 				{
 					var rfqRemoteitem = new RemoteRFQItems_N();
@@ -1028,7 +1028,7 @@ namespace DALayer.RFQ
 					vscm.RemoteRFQItems_N.Add(rfqRemoteitem);
 					vscm.SaveChanges();
 
-					var remoteRfqdocumnts = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid == rfitems.RFQItemsId).ToList();
+					var remoteRfqdocumnts = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid == rfitems.RFQItemsId && li.DeleteFlag != true).ToList();
 
 					foreach (var item in remoteRfqdocumnts)
 					{
@@ -1052,7 +1052,7 @@ namespace DALayer.RFQ
 							log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 					}
-					var remoteRFQItemInfos = vscm.RemoteRFQItemsInfo_N.Where(li => li.RFQItemsId == rfitems.RFQItemsId).ToList();
+					var remoteRFQItemInfos = vscm.RemoteRFQItemsInfo_N.Where(li => li.RFQItemsId == rfitems.RFQItemsId && li.DeleteFlag != true).ToList();
 					foreach (var remoterfqItemInfo in remoteRFQItemInfos)
 					{
 						var remoteinfo = new RemoteRFQItemsInfo_N()
@@ -1076,7 +1076,7 @@ namespace DALayer.RFQ
 				}
 
 				//add remoterfqdocuments where revisionid is null
-				var remoteRfqdocumnts1 = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid == null).ToList();
+				var remoteRfqdocumnts1 = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == rfqRevisionId && li.rfqItemsid == null && li.DeleteFlag != true).ToList();
 
 				foreach (var item in remoteRfqdocumnts1)
 				{
@@ -1121,7 +1121,7 @@ namespace DALayer.RFQ
 				}
 
 
-
+				//local rfqrevisions
 				RFQRevisions_N mprLastRecord1 = obj.RFQRevisions_N.OrderByDescending(p => p.rfqRevisionId).Where(li => li.rfqRevisionId == rfqRevisionId).FirstOrDefault<RFQRevisions_N>();
 				mprLastRecord1.ActiveRevision = false;
 				//mprLastRecord1.RevisionNo = mprLastRecord.RevisionNo + 1;
@@ -1161,7 +1161,7 @@ namespace DALayer.RFQ
 					log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 				}
 
-				var localrfqitems = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == Localrevision.rfqRevisionId).ToList();
+				var localrfqitems = vscm.RemoteRFQItems_N.Where(li => li.RFQRevisionId == Localrevision.rfqRevisionId && li.DeleteFlag != true).ToList();
 				foreach (var data in localrfqitems)
 				{
 					try
@@ -1190,7 +1190,7 @@ namespace DALayer.RFQ
 							log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
 						}
 
-						var rfqdocs = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == revision.rfqRevisionId).ToList();
+						var rfqdocs = vscm.RemoteRFQDocuments.Where(li => li.rfqRevisionId == revision.rfqRevisionId && li.DeleteFlag != true).ToList();
 						foreach (var item in rfqdocs)
 						{
 							var localdoc = obj.RFQDocuments.Where(li => li.RfqDocId == item.RfqDocId).FirstOrDefault();
@@ -1217,7 +1217,7 @@ namespace DALayer.RFQ
 								}
 							}
 						}
-						var localRfqItemInfos = vscm.RemoteRFQItemsInfo_N.Where(li => li.RFQItemsId == rfqitemid).ToList();
+						var localRfqItemInfos = vscm.RemoteRFQItemsInfo_N.Where(li => li.RFQItemsId == rfqitemid && li.DeleteFlag != true).ToList();
 						foreach (var localRfqItemInfo in localRfqItemInfos)
 						{
 							var info = new RFQItemsInfo_N()
@@ -1256,12 +1256,21 @@ namespace DALayer.RFQ
 					obj.RFQStatus.Add(rfqstatusLocal);
 					obj.SaveChanges();
 				}
-				catch (Exception ex)
+
+				catch (DbEntityValidationException e)
 				{
-
-					log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
+					foreach (var eve in e.EntityValidationErrors)
+					{
+						Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+							eve.Entry.Entity.GetType().Name, eve.Entry.State);
+						foreach (var ve in eve.ValidationErrors)
+						{
+							log.ErrorMessage("RFQController", "addNewRfqRevision", ve.ErrorMessage);
+							Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+								ve.PropertyName, ve.ErrorMessage);
+						}
+					}
 				}
-
 				var RFQTerms = vscm.RemoteRfqTerms.Where(li => li.RfqRevisionId == rfqRevisionId).ToList();
 				foreach (var data in RFQTerms)
 				{
@@ -1274,6 +1283,7 @@ namespace DALayer.RFQ
 					rfqterm.CreatedDate = DateTime.Now;
 					InsertRFQTerms(rfqterm);
 				}
+
 				//update MPRRfqItems and MPRRfqItemInfos
 				var mprRfqQuery = "update MPRRfqItems set deleteflag = 1 where RfqItemsid in(select RfqItemsid from RFQItems_N where RFQRevisionId = " + rfqRevisionId + ")";
 				var mprRfqIteminfQuery = "update MPRRfqItemInfos set Deleteflag=1 where rfqsplititemid in(select RFQSplitItemId from RFQItemsInfo_N where rfqitemsid in(select RFQItemsId from RFQItems_N where RFQRevisionId = " + rfqRevisionId + " ) and DeleteFlag!= 1)";
@@ -3187,12 +3197,12 @@ namespace DALayer.RFQ
 							item.Status = rfqdoc.Status;
 							item.StatusRemarks = rfqdoc.StatusRemarks;
 							item.StatusBy = rfqdoc.StatusBy;
-							if (rfqdoc.StatusDate!=null)
+							if (rfqdoc.StatusDate != null)
 							{
 								DateTime databaseUtcTime = Convert.ToDateTime(rfqdoc.StatusDate);
 								item.StatusDate = TimeZoneInfo.ConvertTimeFromUtc(databaseUtcTime, TimeZoneInfo.Local);
 							}
-								//string query = "update RFQDocuments set Status = '" + rfqdoc.Status + "', StatusRemarks = '" + rfqdoc.StatusRemarks + "',StatusBy = '" + rfqdoc.StatusBy + "',StatusDate = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where rfqItemsid = " + rfqdoc.rfqItemsid + " ";
+							//string query = "update RFQDocuments set Status = '" + rfqdoc.Status + "', StatusRemarks = '" + rfqdoc.StatusRemarks + "',StatusBy = '" + rfqdoc.StatusBy + "',StatusDate = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where rfqItemsid = " + rfqdoc.rfqItemsid + " ";
 							//Context.Database.SqlQuery<bool>(query);
 							Context.SaveChanges();
 						}

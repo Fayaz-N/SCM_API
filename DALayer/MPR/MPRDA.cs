@@ -2653,7 +2653,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							Remotedata.RequestedOn = DateTime.Now;
 
 							vscm.SaveChanges();
-							vendorid = Remotedata.Vendorid;
+							vendorid =Convert.ToInt32(Remotedata.Vendorid);
 							regId = Remotedata.Id;
 						}
 
