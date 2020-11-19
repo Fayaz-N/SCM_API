@@ -1246,6 +1246,7 @@ namespace DALayer.RFQ
 				}
 
 				RFQStatu rfqstatusLocal = new RFQStatu();
+				rfqstatusLocal.RfqStatusId = rfqstatus.RfqStatusId;
 				rfqstatusLocal.RfqRevisionId = revision.rfqRevisionId;
 				rfqstatusLocal.RfqMasterId = revision.rfqMasterId;
 				rfqstatusLocal.StatusId = 7;
@@ -1265,7 +1266,7 @@ namespace DALayer.RFQ
 							eve.Entry.Entity.GetType().Name, eve.Entry.State);
 						foreach (var ve in eve.ValidationErrors)
 						{
-							log.ErrorMessage("RFQController", "addNewRfqRevision", ve.ErrorMessage);
+							log.ErrorMessage("RFQDA", "addNewRfqRevision", ve.ErrorMessage);
 							Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
 								ve.PropertyName, ve.ErrorMessage);
 						}
@@ -1317,12 +1318,20 @@ namespace DALayer.RFQ
 			}
 
 
-			catch (Exception ex)
+			catch (DbEntityValidationException e)
 			{
-
-				log.ErrorMessage("RFQController", "addNewRfqRevision", ex.Message + "; " + ex.StackTrace.ToString());
+				foreach (var eve in e.EntityValidationErrors)
+				{
+					Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+						eve.Entry.Entity.GetType().Name, eve.Entry.State);
+					foreach (var ve in eve.ValidationErrors)
+					{
+						log.ErrorMessage("RFQDA", "addNewRfqRevision", ve.ErrorMessage);
+						Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+							ve.PropertyName, ve.ErrorMessage);
+					}
+				}
 			}
-
 			return revision.rfqRevisionId;
 		}
 
