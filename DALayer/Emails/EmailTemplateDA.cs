@@ -281,8 +281,7 @@ namespace DALayer.Emails
 			{
 				using (var db = new YSCMEntities()) //ok
 				{
-					var vscm = new VSCMEntities();
-					var vendorList = vscm.RemoteVendorUserMasters.Where(li => li.VendorId == VendorId).ToList();
+					var vendorList = db.VendorUserMasters.Where(li => li.VendorId == VendorId).ToList();
 					foreach (var vendor in vendorList)
 					{
 						if (vendor != null)
@@ -601,7 +600,7 @@ namespace DALayer.Emails
 						//mail to Approver
 						if (!string.IsNullOrEmpty(vendorProcessDetails.ApprovedBy) && vendorProcessDetails.CheckerStatus == "Approved")
 						{
-							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Intiator Status: " + vendorProcessDetails.IntiatorStatus+" ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus;
+							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Intiator Status: " + vendorProcessDetails.IntiatorStatus + " ; " + "Checker Status: " + vendorProcessDetails.CheckerStatus;
 							Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.ApprovedBy).FirstOrDefault<Employee>();
 							emlSndngList.ToEmailId = toemail.EMail;
 							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Scmipaddress + "'>" + Scmipaddress + "</a></b></div></body></html>";
@@ -697,7 +696,7 @@ namespace DALayer.Emails
 							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 								this.sendEmail(emlSndngList);
 						}
-					
+
 					}
 
 					if (typeOfUser == "FinanceApprover")
@@ -727,7 +726,7 @@ namespace DALayer.Emails
 						//mail to Approver
 						if (!string.IsNullOrEmpty(vendorProcessDetails.ApprovedBy))
 						{
-							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid  + " ; " + "Verifier Status: " + vendorProcessDetails.VerifiedStatus + " ; " + "Finance Approver Status: " + vendorProcessDetails.FinanceApprovedStatus; ;
+							emlSndngList.Subject = "Vendor Registration: " + vendorProcessDetails.Vendorid + " ; " + "Verifier Status: " + vendorProcessDetails.VerifiedStatus + " ; " + "Finance Approver Status: " + vendorProcessDetails.FinanceApprovedStatus; ;
 							Employee toemail = db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.ApprovedBy).FirstOrDefault<Employee>();
 							emlSndngList.ToEmailId = toemail.EMail;
 							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Scmipaddress + "'>" + Scmipaddress + "</a></b></div></body></html>";
@@ -852,12 +851,12 @@ namespace DALayer.Emails
 					var BCC = ConfigurationManager.AppSettings["BCC"];
 					var SMTPServer = ConfigurationManager.AppSettings["SMTPServer"];
 					MailMessage mailMessage = new MailMessage();
-					mailMessage.From = new MailAddress(emlSndngList.FrmEmailId.Trim(), "" ); //From Email Id
+					mailMessage.From = new MailAddress(emlSndngList.FrmEmailId.Trim(), ""); //From Email Id
 					string[] ToMuliId = emlSndngList.ToEmailId.Split(',');
 					foreach (string ToEMailId in ToMuliId)
 					{
 						if (!string.IsNullOrEmpty(ToEMailId))
-							mailMessage.To.Add(new MailAddress(ToEMailId.Trim(),"")); //adding multiple TO Email Id
+							mailMessage.To.Add(new MailAddress(ToEMailId.Trim(), "")); //adding multiple TO Email Id
 					}
 					SmtpClient client = new SmtpClient();
 					if (!string.IsNullOrEmpty(emlSndngList.Subject))
@@ -870,7 +869,7 @@ namespace DALayer.Emails
 						foreach (string CCEmail in CCId)
 						{
 							if (!string.IsNullOrEmpty(CCEmail))
-								mailMessage.CC.Add(new MailAddress(CCEmail.Trim(),"")); //Adding Multiple CC email Id
+								mailMessage.CC.Add(new MailAddress(CCEmail.Trim(), "")); //Adding Multiple CC email Id
 						}
 					}
 
@@ -882,12 +881,12 @@ namespace DALayer.Emails
 						foreach (string bccEmailId in bccid)
 						{
 							if (!string.IsNullOrEmpty(bccEmailId))
-								mailMessage.Bcc.Add(new MailAddress(bccEmailId.Trim(),"")); //Adding Multiple BCC email Id
+								mailMessage.Bcc.Add(new MailAddress(bccEmailId.Trim(), "")); //Adding Multiple BCC email Id
 						}
 					}
 
 					if (!string.IsNullOrEmpty(BCC))
-						mailMessage.Bcc.Add(new MailAddress(BCC.Trim(),""));
+						mailMessage.Bcc.Add(new MailAddress(BCC.Trim(), ""));
 					mailMessage.Body = emlSndngList.Body;
 					mailMessage.IsBodyHtml = true;
 					mailMessage.BodyEncoding = Encoding.UTF8;
@@ -901,7 +900,7 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("EmailTemplate", "sendEmail", ex.ToString());
+				log.ErrorMessage("EmailTemplate", "sendEmail" +";" + emlSndngList.ToEmailId.ToString()+"", ex.ToString());
 			}
 			return true;
 		}
