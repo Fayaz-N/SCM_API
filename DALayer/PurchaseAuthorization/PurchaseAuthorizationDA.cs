@@ -1834,7 +1834,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
                         //paitems.PODate = DateTime.ParseExact(itemdata.PODate.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None);
                         //paitems.PODate = Convert.ToDateTime( DateTime.ParseExact(itemdata.PODate.ToString(), "dd-MM-yyyy", CultureInfo.InvariantCulture));
                         //paitems.PODate = DateTime.ParseExact(itemdata.PODate.ToString(), "dd/MM/yyyy", null);
-                        paitems.PODate = itemdata.PODate;
+                        paitems.PODate = itemdata.POStatusDate;
                         paitems.Remarks = itemdata.Remarks;
 						paitems.UpdatedDate = System.DateTime.Now;
 						paitems.UpdatedBy = itemdata.EmployeeNo;

@@ -642,7 +642,7 @@ namespace SCMAPI.Controllers
         public DataSet GetmprstatusReport(ReportInputModel model)
         {
             DataSet ds = new DataSet();
-            SqlParameter[] Param = new SqlParameter[4];
+            SqlParameter[] Param = new SqlParameter[5];
 
             if (model.BuyerGroupId ==0)
             {
@@ -651,6 +651,7 @@ namespace SCMAPI.Controllers
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
                 Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
+                Param[4] = new SqlParameter("@issuepurpose", model.Issuepurposeid);
             }
             else
             {
@@ -659,8 +660,9 @@ namespace SCMAPI.Controllers
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
                 Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
+                Param[4] = new SqlParameter("@issuepurpose", model.Issuepurposeid);
             }
-            ds = _paBusenessAcess.GetmprstatusReport("mprstatuareport", Param);
+            ds = _paBusenessAcess.GetmprstatusReport("newmprstatuareport", Param);
             return ds;
         }
         [HttpPost]

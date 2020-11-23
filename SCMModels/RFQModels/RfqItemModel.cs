@@ -133,8 +133,9 @@ namespace SCMModels.RFQModels
 	public class ItemsViewModel
 	{
 		public string POItemNo { get; set; }
-		public DateTime PODate { get; set; }
-		public string PONO { get; set; }
+		public Nullable<System.DateTime> PODate { get; set; }
+        public Nullable<System.DateTime> POStatusDate { get; set; }
+        public string PONO { get; set; }
 		public string Remarks { get; set; }
 		public int paid { get; set; }
 		public int paitemid { get; set; }
