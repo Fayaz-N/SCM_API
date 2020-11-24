@@ -146,6 +146,7 @@ namespace SCMModels
 		public string ToDate { get; set; }
 		public string VendorName { get; set; }
 		public string IntiatedBy { get; set; }
+		public string IntiatorStatus { get; set; }
 		public string CheckedBy { get; set; }
 		public string ApprovedBy { get; set; }
 		public string VerifiedBy { get; set; }

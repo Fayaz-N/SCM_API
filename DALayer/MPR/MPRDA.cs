@@ -1009,9 +1009,19 @@ Review Date :<<>>   Reviewed By :<<>>
 					return vendorid;
 				}
 			}
-			catch (Exception ex)
+			catch (DbEntityValidationException e)
 			{
-				log.ErrorMessage("MPRController", "addNewVendor", ex.Message + "; " + ex.StackTrace.ToString());
+				string errmsg = "";
+				foreach (var eve in e.EntityValidationErrors)
+				{
+					Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+						eve.Entry.Entity.GetType().Name, eve.Entry.State);
+					foreach (var ve in eve.ValidationErrors)
+					{
+						errmsg = ve.PropertyName + ve.ErrorMessage;
+					}
+				}
+				log.ErrorMessage("MPRController", "addNewVendor", errmsg);
 				return vendorid;
 			}
 		}
@@ -2365,7 +2375,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							LocalRegApprovalProcessDetails.ApprovalStatus = "Pending";
 							LocalRegApprovalProcessDetails.VerifiedStatus = "Pending";
 						}
-						
+
 						LocalRegApprovalProcessDetails.FinanceApprovedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.FinanceApprovedStatus = model.FinanceApprovedStatus;
 						LocalRegApprovalProcessDetails.FinanceApprovedRemarks = model.FinanceApprovedRemarks;
@@ -2455,6 +2465,8 @@ Review Date :<<>>   Reviewed By :<<>>
 						query += "  and VendorName = '" + vendorRegfilters.VendorName + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.IntiatedBy))
 						query += "  and IntiatedBy = '" + vendorRegfilters.IntiatedBy + "'";
+					if (!string.IsNullOrEmpty(vendorRegfilters.IntiatorStatus))
+						query += "  and IntiatorStatus = '" + vendorRegfilters.IntiatorStatus + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.CheckedBy))
 						query += "  and CheckedBy = '" + vendorRegfilters.CheckedBy + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.CheckerStatus))
@@ -2653,7 +2665,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							Remotedata.RequestedOn = DateTime.Now;
 
 							vscm.SaveChanges();
-							vendorid =Convert.ToInt32(Remotedata.Vendorid);
+							vendorid = Convert.ToInt32(Remotedata.Vendorid);
 							regId = Remotedata.Id;
 						}
 
