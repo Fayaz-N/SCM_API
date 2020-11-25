@@ -2323,6 +2323,8 @@ Review Date :<<>>   Reviewed By :<<>>
 
 					if (typeOfuser == "Intiator")
 					{
+						if (LocalRegApprovalProcessDetails.IntiatorStatus == "Approved")
+							LocalRegApprovalProcessDetails.CheckerStatus = "Pending";
 
 						LocalRegApprovalProcessDetails.InitiatorStatusChangedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.IntiatorStatus = model.IntiatorStatus;
@@ -2333,6 +2335,9 @@ Review Date :<<>>   Reviewed By :<<>>
 					}
 					if (typeOfuser == "Checker")
 					{
+						if (LocalRegApprovalProcessDetails.CheckerStatus == "Approved")
+							LocalRegApprovalProcessDetails.ApprovalStatus = "Pending";
+
 						//LocalRegApprovalProcessDetails.CheckedBy = model.CheckedBy;
 						LocalRegApprovalProcessDetails.CheckedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.CheckerStatus = model.CheckerStatus;
@@ -2343,6 +2348,8 @@ Review Date :<<>>   Reviewed By :<<>>
 					}
 					if (typeOfuser == "Approver")
 					{
+						if (LocalRegApprovalProcessDetails.ApprovalStatus == "Approved")
+							LocalRegApprovalProcessDetails.VerifiedStatus = "Pending";
 						//LocalRegApprovalProcessDetails.ApprovedBy = model.ApprovedBy;
 						LocalRegApprovalProcessDetails.ApprovedOn = DateTime.Now;
 						LocalRegApprovalProcessDetails.ApprovalStatus = model.ApprovalStatus;
@@ -2350,9 +2357,13 @@ Review Date :<<>>   Reviewed By :<<>>
 						statusTrack.Status = model.ApprovalStatus + " From Approver";
 						statusTrack.Remarks = model.ApproverRemarks;
 						statusTrack.UpdatedBy = LocalRegApprovalProcessDetails.ApprovedBy;
+
 					}
 					if (typeOfuser == "Verifier")
 					{
+						if (LocalRegApprovalProcessDetails.VerifiedStatus == "Approved")
+							LocalRegApprovalProcessDetails.FinanceApprovedStatus = "Pending";
+
 						if (model.VerifiedStatus != "Approved")
 						{
 							LocalRegApprovalProcessDetails.CheckerStatus = "Pending";
@@ -2452,7 +2463,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			List<VendorRegProcessView> vendorregDetails = new List<VendorRegProcessView>();
 			try
 			{
-				
+
 				using (YSCMEntities Context = new YSCMEntities())
 				{
 					var query = default(string);
