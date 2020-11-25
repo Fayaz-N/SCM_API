@@ -2452,7 +2452,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			List<VendorRegProcessView> vendorregDetails = new List<VendorRegProcessView>();
 			try
 			{
-
+				
 				using (YSCMEntities Context = new YSCMEntities())
 				{
 					var query = default(string);
@@ -2461,6 +2461,8 @@ Review Date :<<>>   Reviewed By :<<>>
 						query += " and IntiatedOn <= '" + vendorRegfilters.ToDate + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.FromDate))
 						query += "  and IntiatedOn >= '" + vendorRegfilters.FromDate + "'";
+					if (!string.IsNullOrEmpty(vendorRegfilters.Vendorid))
+						query += "  and Vendorid = '" + vendorRegfilters.Vendorid + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.VendorName))
 						query += "  and VendorName = '" + vendorRegfilters.VendorName + "'";
 					if (!string.IsNullOrEmpty(vendorRegfilters.IntiatedBy))
