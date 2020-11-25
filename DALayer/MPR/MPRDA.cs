@@ -2168,7 +2168,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					Vendorid = vendorMaster.VendorId;
 
 				//add new vendor in vendormaster table if vendor id not exist
-				if (Vendorid == 0 || Vendorid == null || vendorMaster != null && typeOfuser == "Buyer")
+				if ((Vendorid == 0 || Vendorid == null || vendorMaster == null) && typeOfuser == "Buyer")
 				{
 					VendormasterModel vendormastermodel = new VendormasterModel();
 					vendormastermodel.Vendorid = Vendorid;
