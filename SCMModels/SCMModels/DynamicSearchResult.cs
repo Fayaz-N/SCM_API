@@ -144,6 +144,7 @@ namespace SCMModels
 	{
 		public string FromDate { get; set; }
 		public string ToDate { get; set; }
+		public string Vendorid { get; set; }
 		public string VendorName { get; set; }
 		public string IntiatedBy { get; set; }
 		public string IntiatorStatus { get; set; }
