@@ -716,12 +716,12 @@ namespace SCMAPI.Controllers
         }
         [HttpPost]
         [Route("Loadprojectcodewisereport")]
-        [ResponseType(typeof(Reportbyprojectcode))]
+       
         public IHttpActionResult Loadprojectcodewisereport(ReportInputModel model)
         {
-           List<Reportbyprojectcode> status = new List<Reportbyprojectcode>();
-            status = _paBusenessAcess.Loadprojectcodewisereport(model);
-            return Ok(status);
+           //List<Reportbyprojectcode> status = new List<Reportbyprojectcode>();
+           // status = _paBusenessAcess.Loadprojectcodewisereport(model);
+            return Ok(_paBusenessAcess.Loadprojectcodewisereport(model));
         }
         [HttpPost]
         [Route("LoadprojectDurationwisereport")]

@@ -73,7 +73,7 @@ namespace BALayer.PurchaseAuthorization
         List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input);
         ReportFilterModel GetmprRequisitionfilters();
         List<loadprojectmangersforreport> Loadprojectmanagersforreport();
-        List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel model);
+        DataTable Loadprojectcodewisereport(ReportInputModel model);
         List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel model);
         List<jobcodes> Loadjobcodes();
         DataTable GETApprovernamesbydepartmentid(int departmentid);

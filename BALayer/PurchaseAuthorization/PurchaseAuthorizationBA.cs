@@ -296,7 +296,7 @@ namespace BALayer.PurchaseAuthorization
             return _purchaseDataAcess.Loadprojectmanagersforreport();
         }
 
-        public List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel model)
+        public DataTable Loadprojectcodewisereport(ReportInputModel model)
         {
             return _purchaseDataAcess.Loadprojectcodewisereport(model);
         }

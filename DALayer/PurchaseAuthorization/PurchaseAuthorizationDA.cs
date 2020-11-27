@@ -39,7 +39,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		VSCMEntities vscm = new VSCMEntities();
 		YSCMEntities obj = new YSCMEntities();
 		//inserting pa limits
-		/*Name of Function : <<InsertPAAuthorizationLimits>>  Author :<<Prasanna>>  
+		/*Name of Function : <<InsertPAAuthorizationLimits>>  Author :<<Akhil>>  
 Date of Creation <<>>
 Purpose : <<To Insert the purchase authorization slabs to the department>>
 Review Date :<<>>   Reviewed By :<<>>*/
@@ -2559,7 +2559,9 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						query += " and revisionid='" + input.revisionId + "'";
 					if (input.BuyerGroupId != 0)
 						query += " and Buyergroupid='" + input.BuyerGroupId + "'";
-					if (input.DepartmentId != 0)
+                    if (input.Issuepurposeid != 0)
+                        query += " and IssuePurposeId='" + input.Issuepurposeid + "'";
+                    if (input.DepartmentId != 0)
 						query += " and departmentid='" + input.DepartmentId + "'";
 					if (!string.IsNullOrEmpty(input.jobcode))
 						query += " and jobcode='" + input.jobcode + "'";
@@ -2580,9 +2582,11 @@ Review Date :<<>>   Reviewed By :<<>>*/
 					//    query += " and departmentid='" + input.DepartmentId + "'";
 					if (input.BuyerGroupId != 0)
 						query += " and Buyergroupid='" + input.BuyerGroupId + "'";
-					//if (input.DepartmentId != 0)
-					//    query += " and departmentid='" + input.DepartmentId + "'";
-					if (!string.IsNullOrEmpty(input.Fromdate))
+                    if (input.Issuepurposeid != 0)
+                        query += " and IssuePurposeId='" + input.Issuepurposeid + "'";
+                    //if (input.DepartmentId != 0)
+                    //    query += " and departmentid='" + input.DepartmentId + "'";
+                    if (!string.IsNullOrEmpty(input.Fromdate))
 						query += " and approvedate>='" + input.Fromdate + "'";
 					if (!string.IsNullOrEmpty(input.Todate))
 						query += " and approvedate < DATEADD(day, 1, '" + input.Todate + "') ";
@@ -2651,17 +2655,24 @@ Review Date :<<>>   Reviewed By :<<>>*/
 			report = obj.loadprojectmangersforreports.SqlQuery(sqlquery).ToList<loadprojectmangersforreport>();
 			return report;
 		}
-		public List<Reportbyprojectcode> Loadprojectcodewisereport(ReportInputModel input)
+		public DataTable Loadprojectcodewisereport(ReportInputModel input)
 		{
+            DataTable table = new DataTable();
             string data = "";
             if (input.OrgDepartmentId != 0)
             {
                 List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == input.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
                 data = string.Join(" ',' ", departments);
             }
-            List<Reportbyprojectcode> report = new List<Reportbyprojectcode>();
+            //List<Reportbyprojectcode> report = new List<Reportbyprojectcode>();
 			var query = "";
-			query = "select * from Reportbyprojectcode where documentno is not null ";
+            if (input.Itemwise == false)
+                query = "select * from Reportbyprojectcodeitemwise where documentno is not null ";
+            else
+                query = "select * from Reportbyprojectcode where documentno is not null "; 
+
+
+            //query = "select * from Reportbyprojectcode where documentno is not null ";
 			if (!string.IsNullOrEmpty(input.jobcode))
 				query += " and JobCode='" + input.jobcode + "'";
 			if (input.BuyerGroupId != 0)
@@ -2680,8 +2691,14 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				query += " and approveddate < DATEADD(day, 1, '" + input.Todate + "')";
 
             query += " order by RevisionId desc ";
-            report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
-			return report;
+            var cmd = obj.Database.Connection.CreateCommand();
+            cmd.CommandText = query;
+
+            cmd.Connection.Open();
+            table.Load(cmd.ExecuteReader());
+            cmd.Connection.Close();
+            //report = obj.Reportbyprojectcodes.SqlQuery(query).ToList<Reportbyprojectcode>();
+			return table;
 		}
 		public List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel input)
 		{

@@ -45,6 +45,7 @@ namespace SCMModels.RFQModels
         public string  ProjectManager { get; set; }
         public string SaleOrderNo { get; set; }
         public int OrgDepartmentId { get; set; }
+        public bool Itemwise { get; set; }
     }
 
     public class ReportFilterModel
