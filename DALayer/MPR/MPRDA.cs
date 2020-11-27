@@ -1354,26 +1354,26 @@ Review Date :<<>>   Reviewed By :<<>>
 				if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
 					viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
 
-				if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-				{
-					if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
-					{
-						viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
-						query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
-					}
-					else
-						query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
-				}
-				else
-				{
-					if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
-					{
-						viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
-					}
-					query = "Select distinct RevisionId,mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproversStatus,ThirdApprover,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
-				}
-				//query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
-				if (mprfilterparams.typeOfUser == "CMM")
+                if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+                {
+                    if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+                    {
+                        viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+                        query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+                    }
+                    else
+                        query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+                    {
+                        viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+                    }
+                    query = "Select distinct RevisionId,mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+                }
+                //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
+                if (mprfilterparams.typeOfUser == "CMM")
 				{
 					if (!string.IsNullOrEmpty(mprfilterparams.ToDate))
 						query += " and approvedate <= '" + mprfilterparams.ToDate + "'";
