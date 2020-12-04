@@ -5985,11 +5985,11 @@ namespace DALayer.RFQ
 						emlSndngList.FrmEmailId = (obj.Employees.Where(li => li.EmployeeNo == model.RemarksFrom).FirstOrDefault<Employee>()).EMail;
 						//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
 						int vendorid = Convert.ToInt16(model.RemarksTo);
-						string emails = (obj.VendorMasters.Where(li => li.Vendorid == vendorid).FirstOrDefault<VendorMaster>()).Emailid;
-						List<string> emailList = emails.Split(',').ToList();
+						var emailList = obj.VendorUserMasters.Where(li => li.VendorId == vendorid).ToList();
+						//List<string> emailList = emails.Split(',').ToList();
 						foreach (var item in emailList)
 						{
-							emlSndngList.ToEmailId = item;
+							emlSndngList.ToEmailId = item.Vuserid;
 							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 								this.emailTemplateDA.sendEmail(emlSndngList);
 
