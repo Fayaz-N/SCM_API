@@ -2230,7 +2230,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					remoteVendorRegDetails.VendorNoInSAP = model.VendorNoInSAP;
 					remoteVendorRegDetails.PaymentTermId = model.PaymentTermId;
 					remoteVendorRegDetails.PaymentTerms = model.PaymentTerms;
-					remoteVendorRegDetails.VendorType = model.VendorType;
+					//remoteVendorRegDetails.VendorType = model.VendorType;
 					remoteVendorRegDetails.Email = model.VendorEmailId;
 					//remoteVendorRegDetails.ISExistVendor = model.ISExistVendor;
 					//remoteVendorRegDetails.ChangesFor = model.ChangesFor;
@@ -2317,7 +2317,7 @@ Review Date :<<>>   Reviewed By :<<>>
 						vendorRegDetails.VendorNoInSAP = model.VendorNoInSAP;
 						vendorRegDetails.PaymentTermId = model.PaymentTermId;
 						vendorRegDetails.PaymentTerms = model.PaymentTerms;
-						vendorRegDetails.VendorType = model.VendorType;
+						//vendorRegDetails.VendorType = model.VendorType;
 					}
 
 
