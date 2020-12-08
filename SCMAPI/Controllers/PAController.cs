@@ -15,6 +15,7 @@ using System.Data.OleDb;
 using System.Globalization;
 using System.Net.Http;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace SCMAPI.Controllers
 {
@@ -643,14 +644,20 @@ namespace SCMAPI.Controllers
         {
             DataSet ds = new DataSet();
             SqlParameter[] Param = new SqlParameter[5];
-
+            string data = "";
+            YSCMEntities obj = new YSCMEntities();
+            if (model.OrgDepartmentId != 0)
+            {
+                List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == model.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
+                data = string.Join(" , ", departments);
+            }
             if (model.BuyerGroupId ==0)
             {
                 Param[0] = new SqlParameter("buyergroupid", SqlDbType.VarChar);
                 Param[0].Value = DBNull.Value;
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
-                Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
+                Param[3] = new SqlParameter("@DepartmentId", data);
                 Param[4] = new SqlParameter("@issuepurpose", model.Issuepurposeid);
             }
             else
@@ -659,7 +666,7 @@ namespace SCMAPI.Controllers
                 Param[0] = new SqlParameter("@BuyerGroupId", model.BuyerGroupId);
                 Param[1] = new SqlParameter("@fromdate", model.Fromdate);
                 Param[2] = new SqlParameter("@todate", model.Todate);
-                Param[3] = new SqlParameter("@DepartmentId", model.DepartmentId);
+                Param[3] = new SqlParameter("@DepartmentId", data);
                 Param[4] = new SqlParameter("@issuepurpose", model.Issuepurposeid);
             }
             ds = _paBusenessAcess.GetmprstatusReport("newmprstatuareport", Param);
@@ -671,7 +678,14 @@ namespace SCMAPI.Controllers
         public DataSet GetMprstatuswisereport(ReportInputModel model)
         {
             DataSet ds = new DataSet();
-            SqlParameter[] Param = new SqlParameter[5];
+            SqlParameter[] Param = new SqlParameter[6];
+            string data = "";
+            YSCMEntities obj = new YSCMEntities();
+            if (model.OrgDepartmentId != 0)
+            {
+                List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == model.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
+                data = string.Join(" , ", departments);
+            }
             if (model.BuyerGroupId == 0)
             {
                 Param[0] = new SqlParameter("buyergroupid", SqlDbType.VarChar);
@@ -680,6 +694,7 @@ namespace SCMAPI.Controllers
                 Param[2] = new SqlParameter("@todate", model.Todate);
                 Param[3] = new SqlParameter("@ProjectManager", model.ProjectManager);
                 Param[4] = new SqlParameter("@SaleOrderNo", model.SaleOrderNo);
+                Param[5] = new SqlParameter("@Departmentid", data);
             }
             else
             {
@@ -689,6 +704,7 @@ namespace SCMAPI.Controllers
                 Param[2] = new SqlParameter("@todate", model.Todate);
                 Param[3] = new SqlParameter("@ProjectManager", model.ProjectManager);
                 Param[4] = new SqlParameter("@SaleOrderNo", model.SaleOrderNo);
+                Param[5] = new SqlParameter("@Departmentid", data);
             }
             ds = _paBusenessAcess.GetMprstatuswisereport("Mprwisereport",Param);
             return ds;

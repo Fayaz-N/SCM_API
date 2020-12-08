@@ -2516,9 +2516,15 @@ Review Date :<<>>   Reviewed By :<<>>*/
 		public List<RequisitionReport> GetmprRequisitionReport(ReportInputModel input)
 		{
 			List<RequisitionReport> data = new List<RequisitionReport>();
+            string department = "";
 			try
 			{
-				int mprno = 0;
+                if (input.OrgDepartmentId != 0)
+                {
+                    List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == input.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
+                    department = string.Join(" ',' ", departments);
+                }
+                int mprno = 0;
 				if (!string.IsNullOrEmpty(input.DocumentNo))
 				{
 					if (input.DocumentNo.StartsWith("MPR", StringComparison.CurrentCultureIgnoreCase))
@@ -2561,13 +2567,16 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						query += " and Buyergroupid='" + input.BuyerGroupId + "'";
                     if (input.Issuepurposeid != 0)
                         query += " and IssuePurposeId='" + input.Issuepurposeid + "'";
+                    if (input.OrgDepartmentId != 0)
+						query += " and DepartmentId in ('" + department + "') ";
                     if (input.DepartmentId != 0)
-						query += " and departmentid='" + input.DepartmentId + "'";
-					if (!string.IsNullOrEmpty(input.jobcode))
+                        query += " and DepartmentId = '" + input.DepartmentId + "'";
+                    if (!string.IsNullOrEmpty(input.jobcode))
 						query += " and jobcode='" + input.jobcode + "'";
-					if (input.ShowAllrevisions == false)
-						query += " and BoolValidRevision='" + 1 + "' and ApprovalStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and SecondApproversStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and ThirdApproverStatus not in ('Pending','Rejected','Sent for Modification','Submitted') ";
-					if (input.ShowAllrevisions == true)
+                    if (input.ShowAllrevisions == false)
+                        query += " and BoolValidRevision='" + 1 + "'";
+                        //query += " and BoolValidRevision='" + 1 + "' and ApprovalStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and SecondApproversStatus not in ('Pending','Rejected','Sent for Modification','Submitted') and ThirdApproverStatus not in ('Pending','Rejected','Sent for Modification','Submitted') ";
+                    if (input.ShowAllrevisions == true)
 						query += " and BoolValidRevision is not null";
 				}
 				else
