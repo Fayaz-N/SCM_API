@@ -48,6 +48,8 @@
     <Compile Include="MPR\IMPRBA.cs" />
     <Compile Include="MPR\MPRBA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseAuthorization\IPurchaseAuthorizationBA.cs" />
+    <Compile Include="PurchaseAuthorization\PurchaseAuthorizationBA.cs" />
     <Compile Include="RFQ\IRFQBA.cs" />
     <Compile Include="RFQ\RFQBA.cs" />
   </ItemGroup>
