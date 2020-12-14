@@ -1354,26 +1354,26 @@ Review Date :<<>>   Reviewed By :<<>>
 				if (!string.IsNullOrEmpty(mprfilterparams.AssignEmployee))
 					viewName = "inner join  MPR_GetAssignEmployee mprasgn on mprasgn.MprRevisionId = mpr.RevisionId and  mprasgn.EmployeeNo=" + mprfilterparams.AssignEmployee + "";
 
-                if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
-                {
-                    if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
-                    {
-                        viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
-                        query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
-                    }
-                    else
-                        query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
-                    {
-                        viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
-                    }
-                    query = "Select distinct RevisionId,mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
-                }
-                //query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
-                if (mprfilterparams.typeOfUser == "CMM")
+				if (string.IsNullOrEmpty(mprfilterparams.ItemDescription))
+				{
+					if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+					{
+						viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+						query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+					}
+					else
+						query = "Select distinct RevisionId, mprasgn.EmployeeName as AssignEmployeeName,RequisitionId, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails_woItems mpr " + viewName + " Where BoolValidRevision=1";
+				}
+				else
+				{
+					if (!string.IsNullOrEmpty(mprfilterparams.PONO) || !string.IsNullOrEmpty(mprfilterparams.PAID))
+					{
+						viewName += " inner join PAItem on PAItem.MPRItemDetailsId = mpr.Itemdetailsid ";
+					}
+					query = "Select distinct RevisionId,mprasgn.EmployeeName as AssignEmployeeName,RequisitionId,ItemDescription, DocumentNo,DocumentDescription,JobCode,JobName,DepartmentName,ORgDepartmentid,IssuePurposeId,GEPSApprovalId,BuyerGroupName,PreparedBy,PreparedName,PreparedOn,CheckedBy,CheckedName,CheckedOn,CheckStatus, ApprovedBy,ApproverName,ApprovedOn,SecondApprover,SecondApproverName,SecondApproversStatus,ThirdApprover,ThirdApproverName,ThirdApproverStatus,ApprovalStatus,MPRStatus,PurchaseType,approvedate from MPRRevisionDetails mpr " + viewName + "  Where BoolValidRevision=1";
+				}
+				//query = "Select * from MPRRevisionDetails Where BoolValidRevision='true' and PreparedOn <= " + mprfilterparams.ToDate.ToString() + " and PreparedOn >= " + mprfilterparams.FromDate.ToString() + "";
+				if (mprfilterparams.typeOfUser == "CMM")
 				{
 					if (!string.IsNullOrEmpty(mprfilterparams.ToDate))
 						query += " and approvedate <= '" + mprfilterparams.ToDate + "'";
@@ -2157,12 +2157,11 @@ Review Date :<<>>   Reviewed By :<<>>
 		public VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser)
 		{
 			VendorRegStatusTrack statusTrack = new VendorRegStatusTrack();
+			int Vendorid = Convert.ToInt32(model.Vendorid);
 			VendorRegApprovalProcess result = new VendorRegApprovalProcess();
 			try
 			{
 				VSCMEntities vscmObj = new VSCMEntities();
-				int Vendorid = Convert.ToInt32(model.Vendorid);
-
 				var vendorMaster = DB.VendorUserMasters.Where(li => li.Vuserid == model.VendorEmailId).FirstOrDefault();
 				if (vendorMaster != null && model.IsExistVendor == false)
 					Vendorid = vendorMaster.VendorId;
@@ -2417,9 +2416,20 @@ Review Date :<<>>   Reviewed By :<<>>
 				this.emailTemplateDA.prepareVendRegTemplate(typeOfuser, Vendorid, IsExistVendor);
 				result = DB.VendorRegApprovalProcesses.Where(li => li.Vendorid == Vendorid).FirstOrDefault();
 			}
-			catch (Exception errmsg)
+			catch (DbEntityValidationException e)
 			{
-				log.ErrorMessage("MPRController", "updateVendorRegProcess", errmsg.Message.ToString());
+				foreach (var eve in e.EntityValidationErrors)
+				{
+					Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+						eve.Entry.Entity.GetType().Name, eve.Entry.State);
+					foreach (var ve in eve.ValidationErrors)
+					{
+						log.ErrorMessage("MPRController", "updateVendorRegProcess ," + Vendorid + "", ve.ErrorMessage);
+						Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+							ve.PropertyName, ve.ErrorMessage);
+					}
+				}
+				throw;
 			}
 			return result;
 		}
