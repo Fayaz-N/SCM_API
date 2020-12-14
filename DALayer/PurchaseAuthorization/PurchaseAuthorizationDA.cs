@@ -2519,7 +2519,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
             string department = "";
 			try
 			{
-                if (input.OrgDepartmentId != 0)
+                if (input.DepartmentId == 0)
                 {
                     List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == input.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
                     department = string.Join(" ',' ", departments);
@@ -2567,7 +2567,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						query += " and Buyergroupid='" + input.BuyerGroupId + "'";
                     if (input.Issuepurposeid != 0)
                         query += " and IssuePurposeId='" + input.Issuepurposeid + "'";
-                    if (input.OrgDepartmentId != 0)
+                    if (!string.IsNullOrEmpty(department))
 						query += " and DepartmentId in ('" + department + "') ";
                     if (input.DepartmentId != 0)
                         query += " and DepartmentId = '" + input.DepartmentId + "'";
@@ -2668,7 +2668,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 		{
             DataTable table = new DataTable();
             string data = "";
-            if (input.OrgDepartmentId != 0)
+            if (input.DepartmentId == 0)
             {
                 List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == input.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
                 data = string.Join(" ',' ", departments);
@@ -2686,8 +2686,10 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				query += " and JobCode='" + input.jobcode + "'";
 			if (input.BuyerGroupId != 0)
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-            if (input.OrgDepartmentId != 0)
+            if ((!string.IsNullOrEmpty(data)))
                 query += " and DepartmentId in ('"+ data +"')";
+            if (input.DepartmentId != 0)
+                query += " and DepartmentId '" + input.DepartmentId + "'";
             if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
             if (!string.IsNullOrEmpty(input.SaleOrderNo))
@@ -2712,7 +2714,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 		public List<ReportbyprojectDuration> LoadprojectDurationwisereport(ReportInputModel input)
 		{
             string data = "";
-            if (input.OrgDepartmentId != 0)
+            if (input.DepartmentId == 0)
             {
                 List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == input.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
                 data = string.Join(" ',' ", departments);
@@ -2724,8 +2726,10 @@ Review Date :<<>>   Reviewed By :<<>>*/
 				query += " and JobCode='" + input.jobcode + "'";
 			if (input.BuyerGroupId != 0)
 				query += " and BuyerGroupId='" + input.BuyerGroupId + "'";
-            if (input.OrgDepartmentId != 0)
+            if ((!string.IsNullOrEmpty(data)))
                 query += " and DepartmentId in ('" + data + "')";
+            if (input.DepartmentId != 0)
+                query += " and DepartmentId ='" + input.DepartmentId + "'";
             if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
             if (!string.IsNullOrEmpty(input.SaleOrderNo))

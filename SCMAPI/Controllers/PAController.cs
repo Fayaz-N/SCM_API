@@ -681,10 +681,14 @@ namespace SCMAPI.Controllers
             SqlParameter[] Param = new SqlParameter[6];
             string data = "";
             YSCMEntities obj = new YSCMEntities();
-            if (model.OrgDepartmentId != 0)
+            if (model.DepartmentId == 0)
             {
                 List<int> departments = obj.MPRDepartments.Where(x => x.ORgDepartmentid == model.OrgDepartmentId).Select(x => (int)x.DepartmentId).ToList();
                 data = string.Join(" , ", departments);
+            }
+            else
+            {
+                data = string.Join(",", model.DepartmentId);
             }
             if (model.BuyerGroupId == 0)
             {
