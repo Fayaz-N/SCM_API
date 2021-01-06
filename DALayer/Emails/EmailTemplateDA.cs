@@ -125,7 +125,8 @@ namespace DALayer.Emails
 								{
 									emlSndngList.Subject = "New MPR is submitted for acknowledgement - " + mprrevisionDetails.DocumentNo + "";
 									var TooEmailId = db.MPRBuyerGroups.Where(li => li.BuyerGroupId == mprrevisionDetails.BuyerGroupId).FirstOrDefault().BuyerManager;
-									emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == TooEmailId).FirstOrDefault<Employee>()).EMail;
+									if (!string.IsNullOrEmpty(TooEmailId))
+										emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == TooEmailId).FirstOrDefault<Employee>()).EMail;
 									if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 									{
 										List<MPRBGMailConfiguration> configList = db.MPRBGMailConfigurations.Where(li => li.BuyerGroupID == mprrevisionDetails.BuyerGroupId).ToList();
@@ -343,8 +344,8 @@ namespace DALayer.Emails
 
 					emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><span>" + bodyTxt + "</span><br/><br/><b>Click here to redirect : </b>&nbsp<a href='" + ipaddress + "'>" + ipaddress + "</a></div></body></html>";
 					emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == FrmEmailId).FirstOrDefault<Employee>()).EMail;
-					//emlSndngList.ToEmailId = "Developer@in.yokogawa.com";
-					emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToEmailId).FirstOrDefault<Employee>()).EMail;
+					if (!string.IsNullOrEmpty(ToEmailId))
+						emlSndngList.ToEmailId = (db.Employees.Where(li => li.EmployeeNo == ToEmailId).FirstOrDefault<Employee>()).EMail;
 					if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 						this.sendEmail(emlSndngList);
 
@@ -538,7 +539,7 @@ namespace DALayer.Emails
 							{
 								emlSndngList.Subject = "Registration Initiated";
 								emlSndngList.ToEmailId = vendorProcessDetails.initiateVendorEmailId;
-								emlSndngList.CC=(db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.IntiatedBy).FirstOrDefault<Employee>()).EMail;
+								emlSndngList.CC = (db.Employees.Where(li => li.EmployeeNo == vendorProcessDetails.IntiatedBy).FirstOrDefault<Employee>()).EMail;
 								emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received registration request from Yokogawa</div><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
 								if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
 									this.sendEmail(emlSndngList);
@@ -838,6 +839,83 @@ namespace DALayer.Emails
 			return true;
 		}
 
+		/*Name of Function : <<sendASNInitiationEmail>  Author :<<Prasanna>>  
+		  Date of Creation <<18-12-2020>>
+		  Purpose : <<Sending ASN Initiate mail to vendor>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
+		public bool sendASNInitiationEmail(ASNInitiation ASNInitiation)
+		{
+			try
+			{
+				using (var db = new YSCMEntities()) //ok
+				{
+					var Vendoripaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+					var mailData = (db.Employees.Where(li => li.EmployeeNo == ASNInitiation.InitiateFrom).FirstOrDefault<Employee>());
+
+					EmailSend emlSndngList = new EmailSend();
+					emlSndngList.Subject = "ASN & Invoice Upload ";
+					emlSndngList.FrmEmailId = mailData.EMail;
+					emlSndngList.CC = mailData.EMail;
+					List<string> EmailList = ASNInitiation.VendorEmailId.Split(new char[] { ',' }).ToList();
+					foreach (var item in EmailList)
+					{
+						var vendor = db.VendorUserMasters.Where(li => li.Vuserid == item && li.VendorId == ASNInitiation.VendorId).FirstOrDefault();
+						if (vendor != null)
+						{
+							emlSndngList.ToEmailId = item;
+							emlSndngList.Body = "<html><meta charset=\"ISO-8859-1\"><head><link rel = 'stylesheet' href = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' ></head><body><div class='container'><div>Dear Vendor, </div><br/><div>You have received ASN & Invoice Upload request from Yokogawa</div><br/><span>" + ASNInitiation.Remarks + "</span><br/><b  style='color:#40bfbf;'>Contact Details :</b><br/><b>Name:</b>" + mailData.Name + " <br/><b>Contact Number:</b>" + mailData.MobileNo + "<br/><br/>The required portal details and the password is given below : <br /><br /> <b  style='color:#40bfbf;'>Click Here to Redirect : <a href='" + Vendoripaddress + "'>" + Vendoripaddress + "</a></b><br /> <br /> <b style='color:#40bfbf;'>Instruction: </b> Open the link with GOOGLE CHROME <br /> <b style='color:#40bfbf;'>User Name:</b> " + vendor.VuniqueId + " <br /><b style='color:#40bfbf;'>Pass word:</b> " + vendor.pwd + "<br /><br/><div>Regards,<br/><div>CMM Department</div></body></html>";
+							if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+								this.sendEmail(emlSndngList);
+						}
+						else
+						{
+							log.ErrorMessage("EmailTemplate", "sendASNInitiationEmail", "No Record for " + ASNInitiation.VendorEmailId + "" + ";" + ASNInitiation.VendorId + "");
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("EmailTemplate", "sendASNInitiationEmail", ex.Message + "; " + ex.StackTrace.ToString());
+				//throw ex;
+			}
+			return true;
+		}
+
+		/*Name of Function : <<sendASNCommunicationMail>  Author :<<Prasanna>>  
+		  Date of Creation <<14-12-2020>>
+		  Purpose : <<Sending mail to vendor>>
+		  Review Date :<<>>   Reviewed By :<<>>*/
+		public bool sendASNCommunicationMail(int ASNId, string Remarks, string RemarksFrom)
+		{
+			try
+			{
+				using (var db = new YSCMEntities()) //ok
+				{
+					var ipaddress = ConfigurationManager.AppSettings["UI_vendor_IpAddress"];
+					var ASNDetails = db.ASNShipmentHeaders.Where(li => li.ASNId == ASNId).FirstOrDefault();
+
+					EmailSend emlSndngList = new EmailSend();
+					emlSndngList.Subject = "Message From Yokogawa for ASN NO:" + ASNDetails.ASNNo + "";
+					emlSndngList.Body = "<html><head></head><body><div>" + Remarks + "<br /><br /><b  style='color:#40bfbf;'>Click Here to Redirect: <a href='" + ipaddress + "'>" + ipaddress + "</a></b><br /></div></body></html>";
+					emlSndngList.FrmEmailId = (db.Employees.Where(li => li.EmployeeNo == RemarksFrom).FirstOrDefault<Employee>()).EMail;
+					int vendorid = Convert.ToInt16(ASNDetails.VendorId);
+					var emailList = db.VendorUserMasters.Where(li => li.VendorId == vendorid).ToList();
+					foreach (var item in emailList)
+					{
+						emlSndngList.ToEmailId = item.Vuserid;
+						if ((!string.IsNullOrEmpty(emlSndngList.FrmEmailId) && !string.IsNullOrEmpty(emlSndngList.FrmEmailId)) && (emlSndngList.FrmEmailId != "NULL" && emlSndngList.ToEmailId != "NULL"))
+							this.sendEmail(emlSndngList);
+
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorMessage("EmailTemplate", "sendASNCommunicationMail", ex.Message + "; " + ex.StackTrace.ToString());
+			}
+			return true;
+		}
 		/*Name of Function : <<sendEmail>>  Author :<<Prasanna>>  
 		  Date of Creation <<01-12-2019>>
 		  Purpose : <<Sending mail method>>
@@ -901,7 +979,7 @@ namespace DALayer.Emails
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("EmailTemplate", "sendEmail" +";" + emlSndngList.ToEmailId.ToString()+"", ex.ToString());
+				log.ErrorMessage("EmailTemplate", "sendEmail" + ";" + emlSndngList.ToEmailId.ToString() + "", ex.ToString());
 			}
 			return true;
 		}

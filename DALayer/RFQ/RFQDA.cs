@@ -3073,7 +3073,7 @@ namespace DALayer.RFQ
 						}
 						RfqItemModel rfqitems = new RfqItemModel();
 						rfqitems.HSNCode = item.HSNCode;
-						var rfqIInfo = obj.RFQItemsInfo_N.Where(li => li.RFQItemsId == item.RFQItemsId).FirstOrDefault();
+						var rfqIInfo = obj.RFQItemsInfo_N.Where(li => li.RFQItemsId == item.RFQItemsId && li.DeleteFlag == false).FirstOrDefault();
 
 						if (rfqIInfo != null)
 							rfqitems.ItemUnitPrice = rfqIInfo.UnitPrice;

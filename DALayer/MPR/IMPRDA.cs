@@ -41,8 +41,8 @@ namespace DALayer.MPR
 		void updateMprstatusTrack(MPRStatusTrack mprStatusTrackDetails);
 		bool deleteMPR(DeleteMpr deleteMprInfo);
 		string updateItemId(materialUpdate mPRItemInfo);
-        List<loadloction> Loadstoragelocationsbydepartment();
-        SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
+		List<loadloction> Loadstoragelocationsbydepartment();
+		SaleorderDetail LoadJobCodesbysaleorder(string saleorder);
 
 		VendorRegApprovalProcess updateVendorRegProcess(VendorRegApprovalProcessData model, string typeOfuser);
 		List<VendorRegProcessView> getVendorReqList(vendorRegfilters vendorRegfilters);
@@ -58,5 +58,6 @@ namespace DALayer.MPR
 		bool UpdateYILTermsAndConditions(YILTermsandCondition yilTermandconditions);
 		bool DeleteTermGroup(int TermGroupId, string DeletedBy);
 		bool DeleteTermsAndConditions(int TermId, string DeletedBy);
+		string GeneratePassword();
 	}
 }

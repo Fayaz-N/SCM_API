@@ -1842,7 +1842,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					else
 					{
 						//send mail to requestor for manual status,acknoweldge,buyer group change
-						this.emailTemplateDA.mailtoRequestor(mprrevision.RevisionId, mprrevision.PreparedBy);
+						this.emailTemplateDA.mailtoRequestor(mprrevision.RevisionId, mprStatus.PreparedBy);
 					}
 				}
 
@@ -2052,7 +2052,7 @@ Review Date :<<>>   Reviewed By :<<>>
 		Date of Creation <<30-03-2020>>
 		Purpose : <<Genereate password for vendor user>>
 		Review Date :<<>>   Reviewed By :<<>>*/
-		public static string GeneratePassword()
+		public  string GeneratePassword()
 		{
 			bool includeLowercase = true;
 			bool includeUppercase = true;
@@ -2516,7 +2516,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			catch (Exception errmsg)
 			{
 
-				log.ErrorMessage("MPRController", "getVendorReqList", errmsg.Message.ToString());
+				log.ErrorMessage("MPRDA", "getVendorReqList", errmsg.Message.ToString());
 			}
 
 			return vendorregDetails;
@@ -2951,7 +2951,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("MPRController", "GetYILTermGroups", ex.Message.ToString());
+				log.ErrorMessage("MPRDA", "GetYILTermGroups", ex.Message.ToString());
 			}
 			return YILTermsGroupList;
 		}
@@ -2982,7 +2982,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("MPRController", "UpdateYILTermsGroup", ex.Message.ToString());
+				log.ErrorMessage("MPRDA", "UpdateYILTermsGroup", ex.Message.ToString());
 			}
 			return true;
 		}
@@ -3018,7 +3018,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("MPRController", "UpdateYILTermsAndConditions", ex.Message.ToString());
+				log.ErrorMessage("MPRDA", "UpdateYILTermsAndConditions", ex.Message.ToString());
 			}
 			return true;
 		}
@@ -3038,7 +3038,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("MPRController", "UpdateYILTermsAndConditions", ex.Message.ToString());
+				log.ErrorMessage("MPRDA", "UpdateYILTermsAndConditions", ex.Message.ToString());
 			}
 			return true;
 		}
@@ -3058,7 +3058,7 @@ Review Date :<<>>   Reviewed By :<<>>
 			}
 			catch (Exception ex)
 			{
-				log.ErrorMessage("MPRController", "UpdateYILTermsAndConditions", ex.Message.ToString());
+				log.ErrorMessage("MPRDA", "UpdateYILTermsAndConditions", ex.Message.ToString());
 			}
 			return true;
 		}

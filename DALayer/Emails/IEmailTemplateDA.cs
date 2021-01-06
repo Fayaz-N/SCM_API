@@ -1,4 +1,5 @@
 ﻿using SCMModels;
+using SCMModels.SCMModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace DALayer.Emails
 		bool sendEmail(EmailSend emlSndngList);
 		bool prepareVendRegTemplate(string typeOfUser,  int VendorId, bool isexistvendor);
 		bool sendTechNotificationMail(int RFQRevisionId, string status,string StatusBy);
-
+		bool sendASNCommunicationMail(int ASNId, string Remarks, string RemarksFrom);
+		bool sendASNInitiationEmail(ASNInitiation asnIniLocal);
 
 	}
 }
