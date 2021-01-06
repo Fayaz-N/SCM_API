@@ -500,8 +500,8 @@ namespace SCMAPI.Controllers
 								mprIteminfos.ProjectDefinition = row[10].ToString();
 							if (!string.IsNullOrEmpty(row[12].ToString()))
 								mprIteminfos.SystemModel = row[12].ToString();
-							if (data != null)
-								mprIteminfos.UnitId = data.UnitId;
+                            if (data != null)
+                                mprIteminfos.UnitId = data.UnitId;
 							if (row[9].ToString() == "")
 								mprIteminfos.Itemid = "NewItem";
 							else
@@ -673,7 +673,12 @@ namespace SCMAPI.Controllers
 			return Ok(true);
 		}
 
-
-	}
+        [HttpPost]
+        [Route("Getoldrevisionitems")]
+        public IHttpActionResult Getoldrevisionitems(List<int> itemdetailsid)
+        {
+            return Ok(this._mprBusenessAcess.Getoldrevisionitems(itemdetailsid));
+        }
+    }
 
 }

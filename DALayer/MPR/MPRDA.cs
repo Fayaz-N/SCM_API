@@ -645,7 +645,8 @@ Review Date :<<>>   Reviewed By :<<>>
 							item.MfgPartNo = mPRItemInfo.MfgPartNo;
 							item.TargetSpend = mPRItemInfo.TargetSpend;
 							item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
-							DB.MPRItemInfoes.Add(item);
+                            item.PreviousItemDetailsId = mPRItemInfo.Itemdetailsid;
+                            DB.MPRItemInfoes.Add(item);
 							DB.SaveChanges();
 						}
 
@@ -3063,6 +3064,26 @@ Review Date :<<>>   Reviewed By :<<>>
 			return true;
 		}
 
+        public DataTable Getoldrevisionitems(List<int> itemdetailsid)
+        {
+            DataTable table = new DataTable();
+            var data = string.Join(" ',' ", itemdetailsid);
+            try
+            {
+                var query = "";
+                query = "select * from itemsMapping where Itemdetailsid in ('" + data + "') ";
+                var cmd = DB.Database.Connection.CreateCommand();
+                cmd.CommandText = query;
 
-	}
+                cmd.Connection.Open();
+                table.Load(cmd.ExecuteReader());
+                cmd.Connection.Close();
+                return table;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+    }
 }

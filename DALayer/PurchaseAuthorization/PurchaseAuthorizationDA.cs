@@ -2275,6 +2275,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						TargetSpend = Convert.ToDecimal(x.TargetSpend),
 						PaymentTermCode = x.PaymentTermCode,
 						VendorName = x.VendorName,
+                        VendorCode=x.VendorCode,
 						DepartmentId = x.DepartmentId,
 						MRPItemsDetailsID = Convert.ToInt32(x.MPRItemDetailsid),
 						RFQRevisionId = x.rfqRevisionId,
@@ -2292,11 +2293,18 @@ Review Date :<<>>   Reviewed By :<<>>*/
 						MfgPartNo = x.MfgPartNo,
 						ManufacturerName = x.ManufacturerName,
 						MPRRevisionId = Convert.ToInt32(x.MPRRevisionId),
-						Tklineitemid = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault()?.Tklineitemid,
+                        SoldToParty=x.soldtoparty +"-"+ x.soldtopartyname,
+                        ShipToParty =x.ShipToParty,
+                        EndUser = x.Enduser + "-" + x.Endusername,
+                        Tklineitemid = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault()?.Tklineitemid,
 						TokuchuNo = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().TokuchuNo : null,
 						StandardLeadtime = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().StandardLeadtime : null,
 						ProductCategorylevel2id = obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault() != null ? obj.TokuchuLIneItems.Where(li => li.PAItemID == x.PAItemID && li.TokuchRequestid == tokuchuRequestid).FirstOrDefault().ProductCategorylevel2id : null,
-					}).ToList();
+                        //SoldToParty=obj.MPRRevisions.Where(y=>y.RevisionId==x.MPRRevisionId && y.BoolValidRevision==true).FirstOrDefault().soldtopartyname,
+                        //ShipToParty = obj.MPRRevisions.Where(y => y.RevisionId == x.MPRRevisionId && y.BoolValidRevision == true).FirstOrDefault().shiptopartyname,
+                        //EndUser = obj.MPRRevisions.Where(y => y.RevisionId == x.MPRRevisionId && y.BoolValidRevision == true).FirstOrDefault().Endusername,
+
+                    }).ToList();
 					return model;
 				}
 				else
@@ -2689,7 +2697,7 @@ Review Date :<<>>   Reviewed By :<<>>*/
             if ((!string.IsNullOrEmpty(data)))
                 query += " and DepartmentId in ('"+ data +"')";
             if (input.DepartmentId != 0)
-                query += " and DepartmentId '" + input.DepartmentId + "'";
+                query += " and DepartmentId = '" + input.DepartmentId + "'";
             if (!string.IsNullOrEmpty(input.ProjectManager))
 				query += " and ProjectManager='" + input.ProjectManager + "'";
             if (!string.IsNullOrEmpty(input.SaleOrderNo))

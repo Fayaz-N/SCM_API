@@ -59,5 +59,6 @@ namespace DALayer.MPR
 		bool DeleteTermGroup(int TermGroupId, string DeletedBy);
 		bool DeleteTermsAndConditions(int TermId, string DeletedBy);
 		string GeneratePassword();
-	}
+        DataTable Getoldrevisionitems(List<int> itemdetailsid);
+    }
 }

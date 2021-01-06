@@ -32,7 +32,8 @@ namespace SCMModels.RFQModels
 		public string VendorModelNo { get; set; }
 		public string HSNCode { get; set; }
 		public string VendorName { get; set; }
-		public string DocumentyNo { get; set; }
+        public string VendorCode { get; set; }
+        public string DocumentyNo { get; set; }
 		public decimal TargetSpend { get; set; }
 		public string SaleOrderNo { get; set; }
 		public decimal UnitPrice { get; set; }
@@ -99,8 +100,10 @@ namespace SCMModels.RFQModels
         public Nullable<int> StandardLeadtime { get; set; }
 		public Nullable<int> ProductCategorylevel2id { get; set; }
 		public TokuchuLIneItem TokuchuLIneItems { get; set; }
-
-	}
+        public string ShipToParty { get; set; }
+        public string SoldToParty { get; set; }
+        public string EndUser { get; set; }
+    }
 	public class PADetailsModel
 	{
 		public string rfqnumber { get; set; }

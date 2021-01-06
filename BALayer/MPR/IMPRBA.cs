@@ -55,6 +55,7 @@ namespace BALayer.MPR
 		bool UpdateYILTermsAndConditions(YILTermsandCondition yilTermandconditions);
 		bool DeleteTermGroup(int TermGroupId, string DeletedBy);
 		bool DeleteTermsAndConditions(int TermId, string DeletedBy);
-	}
+        DataTable Getoldrevisionitems(List<int> itemdetailsid);
+    }
 
 }

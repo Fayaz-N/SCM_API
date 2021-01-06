@@ -191,6 +191,9 @@ namespace BALayer.MPR
 			return this._mprDataAcess.DeleteTermsAndConditions(TermId, DeletedBy);
 		}
 
-
-	}
+        public DataTable Getoldrevisionitems(List<int> itemdetailsid)
+        {
+            return this._mprDataAcess.Getoldrevisionitems(itemdetailsid);
+        }
+    }
 }
