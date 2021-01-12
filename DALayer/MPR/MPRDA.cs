@@ -645,7 +645,7 @@ Review Date :<<>>   Reviewed By :<<>>
 							item.MfgPartNo = mPRItemInfo.MfgPartNo;
 							item.TargetSpend = mPRItemInfo.TargetSpend;
 							item.RepeatOrderRefId = mPRItemInfo.RepeatOrderRefId;
-                            item.PreviousItemDetailsId = mPRItemInfo.Itemdetailsid;
+                            item.PreviousItemdetailsid = mPRItemInfo.Itemdetailsid;
                             DB.MPRItemInfoes.Add(item);
 							DB.SaveChanges();
 						}
@@ -2366,6 +2366,7 @@ Review Date :<<>>   Reviewed By :<<>>
 
 						if (model.VerifiedStatus != "Approved")
 						{
+							LocalRegApprovalProcessDetails.IntiatorStatus = "Pending";
 							LocalRegApprovalProcessDetails.CheckerStatus = "Pending";
 							LocalRegApprovalProcessDetails.ApprovalStatus = "Pending";
 
@@ -2382,6 +2383,7 @@ Review Date :<<>>   Reviewed By :<<>>
 					{
 						if (model.FinanceApprovedStatus != "Approved")
 						{
+							LocalRegApprovalProcessDetails.IntiatorStatus = "Pending";
 							LocalRegApprovalProcessDetails.CheckerStatus = "Pending";
 							LocalRegApprovalProcessDetails.ApprovalStatus = "Pending";
 							LocalRegApprovalProcessDetails.VerifiedStatus = "Pending";
@@ -2397,7 +2399,7 @@ Review Date :<<>>   Reviewed By :<<>>
 
 					DB.SaveChanges();
 				}
-				if (typeOfuser == "FinanceApprover" && model.VerifiedStatus == "Approved")
+				if (typeOfuser == "FinanceApprover" && model.FinanceApprovedStatus == "Approved")
 				{
 
 					//update details in vendormaster table
